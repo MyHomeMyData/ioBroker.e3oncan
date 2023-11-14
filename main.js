@@ -59,6 +59,15 @@ class E3oncan extends utils.Adapter {
             native: {},
         });
 
+        await this.setObjectNotExistsAsync('E380', {
+            type: 'channel',
+            common: {
+                name: 'E380',
+                role: 'device'
+            },
+            native: {},
+        });
+
         // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
         this.subscribeStates('testVariable');
         // You can also add a subscription for multiple states. The following line watches all states starting with "lights."
