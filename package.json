@@ -1,0 +1,77 @@
+{
+  "name": "iobroker.e3oncan",
+  "version": "0.0.1",
+  "description": "Collect data on CAN bus for Viessmann E3 devices, e.g. Vitocal, Vitocharge, Energy Meter E380",
+  "author": {
+    "name": "Juergen",
+    "email": "juergen.bonfert@gmail.com"
+  },
+  "homepage": "https://github.com/MyHomeMyData/ioBroker.e3oncan",
+  "license": "Apache-2.0",
+  "keywords": [
+    "Viessmann",
+    "E3",
+    "CAN",
+    "Heating",
+    "PV",
+    "Energy Meter"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:MyHomeMyData/ioBroker.e3oncan.git"
+  },
+  "engines": {
+    "node": ">= 16"
+  },
+  "dependencies": {
+    "@iobroker/adapter-core": "^3.0.4"
+  },
+  "devDependencies": {
+    "@alcalzone/release-script": "^3.6.0",
+    "@alcalzone/release-script-plugin-iobroker": "^3.6.0",
+    "@alcalzone/release-script-plugin-license": "^3.5.9",
+    "@alcalzone/release-script-plugin-manual-review": "^3.5.9",
+    "@iobroker/adapter-dev": "^1.2.0",
+    "@iobroker/testing": "^4.1.0",
+    "@tsconfig/node16": "^16.1.1",
+    "@types/chai": "^4.3.10",
+    "@types/chai-as-promised": "^7.1.8",
+    "@types/mocha": "^10.0.4",
+    "@types/node": "^16.18.61",
+    "@types/proxyquire": "^1.3.31",
+    "@types/sinon": "^17.0.1",
+    "@types/sinon-chai": "^3.2.12",
+    "chai": "^4.3.10",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^8.53.0",
+    "mocha": "^10.2.0",
+    "proxyquire": "^2.1.3",
+    "sinon": "^17.0.1",
+    "sinon-chai": "^3.7.0",
+    "typescript": "~5.0.4"
+  },
+  "main": "main.js",
+  "files": [
+    "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).{json,json5}",
+    "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
+    "lib/",
+    "www/",
+    "io-package.json",
+    "LICENSE",
+    "main.js"
+  ],
+  "scripts": {
+    "test:js": "mocha --config test/mocharc.custom.json \"{!(node_modules|test)/**/*.test.js,*.test.js,test/**/test!(PackageFiles|Startup).js}\"",
+    "test:package": "mocha test/package --exit",
+    "test:integration": "mocha test/integration --exit",
+    "test": "npm run test:js && npm run test:package",
+    "check": "tsc --noEmit -p tsconfig.check.json",
+    "lint": "eslint .",
+    "translate": "translate-adapter",
+    "release": "release-script"
+  },
+  "bugs": {
+    "url": "https://github.com/MyHomeMyData/ioBroker.e3oncan/issues"
+  },
+  "readmeFilename": "README.md"
+}

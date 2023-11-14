@@ -1,0 +1,47 @@
+{
+    "cli": true,
+    "target": "directory",
+    "adapterName": "e3oncan",
+    "title": "Viessmann E3 series CAN listener",
+    "description": "Collect data on CAN bus for Viessmann E3 devices, e.g. Vitocal, Vitocharge, Energy Meter E380",
+    "keywords": [
+        "Viessmann",
+        "E3",
+        "CAN",
+        "Heating",
+        "PV",
+        "Energy Meter"
+    ],
+    "expert": "yes",
+    "features": [
+        "adapter"
+    ],
+    "adminFeatures": [],
+    "type": "iot-systems",
+    "startMode": "daemon",
+    "connectionType": "local",
+    "dataSource": "push",
+    "connectionIndicator": "yes",
+    "language": "JavaScript",
+    "nodeVersion": "16",
+    "adminUi": "json",
+    "tools": [
+        "ESLint",
+        "type checking"
+    ],
+    "releaseScript": "yes",
+    "devServer": "yes",
+    "devServerPort": 8081,
+    "indentation": "Space (4)",
+    "quotes": "single",
+    "es6class": "yes",
+    "authorName": "Juergen",
+    "authorGithub": "MyHomeMyData",
+    "authorEmail": "juergen.bonfert@gmail.com",
+    "gitRemoteProtocol": "SSH",
+    "gitCommit": "yes",
+    "defaultBranch": "main",
+    "license": "Apache License 2.0",
+    "dependabot": "yes",
+    "creatorVersion": "2.5.0"
+}
