@@ -8,21 +8,12 @@
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
 
-
-const didsCommon = require('./lib/didsCommon');
-// let can = require("socketcan");
-
 // Load your modules here, e.g.:
 // const fs = require("fs");
 
-function toByteArray(hs) {
-    // Convert hex string, e.g. '21A8' to byte array: [33,168]
-    const ba = [];
-    for (let i=0; i<hs.length/2; i++) {
-        ba.push(parseInt(hs.slice(2*i,2*i+2), 16));
-    }
-    return ba;
-}
+const codecs = require('./lib/codecs');
+const collect = require('./lib/canCollect');
+const can = require('socketcan');
 
 class E3oncan extends utils.Adapter {
 
@@ -39,6 +30,17 @@ class E3oncan extends utils.Adapter {
         // this.on('objectChange', this.onObjectChange.bind(this));
         // this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
+
+        this.vx3Collect = new collect.collect([0x451], 'vx3', 'common');
+        this.e380Collect = new collect.collect([0x250,0x252,0x254,0x256,0x258,0x25A,0x25C], 'e380', 'e380');
+
+        try {
+            this.channel = can.createRawChannel('vcan0', true);
+            this.channel.addListener('onMessage', this.onCanMsg, this);
+        } catch (e) {
+            console.error(e);
+            this.channel = null;
+        }
     }
 
     /**
@@ -55,16 +57,12 @@ class E3oncan extends utils.Adapter {
         this.log.info('config option1: ' + this.config.option1);
         this.log.info('config option2: ' + this.config.option2);
 
-
-        const raw954 = '0501021c001800f6019f08bc0018005b02650001003734373037303532303236313331323261031b021b006600010005001b0064000000000030313032303030323134303030313630600228016400f401a90863596400010000000d003030303030303032383734353430323039021e011600f6019f08940016005b026500010037343730373035323032363133313232430611011a00f501a20876001a005802be02010037333737313233323036393133323037';
-        const did = 954;
-        console.log(JSON.stringify(didsCommon.dids['dids'][did].decode(toByteArray(raw954))));
-
         /*
         For every state in the system there has to be also an object of type state
         Here a simple template for a boolean variable named "testVariable"
         Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
         */
+        await this.vx3Collect.initStates(this);
         await this.setObjectNotExistsAsync('testVariable', {
             type: 'state',
             common: {
@@ -77,14 +75,13 @@ class E3oncan extends utils.Adapter {
             native: {},
         });
 
-        await this.setObjectNotExistsAsync('E380', {
-            type: 'channel',
-            common: {
-                name: 'E380',
-                role: 'device'
-            },
-            native: {},
-        });
+        codecs.rawmode.setOpMode(false);
+
+        if (this.channel) {
+            this.channel.start();
+            this.setState('info.connection', true, true);
+        }
+
 
         // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
         this.subscribeStates('testVariable');
@@ -121,6 +118,9 @@ class E3oncan extends utils.Adapter {
      */
     onUnload(callback) {
         try {
+            if (this.channel) {
+                this.channel.stop();
+            }
             // Here you must clear all timeouts or intervals that may still be active
             // clearTimeout(timeout1);
             // clearTimeout(timeout2);
@@ -183,6 +183,10 @@ class E3oncan extends utils.Adapter {
     //     }
     // }
 
+    onCanMsg(msg) {
+        if (this.vx3Collect.canID.includes(msg.id)) { this.vx3Collect.msgCollect(this, msg); }
+        if (this.e380Collect.canID.includes(msg.id)) { this.e380Collect.msgCollect(this, msg); }
+    }
 }
 
 if (require.main !== module) {
