@@ -1,16 +1,120 @@
 {
-    "i18n": true,
+    "i18n": false,
     "type": "panel",
     "items": {
-        "option1": {
-            "type": "checkbox",
-            "label": "option1",
+        "can_header": {
+            "type": "header",
+            "text": "CAN Adapter",
+            "size": 2,
+            "newLine": false
+        },
+        "can_name": {
+            "type": "text",
+            "label": "can bus",
+            "default" : "vcan0",
+            "newLine": false
+        },
+        "e380_header": {
+            "type": "header",
+            "text": "Energy Meter E380",
+            "size": 2,
             "newLine": true
         },
-        "option2": {
+        "e380_name": {
             "type": "text",
-            "label": "option2",
+            "label": "Name",
+            "default" : "e380",
+            "newLine": false
+        },
+        "e380_tree": {
+            "type": "checkbox",
+            "label": "tree states",
+            "default" : true,
+            "newLine": false
+        },
+        "e380_json": {
+            "type": "checkbox",
+            "label": "json states",
+            "default" : false,
+            "newLine": false
+        },
+        "e380_delay": {
+            "type": "text",
+            "label": "Min. update time (s)",
+            "default" : 5,
+            "newLine": false
+        },
+        "dev1_header": {
+            "type": "header",
+            "text": "Viessmann Device 1",
+            "size": 2,
             "newLine": true
+        },
+        "dev1_name": {
+            "type": "text",
+            "label": "Name",
+            "default" : "vitocal",
+            "newLine": false
+        },
+        "dev1_tree": {
+            "type": "checkbox",
+            "label": "tree states",
+            "default" : true,
+            "newLine": false
+        },
+        "dev1_json": {
+            "type": "checkbox",
+            "label": "json states",
+            "default" : false,
+            "newLine": false
+        },
+        "dev1_delay": {
+            "type": "text",
+            "label": "Min. update time (s)",
+            "default" : 5,
+            "newLine": false
+        },
+        "dev1_canid": {
+            "type": "text",
+            "label": "CAN ID",
+            "default" : "0x693",
+            "newLine": false
+        },
+        "dev2_header": {
+            "type": "header",
+            "text": "Viessmann Device 2",
+            "size": 2,
+            "newLine": true
+        },
+        "dev2_name": {
+            "type": "text",
+            "label": "Name",
+            "default" : "vx3",
+            "newLine": false
+        },
+        "dev2_tree": {
+            "type": "checkbox",
+            "label": "tree states",
+            "default" : true,
+            "newLine": false
+        },
+        "dev2_json": {
+            "type": "checkbox",
+            "label": "json states",
+            "default" : false,
+            "newLine": false
+        },
+        "dev2_delay": {
+            "type": "text",
+            "label": "Min. update time (s)",
+            "default" : 5,
+            "newLine": false
+        },
+        "dev2_canid": {
+            "type": "text",
+            "label": "CAN ID",
+            "default" : "0x451",
+            "newLine": false
         }
     }
 }

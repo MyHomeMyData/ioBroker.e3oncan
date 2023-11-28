@@ -25,44 +25,62 @@ class E3oncan extends utils.Adapter {
             ...options,
             name: 'e3oncan',
         });
+        //this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
         // this.on('objectChange', this.onObjectChange.bind(this));
         // this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
 
-        this.vx3Collect = new collect.collect([0x451], 'vx3', 'common', 5);
-        this.e380Collect = new collect.collect([0x250,0x252,0x254,0x256,0x258,0x25A,0x25C], 'e380', 'e380', 5);
+        this.dev2Collect = null;
+        this.e380Collect = null;
 
-        try {
-            this.channel = can.createRawChannel('vcan0', true);
-            this.channel.addListener('onMessage', this.onCanMsg, this);
-        } catch (e) {
-            console.error(e);
-            this.channel = null;
-        }
+        this.channel = null;
     }
-
+    /*
+    async onInstall() {
+        console.log('onInstall()');
+        console.log(this.config);
+    }
+    */
     /**
      * Is called when databases are connected and adapter received configuration.
      */
     async onReady() {
         // Initialize your adapter here
+        try {
+            this.channel = can.createRawChannel(this.config.can_name, true);
+            this.channel.addListener('onMessage', this.onCanMsg, this);
+        } catch (e) {
+            console.error(e);
+            this.channel = null;
+        }
+
+        if ( (this.config.dev2_tree) || (this.config.dev2_json) ) {
+            this.dev2Collect = new collect.collect([Number(this.config.dev2_canid)], this.config.dev2_name, 'common', this.config.dev2_delay, this.config.dev2_tree, this.config.dev2_json);
+        }
+        if ( (this.config.e380_tree) || (this.config.e380_json) ) {
+            this.e380Collect = new collect.collect([0x250,0x252,0x254,0x256,0x258,0x25A,0x25C], this.config.e380_name, this.config.e380_name, this.config.e380_delay, this.config.e380_tree, this.config.e380_json);
+        }
 
         // Reset the connection indicator during startup
         this.setState('info.connection', false, true);
 
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:
-        this.log.info('config option1: ' + this.config.option1);
-        this.log.info('config option2: ' + this.config.option2);
+        //this.log.info('config option1: ' + this.config.option1);
+        //this.log.info('config option2: ' + this.config.option2);
 
         /*
         For every state in the system there has to be also an object of type state
         Here a simple template for a boolean variable named "testVariable"
         Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
         */
-        await this.vx3Collect.initStates(this);
+        console.log(this.config);
+
+        if (this.vx3Collect) { await this.vx3Collect.initStates(this); }
+        if (this.e380Collect) { await this.e380Collect.initStates(this); }
+
         await this.setObjectNotExistsAsync('testVariable', {
             type: 'state',
             common: {
@@ -184,10 +202,11 @@ class E3oncan extends utils.Adapter {
     // }
 
     onCanMsg(msg) {
-        if (this.vx3Collect.canID.includes(msg.id)) { this.vx3Collect.msgCollect(this, msg); }
-        if (this.e380Collect.canID.includes(msg.id)) { this.e380Collect.msgCollect(this, msg); }
+        if ( (this.dev2Collect) && (this.dev2Collect.canID.includes(msg.id)) ) { this.dev2Collect.msgCollect(this, msg); }
+        if ( (this.e380Collect) && (this.e380Collect.canID.includes(msg.id)) ) { this.e380Collect.msgCollect(this, msg); }
     }
 }
+
 
 if (require.main !== module) {
     // Export the constructor in compact mode
