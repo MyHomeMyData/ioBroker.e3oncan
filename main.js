@@ -31,8 +31,8 @@ class E3oncan extends utils.Adapter {
         // this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
 
-        this.vx3Collect = new collect.collect([0x451], 'vx3', 'common');
-        this.e380Collect = new collect.collect([0x250,0x252,0x254,0x256,0x258,0x25A,0x25C], 'e380', 'e380');
+        this.vx3Collect = new collect.collect([0x451], 'vx3', 'common', 5);
+        this.e380Collect = new collect.collect([0x250,0x252,0x254,0x256,0x258,0x25A,0x25C], 'e380', 'e380', 5);
 
         try {
             this.channel = can.createRawChannel('vcan0', true);
