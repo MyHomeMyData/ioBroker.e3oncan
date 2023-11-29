@@ -134,7 +134,7 @@
                         {
                             "type": "checkbox",
                             "attr": "collect_tree_states",
-                            "width": "5% ",
+                            "width": "10% ",
                             "title": "tree states",
                             "tooltip": "Show data as tree of obejcts",
                             "filter": false,
@@ -144,7 +144,7 @@
                         {
                             "type": "checkbox",
                             "attr": "collect_json_states",
-                            "width": "5% ",
+                            "width": "10% ",
                             "title": "json states",
                             "tooltip": "Show data as JSON obejcts",
                             "filter": false,
@@ -166,7 +166,7 @@
                         },
                         {
                             "type": "text",
-                            "attr": "collect_dev_addr",
+                            "attr": "collect_canid",
                             "width": "10% ",
                             "title": "CAN ID",
                             "tooltip": "CAN ID to listen for data of this device.",
@@ -224,7 +224,7 @@
                         {
                             "type": "checkbox",
                             "attr": "uds_tree_states",
-                            "width": "5% ",
+                            "width": "10% ",
                             "title": "tree states",
                             "tooltip": "Show data as tree of obejcts",
                             "filter": false,
@@ -234,7 +234,7 @@
                         {
                             "type": "checkbox",
                             "attr": "uds_json_states",
-                            "width": "5% ",
+                            "width": "10% ",
                             "title": "json states",
                             "tooltip": "Show data as JSON obejcts",
                             "filter": false,
@@ -327,7 +327,7 @@
                         {
                             "type": "checkbox",
                             "attr": "collect_tree_states",
-                            "width": "5% ",
+                            "width": "10% ",
                             "title": "tree states",
                             "tooltip": "Show data as tree of obejcts",
                             "filter": false,
@@ -337,7 +337,7 @@
                         {
                             "type": "checkbox",
                             "attr": "collect_json_states",
-                            "width": "5% ",
+                            "width": "10% ",
                             "title": "json states",
                             "tooltip": "Show data as JSON obejcts",
                             "filter": false,

@@ -32,10 +32,12 @@ class E3oncan extends utils.Adapter {
         // this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
 
-        this.dev2Collect = null;
-        this.e380Collect = null;
+        this.e380Collect = null;    // E380 alway is assigned to external bus
+        this.E3CollectInt = [];     // List of collect devices on internal bus
+        this.E3CollectExt = [];     // List of collect devices on external bus
 
-        this.channel = null;
+        this.channelExt = null;
+        this.channelInt = null;
     }
     /*
     async onInstall() {
@@ -49,27 +51,81 @@ class E3oncan extends utils.Adapter {
     async onReady() {
         // Initialize your adapter here
 
-        this.log.debug(JSON.stringify(this.config));
-
-        /*
-        try {
-            this.channel = can.createRawChannel(this.config.can_name, true);
-            this.channel.addListener('onMessage', this.onCanMsg, this);
-        } catch (e) {
-            this.log.error(JSON.stringify(e));
-            this.channel = null;
-        }
-
-        if ( (this.config.dev2_tree) || (this.config.dev2_json) ) {
-            this.dev2Collect = new collect.collect([Number(this.config.dev2_canid)], this.config.dev2_name, 'common', this.config.dev2_delay, this.config.dev2_tree, this.config.dev2_json);
-        }
-        if ( (this.config.e380_tree) || (this.config.e380_json) ) {
-            this.e380Collect = new collect.collect([0x250,0x252,0x254,0x256,0x258,0x25A,0x25C], this.config.e380_name, this.config.e380_name, this.config.e380_delay, this.config.e380_tree, this.config.e380_json);
-        }
-        */
-
         // Reset the connection indicator during startup
         this.setState('info.connection', false, true);
+
+        this.log.debug(JSON.stringify(this.config));
+
+        // Setup external CAN bus if required
+        // ==================================
+
+        if (this.config.adapter_ext_activated) {
+            try {
+                this.channelExt = can.createRawChannel(this.config.adapter_ext_name, true);
+                this.channelExt.addListener('onMessage', this.onCanMsgExt, this);
+            } catch (e) {
+                this.log.error(JSON.stringify(e));
+                this.channelExt = null;
+            }
+        }
+
+        // Setup internal CAN bus if required
+        // ==================================
+
+        if (this.config.adapter_int_activated) {
+            try {
+                this.channelInt = can.createRawChannel(this.config.adapter_int_name, true);
+                this.channelInt.addListener('onMessage', this.onCanMsgInt, this);
+            } catch (e) {
+                this.log.error(JSON.stringify(e));
+                this.channelInt = null;
+            }
+        }
+
+        // Evaluate configuration for external CAN bus
+        // ===========================================
+
+        // Setup E380 collect:
+        if ( (this.config.e380_tree) || (this.config.e380_json) ) {
+            this.e380Collect = new collect.collect(
+                [0x250,0x252,0x254,0x256,0x258,0x25A,0x25C],
+                this.config.e380_name, this.config.e380_name,
+                this.config.e380_delay, this.config.e380_tree,
+                this.config.e380_json);
+            await this.e380Collect.initStates(this);
+        }
+
+        // Setup all configured devices for collect:
+        for (let i=0; i< this.config.table_collect_ext.length;i++) {
+            const dev = this.config.table_collect_ext[i];
+            if ( (dev.collect_tree_states) || (dev.collect_json_states) ) {
+                this.E3CollectExt.push(new collect.collect(
+                    [Number(dev.collect_canid)],
+                    dev.collect_dev_name,
+                    'common',
+                    dev.collect_delay_time,
+                    dev.collect_tree_states,
+                    dev.collect_json_states));
+                await this.E3CollectExt[i].initStates(this);            }
+        }
+
+        // Evaluate configuration for internal CAN bus
+        // ===========================================
+
+        // Setup all configured devices for collect:
+        for (let i=0; i< this.config.table_collect_int.length;i++) {
+            const dev = this.config.table_collect_int[i];
+            if ( (dev.collect_tree_states) || (dev.collect_json_states) ) {
+                this.E3CollectInt.push(new collect.collect(
+                    [Number(dev.collect_canid)],
+                    dev.collect_dev_name,
+                    'common',
+                    dev.collect_delay_time,
+                    dev.collect_tree_states,
+                    dev.collect_json_states));
+                await this.E3CollectInt[i].initStates(this);            }
+        }
+
 
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:
@@ -82,31 +138,26 @@ class E3oncan extends utils.Adapter {
         Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
         */
 
-        if (this.dev2Collect) { await this.dev2Collect.initStates(this); }
-        if (this.e380Collect) { await this.e380Collect.initStates(this); }
-
-        await this.setObjectNotExistsAsync('testVariable', {
-            type: 'state',
-            common: {
-                name: 'testVariable',
-                type: 'boolean',
-                role: 'indicator',
-                read: true,
-                write: true,
-            },
-            native: {},
-        });
-
         codecs.rawmode.setOpMode(false);
 
-        if (this.channel) {
-            this.channel.start();
+        // Startup external CAN bus if configured
+        // ======================================
+
+        if (this.channelExt) {
+            this.channelExt.start();
             this.setState('info.connection', true, true);
         }
 
+        // Startup internal CAN bus if configured
+        // ======================================
+
+        if (this.channelInt) {
+            this.channelInt.start();
+            this.setState('info.connection', true, true);
+        }
 
         // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
-        this.subscribeStates('testVariable');
+        // this.subscribeStates('testVariable');
         // You can also add a subscription for multiple states. The following line watches all states starting with "lights."
         // this.subscribeStates('lights.*');
         // Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
@@ -117,21 +168,21 @@ class E3oncan extends utils.Adapter {
             you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
         */
         // the variable testVariable is set to true as command (ack=false)
-        await this.setStateAsync('testVariable', true);
+        // await this.setStateAsync('testVariable', true);
 
         // same thing, but the value is flagged "ack"
         // ack should be always set to true if the value is received from or acknowledged from the target system
-        await this.setStateAsync('testVariable', { val: true, ack: true });
+        // await this.setStateAsync('testVariable', { val: true, ack: true });
 
         // same thing, but the state is deleted after 30s (getState will return null afterwards)
-        await this.setStateAsync('testVariable', { val: true, ack: true, expire: 30 });
+        // await this.setStateAsync('testVariable', { val: true, ack: true, expire: 30 });
 
         // examples for the checkPassword/checkGroup functions
-        let result = await this.checkPasswordAsync('admin', 'iobroker');
-        this.log.info('check user admin pw iobroker: ' + result);
+        //let result = await this.checkPasswordAsync('admin', 'iobroker');
+        //this.log.info('check user admin pw iobroker: ' + result);
 
-        result = await this.checkGroupAsync('admin', 'admin');
-        this.log.info('check group user admin group admin: ' + result);
+        //result = await this.checkGroupAsync('admin', 'admin');
+        //this.log.info('check group user admin group admin: ' + result);
     }
 
     /**
@@ -140,9 +191,13 @@ class E3oncan extends utils.Adapter {
      */
     onUnload(callback) {
         try {
-            if (this.channel) {
-                this.channel.stop();
-                this.log.info('CAN-Adapter '+this.config.can_name+' stopped.');
+            if (this.channelExt) {
+                this.channelExt.stop();
+                this.log.info('CAN-Adapter '+this.config.adapter_ext_name+' stopped.');
+            }
+            if (this.channelInt) {
+                this.channelInt.stop();
+                this.log.info('CAN-Adapter '+this.config.adapter_int_name+' stopped.');
             }
             // Here you must clear all timeouts or intervals that may still be active
             // clearTimeout(timeout1);
@@ -206,9 +261,14 @@ class E3oncan extends utils.Adapter {
     //     }
     // }
 
-    onCanMsg(msg) {
-        if ( (this.dev2Collect) && (this.dev2Collect.canID.includes(msg.id)) ) { this.dev2Collect.msgCollect(this, msg); }
+    onCanMsgExt(msg) {
         if ( (this.e380Collect) && (this.e380Collect.canID.includes(msg.id)) ) { this.e380Collect.msgCollect(this, msg); }
+        for (let i=0; i<this.E3CollectExt.length;i++) {
+            if ( (this.E3CollectExt[i]) && (this.E3CollectExt[i].canID.includes(msg.id)) ) { this.E3CollectExt[i].msgCollect(this, msg); }
+        }
+    }
+
+    onCanMsgInt(msg) {
     }
 }
 
