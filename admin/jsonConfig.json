@@ -1,120 +1,377 @@
 {
     "i18n": false,
-    "type": "panel",
+    "type": "tabs",
     "items": {
-        "can_header": {
-            "type": "header",
-            "text": "CAN Adapter",
-            "size": 2,
-            "newLine": false
+        "can_adapter": {
+            "type": "panel",
+            "label": "CAN Adapter",
+            "items": {
+                "adapter_ext_header": {
+                    "type": "header",
+                    "text": "External CAN Adapter",
+                    "size": 2,
+                    "newLine": false
+                },
+                "adapter_ext_name": {
+                    "type": "text",
+                    "label": "Adapter Name",
+                    "default" : "vcan0",
+                    "newLine": false
+                },
+                "adapter_ext_activated": {
+                    "type": "checkbox",
+                    "label": "Connect to Adapter",
+                    "default" : true,
+                    "newLine": false
+                },        
+                "adapter_int_header": {
+                    "type": "header",
+                    "text": "Internal CAN Adapter",
+                    "size": 2,
+                    "newLine": true
+                },
+                "adapter_int_name": {
+                    "type": "text",
+                    "label": "Adapter Name",
+                    "default" : "vcan1",
+                    "newLine": false
+                },
+                "adapter_int_activated": {
+                    "type": "checkbox",
+                    "label": "Connect to Adapter",
+                    "default" : false,
+                    "newLine": false
+                }        
+            }
         },
-        "can_name": {
-            "type": "text",
-            "label": "can bus",
-            "default" : "vcan0",
-            "newLine": false
+        "can_adapter_ext": {
+            "type": "panel",
+            "label": "Assignments to External CAN Adapter",
+            "items": {
+                "e380_header": {
+                    "type": "header",
+                    "text": "Energy Meter E380",
+                    "size": 2,
+                    "newLine": true
+                },
+                "e380_name": {
+                    "type": "text",
+                    "label": "Name",
+                    "default" : "e380",
+                    "newLine": false
+                },
+                "e380_tree": {
+                    "type": "checkbox",
+                    "label": "tree states",
+                    "default" : true,
+                    "newLine": false
+                },
+                "e380_json": {
+                    "type": "checkbox",
+                    "label": "json states",
+                    "default" : false,
+                    "newLine": false
+                },
+                "e380_delay": {
+                    "type": "text",
+                    "label": "Min. update time (s)",
+                    "default" : 5,
+                    "newLine": false
+                },
+                "tableHdrCol": {
+                    "type": "header",
+                    "text": "Collecting Data on External CAN Adapter",
+                    "size": 2
+                },
+
+                "introTableColExt": {
+                    "type": "staticText",
+                    "text": "Listen for data on addresses given in this table. No writing to CAN bus.",
+                    "newLine": true
+                },
+
+                "tableColExtErr1": {
+                    "type": "staticText",
+                    "text": "ERROR: column 'Name of Device' must contain unique text",
+                    "newLine": true,
+                    "hidden": "const x={}; for(let ii=0; data.table_collect_ext && ii<data.table_collect_ext.length; ii++){const t=data.table_collect_ext[ii].collect_dev_name; if (x[t]==='x') return false; x[t]='x';}; return true;",
+                    "style": {
+                        "color": "red"
+                    }
+                },
+
+                "tableColExtErr2": {
+                    "type": "staticText",
+                    "text": "ERROR: column 'Restricted Text' must contain characters x0-9 only",
+                    "newLine": true,
+                    "hidden": "if (!data.table_collect_ext) return true; for (const c of data.table_collect_ext) {if (c.collect_dev_addr !== '' && !c.collect_dev_addr.match(/^[x0-9]([x0-9])*$/)) return false;}; return true;",
+                    "style": {
+                        "color": "red"
+                    }
+                },
+
+                "table_collect_ext": {
+                    "type": "table",
+                    "newLine": true,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "label": "",
+                    "showSecondAddAt": 5,
+                    "items": [
+                        {
+                            "type": "text",
+                            "attr": "collect_dev_name",
+                            "width": "15% ",
+                            "title": "Name of Device",
+                            "tooltip": "This text will be used for object tree",
+                            "filter": false,
+                            "sort": false,
+                            "default": "vx3",
+                            "validator": "const x={};for (const c of globalData.table1) {if (x[c.collect_dev_name]==='x') return false; x[c.collect_dev_name]='x';}; return true;",
+                            "validatorNoSaveOnError": false
+                        },
+                        {
+                            "type": "checkbox",
+                            "attr": "collect_tree_states",
+                            "width": "5% ",
+                            "title": "tree states",
+                            "tooltip": "Show data as tree of obejcts",
+                            "filter": false,
+                            "sort": false,
+                            "default": true
+                        },
+                        {
+                            "type": "checkbox",
+                            "attr": "collect_json_states",
+                            "width": "5% ",
+                            "title": "json states",
+                            "tooltip": "Show data as JSON obejcts",
+                            "filter": false,
+                            "sort": false,
+                            "default": false
+                        },
+                        {
+                            "type": "number",
+                            "attr": "collect_delay_time",
+                            "width": "15% ",
+                            "title": "Min. update time (s)",
+                            "tooltip": "Minumum update time for states. 0 for immediate update.",
+                            "hidden": "data.table1ChkHide",
+                            "filter": false,
+                            "sort": false,
+                            "min": 0,
+                            "step": 1,
+                            "default": 5
+                        },
+                        {
+                            "type": "text",
+                            "attr": "collect_dev_addr",
+                            "width": "10% ",
+                            "title": "CAN ID",
+                            "tooltip": "CAN ID to listen for data of this device.",
+                            "filter": false,
+                            "sort": false,
+                            "default": "0x451",
+                            "validator": "return (data.collect_dev_addr==='') || data.collect_dev_addr.match(/^[x0-9]([x0-9])*$/);",
+                            "validatorNoSaveOnError": false
+                        }
+                    ]
+                },
+                "tableHdrUds": {
+                    "type": "header",
+                    "text": "Requesting and Writing Data on External CAN Adapter via UDSonCAN",
+                    "size": 2
+                },
+
+                "introTableUds": {
+                    "type": "staticText",
+                    "text": "Actively request wead- and write-operations to specified data identifiers",
+                    "newLine": true
+                },
+
+                "tableUdsErr1": {
+                    "type": "staticText",
+                    "text": "ERROR: column 'Name of Device' must contain unique text",
+                    "newLine": true,
+                    "hidden": "const x={}; for(let ii=0; data.table_uds && ii<data.table_uds.length; ii++){const t=data.table_uds[ii].uds_dev_name; if (x[t]==='x') return false; x[t]='x';}; return true;",
+                    "style": {
+                        "color": "red"
+                    }
+                },
+
+                "table_uds": {
+                    "type": "table",
+                    "newLine": true,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "label": "",
+                    "showSecondAddAt": 5,
+                    "items": [
+                        {
+                            "type": "number",
+                            "attr": "uds_schedule",
+                            "width": "10% ",
+                            "title": "Schedule (s)",
+                            "tooltip": "Schedule for requesting given DIDs",
+                            "filter": false,
+                            "sort": false,
+                            "min": 1,
+                            "step": 1,
+                            "default": 15
+                        },
+                        {
+                            "type": "checkbox",
+                            "attr": "uds_tree_states",
+                            "width": "5% ",
+                            "title": "tree states",
+                            "tooltip": "Show data as tree of obejcts",
+                            "filter": false,
+                            "sort": false,
+                            "default": true
+                        },
+                        {
+                            "type": "checkbox",
+                            "attr": "uds_json_states",
+                            "width": "5% ",
+                            "title": "json states",
+                            "tooltip": "Show data as JSON obejcts",
+                            "filter": false,
+                            "sort": false,
+                            "default": false
+                        },
+                        {
+                            "type": "text",
+                            "attr": "uds_dev_addr",
+                            "width": "10% ",
+                            "title": "Device Address",
+                            "tooltip": "Device Address to send requests to.",
+                            "filter": false,
+                            "sort": false,
+                            "default": "0x680",
+                            "validator": "return (data.collect_dev_addr==='') || data.collect_dev_addr.match(/^[x0-9]([x0-9])*$/);",
+                            "validatorNoSaveOnError": false
+                        },
+                        {
+                            "type": "text",
+                            "attr": "uds_dids",
+                            "width": "20% ",
+                            "title": "List of DIDs",
+                            "tooltip": "Separate by comma! All given DIDs will be requested with specified schedule an ECU address.",
+                            "filter": false,
+                            "sort": false,
+                            "default": "256"
+                        }
+                    ]
+                }
+            }
         },
-        "e380_header": {
-            "type": "header",
-            "text": "Energy Meter E380",
-            "size": 2,
-            "newLine": true
-        },
-        "e380_name": {
-            "type": "text",
-            "label": "Name",
-            "default" : "e380",
-            "newLine": false
-        },
-        "e380_tree": {
-            "type": "checkbox",
-            "label": "tree states",
-            "default" : true,
-            "newLine": false
-        },
-        "e380_json": {
-            "type": "checkbox",
-            "label": "json states",
-            "default" : false,
-            "newLine": false
-        },
-        "e380_delay": {
-            "type": "text",
-            "label": "Min. update time (s)",
-            "default" : 5,
-            "newLine": false
-        },
-        "dev1_header": {
-            "type": "header",
-            "text": "Viessmann Device 1",
-            "size": 2,
-            "newLine": true
-        },
-        "dev1_name": {
-            "type": "text",
-            "label": "Name",
-            "default" : "vitocal",
-            "newLine": false
-        },
-        "dev1_tree": {
-            "type": "checkbox",
-            "label": "tree states",
-            "default" : true,
-            "newLine": false
-        },
-        "dev1_json": {
-            "type": "checkbox",
-            "label": "json states",
-            "default" : false,
-            "newLine": false
-        },
-        "dev1_delay": {
-            "type": "text",
-            "label": "Min. update time (s)",
-            "default" : 5,
-            "newLine": false
-        },
-        "dev1_canid": {
-            "type": "text",
-            "label": "CAN ID",
-            "default" : "0x693",
-            "newLine": false
-        },
-        "dev2_header": {
-            "type": "header",
-            "text": "Viessmann Device 2",
-            "size": 2,
-            "newLine": true
-        },
-        "dev2_name": {
-            "type": "text",
-            "label": "Name",
-            "default" : "vx3",
-            "newLine": false
-        },
-        "dev2_tree": {
-            "type": "checkbox",
-            "label": "tree states",
-            "default" : true,
-            "newLine": false
-        },
-        "dev2_json": {
-            "type": "checkbox",
-            "label": "json states",
-            "default" : false,
-            "newLine": false
-        },
-        "dev2_delay": {
-            "type": "text",
-            "label": "Min. update time (s)",
-            "default" : 5,
-            "newLine": false
-        },
-        "dev2_canid": {
-            "type": "text",
-            "label": "CAN ID",
-            "default" : "0x451",
-            "newLine": false
+        "can_adapter_int": {
+            "type": "panel",
+            "label": "Assignments to Internal CAN Adapter",
+            "items": {
+                "tableHdr": {
+                    "type": "header",
+                    "text": "Collecting Data on Internal CAN Adapter",
+                    "size": 2
+                },
+
+                "introTableColInt": {
+                    "type": "staticText",
+                    "text": "Listen for data on addresses given in this table. No writing to CAN bus.",
+                    "newLine": true
+                },
+
+                "tableColIntErr1": {
+                    "type": "staticText",
+                    "text": "ERROR: column 'Name of Device' must contain unique text",
+                    "newLine": true,
+                    "hidden": "const x={}; for(let ii=0; data.table_collect_int && ii<data.table_collect_int.length; ii++){const t=data.table_collect_int[ii].collect_dev_name; if (x[t]==='x') return false; x[t]='x';}; return true;",
+                    "style": {
+                        "color": "red"
+                    }
+                },
+
+                "tableColIntErr2": {
+                    "type": "staticText",
+                    "text": "ERROR: column 'Restricted Text' must contain characters x0-9 only",
+                    "newLine": true,
+                    "hidden": "if (!data.table_collect_int) return true; for (const c of data.table_collect_int) {if (c.collect_dev_addr !== '' && !c.collect_dev_addr.match(/^[x0-9]([x0-9])*$/)) return false;}; return true;",
+                    "style": {
+                        "color": "red"
+                    }
+                },
+
+                "table_collect_int": {
+                    "type": "table",
+                    "newLine": true,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "label": "",
+                    "showSecondAddAt": 5,
+                    "items": [
+                        {
+                            "type": "text",
+                            "attr": "collect_dev_name",
+                            "width": "15% ",
+                            "title": "Name of Device",
+                            "tooltip": "This text will be used for object tree",
+                            "filter": false,
+                            "sort": false,
+                            "default": "vitocal",
+                            "validator": "const x={};for (const c of globalData.table1) {if (x[c.collect_dev_name]==='x') return false; x[c.collect_dev_name]='x';}; return true;",
+                            "validatorNoSaveOnError": false
+                        },
+                        {
+                            "type": "checkbox",
+                            "attr": "collect_tree_states",
+                            "width": "5% ",
+                            "title": "tree states",
+                            "tooltip": "Show data as tree of obejcts",
+                            "filter": false,
+                            "sort": false,
+                            "default": true
+                        },
+                        {
+                            "type": "checkbox",
+                            "attr": "collect_json_states",
+                            "width": "5% ",
+                            "title": "json states",
+                            "tooltip": "Show data as JSON obejcts",
+                            "filter": false,
+                            "sort": false,
+                            "default": false
+                        },
+                        {
+                            "type": "number",
+                            "attr": "collect_delay_time",
+                            "width": "15% ",
+                            "title": "Min. update time (s)",
+                            "tooltip": "Minumum update time for states. 0 for immediate update.",
+                            "hidden": "data.table1ChkHide",
+                            "filter": false,
+                            "sort": false,
+                            "min": 0,
+                            "step": 1,
+                            "default": 5
+                        },
+                        {
+                            "type": "text",
+                            "attr": "collect_dev_addr",
+                            "width": "10% ",
+                            "title": "CAN ID",
+                            "tooltip": "CAN ID to listen for data of this device.",
+                            "filter": false,
+                            "sort": false,
+                            "default": "0x693",
+                            "validator": "return (data.collect_dev_addr==='') || data.collect_dev_addr.match(/^[x0-9]([x0-9])*$/);",
+                            "validatorNoSaveOnError": false
+                        }
+                    ]
+                }
+            }
         }
     }
 }

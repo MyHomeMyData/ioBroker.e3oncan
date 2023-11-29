@@ -39,8 +39,8 @@ class E3oncan extends utils.Adapter {
     }
     /*
     async onInstall() {
-        console.log('onInstall()');
-        console.log(this.config);
+        this.log.info('onInstall()');
+        this.log.info(JSON.stringify(this.config));
     }
     */
     /**
@@ -48,11 +48,15 @@ class E3oncan extends utils.Adapter {
      */
     async onReady() {
         // Initialize your adapter here
+
+        this.log.debug(JSON.stringify(this.config));
+
+        /*
         try {
             this.channel = can.createRawChannel(this.config.can_name, true);
             this.channel.addListener('onMessage', this.onCanMsg, this);
         } catch (e) {
-            console.error(e);
+            this.log.error(JSON.stringify(e));
             this.channel = null;
         }
 
@@ -62,6 +66,7 @@ class E3oncan extends utils.Adapter {
         if ( (this.config.e380_tree) || (this.config.e380_json) ) {
             this.e380Collect = new collect.collect([0x250,0x252,0x254,0x256,0x258,0x25A,0x25C], this.config.e380_name, this.config.e380_name, this.config.e380_delay, this.config.e380_tree, this.config.e380_json);
         }
+        */
 
         // Reset the connection indicator during startup
         this.setState('info.connection', false, true);
@@ -76,9 +81,8 @@ class E3oncan extends utils.Adapter {
         Here a simple template for a boolean variable named "testVariable"
         Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
         */
-        console.log(this.config);
 
-        if (this.vx3Collect) { await this.vx3Collect.initStates(this); }
+        if (this.dev2Collect) { await this.dev2Collect.initStates(this); }
         if (this.e380Collect) { await this.e380Collect.initStates(this); }
 
         await this.setObjectNotExistsAsync('testVariable', {
@@ -138,6 +142,7 @@ class E3oncan extends utils.Adapter {
         try {
             if (this.channel) {
                 this.channel.stop();
+                this.log.info('CAN-Adapter '+this.config.can_name+' stopped.');
             }
             // Here you must clear all timeouts or intervals that may still be active
             // clearTimeout(timeout1);
