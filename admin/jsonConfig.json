@@ -359,7 +359,7 @@
                         },
                         {
                             "type": "text",
-                            "attr": "collect_dev_addr",
+                            "attr": "collect_canid",
                             "width": "10% ",
                             "title": "CAN ID",
                             "tooltip": "CAN ID to listen for data of this device.",
