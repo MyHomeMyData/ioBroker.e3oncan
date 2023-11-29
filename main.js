@@ -264,11 +264,18 @@ class E3oncan extends utils.Adapter {
     onCanMsgExt(msg) {
         if ( (this.e380Collect) && (this.e380Collect.canID.includes(msg.id)) ) { this.e380Collect.msgCollect(this, msg); }
         for (let i=0; i<this.E3CollectExt.length;i++) {
-            if ( (this.E3CollectExt[i]) && (this.E3CollectExt[i].canID.includes(msg.id)) ) { this.E3CollectExt[i].msgCollect(this, msg); }
+            if ( (this.E3CollectExt[i]) && (this.E3CollectExt[i].canID.includes(msg.id)) ) {
+                this.E3CollectExt[i].msgCollect(this, msg);
+            }
         }
     }
 
     onCanMsgInt(msg) {
+        for (let i=0; i<this.E3CollectInt.length;i++) {
+            if ( (this.E3CollectInt[i]) && (this.E3CollectInt[i].canID.includes(msg.id)) ) {
+                this.E3CollectInt[i].msgCollect(this, msg);
+            }
+        }
     }
 }
 
