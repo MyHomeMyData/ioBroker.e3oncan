@@ -1,4 +1,4 @@
-![Logo](admin/e3oncan.png)
+![Logo](admin/e3oncan_small.png)
 # ioBroker.e3oncan
 
 [![NPM version](https://img.shields.io/npm/v/iobroker.e3oncan.svg)](https://www.npmjs.com/package/iobroker.e3oncan)
