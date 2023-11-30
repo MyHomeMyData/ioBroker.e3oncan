@@ -25,12 +25,6 @@ class E3oncan extends utils.Adapter {
             ...options,
             name: 'e3oncan',
         });
-        //this.on('install', this.onInstall.bind(this));
-        this.on('ready', this.onReady.bind(this));
-        this.on('stateChange', this.onStateChange.bind(this));
-        // this.on('objectChange', this.onObjectChange.bind(this));
-        // this.on('message', this.onMessage.bind(this));
-        this.on('unload', this.onUnload.bind(this));
 
         this.e380Collect = null;    // E380 alway is assigned to external bus
         this.E3CollectInt = [];     // List of collect devices on internal bus
@@ -38,6 +32,14 @@ class E3oncan extends utils.Adapter {
 
         this.channelExt = null;
         this.channelInt = null;
+
+        //this.on('install', this.onInstall.bind(this));
+        this.on('ready', this.onReady.bind(this));
+        this.on('stateChange', this.onStateChange.bind(this));
+        // this.on('objectChange', this.onObjectChange.bind(this));
+        // this.on('message', this.onMessage.bind(this));
+        this.on('unload', this.onUnload.bind(this));
+
     }
     /*
     async onInstall() {
@@ -56,32 +58,6 @@ class E3oncan extends utils.Adapter {
 
         this.log.debug(JSON.stringify(this.config));
 
-        // Setup external CAN bus if required
-        // ==================================
-
-        if (this.config.adapter_ext_activated) {
-            try {
-                this.channelExt = can.createRawChannel(this.config.adapter_ext_name, true);
-                this.channelExt.addListener('onMessage', this.onCanMsgExt, this);
-            } catch (e) {
-                this.log.error(JSON.stringify(e));
-                this.channelExt = null;
-            }
-        }
-
-        // Setup internal CAN bus if required
-        // ==================================
-
-        if (this.config.adapter_int_activated) {
-            try {
-                this.channelInt = can.createRawChannel(this.config.adapter_int_name, true);
-                this.channelInt.addListener('onMessage', this.onCanMsgInt, this);
-            } catch (e) {
-                this.log.error(JSON.stringify(e));
-                this.channelInt = null;
-            }
-        }
-
         // Evaluate configuration for external CAN bus
         // ===========================================
 
@@ -94,7 +70,6 @@ class E3oncan extends utils.Adapter {
                 this.config.e380_json);
             await this.e380Collect.initStates(this);
         }
-
         // Setup all configured devices for collect:
         for (let i=0; i< this.config.table_collect_ext.length;i++) {
             const dev = this.config.table_collect_ext[i];
@@ -139,6 +114,32 @@ class E3oncan extends utils.Adapter {
         */
 
         codecs.rawmode.setOpMode(false);
+
+        // Setup external CAN bus if required
+        // ==================================
+
+        if (this.config.adapter_ext_activated) {
+            try {
+                this.channelExt = can.createRawChannel(this.config.adapter_ext_name, true);
+                this.channelExt.addListener('onMessage', this.onCanMsgExt, this);
+            } catch (e) {
+                this.log.error(JSON.stringify(e));
+                this.channelExt = null;
+            }
+        }
+
+        // Setup internal CAN bus if required
+        // ==================================
+
+        if (this.config.adapter_int_activated) {
+            try {
+                this.channelInt = can.createRawChannel(this.config.adapter_int_name, true);
+                this.channelInt.addListener('onMessage', this.onCanMsgInt, this);
+            } catch (e) {
+                this.log.error(JSON.stringify(e));
+                this.channelInt = null;
+            }
+        }
 
         // Startup external CAN bus if configured
         // ======================================

@@ -15,12 +15,14 @@
                 "adapter_ext_name": {
                     "type": "text",
                     "label": "Adapter Name",
+                    "tooltip": "Device mame of CAN adapter connected to external bus, e.g. can0",
                     "default" : "vcan0",
                     "newLine": false
                 },
                 "adapter_ext_activated": {
                     "type": "checkbox",
                     "label": "Connect to Adapter",
+                    "tooltip": "Check, if this adapter shall be used.",
                     "default" : true,
                     "newLine": false
                 },        
@@ -33,12 +35,14 @@
                 "adapter_int_name": {
                     "type": "text",
                     "label": "Adapter Name",
+                    "tooltip": "Device mame of CAN adapter connected to internal bus, e.g. can1",
                     "default" : "vcan1",
                     "newLine": false
                 },
                 "adapter_int_activated": {
                     "type": "checkbox",
                     "label": "Connect to Adapter",
+                    "tooltip": "Check, if this adapter shall be used.",
                     "default" : false,
                     "newLine": false
                 }        
@@ -54,28 +58,42 @@
                     "size": 2,
                     "newLine": true
                 },
+                "e380WarnUpdateTime": {
+                    "type": "staticText",
+                    "text": "WARNING: Values below 2 seconds may cause heavy system load!",
+                    "newLine": true,
+                    "hidden": "if (data.can_adapter_ext.e380_delay < 2) { return false; }; return true;",
+                    "style": {
+                        "color": "red"
+                    }
+                },
                 "e380_name": {
                     "type": "text",
                     "label": "Name",
+                    "tooltip": "This text will be used as base for object tree",
                     "default" : "e380",
-                    "newLine": false
+                    "newLine": true
                 },
                 "e380_tree": {
                     "type": "checkbox",
                     "label": "tree states",
+                    "tooltip": "Show data as tree of obejcts",
                     "default" : true,
                     "newLine": false
                 },
                 "e380_json": {
                     "type": "checkbox",
                     "label": "json states",
+                    "tooltip": "Show data as JSON obejcts",
                     "default" : false,
                     "newLine": false
                 },
                 "e380_delay": {
-                    "type": "text",
+                    "type": "number",
                     "label": "Min. update time (s)",
+                    "tooltip": "Minumum update time for states. 0 for immediate update.",
                     "default" : 5,
+                    "min": 0,
                     "newLine": false
                 },
                 "tableHdrCol": {
@@ -90,7 +108,7 @@
                     "newLine": true
                 },
 
-                "tableColExtErr1": {
+                "tableColExtErrDevName": {
                     "type": "staticText",
                     "text": "ERROR: column 'Name of Device' must contain unique text",
                     "newLine": true,
@@ -100,11 +118,21 @@
                     }
                 },
 
-                "tableColExtErr2": {
+                "tableColExtErrUniqueCanId": {
                     "type": "staticText",
-                    "text": "ERROR: column 'Restricted Text' must contain characters x0-9 only",
+                    "text": "ERROR: column 'CAN ID' must contain unique IDs",
                     "newLine": true,
-                    "hidden": "if (!data.table_collect_ext) return true; for (const c of data.table_collect_ext) {if (c.collect_dev_addr !== '' && !c.collect_dev_addr.match(/^[x0-9]([x0-9])*$/)) return false;}; return true;",
+                    "hidden": "const x={}; for(let ii=0; data.table_collect_ext && ii<data.table_collect_ext.length; ii++){const t=data.table_collect_ext[ii].collect_canid; if (x[t]==='x') return false; x[t]='x';}; return true;",
+                    "style": {
+                        "color": "red"
+                    }
+                },
+
+                "tableColExtErrCanId": {
+                    "type": "staticText",
+                    "text": "ERROR: column 'CAN ID' must follow hex pattern e.g. '0x451'",
+                    "newLine": true,
+                    "hidden": "if (!data.table_collect_ext) return true; for (const c of data.table_collect_ext) {if ((String([c.collect_canid]) != String(c.collect_canid.match(/0[xX][0-9a-fA-F]+/)))) return false;}; return true;",
                     "style": {
                         "color": "red"
                     }
@@ -124,12 +152,12 @@
                             "attr": "collect_dev_name",
                             "width": "15% ",
                             "title": "Name of Device",
-                            "tooltip": "This text will be used for object tree",
+                            "tooltip": "This text will be used as base for object tree",
                             "filter": false,
                             "sort": false,
                             "default": "vx3",
-                            "validator": "const x={};for (const c of globalData.table1) {if (x[c.collect_dev_name]==='x') return false; x[c.collect_dev_name]='x';}; return true;",
-                            "validatorNoSaveOnError": false
+                            "validator": "const x={};for (const c of globalData.table_collect_ext) {if (x[c.collect_dev_name]==='x') return false; x[c.collect_dev_name]='x';}; return true;",
+                            "validatorNoSaveOnError": true
                         },
                         {
                             "type": "checkbox",
@@ -157,7 +185,6 @@
                             "width": "15% ",
                             "title": "Min. update time (s)",
                             "tooltip": "Minumum update time for states. 0 for immediate update.",
-                            "hidden": "data.table1ChkHide",
                             "filter": false,
                             "sort": false,
                             "min": 0,
@@ -173,8 +200,8 @@
                             "filter": false,
                             "sort": false,
                             "default": "0x451",
-                            "validator": "return (data.collect_dev_addr==='') || data.collect_dev_addr.match(/^[x0-9]([x0-9])*$/);",
-                            "validatorNoSaveOnError": false
+                            "validator": "return data.collect_canid.match(/0[xX][0-9a-fA-F]+/);",
+                            "validatorNoSaveOnError": true
                         }
                     ]
                 },
@@ -189,12 +216,11 @@
                     "text": "Actively request wead- and write-operations to specified data identifiers",
                     "newLine": true
                 },
-
-                "tableUdsErr1": {
+                "tableUdsErrDevAddr": {
                     "type": "staticText",
-                    "text": "ERROR: column 'Name of Device' must contain unique text",
+                    "text": "ERROR: column 'Device Address' must follow hex pattern e.g. '0x451'",
                     "newLine": true,
-                    "hidden": "const x={}; for(let ii=0; data.table_uds && ii<data.table_uds.length; ii++){const t=data.table_uds[ii].uds_dev_name; if (x[t]==='x') return false; x[t]='x';}; return true;",
+                    "hidden": "if (!data.table_uds) return true; for (const c of data.table_uds) {if ((String([c.uds_dev_addr]) != String(c.uds_dev_addr.match(/0[xX][0-9a-fA-F]+/)))) return false;}; return true;",
                     "style": {
                         "color": "red"
                     }
@@ -220,6 +246,16 @@
                             "min": 1,
                             "step": 1,
                             "default": 15
+                        },
+                        {
+                            "type": "text",
+                            "attr": "uds_dev_name",
+                            "width": "15% ",
+                            "title": "Name of Device",
+                            "tooltip": "This text will be used as base for object tree",
+                            "filter": false,
+                            "sort": false,
+                            "default": "vitocal"
                         },
                         {
                             "type": "checkbox",
@@ -250,8 +286,8 @@
                             "filter": false,
                             "sort": false,
                             "default": "0x680",
-                            "validator": "return (data.collect_dev_addr==='') || data.collect_dev_addr.match(/^[x0-9]([x0-9])*$/);",
-                            "validatorNoSaveOnError": false
+                            "validator": "return data.uds_dev_addr.match(/0[xX][0-9a-fA-F]+/);",
+                            "validatorNoSaveOnError": true
                         },
                         {
                             "type": "text",
@@ -283,7 +319,7 @@
                     "newLine": true
                 },
 
-                "tableColIntErr1": {
+                "tableColIntErrDevName": {
                     "type": "staticText",
                     "text": "ERROR: column 'Name of Device' must contain unique text",
                     "newLine": true,
@@ -293,11 +329,21 @@
                     }
                 },
 
-                "tableColIntErr2": {
+                "tableColIntErrUniqueCanId": {
                     "type": "staticText",
-                    "text": "ERROR: column 'Restricted Text' must contain characters x0-9 only",
+                    "text": "ERROR: column 'CAN ID' must contain unique IDs",
                     "newLine": true,
-                    "hidden": "if (!data.table_collect_int) return true; for (const c of data.table_collect_int) {if (c.collect_dev_addr !== '' && !c.collect_dev_addr.match(/^[x0-9]([x0-9])*$/)) return false;}; return true;",
+                    "hidden": "const x={}; for(let ii=0; data.table_collect_int && ii<data.table_collect_int.length; ii++){const t=data.table_collect_int[ii].collect_canid; if (x[t]==='x') return false; x[t]='x';}; return true;",
+                    "style": {
+                        "color": "red"
+                    }
+                },
+
+                "tableColIntErrCanId": {
+                    "type": "staticText",
+                    "text": "ERROR: column 'CAN ID' must follow hex pattern e.g. '0x451'",
+                    "newLine": true,
+                    "hidden": "if (!data.table_collect_int) return true; for (const c of data.table_collect_int) {if ((String([c.collect_canid]) != String(c.collect_canid.match(/0[xX][0-9a-fA-F]+/)))) return false;}; return true;",
                     "style": {
                         "color": "red"
                     }
@@ -317,12 +363,12 @@
                             "attr": "collect_dev_name",
                             "width": "15% ",
                             "title": "Name of Device",
-                            "tooltip": "This text will be used for object tree",
+                            "tooltip": "This text will be used as base for object tree",
                             "filter": false,
                             "sort": false,
                             "default": "vitocal",
-                            "validator": "const x={};for (const c of globalData.table1) {if (x[c.collect_dev_name]==='x') return false; x[c.collect_dev_name]='x';}; return true;",
-                            "validatorNoSaveOnError": false
+                            "validator": "const x={};for (const c of globalData.table_collect_int) {if (x[c.collect_dev_name]==='x') return false; x[c.collect_dev_name]='x';}; return true;",
+                            "validatorNoSaveOnError": true
                         },
                         {
                             "type": "checkbox",
@@ -350,7 +396,6 @@
                             "width": "15% ",
                             "title": "Min. update time (s)",
                             "tooltip": "Minumum update time for states. 0 for immediate update.",
-                            "hidden": "data.table1ChkHide",
                             "filter": false,
                             "sort": false,
                             "min": 0,
@@ -366,8 +411,8 @@
                             "filter": false,
                             "sort": false,
                             "default": "0x693",
-                            "validator": "return (data.collect_dev_addr==='') || data.collect_dev_addr.match(/^[x0-9]([x0-9])*$/);",
-                            "validatorNoSaveOnError": false
+                            "validator": "return data.collect_canid.match(/0[xX][0-9a-fA-F]+/);",
+                            "validatorNoSaveOnError": true
                         }
                     ]
                 }
