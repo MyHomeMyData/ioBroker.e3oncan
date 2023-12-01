@@ -64,41 +64,46 @@ class E3oncan extends utils.Adapter {
         // Setup E380 collect:
         if ( (this.config.e380_tree) || (this.config.e380_json) ) {
             this.e380Collect = new collect.collect(
-                [0x250,0x252,0x254,0x256,0x258,0x25A,0x25C],
-                this.config.e380_name, this.config.e380_name,
-                this.config.e380_delay, this.config.e380_tree,
-                this.config.e380_json);
+                {   'canID': [0x250,0x252,0x254,0x256,0x258,0x25A,0x25C],
+                    'stateBase': this.config.e380_name,
+                    'device': this.config.e380_name,
+                    'delay': this.config.e380_delay,
+                    'doTree': this.config.e380_tree,
+                    'doJSON': this.config.e380_json});
             await this.e380Collect.initStates(this);
         }
         // Setup all configured devices for collect:
-        for (let i=0; i< this.config.table_collect_ext.length;i++) {
-            const dev = this.config.table_collect_ext[i];
+        //for (const [key, dev] of Object.values(this.config.table_collect_ext)) {
+        //    this.log.debug(String(key)+': '+JSON.stringify(dev));
+        //}
+        for (const dev of Object.values(this.config.table_collect_ext)) {
             if ( (dev.collect_tree_states) || (dev.collect_json_states) ) {
-                this.E3CollectExt.push(new collect.collect(
-                    [Number(dev.collect_canid)],
-                    dev.collect_dev_name,
-                    'common',
-                    dev.collect_delay_time,
-                    dev.collect_tree_states,
-                    dev.collect_json_states));
-                await this.E3CollectExt[i].initStates(this);            }
+                const Collect = new collect.collect(
+                    {   'canID': [Number(dev.collect_canid)],
+                        'stateBase': dev.collect_dev_name,
+                        'device': 'common',
+                        'delay': dev.collect_delay_time,
+                        'doTree': dev.collect_tree_states,
+                        'doJSON': dev.collect_json_states});
+                this.E3CollectExt.push(Collect);
+                await Collect.initStates(this);            }
         }
 
         // Evaluate configuration for internal CAN bus
         // ===========================================
 
         // Setup all configured devices for collect:
-        for (let i=0; i< this.config.table_collect_int.length;i++) {
-            const dev = this.config.table_collect_int[i];
+        for (const dev of Object.values(this.config.table_collect_int)) {
             if ( (dev.collect_tree_states) || (dev.collect_json_states) ) {
-                this.E3CollectInt.push(new collect.collect(
-                    [Number(dev.collect_canid)],
-                    dev.collect_dev_name,
-                    'common',
-                    dev.collect_delay_time,
-                    dev.collect_tree_states,
-                    dev.collect_json_states));
-                await this.E3CollectInt[i].initStates(this);            }
+                const Collect = new collect.collect(
+                    {   'canID': [Number(dev.collect_canid)],
+                        'stateBase': dev.collect_dev_name,
+                        'device': 'common',
+                        'delay': dev.collect_delay_time,
+                        'doTree': dev.collect_tree_states,
+                        'doJSON': dev.collect_json_states});
+                this.E3CollectInt.push(Collect);
+                await Collect.initStates(this);            }
         }
 
 
@@ -263,18 +268,18 @@ class E3oncan extends utils.Adapter {
     // }
 
     onCanMsgExt(msg) {
-        if ( (this.e380Collect) && (this.e380Collect.canID.includes(msg.id)) ) { this.e380Collect.msgCollect(this, msg); }
-        for (let i=0; i<this.E3CollectExt.length;i++) {
-            if ( (this.E3CollectExt[i]) && (this.E3CollectExt[i].canID.includes(msg.id)) ) {
-                this.E3CollectExt[i].msgCollect(this, msg);
+        if ( (this.e380Collect) && (this.e380Collect.config.canID.includes(msg.id)) ) { this.e380Collect.msgCollect(this, msg); }
+        for (const dev of Object.values(this.E3CollectExt)) {
+            if ( (dev) && (dev.config.canID.includes(msg.id)) ) {
+                dev.msgCollect(this, msg);
             }
         }
     }
 
     onCanMsgInt(msg) {
-        for (let i=0; i<this.E3CollectInt.length;i++) {
-            if ( (this.E3CollectInt[i]) && (this.E3CollectInt[i].canID.includes(msg.id)) ) {
-                this.E3CollectInt[i].msgCollect(this, msg);
+        for (const dev of Object.values(this.E3CollectInt)) {
+            if ( (dev) && (dev.config.canID.includes(msg.id)) ) {
+                dev.msgCollect(this, msg);
             }
         }
     }
