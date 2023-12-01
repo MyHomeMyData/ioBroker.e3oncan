@@ -13,6 +13,7 @@ const utils = require('@iobroker/adapter-core');
 
 const codecs = require('./lib/codecs');
 const collect = require('./lib/canCollect');
+const uds = require('./lib/canUds');
 const can = require('socketcan');
 
 class E3oncan extends utils.Adapter {
@@ -29,6 +30,7 @@ class E3oncan extends utils.Adapter {
         this.e380Collect = null;    // E380 alway is assigned to external bus
         this.E3CollectInt = [];     // List of collect devices on internal bus
         this.E3CollectExt = [];     // List of collect devices on external bus
+        this.E3Uds        = [];     // List of uds devices on external bus
 
         this.channelExt = null;
         this.channelInt = null;
@@ -58,66 +60,6 @@ class E3oncan extends utils.Adapter {
 
         this.log.debug(JSON.stringify(this.config));
 
-        // Evaluate configuration for external CAN bus
-        // ===========================================
-
-        // Setup E380 collect:
-        if ( (this.config.e380_tree) || (this.config.e380_json) ) {
-            this.e380Collect = new collect.collect(
-                {   'canID': [0x250,0x252,0x254,0x256,0x258,0x25A,0x25C],
-                    'stateBase': this.config.e380_name,
-                    'device': this.config.e380_name,
-                    'delay': this.config.e380_delay,
-                    'doTree': this.config.e380_tree,
-                    'doJSON': this.config.e380_json});
-            await this.e380Collect.initStates(this);
-        }
-        // Setup all configured devices for collect:
-        //for (const [key, dev] of Object.values(this.config.table_collect_ext)) {
-        //    this.log.debug(String(key)+': '+JSON.stringify(dev));
-        //}
-        for (const dev of Object.values(this.config.table_collect_ext)) {
-            if ( (dev.collect_tree_states) || (dev.collect_json_states) ) {
-                const Collect = new collect.collect(
-                    {   'canID': [Number(dev.collect_canid)],
-                        'stateBase': dev.collect_dev_name,
-                        'device': 'common',
-                        'delay': dev.collect_delay_time,
-                        'doTree': dev.collect_tree_states,
-                        'doJSON': dev.collect_json_states});
-                this.E3CollectExt.push(Collect);
-                await Collect.initStates(this);            }
-        }
-
-        // Evaluate configuration for internal CAN bus
-        // ===========================================
-
-        // Setup all configured devices for collect:
-        for (const dev of Object.values(this.config.table_collect_int)) {
-            if ( (dev.collect_tree_states) || (dev.collect_json_states) ) {
-                const Collect = new collect.collect(
-                    {   'canID': [Number(dev.collect_canid)],
-                        'stateBase': dev.collect_dev_name,
-                        'device': 'common',
-                        'delay': dev.collect_delay_time,
-                        'doTree': dev.collect_tree_states,
-                        'doJSON': dev.collect_json_states});
-                this.E3CollectInt.push(Collect);
-                await Collect.initStates(this);            }
-        }
-
-
-        // The adapters config (in the instance object everything under the attribute "native") is accessible via
-        // this.config:
-        //this.log.info('config option1: ' + this.config.option1);
-        //this.log.info('config option2: ' + this.config.option2);
-
-        /*
-        For every state in the system there has to be also an object of type state
-        Here a simple template for a boolean variable named "testVariable"
-        Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-        */
-
         codecs.rawmode.setOpMode(false);
 
         // Setup external CAN bus if required
@@ -146,11 +88,85 @@ class E3oncan extends utils.Adapter {
             }
         }
 
+        // Evaluate configuration for external CAN bus
+        // ===========================================
+
+        // Setup E380 collect:
+        if ( (this.config.e380_tree) || (this.config.e380_json) ) {
+            this.e380Collect = new collect.collect(
+                {   'canID': [0x250,0x252,0x254,0x256,0x258,0x25A,0x25C],
+                    'stateBase': this.config.e380_name,
+                    'device': this.config.e380_name,
+                    'delay': this.config.e380_delay,
+                    'doTree': this.config.e380_tree,
+                    'doJSON': this.config.e380_json});
+            await this.e380Collect.initStates(this);
+        }
+        // Setup all configured devices for collect:
+        for (const dev of Object.values(this.config.table_collect_ext)) {
+            if ( (dev.collect_tree_states) || (dev.collect_json_states) ) {
+                const Collect = new collect.collect(
+                    {   'canID': [Number(dev.collect_canid)],
+                        'stateBase': dev.collect_dev_name,
+                        'device': 'common',
+                        'delay': dev.collect_delay_time,
+                        'doTree': dev.collect_tree_states,
+                        'doJSON': dev.collect_json_states,
+                        'channel': this.channelExt});
+                this.E3CollectExt.push(Collect);
+                await Collect.initStates(this);            }
+        }
+
+        // Setup all configured devices for UDS:
+        for (const dev of Object.values(this.config.table_uds)) {
+            if ( (dev.uds_tree_states) || (dev.uds_json_states) ) {
+                const Uds = new uds.uds(
+                    {   'canID': [Number(dev.uds_dev_addr)],
+                        'stateBase': dev.uds_dev_name,
+                        'device': 'common',
+                        'delay': 0,
+                        'doTree': dev.uds_tree_states,
+                        'doJSON': dev.uds_json_states,
+                        'channel': this.channelExt});
+                this.E3Uds.push(Uds);
+                await Uds.initStates(this);            }
+        }
+
+        // Evaluate configuration for internal CAN bus
+        // ===========================================
+
+        // Setup all configured devices for collect:
+        for (const dev of Object.values(this.config.table_collect_int)) {
+            if ( (dev.collect_tree_states) || (dev.collect_json_states) ) {
+                const Collect = new collect.collect(
+                    {   'canID': [Number(dev.collect_canid)],
+                        'stateBase': dev.collect_dev_name,
+                        'device': 'common',
+                        'delay': dev.collect_delay_time,
+                        'doTree': dev.collect_tree_states,
+                        'doJSON': dev.collect_json_states,
+                        'channel': this.channelInt});
+                this.E3CollectInt.push(Collect);
+                await Collect.initStates(this);            }
+        }
+
+
+        // The adapters config (in the instance object everything under the attribute "native") is accessible via
+        // this.config:
+        //this.log.info('config option1: ' + this.config.option1);
+        //this.log.info('config option2: ' + this.config.option2);
+
+        /*
+        For every state in the system there has to be also an object of type state
+        Here a simple template for a boolean variable named "testVariable"
+        Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
+        */
+
         // Startup external CAN bus if configured
         // ======================================
 
         if (this.channelExt) {
-            this.channelExt.start();
+            await this.channelExt.start();
             this.setState('info.connection', true, true);
         }
 
@@ -158,8 +174,13 @@ class E3oncan extends utils.Adapter {
         // ======================================
 
         if (this.channelInt) {
-            this.channelInt.start();
+            await this.channelInt.start();
             this.setState('info.connection', true, true);
+        }
+
+        if (this.E3Uds[0]) {
+            //await this.E3Uds[0].readByDid(this, 2346);
+            await this.E3Uds[0].readByDid(this, 256);
         }
 
         // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
@@ -272,6 +293,11 @@ class E3oncan extends utils.Adapter {
         for (const dev of Object.values(this.E3CollectExt)) {
             if ( (dev) && (dev.config.canID.includes(msg.id)) ) {
                 dev.msgCollect(this, msg);
+            }
+        }
+        for (const dev of Object.values(this.E3Uds)) {
+            if ( (dev) && (dev.readByDidProt.idRx == msg.id) ) {
+                dev.msgUds(this, msg);
             }
         }
     }
