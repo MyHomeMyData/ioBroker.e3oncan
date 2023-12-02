@@ -127,7 +127,9 @@ class E3oncan extends utils.Adapter {
                         'delay': 0,
                         'doTree': dev.uds_tree_states,
                         'doJSON': dev.uds_json_states,
-                        'channel': this.channelExt});
+                        'channel': this.channelExt,
+                        'timeout': 2        // Commuication timeout (s)
+                    });
                 this.E3Uds.push(Uds);
                 await Uds.initStates(this);            }
         }
@@ -179,9 +181,12 @@ class E3oncan extends utils.Adapter {
         }
 
         if (this.E3Uds[0]) {
-            //await this.E3Uds[0].readByDid(this, 2346);
-            await this.E3Uds[0].readByDid(this, 256);
+            await this.E3Uds[0].pushCmnd(this, 'read', [256]);
+            await this.E3Uds[0].pushCmnd(this, 'read', [256,269,2346]);
+            this.E3Uds[0].cmndLoop(this);
         }
+
+        this.log.debug('onReady(): All done.');
 
         // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
         // this.subscribeStates('testVariable');
@@ -261,12 +266,22 @@ class E3oncan extends utils.Adapter {
      * @param {ioBroker.State | null | undefined} state
      */
     onStateChange(id, state) {
+        /*
         if (state) {
             // The state was changed
             this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
         } else {
             // The state was deleted
             this.log.info(`state ${id} deleted`);
+        }
+        */
+        for (const dev of Object.values(this.E3Uds)) {
+            if ( (dev) && (id.includes(dev.timeoutId)) ) {
+                dev.onTimeoutChange(this, state);
+            }
+            if ( (dev) && (id.includes(dev.userDidsToReadId)) ) {
+                dev.onUserReadDidsChange(this, state);
+            }
         }
     }
 
