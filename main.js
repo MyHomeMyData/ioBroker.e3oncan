@@ -121,7 +121,7 @@ class E3oncan extends utils.Adapter {
         // Setup all configured devices for UDS:
         for (const dev of Object.values(this.config.table_uds)) {
             if ( (dev.uds_tree_states) || (dev.uds_json_states) ) {
-                if (!(dev.uds_dev_addr in Object.keys(this.udsDevices))) {
+                if (!(Object.keys(this.udsDevices).includes(dev.uds_dev_addr))) {
                     const Uds = new uds.uds(
                         {   'canID': [Number(dev.uds_dev_addr)],
                             'stateBase': dev.uds_dev_name,
@@ -133,11 +133,12 @@ class E3oncan extends utils.Adapter {
                             'timeout': 2        // Commuication timeout (s)
                         });
                     this.E3Uds.push(Uds);
+                    this.log.debug('New UDS device on '+String(dev.uds_dev_addr));
                     this.udsDevices[dev.uds_dev_addr] = Uds;
                     await Uds.initStates(this);
                     await Uds.addSchedule(this, dev.uds_schedule, dev.uds_dids);
                 } else {
-                    await this.udsDevices[dev.uds_dev_addr].Uds.addSchedule(this,dev.uds_schedule, dev.uds_dids);
+                    await this.udsDevices[dev.uds_dev_addr].addSchedule(this,dev.uds_schedule, dev.uds_dids);
                 }
             }
         }
