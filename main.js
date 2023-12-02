@@ -31,6 +31,7 @@ class E3oncan extends utils.Adapter {
         this.E3CollectInt = [];     // List of collect devices on internal bus
         this.E3CollectExt = [];     // List of collect devices on external bus
         this.E3Uds        = [];     // List of uds devices on external bus
+        this.udsDevices   = {};     // Uds devices-addresses
 
         this.channelExt = null;
         this.channelInt = null;
@@ -120,18 +121,25 @@ class E3oncan extends utils.Adapter {
         // Setup all configured devices for UDS:
         for (const dev of Object.values(this.config.table_uds)) {
             if ( (dev.uds_tree_states) || (dev.uds_json_states) ) {
-                const Uds = new uds.uds(
-                    {   'canID': [Number(dev.uds_dev_addr)],
-                        'stateBase': dev.uds_dev_name,
-                        'device': 'common',
-                        'delay': 0,
-                        'doTree': dev.uds_tree_states,
-                        'doJSON': dev.uds_json_states,
-                        'channel': this.channelExt,
-                        'timeout': 2        // Commuication timeout (s)
-                    });
-                this.E3Uds.push(Uds);
-                await Uds.initStates(this);            }
+                if (!(dev.uds_dev_addr in Object.keys(this.udsDevices))) {
+                    const Uds = new uds.uds(
+                        {   'canID': [Number(dev.uds_dev_addr)],
+                            'stateBase': dev.uds_dev_name,
+                            'device': 'common',
+                            'delay': 0,
+                            'doTree': dev.uds_tree_states,
+                            'doJSON': dev.uds_json_states,
+                            'channel': this.channelExt,
+                            'timeout': 2        // Commuication timeout (s)
+                        });
+                    this.E3Uds.push(Uds);
+                    this.udsDevices[dev.uds_dev_addr] = Uds;
+                    await Uds.initStates(this);
+                    await Uds.addSchedule(this, dev.uds_schedule, dev.uds_dids);
+                } else {
+                    await this.udsDevices[dev.uds_dev_addr].Uds.addSchedule(this,dev.uds_schedule, dev.uds_dids);
+                }
+            }
         }
 
         // Evaluate configuration for internal CAN bus
@@ -180,10 +188,14 @@ class E3oncan extends utils.Adapter {
             this.setState('info.connection', true, true);
         }
 
-        if (this.E3Uds[0]) {
-            await this.E3Uds[0].pushCmnd(this, 'read', [256]);
-            await this.E3Uds[0].pushCmnd(this, 'read', [256,269,2346]);
-            this.E3Uds[0].cmndLoop(this);
+        // Startup UDS communications if configured
+        // ========================================
+
+        for (const dev of Object.values(this.E3Uds)) {
+            if (dev) {
+                dev.cmndLoop(this);
+                dev.schedulesLoop(this);
+            }
         }
 
         this.log.debug('onReady(): All done.');
