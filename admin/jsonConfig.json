@@ -74,18 +74,11 @@
                     "default" : "e380",
                     "newLine": true
                 },
-                "e380_tree": {
+                "e380_active": {
                     "type": "checkbox",
-                    "label": "tree states",
-                    "tooltip": "Show data as tree of obejcts",
+                    "label": "active",
+                    "tooltip": "Activate communication",
                     "default" : true,
-                    "newLine": false
-                },
-                "e380_json": {
-                    "type": "checkbox",
-                    "label": "json states",
-                    "tooltip": "Show data as JSON obejcts",
-                    "default" : false,
                     "newLine": false
                 },
                 "e380_delay": {
@@ -161,23 +154,13 @@
                         },
                         {
                             "type": "checkbox",
-                            "attr": "collect_tree_states",
-                            "width": "10% ",
-                            "title": "tree states",
-                            "tooltip": "Show data as tree of obejcts",
+                            "attr": "collect_active",
+                            "width": "5% ",
+                            "title": "active",
+                            "tooltip": "Activate communication",
                             "filter": false,
                             "sort": false,
                             "default": true
-                        },
-                        {
-                            "type": "checkbox",
-                            "attr": "collect_json_states",
-                            "width": "10% ",
-                            "title": "json states",
-                            "tooltip": "Show data as JSON obejcts",
-                            "filter": false,
-                            "sort": false,
-                            "default": false
                         },
                         {
                             "type": "number",
@@ -259,23 +242,13 @@
                         },
                         {
                             "type": "checkbox",
-                            "attr": "uds_tree_states",
-                            "width": "10% ",
-                            "title": "tree states",
-                            "tooltip": "Show data as tree of obejcts",
+                            "attr": "uds_active",
+                            "width": "5% ",
+                            "title": "active",
+                            "tooltip": "Activate communication",
                             "filter": false,
                             "sort": false,
                             "default": true
-                        },
-                        {
-                            "type": "checkbox",
-                            "attr": "uds_json_states",
-                            "width": "10% ",
-                            "title": "json states",
-                            "tooltip": "Show data as JSON obejcts",
-                            "filter": false,
-                            "sort": false,
-                            "default": false
                         },
                         {
                             "type": "text",
@@ -372,23 +345,13 @@
                         },
                         {
                             "type": "checkbox",
-                            "attr": "collect_tree_states",
-                            "width": "10% ",
-                            "title": "tree states",
-                            "tooltip": "Show data as tree of obejcts",
+                            "attr": "collect_active",
+                            "width": "5% ",
+                            "title": "active",
+                            "tooltip": "Activate communication",
                             "filter": false,
                             "sort": false,
                             "default": true
-                        },
-                        {
-                            "type": "checkbox",
-                            "attr": "collect_json_states",
-                            "width": "10% ",
-                            "title": "json states",
-                            "tooltip": "Show data as JSON obejcts",
-                            "filter": false,
-                            "sort": false,
-                            "default": false
                         },
                         {
                             "type": "number",

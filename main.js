@@ -93,26 +93,24 @@ class E3oncan extends utils.Adapter {
         // ===========================================
 
         // Setup E380 collect:
-        if ( (this.config.e380_tree) || (this.config.e380_json) ) {
+        if (this.config.e380_active) {
             this.e380Collect = new collect.collect(
                 {   'canID': [0x250,0x252,0x254,0x256,0x258,0x25A,0x25C],
                     'stateBase': this.config.e380_name,
                     'device': this.config.e380_name,
                     'delay': this.config.e380_delay,
-                    'doTree': this.config.e380_tree,
-                    'doJSON': this.config.e380_json});
+                    'active': this.config.e380_active});
             await this.e380Collect.initStates(this);
         }
         // Setup all configured devices for collect:
         for (const dev of Object.values(this.config.table_collect_ext)) {
-            if ( (dev.collect_tree_states) || (dev.collect_json_states) ) {
+            if (dev.collect_active) {
                 const Collect = new collect.collect(
                     {   'canID': [Number(dev.collect_canid)],
                         'stateBase': dev.collect_dev_name,
                         'device': 'common',
                         'delay': dev.collect_delay_time,
-                        'doTree': dev.collect_tree_states,
-                        'doJSON': dev.collect_json_states,
+                        'active': dev.collect_active,
                         'channel': this.channelExt});
                 this.E3CollectExt.push(Collect);
                 await Collect.initStates(this);            }
@@ -120,15 +118,14 @@ class E3oncan extends utils.Adapter {
 
         // Setup all configured devices for UDS:
         for (const dev of Object.values(this.config.table_uds)) {
-            if ( (dev.uds_tree_states) || (dev.uds_json_states) ) {
+            if (dev.uds_active) {
                 if (!(Object.keys(this.udsDevices).includes(dev.uds_dev_addr))) {
                     const Uds = new uds.uds(
                         {   'canID': [Number(dev.uds_dev_addr)],
                             'stateBase': dev.uds_dev_name,
                             'device': 'common',
                             'delay': 0,
-                            'doTree': dev.uds_tree_states,
-                            'doJSON': dev.uds_json_states,
+                            'active': dev.uds_active,
                             'channel': this.channelExt,
                             'timeout': 2        // Commuication timeout (s)
                         });
@@ -148,14 +145,13 @@ class E3oncan extends utils.Adapter {
 
         // Setup all configured devices for collect:
         for (const dev of Object.values(this.config.table_collect_int)) {
-            if ( (dev.collect_tree_states) || (dev.collect_json_states) ) {
+            if (dev.collect_active) {
                 const Collect = new collect.collect(
                     {   'canID': [Number(dev.collect_canid)],
                         'stateBase': dev.collect_dev_name,
                         'device': 'common',
                         'delay': dev.collect_delay_time,
-                        'doTree': dev.collect_tree_states,
-                        'doJSON': dev.collect_json_states,
+                        'active': dev.collect_active,
                         'channel': this.channelInt});
                 this.E3CollectInt.push(Collect);
                 await Collect.initStates(this);            }
