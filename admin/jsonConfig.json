@@ -2,6 +2,73 @@
     "i18n": false,
     "type": "tabs",
     "items": {
+        "test_tab": {
+            "type": "panel",
+            "label": "TEST",
+            "items": {
+                "test_header": {
+                    "type": "header",
+                    "text": "Test-Tab",
+                    "size": 2,
+                    "newLine": false
+                },
+                "configTxt1": {
+                    "type": "staticText",
+                    "text": "globalData: ${globalData.test}",
+                    "newLine": true
+                },
+                "configTxt2": {
+                    "type": "staticText",
+                    "text": "data: ${data.test}",
+                    "newLine": false
+                },
+                "SendTo1Txt": {
+                    "type": "staticText",
+                    "text": "sendTo send 2 text filed contents to adapter. Result is filled into third field.",
+                    "newLine": true
+                },
+                "sendTo1a": {
+                    "type": "text",
+                    "label": "Text 1",
+                    "default": "Text #1",
+                    "newLine": true
+                },
+                "sendTo1b": {
+                    "type": "text",
+                    "label": "Text 2",
+                    "default": "Text #2"
+                },
+                "sendTo1": {
+                    "type": "sendTo",
+                    "label": "send It",
+                    "variant": "outlined",
+                    "showProcess": true,
+                    "command": "sendTo1",
+                    "jsonData": "{ \"data1\": \"${data.sendTo1a}\", \"data2\": \"${data.sendTo1b}\" }",
+                    "useNative": true
+                },
+                "sendTo1Ret": {
+                    "type": "text",
+                    "label": "Result",
+                    "readOnly": true,
+                    "sm":4,
+                    "md":4,
+                    "lg":4,
+                    "xs":4,
+                    "newLine": true
+                },
+                "sendToMyDevices": {
+                    "type": "text",
+                    "label": "No MyDevices Info received",
+                    "readOnly": true,
+                    "sm":4,
+                    "md":4,
+                    "lg":4,
+                    "xs":4,
+                    "newLine": true
+                }
+            }
+        },
         "can_adapter": {
             "type": "panel",
             "label": "CAN Adapter",
@@ -23,7 +90,7 @@
                     "type": "checkbox",
                     "label": "Connect to Adapter",
                     "tooltip": "Check, if this adapter shall be used.",
-                    "default" : true,
+                    "default" : false,
                     "newLine": false
                 },        
                 "adapter_int_header": {
@@ -78,7 +145,7 @@
                     "type": "checkbox",
                     "label": "active",
                     "tooltip": "Activate communication",
-                    "default" : true,
+                    "default" : false,
                     "newLine": false
                 },
                 "e380_delay": {
@@ -160,7 +227,7 @@
                             "tooltip": "Activate communication",
                             "filter": false,
                             "sort": false,
-                            "default": true
+                            "default": false
                         },
                         {
                             "type": "number",
@@ -248,7 +315,7 @@
                             "tooltip": "Activate communication",
                             "filter": false,
                             "sort": false,
-                            "default": true
+                            "default": false
                         },
                         {
                             "type": "text",
@@ -263,6 +330,21 @@
                             "validatorNoSaveOnError": true
                         },
                         {
+                            "type": "select",
+                            "attr": "uds_select_dev",
+                            "width": "20% ",
+                            "title": "Select device",
+                            "options": [{"items": "${JSON.stringify(globalData.uds_devices)}"}],
+                            "default": 0,
+                            "newLine": false
+                        },
+                        {
+                            "type": "staticText",
+                            "title": "Select device",
+                            "width": "20% ",
+                            "text": "${globalData.test}"
+                        },
+                                {
                             "type": "text",
                             "attr": "uds_dids",
                             "width": "20% ",
@@ -351,7 +433,7 @@
                             "tooltip": "Activate communication",
                             "filter": false,
                             "sort": false,
-                            "default": true
+                            "default": false
                         },
                         {
                             "type": "number",

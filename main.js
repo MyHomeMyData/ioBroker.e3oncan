@@ -40,9 +40,10 @@ class E3oncan extends utils.Adapter {
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
         // this.on('objectChange', this.onObjectChange.bind(this));
-        // this.on('message', this.onMessage.bind(this));
+        this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
 
+        this.sequence = 0;
     }
     /*
     async onInstall() {
@@ -55,6 +56,20 @@ class E3oncan extends utils.Adapter {
      */
     async onReady() {
         // Initialize your adapter here
+
+        const objSendTo =  {'command':'sendTo1','message':{'data1':'Text #1','data2':'Text #2'},'from':'system.adapter.admin.0','callback':{'message':{'data1':'Text #1','data2':'Text #2'},'id':396,'ack':false,'time':1701637002346},'_id':45130525};
+        this.sendTo('system.adapter.admin.0', 'sendTo1',
+            { native: { sendTo1Ret: `${objSendTo.message.data1} / ${objSendTo.message.data2}`}},
+            objSendTo.callback);
+        const myUdsDevices = [
+            {'label': 'Device 1', 'value': '0x680'},
+            {'label': 'Device 2', 'value': '0x6a1'},
+            {'label': 'Device 3', 'value': '0x6c1'}
+        ];
+        this.sendTo('system.adapter.admin.0', 'this.sendTo',
+            { native: { sendToMyDevices: `${JSON.stringify(myUdsDevices)}`}});
+
+        this.log.debug('sendTo done');
 
         // Reset the connection indicator during startup
         this.setState('info.connection', false, true);
@@ -195,6 +210,7 @@ class E3oncan extends utils.Adapter {
             }
         }
 
+
         this.log.debug('onReady(): All done.');
 
         // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
@@ -300,17 +316,34 @@ class E3oncan extends utils.Adapter {
     //  * Using this method requires "common.messagebox" property to be set to true in io-package.json
     //  * @param {ioBroker.Message} obj
     //  */
-    // onMessage(obj) {
-    //     if (typeof obj === 'object' && obj.message) {
-    //         if (obj.command === 'send') {
-    //             // e.g. send email or pushover or whatever
-    //             this.log.info('send command');
+    onMessage(obj) {
+        this.log.debug(`onMessage() - ${JSON.stringify(obj)}`);
+        if (typeof obj === 'object' && obj.message) {
+            this.log.info(`command received ${obj.command}`);
+            if (obj.command === 'textSendTo1') {
+                // Send response in callback if required
+                this.log.info(`textSendTo1 - ${JSON.stringify(obj)}`);
+                this.sequence++;
+                if (obj.callback) this.sendTo(obj.from, obj.command, `Message received (${this.sequence})`, obj.callback);
+            }
+            if (obj.command === 'sendTo1') {
+                // Send response in callback if required
+                this.log.info(`sendTo1 - ${JSON.stringify(obj)}`);
+                if (obj.callback) this.sendTo(obj.from, obj.command,
+                    { native: { sendTo1Ret: `${obj.message.data1} / ${obj.message.data2}`}},
+                    obj.callback);
+            }
+        }
+        //     if (typeof obj === 'object' && obj.message) {
+        //         if (obj.command === 'send') {
+        //             // e.g. send email or pushover or whatever
+        //             this.log.info('send command');
 
     //             // Send response in callback if required
     //             if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
     //         }
     //     }
-    // }
+    }
 
     onCanMsgExt(msg) {
         if ( (this.e380Collect) && (this.e380Collect.config.canID.includes(msg.id)) ) { this.e380Collect.msgCollect(this, msg); }
