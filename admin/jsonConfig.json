@@ -2,73 +2,6 @@
     "i18n": false,
     "type": "tabs",
     "items": {
-        "test_tab": {
-            "type": "panel",
-            "label": "TEST",
-            "items": {
-                "test_header": {
-                    "type": "header",
-                    "text": "Test-Tab",
-                    "size": 2,
-                    "newLine": false
-                },
-                "configTxt1": {
-                    "type": "staticText",
-                    "text": "globalData: ${globalData.test}",
-                    "newLine": true
-                },
-                "configTxt2": {
-                    "type": "staticText",
-                    "text": "data: ${data.test}",
-                    "newLine": false
-                },
-                "SendTo1Txt": {
-                    "type": "staticText",
-                    "text": "sendTo send 2 text filed contents to adapter. Result is filled into third field.",
-                    "newLine": true
-                },
-                "sendTo1a": {
-                    "type": "text",
-                    "label": "Text 1",
-                    "default": "Text #1",
-                    "newLine": true
-                },
-                "sendTo1b": {
-                    "type": "text",
-                    "label": "Text 2",
-                    "default": "Text #2"
-                },
-                "sendTo1": {
-                    "type": "sendTo",
-                    "label": "send It",
-                    "variant": "outlined",
-                    "showProcess": true,
-                    "command": "sendTo1",
-                    "jsonData": "{ \"data1\": \"${data.sendTo1a}\", \"data2\": \"${data.sendTo1b}\" }",
-                    "useNative": true
-                },
-                "sendTo1Ret": {
-                    "type": "text",
-                    "label": "Result",
-                    "readOnly": true,
-                    "sm":4,
-                    "md":4,
-                    "lg":4,
-                    "xs":4,
-                    "newLine": true
-                },
-                "sendToMyDevices": {
-                    "type": "text",
-                    "label": "No MyDevices Info received",
-                    "readOnly": true,
-                    "sm":4,
-                    "md":4,
-                    "lg":4,
-                    "xs":4,
-                    "newLine": true
-                }
-            }
-        },
         "can_adapter": {
             "type": "panel",
             "label": "CAN Adapter",
@@ -129,23 +62,23 @@
                     "type": "staticText",
                     "text": "WARNING: Values below 2 seconds may cause heavy system load!",
                     "newLine": true,
-                    "hidden": "if (data.can_adapter_ext.e380_delay < 2) { return false; }; return true;",
+                    "hidden": "if (data.e380_delay < 2) { return false; }; return true;",
                     "style": {
                         "color": "red"
                     }
-                },
-                "e380_name": {
-                    "type": "text",
-                    "label": "Name",
-                    "tooltip": "This text will be used as base for object tree",
-                    "default" : "e380",
-                    "newLine": true
                 },
                 "e380_active": {
                     "type": "checkbox",
                     "label": "active",
                     "tooltip": "Activate communication",
                     "default" : false,
+                    "newLine": true
+                },
+                "e380_name": {
+                    "type": "text",
+                    "label": "Name",
+                    "tooltip": "This text will be used as base for object tree",
+                    "default" : "e380",
                     "newLine": false
                 },
                 "e380_delay": {
@@ -208,6 +141,16 @@
                     "showSecondAddAt": 5,
                     "items": [
                         {
+                            "type": "checkbox",
+                            "attr": "collect_active",
+                            "width": "5% ",
+                            "title": "active",
+                            "tooltip": "Activate communication",
+                            "filter": false,
+                            "sort": false,
+                            "default": false
+                        },
+                        {
                             "type": "text",
                             "attr": "collect_dev_name",
                             "width": "15% ",
@@ -218,16 +161,6 @@
                             "default": "vx3",
                             "validator": "const x={};for (const c of globalData.table_collect_ext) {if (x[c.collect_dev_name]==='x') return false; x[c.collect_dev_name]='x';}; return true;",
                             "validatorNoSaveOnError": true
-                        },
-                        {
-                            "type": "checkbox",
-                            "attr": "collect_active",
-                            "width": "5% ",
-                            "title": "active",
-                            "tooltip": "Activate communication",
-                            "filter": false,
-                            "sort": false,
-                            "default": false
                         },
                         {
                             "type": "number",
@@ -266,16 +199,6 @@
                     "text": "Actively request wead- and write-operations to specified data identifiers",
                     "newLine": true
                 },
-                "tableUdsErrDevAddr": {
-                    "type": "staticText",
-                    "text": "ERROR: column 'Device Address' must follow hex pattern e.g. '0x451'",
-                    "newLine": true,
-                    "hidden": "if (!data.table_uds) return true; for (const c of data.table_uds) {if ((String([c.uds_dev_addr]) != String(c.uds_dev_addr.match(/0[xX][0-9a-fA-F]+/)))) return false;}; return true;",
-                    "style": {
-                        "color": "red"
-                    }
-                },
-
                 "table_uds": {
                     "type": "table",
                     "newLine": true,
@@ -285,6 +208,16 @@
                     "label": "",
                     "showSecondAddAt": 5,
                     "items": [
+                        {
+                            "type": "checkbox",
+                            "attr": "uds_active",
+                            "width": "5% ",
+                            "title": "active",
+                            "tooltip": "Activate communication",
+                            "filter": false,
+                            "sort": false,
+                            "default": false
+                        },
                         {
                             "type": "number",
                             "attr": "uds_schedule",
@@ -297,57 +230,20 @@
                             "step": 1,
                             "default": 15
                         },
-                        {
-                            "type": "text",
-                            "attr": "uds_dev_name",
-                            "width": "15% ",
-                            "title": "Name of Device",
-                            "tooltip": "This text will be used as base for object tree",
-                            "filter": false,
-                            "sort": false,
-                            "default": "vitocal"
-                        },
-                        {
-                            "type": "checkbox",
-                            "attr": "uds_active",
-                            "width": "5% ",
-                            "title": "active",
-                            "tooltip": "Activate communication",
-                            "filter": false,
-                            "sort": false,
-                            "default": false
-                        },
-                        {
-                            "type": "text",
-                            "attr": "uds_dev_addr",
-                            "width": "10% ",
-                            "title": "Device Address",
-                            "tooltip": "Device Address to send requests to.",
-                            "filter": false,
-                            "sort": false,
-                            "default": "0x680",
-                            "validator": "return data.uds_dev_addr.match(/0[xX][0-9a-fA-F]+/);",
-                            "validatorNoSaveOnError": true
-                        },
-                        {
-                            "type": "select",
-                            "attr": "uds_select_dev",
-                            "width": "20% ",
+                        {   "type": "selectSendTo",
                             "title": "Select device",
-                            "options": [{"items": "${JSON.stringify(globalData.uds_devices)}"}],
-                            "default": 0,
+                            "command": "getDeviceSelectSendTo",
+                            "attr": "uds_select_dev",
+                            "jsonData": "{${JSON.stringify(data.uds_select_dev)}}",
+                            "width": "15%",
+                            "default": "Select device",
+                            "alsoDependsOn": ["uds_schedule"],
                             "newLine": false
                         },
                         {
-                            "type": "staticText",
-                            "title": "Select device",
-                            "width": "20% ",
-                            "text": "${globalData.test}"
-                        },
-                                {
                             "type": "text",
                             "attr": "uds_dids",
-                            "width": "20% ",
+                            "width": "30% ",
                             "title": "List of DIDs",
                             "tooltip": "Separate by comma! All given DIDs will be requested with specified schedule an ECU address.",
                             "filter": false,
@@ -414,6 +310,16 @@
                     "showSecondAddAt": 5,
                     "items": [
                         {
+                            "type": "checkbox",
+                            "attr": "collect_active",
+                            "width": "5% ",
+                            "title": "active",
+                            "tooltip": "Activate communication",
+                            "filter": false,
+                            "sort": false,
+                            "default": false
+                        },
+                        {
                             "type": "text",
                             "attr": "collect_dev_name",
                             "width": "15% ",
@@ -424,16 +330,6 @@
                             "default": "vitocal",
                             "validator": "const x={};for (const c of globalData.table_collect_int) {if (x[c.collect_dev_name]==='x') return false; x[c.collect_dev_name]='x';}; return true;",
                             "validatorNoSaveOnError": true
-                        },
-                        {
-                            "type": "checkbox",
-                            "attr": "collect_active",
-                            "width": "5% ",
-                            "title": "active",
-                            "tooltip": "Activate communication",
-                            "filter": false,
-                            "sort": false,
-                            "default": false
                         },
                         {
                             "type": "number",

@@ -18,4 +18,5 @@ admin/i18n/*/flat.txt
 
 # helper files
 admin/jsonConfigDemo.json5
+admin/jsonConfig.testTab.json
 README.org.md

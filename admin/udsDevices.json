@@ -1,0 +1,37 @@
+{
+    "0x680": {
+      "tx": "0x680",
+      "dpList": "Open3Edatapoints_680.py",
+      "prop": "HPMUMASTER"
+    },
+    "0x684": {
+      "tx": "0x684",
+      "dpList": "Open3Edatapoints_684.py",
+      "prop": "HMI"
+    },
+    "0x68c": {
+      "tx": "0x68c",
+      "dpList": "Open3Edatapoints_68c.py",
+      "prop": "VCMU"
+    },
+    "0x6a1": {
+      "tx": "0x6a1",
+      "dpList": "Open3Edatapoints_6a1.py",
+      "prop": "EMCUMASTER"
+    },
+    "0x6c3": {
+      "tx": "0x6c3",
+      "dpList": "Open3Edatapoints_6c3.py",
+      "prop": "BACKENDGATEWAY"
+    },
+    "0x6c5": {
+      "tx": "0x6c5",
+      "dpList": "Open3Edatapoints_6c5.py",
+      "prop": "BACKENDGATEWAY"
+    },
+    "0x6cf": {
+      "tx": "0x6cf",
+      "dpList": "Open3Edatapoints_6cf.py",
+      "prop": "EHCU"
+    }
+  }

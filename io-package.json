@@ -60,9 +60,10 @@
         "main": "main.js",
         "icon": "e3oncan.png",
         "enabled": true,
+        "messagebox": true,
         "extIcon": "https://raw.githubusercontent.com/MyHomeMyData/ioBroker.e3oncan/main/admin/e3oncan.png",
         "readme": "https://github.com/MyHomeMyData/ioBroker.e3oncan/blob/main/README.md",
-        "loglevel": "info",
+        "loglevel": "debug",
         "mode": "daemon",
         "type": "iot-systems",
         "compact": true,
@@ -101,6 +102,27 @@
                 "role": "indicator.connected",
                 "name": "Device or service connected",
                 "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        },
+        {
+            "_id": "uds",
+            "type": "folder",
+            "common": {
+                "name": "Data for UDSonCAN communication"
+            },
+            "native": {}
+        },
+        {
+            "_id": "uds.devices",
+            "type": "state",
+            "common": {
+                "role": "state",
+                "name": "List of devices addressable via UDSonCAN",
+                "type": "json",
                 "read": true,
                 "write": false,
                 "def": false
