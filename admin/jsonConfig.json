@@ -48,6 +48,67 @@
                 }        
             }
         },
+        "tab_devices": {
+            "type": "panel",
+            "label": "List of devices",
+            "items": {
+                "tableDevHdr": {
+                    "type": "header",
+                    "text": "List of available devices",
+                    "size": 2
+                },
+
+                "introTableDevTxt": {
+                    "type": "staticText",
+                    "text": "Edit last column to set name of state for the device. Press done when ready.",
+                    "newLine": true
+                },
+
+                "tableDev": {
+                    "type": "table",
+                    "defaultSendTo": "tableDevGetDevices",
+                    "jsonData": "${JSON.stringify(data.tableDev)}",
+                    "button": "Done",
+                    "newLine": true,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "label": "List of available devices",
+                    "noDelete": true,
+                    "items": [
+                        {
+                            "type": "text",
+                            "attr": "tableDevName",
+                            "width": "15% ",
+                            "title": "Device Name (Viessmann)",
+                            "tooltip": "ECU name (fixed)",
+                            "filter": false,
+                            "sort": false,
+                            "readOnly": true
+                        },
+                        {
+                            "type": "text",
+                            "attr": "tableDevAddr",
+                            "width": "10% ",
+                            "title": "Device Address",
+                            "tooltip": "ECU address (fixed)",
+                            "filter": false,
+                            "sort": false,
+                            "readOnly": true
+                        },
+                        {
+                            "type": "text",
+                            "attr": "tableDevMyName",
+                            "width": "15% ",
+                            "title": "Device state ame",
+                            "tooltip": "Device name in object tree",
+                            "filter": false,
+                            "sort": false
+                        }
+                    ]
+                }
+            }
+        },
         "can_adapter_ext": {
             "type": "panel",
             "label": "Assignments to External CAN Adapter",

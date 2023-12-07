@@ -31,12 +31,13 @@ class E3oncan extends utils.Adapter {
         this.E3CollectInt = [];     // List of collect devices on internal bus
         this.E3CollectExt = [];     // List of collect devices on external bus
         this.E3Uds        = [];     // List of uds devices on external bus
-        this.udsDevices   = {};     // Uds devices-addresses
 
         this.channelExt    = null;
         this.channelInt    = null;
         this.udsDevicesId  = 'uds.devices';
         this.udsDevices    = {};
+
+        this.updateInterval = null;
 
         this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
@@ -75,12 +76,23 @@ class E3oncan extends utils.Adapter {
         this.log.debug('sendTo done');
         */
 
+        this.config.interval = 60;
+        if (this.config.interval < 5) {
+            this.log.info('Set interval to minimum 5s');
+            this.config.interval = 5;
+        }
+
+        /*
+        this.updateInterval = setInterval(async () => {
+            await this.updateDevices();
+        }, this.config.interval * 1 * 1000);
+        */
+
         // Reset the connection indicator during startup
         this.setState('info.connection', false, true);
-        this.log.debug(JSON.stringify(this.config));
 
         const dev = await this.getStateAsync(this.udsDevicesId);
-        if (dev) this.udsDevices = JSON.parse(dev.val); else this.devices = {};
+        if (dev) this.udsDevices = JSON.parse(dev.val); else this.udsDevices = {};
         this.log.debug(JSON.stringify(this.udsDevices));
 
         codecs.rawmode.setOpMode(false);
@@ -255,6 +267,10 @@ class E3oncan extends utils.Adapter {
         //this.log.info('check group user admin group admin: ' + result);
     }
 
+    updateDevices() {
+        this.log.debug('updateDevices()');
+    }
+
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
      * @param {() => void} callback
@@ -269,6 +285,7 @@ class E3oncan extends utils.Adapter {
                 this.channelInt.stop();
                 this.log.info('CAN-Adapter '+this.config.adapter_int_name+' stopped.');
             }
+            this.updateInterval && clearInterval(this.updateInterval);
             // Here you must clear all timeouts or intervals that may still be active
             // clearTimeout(timeout1);
             // clearTimeout(timeout2);
@@ -376,6 +393,42 @@ class E3oncan extends utils.Adapter {
         this.log.info(`command received ${obj.command}`);
         if (typeof obj === 'object' && obj.message) {
             this.log.info(`command received ${obj.command}`);
+
+            if (obj.command === 'tableDevGetDevices') {
+                if (obj.callback) {
+                    this.log.info(`Received data - ${JSON.stringify(obj)} - message.length: ${obj.message.length}`);
+                    const devTable = [
+                        {
+                            'tableDevName': 'HPMUMASTER',
+                            'tableDevAddr': '0x680',
+                            'tableDevMyName': 'HPMUMASTER'
+                        },
+                        {
+                            'tableDevName': 'EMCUMASTER',
+                            'tableDevAddr': '0x6a1',
+                            'tableDevMyName': 'EMCUMASTER'
+                        },
+                        {
+                            'tableDevName': 'VCMU',
+                            'tableDevAddr': '0x68c',
+                            'tableDevMyName': 'VCMU'
+                        }
+                    ];
+                    let sendTable = {};
+                    if (obj.message.length == 0) {
+                        sendTable = devTable;
+                    } else {
+                        sendTable = obj.message;
+                    }
+                    if ( (sendTable.length > 0) && (sendTable[sendTable.length-1].tableDevMyName == 'delete') ) {
+                        sendTable.pop();
+                    }
+                    this.sendTo(obj.from, obj.command, sendTable, obj.callback);
+                } else {
+                    this.sendTo(obj.from, obj.command, [], obj.callback);
+                }
+            }
+
             const myUdsDevices = [];
             for (const [key, value] of Object.entries(this.udsDevices)) {
                 myUdsDevices.push({'label': value.prop, 'value': key});
