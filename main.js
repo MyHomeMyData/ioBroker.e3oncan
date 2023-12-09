@@ -34,12 +34,13 @@ class E3oncan extends utils.Adapter {
 
         this.channelExt    = null;
         this.channelInt    = null;
-        this.udsDevicesId  = 'uds.devices';
-        this.udsDevices    = {};
+        this.udsAgents    = {};
+        this.allUdsDevices    = [];
+        this.myUdsDevices = [];
 
         this.updateInterval = null;
 
-        this.on('install', this.onInstall.bind(this));
+        //this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
         this.on('objectChange', this.onObjectChange.bind(this));
@@ -48,33 +49,20 @@ class E3oncan extends utils.Adapter {
 
         this.sequence = 0;
     }
-    /*
+
     async onInstall() {
-        this.log.info('onInstall()');
-        this.log.info(JSON.stringify(this.config));
+        this.log.debug('onInstall()');
+        this.log.debug(JSON.stringify(this.config));
     }
-    */
+
     /**
      * Is called when databases are connected and adapter received configuration.
      */
     async onReady() {
         // Initialize your adapter here
 
-        /*
-        const objSendTo =  {'command':'sendTo1','message':{'data1':'Text #1','data2':'Text  #2'},'from':'system.adapter.admin.0','callback':{'message':{'data1':'Text #1','data2':'Text  #2'},'id':9,'ack':false,'time':1701682675561},'_id':49695939};
-        this.sendTo('system.adapter.admin.0', 'sendTo1',
-            { native: { sendTo1Ret: `${objSendTo.message.data1} / ${objSendTo.message.data2}`}},
-            objSendTo.callback);
-        const myUdsDevices = [
-            {'label': 'Device 1', 'value': '0x680'},
-            {'label': 'Device 2', 'value': '0x6a1'},
-            {'label': 'Device 3', 'value': '0x6c1'}
-        ];
-        this.sendTo('system.adapter.admin.0', 'this.sendTo',
-            { native: { sendToMyDevices: `${JSON.stringify(myUdsDevices)}`}});
-
-        this.log.debug('sendTo done');
-        */
+        this.log.debug('onReady(): Starting.');
+        this.log.debug(JSON.stringify(this.config));
 
         this.config.interval = 60;
         if (this.config.interval < 5) {
@@ -91,106 +79,68 @@ class E3oncan extends utils.Adapter {
         // Reset the connection indicator during startup
         this.setState('info.connection', false, true);
 
-        const dev = await this.getStateAsync(this.udsDevicesId);
-        if (dev) this.udsDevices = JSON.parse(dev.val); else this.udsDevices = {};
-        this.log.debug(JSON.stringify(this.udsDevices));
-
         codecs.rawmode.setOpMode(false);
 
         // Setup external CAN bus if required
         // ==================================
 
-        if (this.config.adapter_ext_activated) {
-            try {
-                this.channelExt = can.createRawChannel(this.config.adapter_ext_name, true);
-                this.channelExt.addListener('onMessage', this.onCanMsgExt, this);
-            } catch (e) {
-                this.log.error(JSON.stringify(e));
-                this.channelExt = null;
-            }
+        if (this.config.canExtActivated) {
+            this.channelExt = await this.connectToCan(this.channelExt, this.config.canExtName, this.onCanMsgExt);
         }
 
         // Setup internal CAN bus if required
         // ==================================
 
-        if (this.config.adapter_int_activated) {
-            try {
-                this.channelInt = can.createRawChannel(this.config.adapter_int_name, true);
-                this.channelInt.addListener('onMessage', this.onCanMsgInt, this);
-            } catch (e) {
-                this.log.error(JSON.stringify(e));
-                this.channelInt = null;
-            }
+        if (this.config.canIntActivated) {
+            this.channelInt = await this.connectToCan(this.channelInt, this.config.canIntName, this.onCanMsgInt);
         }
 
         // Evaluate configuration for external CAN bus
         // ===========================================
 
         // Setup E380 collect:
-        if (this.config.e380_active) {
+        if (this.config.e380Active) {
             this.e380Collect = new collect.collect(
                 {   'canID': [0x250,0x252,0x254,0x256,0x258,0x25A,0x25C],
-                    'stateBase': this.config.e380_name,
-                    'device': this.config.e380_name,
-                    'delay': this.config.e380_delay,
-                    'active': this.config.e380_active});
+                    'stateBase': this.config.e380Name,
+                    'device': this.config.e380Name,
+                    'delay': this.config.e380Delay,
+                    'active': this.config.e380Active});
             await this.e380Collect.initStates(this);
         }
         // Setup all configured devices for collect:
-        if (this.config.table_collect_ext.length > 0) {
-            for (const dev of Object.values(this.config.table_collect_ext)) {
-                if (dev.collect_active) {
+        if ( (this.config.tableCollectCanExt) && (this.config.tableCollectCanExt.length > 0) ) {
+            for (const agent of Object.values(this.config.tableCollectCanExt)) {
+                if (agent.collectActive) {
                     const Collect = new collect.collect(
-                        {   'canID': [Number(dev.collect_canid)],
-                            'stateBase': dev.collect_dev_name,
+                        {   'canID': [Number(agent.collectCanId)],
+                            'stateBase': agent.collectDevName,
                             'device': 'common',
-                            'delay': dev.collect_delay_time,
-                            'active': dev.collect_active,
+                            'delay': agent.collectDelayTime,
+                            'active': agent.collectActive,
                             'channel': this.channelExt});
                     this.E3CollectExt.push(Collect);
-                    await Collect.initStates(this);            }
-            }
-        }
-
-        // Setup all configured devices for UDS:
-        if (this.config.table_uds.length > 0) {
-            for (const dev of Object.values(this.config.table_uds)) {
-                if (dev.uds_active) {
-                    if (!(Object.keys(this.udsDevices).includes(dev.uds_dev_addr))) {
-                        const Uds = new uds.uds(
-                            {   'canID': [Number(dev.uds_dev_addr)],
-                                'stateBase': dev.uds_dev_name,
-                                'device': 'common',
-                                'delay': 0,
-                                'active': dev.uds_active,
-                                'channel': this.channelExt,
-                                'timeout': 2        // Commuication timeout (s)
-                            });
-                        this.E3Uds.push(Uds);
-                        this.log.debug('New UDS device on '+String(dev.uds_dev_addr));
-                        this.udsDevices[dev.uds_dev_addr] = Uds;
-                        await Uds.initStates(this);
-                        await Uds.addSchedule(this, dev.uds_schedule, dev.uds_dids);
-                    } else {
-                        await this.udsDevices[dev.uds_dev_addr].addSchedule(this,dev.uds_schedule, dev.uds_dids);
-                    }
+                    await Collect.initStates(this);
                 }
             }
         }
+
+        // Initial setup all configured devices for UDS:
+        await this.setupUdsAgents();
 
         // Evaluate configuration for internal CAN bus
         // ===========================================
 
         // Setup all configured devices for collect:
-        if (this.config.table_collect_int.length > 0) {
-            for (const dev of Object.values(this.config.table_collect_int)) {
-                if (dev.collect_active) {
+        if ( (this.config.tableCollectCanInt) && (this.config.tableCollectCanInt.length > 0) ) {
+            for (const dev of Object.values(this.config.tableCollectCanInt)) {
+                if (dev.collectActive) {
                     const Collect = new collect.collect(
-                        {   'canID': [Number(dev.collect_canid)],
-                            'stateBase': dev.collect_dev_name,
+                        {   'canID': [Number(dev.collectCanId)],
+                            'stateBase': dev.collectDevName,
                             'device': 'common',
-                            'delay': dev.collect_delay_time,
-                            'active': dev.collect_active,
+                            'delay': dev.collectDelayTime,
+                            'active': dev.collectActive,
                             'channel': this.channelInt});
                     this.E3CollectInt.push(Collect);
                     await Collect.initStates(this);            }
@@ -208,22 +158,6 @@ class E3oncan extends utils.Adapter {
         Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
         */
 
-        // Startup external CAN bus if configured
-        // ======================================
-
-        if (this.channelExt) {
-            await this.channelExt.start();
-            this.setState('info.connection', true, true);
-        }
-
-        // Startup internal CAN bus if configured
-        // ======================================
-
-        if (this.channelInt) {
-            await this.channelInt.start();
-            this.setState('info.connection', true, true);
-        }
-
         // Startup UDS communications if configured
         // ========================================
 
@@ -236,7 +170,7 @@ class E3oncan extends utils.Adapter {
 
         this.subscribeObjects('*');
 
-        this.log.debug('onReady(): All done.');
+        this.log.debug('onReady(): Done.');
 
         // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
         // this.subscribeStates('testVariable');
@@ -267,6 +201,100 @@ class E3oncan extends utils.Adapter {
         //this.log.info('check group user admin group admin: ' + result);
     }
 
+    // Setup CAN busses
+
+    async connectToCan(channel, name, onMsg) {
+        if (!channel) {
+            try {
+                channel = can.createRawChannel(name, true);
+                await channel.addListener('onMessage', onMsg, this);
+                await channel.start();
+                this.setState('info.connection', true, true);
+                this.log.debug('CAN-Adapter '+name+' successfully started.');
+            } catch (e) {
+                this.log.error(`Could not connect to CAN "${name}" - ${JSON.stringify(e)}`);
+                channel = null;
+            }
+        }
+        return(channel);
+    }
+
+    async disconnectFromCan(channel, name) {
+        if (channel) {
+            try {
+                await channel.stop();
+                this.log.debug('CAN-Adapter '+name+' stopped.');
+            } catch (e) {
+                this.log.error(`Could not disconnect from CAN "${name}" - ${JSON.stringify(e)}`);
+                channel = null;
+            }
+        }
+        return(channel);
+    }
+
+    // Setup of agents for collecting data and for communication via UDS
+    // Called during initial startup and on changes of configuration
+
+    async setupUdsAgents() {
+        if ( (this.config.tableUdsSchedules) && (this.config.tableUdsSchedules.length > 0) ) {
+            for (const agent of Object.values(this.config.tableUdsSchedules)) {
+                if (agent.udsScheduleActive) {
+                    if (!(Object.keys(this.udsAgents).includes(agent.udsSelectDevAddr))) {
+                        const devInfo = this.config.tableUdsDevices.filter(item => item.devAddr == agent.udsSelectDevAddr);
+                        if (devInfo.length > 0) {
+                            const dev_name = devInfo[0].devMyName;
+                            await this.log.debug('New UDS device on '+String(agent.udsSelectDevAddr)+' with name '+String(dev_name));
+                            const udsAgent = new uds.uds(
+                                {   'canID': [Number(agent.udsSelectDevAddr)],
+                                    'stateBase': dev_name,
+                                    'device': 'common',
+                                    'delay': 0,
+                                    'active': agent.udsScheduleActive,
+                                    'channel': this.channelExt,
+                                    'timeout': 2        // Commuication timeout (s)
+                                });
+                            await this.E3Uds.push(udsAgent);
+                            this.udsAgents[agent.udsSelectDevAddr] = udsAgent;
+                            await udsAgent.initStates(this);
+                            await udsAgent.addSchedule(this, agent.udsSchedule, agent.udsScheduleDids);
+                            await this.log.debug('New Schedule ('+String(agent.udsSchedule)+'s) UDS device on '+String(agent.udsSelectDevAddr));
+                        } else {
+                            this.log.error('Could not setup UDS device on address '+String(agent.udsSelectDevAddr)+' due to missing device name.');
+                        }
+                    } else {
+                        await this.udsAgents[agent.udsSelectDevAddr].addSchedule(this,agent.udsSchedule, agent.udsScheduleDids);
+                        await this.log.debug('New Schedule ('+String(agent.udsSchedule)+'s) UDS device on '+String(agent.udsSelectDevAddr));
+                    }
+                }
+            }
+        }
+    }
+
+    scanUdsDevices() {
+        this.log.debug('SCAN of UDS devices - start');
+        this.log.debug('SCAN of UDS devices - done');
+        return([
+            {
+                'devName': 'HPMUMASTER',
+                'devMyName': 'HPMUMASTER',
+                'devAddr': '0x680',
+                'collectCanId': '0x693'
+            },
+            {
+                'devName': 'EMCUMASTER',
+                'devMyName': 'EMCUMASTER',
+                'devAddr': '0x6a1',
+                'collectCanId': '0x451'
+            },
+            {
+                'devName': 'VCMU',
+                'devMyName': 'VCMU',
+                'devAddr': '0x68c',
+                'collectCanId': ''
+            }
+        ]);
+    }
+
     updateDevices() {
         this.log.debug('updateDevices()');
     }
@@ -277,14 +305,8 @@ class E3oncan extends utils.Adapter {
      */
     onUnload(callback) {
         try {
-            if (this.channelExt) {
-                this.channelExt.stop();
-                this.log.info('CAN-Adapter '+this.config.adapter_ext_name+' stopped.');
-            }
-            if (this.channelInt) {
-                this.channelInt.stop();
-                this.log.info('CAN-Adapter '+this.config.adapter_int_name+' stopped.');
-            }
+            this.disconnectFromCan(this.channelExt,this.config.canExtName);
+            this.disconnectFromCan(this.channelInt,this.config.canIntName);
             this.updateInterval && clearInterval(this.updateInterval);
             // Here you must clear all timeouts or intervals that may still be active
             // clearTimeout(timeout1);
@@ -296,48 +318,6 @@ class E3oncan extends utils.Adapter {
         } catch (e) {
             callback();
         }
-    }
-
-    onInstall() {
-        this.log.debug('onIstall()');
-        const udsDevices = {
-            '0x680': {
-                'tx': '0x680',
-                'dpList': 'Open3Edatapoints_680.py',
-                'prop': 'HPMUMASTER'
-            },
-            '0x684': {
-                'tx': '0x684',
-                'dpList': 'Open3Edatapoints_684.py',
-                'prop': 'HMI'
-            },
-            '0x68c': {
-                'tx': '0x68c',
-                'dpList': 'Open3Edatapoints_68c.py',
-                'prop': 'VCMU'
-            },
-            '0x6a1': {
-                'tx': '0x6a1',
-                'dpList': 'Open3Edatapoints_6a1.py',
-                'prop': 'EMCUMASTER'
-            },
-            '0x6c3': {
-                'tx': '0x6c3',
-                'dpList': 'Open3Edatapoints_6c3.py',
-                'prop': 'BACKENDGATEWAY'
-            },
-            '0x6c5': {
-                'tx': '0x6c5',
-                'dpList': 'Open3Edatapoints_6c5.py',
-                'prop': 'BACKENDGATEWAY'
-            },
-            '0x6cf': {
-                'tx': '0x6cf',
-                'dpList': 'Open3Edatapoints_6cf.py',
-                'prop': 'EHCU'
-            }
-        };
-        this.setState(this.udsDevicesId, JSON.stringify(udsDevices),true);
     }
 
     // If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
@@ -373,14 +353,18 @@ class E3oncan extends utils.Adapter {
             this.log.info(`state ${id} deleted`);
         }
         */
-        for (const dev of Object.values(this.E3Uds)) {
-            if ( (dev) && (id.includes(dev.timeoutId)) ) {
-                dev.onTimeoutChange(this, state);
+        for (const agent of Object.values(this.E3Uds)) {
+            if ( (agent) && (id.includes(agent.timeoutId)) ) {
+                agent.onTimeoutChange(this, state);
             }
-            if ( (dev) && (id.includes(dev.userDidsToReadId)) ) {
-                dev.onUserReadDidsChange(this, state);
+            if ( (agent) && (id.includes(agent.userDidsToReadId)) ) {
+                agent.onUserReadDidsChange(this, state);
             }
         }
+    }
+
+    sleep(milliseconds) {
+        return new Promise(resolve => setTimeout(resolve, milliseconds));
     }
 
     // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
@@ -389,95 +373,77 @@ class E3oncan extends utils.Adapter {
     //  * Using this method requires "common.messagebox" property to be set to true in io-package.json
     //  * @param {ioBroker.Message} obj
     //  */
-    onMessage(obj) {
-        this.log.info(`command received ${obj.command}`);
+    async onMessage(obj) {
         if (typeof obj === 'object' && obj.message) {
-            this.log.info(`command received ${obj.command}`);
+            this.log.debug(`command received ${obj.command}`);
 
-            if (obj.command === 'tableDevGetDevices') {
+            if (obj.command === 'getUdsDevices') {
                 if (obj.callback) {
-                    this.log.info(`Received data - ${JSON.stringify(obj)} - message.length: ${obj.message.length}`);
-                    const devTable = [
-                        {
-                            'tableDevName': 'HPMUMASTER',
-                            'tableDevAddr': '0x680',
-                            'tableDevMyName': 'HPMUMASTER'
-                        },
-                        {
-                            'tableDevName': 'EMCUMASTER',
-                            'tableDevAddr': '0x6a1',
-                            'tableDevMyName': 'EMCUMASTER'
-                        },
-                        {
-                            'tableDevName': 'VCMU',
-                            'tableDevAddr': '0x68c',
-                            'tableDevMyName': 'VCMU'
-                        }
-                    ];
-                    let sendTable = {};
-                    if (obj.message.length == 0) {
-                        sendTable = devTable;
+                    this.log.debug(`Received data - ${JSON.stringify(obj)}`);
+                    if ( (obj.message.length == 0) && (obj.message.length == 0) ) {
+                        this.udsDevices = this.scanUdsDevices();
+                        await this.sleep(2000);
+                        this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
                     } else {
-                        sendTable = obj.message;
+                        this.sendTo(obj.from, obj.command, obj.message, obj.callback);
                     }
-                    if ( (sendTable.length > 0) && (sendTable[sendTable.length-1].tableDevMyName == 'delete') ) {
-                        sendTable.pop();
-                    }
-                    this.sendTo(obj.from, obj.command, sendTable, obj.callback);
                 } else {
                     this.sendTo(obj.from, obj.command, [], obj.callback);
                 }
             }
 
-            const myUdsDevices = [];
-            for (const [key, value] of Object.entries(this.udsDevices)) {
-                myUdsDevices.push({'label': value.prop, 'value': key});
-            }
-            if (obj.command === 'getDeviceSelectSendTo') {
+            if (obj.command === 'getUdsDeviceSelect') {
                 if (obj.callback) {
-                    this.log.info(`Received data - ${JSON.stringify(obj)}`);
-                    if (myUdsDevices) {
-                        if ( (this.config.table_uds.length > 0) && (this.config.table_uds[0].schedule == 13) ) {
-                            this.log.info(`config: ${JSON.stringify(this.config)}`);
+                    this.log.debug(`Received data - ${JSON.stringify(obj)}`);
+                    if (Array.isArray(obj.message) ) {
+                        const selUdsDevices = obj.message.map(item => ({label: item.devMyName, value: item.devAddr}));
+                        this.log.debug(`Data to send - ${JSON.stringify(selUdsDevices)}`);
+                        if (selUdsDevices) {
+                            this.sendTo(obj.from, obj.command, selUdsDevices, obj.callback);
                         }
-                        this.log.info(`config.table_uds: ${JSON.stringify(this.config.table_uds)}`);
-                        //this.log.info(`Sent data: ${JSON.stringify(myUdsDevices.devs.map(item => ({label: item.label, value: item.value})))}`);
-                        this.sendTo(obj.from, obj.command, myUdsDevices.map(item => ({label: item.label, value: item.value})), obj.callback);
+                    } else {
+                        this.sendTo(obj.from, obj.command, [{label: 'Not available', value: ''}], obj.callback);
                     }
                 } else {
-                    this.sendTo(obj.from, obj.command, [{label: 'Not available', value: '', myname: ''}], obj.callback);
+                    this.sendTo(obj.from, obj.command, [{label: 'Not available', value: ''}], obj.callback);
                 }
             }
-        }
-        if (obj.command === 'getDeviceSelectSendToStatic') {
-            const myUdsDevices = {'devs': [
-                {'label': 'Device 1', 'value': '0x680'},
-                {'label': 'Device 2', 'value': '0x6a1'},
-                {'label': 'Device 3', 'value': '0x6c8'}
-            ]};
-            if (obj.callback) {
-                this.log.info(`Received data - ${JSON.stringify(obj)}`);
-                if (myUdsDevices) {
-                    if (this.config.table_uds[0].schedule == 13) {
-                        this.log.info(`config: ${JSON.stringify(this.config)}`);
-                    }
-                    this.log.info(`config.table_uds: ${JSON.stringify(this.config.table_uds)}`);
-                    //this.log.info(`Sent data: ${JSON.stringify(myUdsDevices.devs.map(item => ({label: item.label, value: item.value})))}`);
-                    this.sendTo(obj.from, obj.command, myUdsDevices.devs.map(item => ({label: item.label, value: item.value})), obj.callback);
-                }
-            } else {
-                this.sendTo(obj.from, obj.command, [{label: 'Not available', value: '', myname: ''}], obj.callback);
-            }
-        }
-        //     if (typeof obj === 'object' && obj.message) {
-        //         if (obj.command === 'send') {
-        //             // e.g. send email or pushover or whatever
-        //             this.log.info('send command');
 
-    //             // Send response in callback if required
-    //             if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-    //         }
-    //     }
+            if (obj.command === 'getExtColDeviceSelect') {
+                if (obj.callback) {
+                    this.log.debug(`Received data - ${JSON.stringify(obj)}`);
+                    if (Array.isArray(obj.message) ) {
+                        const selUdsDevices = obj.message.filter(item => item.collectCanId != '').map(item => ({label: item.devMyName, value: item.collectCanId}));
+                        this.log.debug(`Data to send - ${JSON.stringify(selUdsDevices)}`);
+                        if (selUdsDevices) {
+                            this.sendTo(obj.from, obj.command, selUdsDevices, obj.callback);
+                        }
+                    } else {
+                        this.sendTo(obj.from, obj.command, [{label: 'Not available', value: ''}], obj.callback);
+                    }
+                } else {
+                    this.sendTo(obj.from, obj.command, [{label: 'Not available', value: ''}], obj.callback);
+                }
+            }
+
+            if (obj.command === 'getIntColDeviceSelect') {
+                if (obj.callback) {
+                    this.log.debug(`Received data - ${JSON.stringify(obj)}`);
+                    if (Array.isArray(obj.message) ) {
+                        const selUdsDevices = obj.message.filter(item => item.collectCanId != '').map(item => ({label: item.devMyName, value: item.collectCanId}));
+                        this.log.debug(`Data to send - ${JSON.stringify(selUdsDevices)}`);
+                        if (selUdsDevices) {
+                            this.sendTo(obj.from, obj.command, selUdsDevices, obj.callback);
+                        }
+                    } else {
+                        this.sendTo(obj.from, obj.command, [{label: 'Not available', value: ''}], obj.callback);
+                    }
+                } else {
+                    this.sendTo(obj.from, obj.command, [{label: 'Not available', value: ''}], obj.callback);
+                }
+            }
+
+        }
     }
 
     onCanMsgExt(msg) {

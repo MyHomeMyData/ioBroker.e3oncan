@@ -84,7 +84,7 @@
         ]
     },
     "native": {
-        "tableDev": [
+        "tableUdsDevices": [
         ]
     },
     "objects": [],
@@ -115,19 +115,6 @@
             "type": "folder",
             "common": {
                 "name": "Data for UDSonCAN communication"
-            },
-            "native": {}
-        },
-        {
-            "_id": "uds.devices",
-            "type": "state",
-            "common": {
-                "role": "state",
-                "name": "List of devices addressable via UDSonCAN",
-                "type": "json",
-                "read": true,
-                "write": false,
-                "def": false
             },
             "native": {}
         }
