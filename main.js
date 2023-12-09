@@ -30,7 +30,7 @@ class E3oncan extends utils.Adapter {
         this.e380Collect = null;    // E380 alway is assigned to external bus
         this.E3CollectInt = [];     // List of collect devices on internal bus
         this.E3CollectExt = [];     // List of collect devices on external bus
-        this.E3Uds        = [];     // List of uds devices on external bus
+        this.E3Uds        = {};     // Dict of uds devices on external bus
 
         this.channelExt    = null;
         this.channelInt    = null;
@@ -40,14 +40,12 @@ class E3oncan extends utils.Adapter {
 
         this.updateInterval = null;
 
-        //this.on('install', this.onInstall.bind(this));
+        this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
         this.on('objectChange', this.onObjectChange.bind(this));
         this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
-
-        this.sequence = 0;
     }
 
     async onInstall() {
@@ -63,12 +61,6 @@ class E3oncan extends utils.Adapter {
 
         this.log.debug('onReady(): Starting.');
         this.log.debug(JSON.stringify(this.config));
-
-        this.config.interval = 60;
-        if (this.config.interval < 5) {
-            this.log.info('Set interval to minimum 5s');
-            this.config.interval = 5;
-        }
 
         /*
         this.updateInterval = setInterval(async () => {
@@ -161,14 +153,54 @@ class E3oncan extends utils.Adapter {
         // Startup UDS communications if configured
         // ========================================
 
-        for (const dev of Object.values(this.E3Uds)) {
-            if (dev) {
-                dev.cmndLoop(this);
-                dev.schedulesLoop(this);
+        for (const agent of Object.values(this.E3Uds)) {
+            if (agent) {
+                agent.cmndLoop(this);
+                agent.schedulesLoop(this);
             }
         }
 
         this.subscribeObjects('*');
+
+
+        const udsAgent1 = new uds.uds(
+            {   'canID': Number(0x680),
+                'stateBase': 'udsScanAddr',
+                'device': 'common',
+                'delay': 0,
+                'active': true,
+                'channel': this.channelExt,
+                'timeout': 1500     // Commuication timeout (ms)
+            });
+        await udsAgent1.initStates(this, false);
+        await this.registerUdsAgent(udsAgent1);
+
+        await this.log.debug('Start checkDeviceAddress()');
+
+        const udsAgent2 = new uds.uds(
+            {   'canID': Number(0x6a1),
+                'stateBase': 'udsScanAddr',
+                'device': 'common',
+                'delay': 0,
+                'active': true,
+                'channel': this.channelExt,
+                'timeout': 1500     // Commuication timeout (ms)
+            });
+        await udsAgent2.initStates(this, false);
+        await this.registerUdsAgent(udsAgent2);
+
+        await this.log.debug('Start checkDeviceAddress()');
+        udsAgent1.checkDeviceAddress(this, 256, 2000, 2);
+
+        await udsAgent2.checkDeviceAddress(this, 256, 2000, 2);
+
+        await this.sleep(2*2000);
+        if (udsAgent1.storage.udsScanResult) {
+            this.log.debug(String(udsAgent1.canIDhex)+': '+udsAgent1.storage.udsScanResult.res.DeviceProperty.Text);
+        }
+        if (udsAgent2.storage.udsScanResult) {
+            this.log.debug(String(udsAgent2.canIDhex)+': '+udsAgent2.storage.udsScanResult.res.DeviceProperty.Text);
+        }
 
         this.log.debug('onReady(): Done.');
 
@@ -235,6 +267,11 @@ class E3oncan extends utils.Adapter {
     // Setup of agents for collecting data and for communication via UDS
     // Called during initial startup and on changes of configuration
 
+    async registerUdsAgent(agent) {
+        const rxAddr = agent.config.canID + 0x10;
+        this.E3Uds[rxAddr] = agent;
+    }
+
     async setupUdsAgents() {
         if ( (this.config.tableUdsSchedules) && (this.config.tableUdsSchedules.length > 0) ) {
             for (const agent of Object.values(this.config.tableUdsSchedules)) {
@@ -251,11 +288,11 @@ class E3oncan extends utils.Adapter {
                                     'delay': 0,
                                     'active': agent.udsScheduleActive,
                                     'channel': this.channelExt,
-                                    'timeout': 2        // Commuication timeout (s)
+                                    'timeout': 1500     // Commuication timeout (ms)
                                 });
-                            await this.E3Uds.push(udsAgent);
+                            await this.registerUdsAgent(udsAgent);
                             this.udsAgents[agent.udsSelectDevAddr] = udsAgent;
-                            await udsAgent.initStates(this);
+                            await udsAgent.initStates(this, true);
                             await udsAgent.addSchedule(this, agent.udsSchedule, agent.udsScheduleDids);
                             await this.log.debug('New Schedule ('+String(agent.udsSchedule)+'s) UDS device on '+String(agent.udsSelectDevAddr));
                         } else {
@@ -453,11 +490,7 @@ class E3oncan extends utils.Adapter {
                 dev.msgCollect(this, msg);
             }
         }
-        for (const dev of Object.values(this.E3Uds)) {
-            if ( (dev) && (dev.readByDidProt.idRx == msg.id) ) {
-                dev.msgUds(this, msg);
-            }
-        }
+        if (this.E3Uds[msg.id]) this.E3Uds[msg.id].msgUds(this, msg);
     }
 
     onCanMsgInt(msg) {
