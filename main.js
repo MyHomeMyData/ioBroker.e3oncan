@@ -28,15 +28,27 @@ class E3oncan extends utils.Adapter {
         });
 
         this.e380Collect = null;    // E380 alway is assigned to external bus
-        this.E3CollectInt = [];     // List of collect devices on internal bus
-        this.E3CollectExt = [];     // List of collect devices on external bus
+        this.E3CollectInt = {};     // Dict of collect devices on internal bus
+        this.E3CollectExt = {};     // Dict of collect devices on external bus
         this.E3Uds        = {};     // Dict of uds devices on external bus
 
-        this.channelExt    = null;
-        this.channelInt    = null;
-        this.udsAgents    = {};
-        this.allUdsDevices    = [];
-        this.myUdsDevices = [];
+        this.channelExt       = null;
+        this.channelInt       = null;
+        this.udsAgents        = {};
+        this.udsDidForScan    = 256;                        // Busidentification
+        this.udsMaxTrialsScan = 2;                          // Number of trials during UDS scan
+        this.udsTimeout       = 1500;                       // Timeout (ms) for normal UDS communication
+        this.udsTimeoutScan   = this.udsTimeout + 500;      // Timeout (ms) for scan for UDS devices per trial
+        this.myUdsDevices     = [];
+        this.udsScanDevices   = [];
+        this.myUdsAddrSpan    = 0x10;
+        //this.myUdsAddrRange   = [0x680, 0x6a0];
+        this.myUdsAddrRange   = [0x680, 0x6a0, 0x6c0, 0x6e0];
+        this.myScansActive    = 0;
+        this.udsDevName2CanId = {
+            'HPMUMASTER': '0x693',    // available only on internal bus (?)
+            'EMCUMASTER': '0x451'
+        };
 
         this.updateInterval = null;
 
@@ -87,57 +99,15 @@ class E3oncan extends utils.Adapter {
             this.channelInt = await this.connectToCan(this.channelInt, this.config.canIntName, this.onCanMsgInt);
         }
 
-        // Evaluate configuration for external CAN bus
-        // ===========================================
+        // Setup E380 collect agent:
+        this.e380Collect = await this.setupE380CollectAgent(this.config);
 
-        // Setup E380 collect:
-        if (this.config.e380Active) {
-            this.e380Collect = new collect.collect(
-                {   'canID': [0x250,0x252,0x254,0x256,0x258,0x25A,0x25C],
-                    'stateBase': this.config.e380Name,
-                    'device': this.config.e380Name,
-                    'delay': this.config.e380Delay,
-                    'active': this.config.e380Active});
-            await this.e380Collect.initStates(this);
-        }
         // Setup all configured devices for collect:
-        if ( (this.config.tableCollectCanExt) && (this.config.tableCollectCanExt.length > 0) ) {
-            for (const agent of Object.values(this.config.tableCollectCanExt)) {
-                if (agent.collectActive) {
-                    const Collect = new collect.collect(
-                        {   'canID': [Number(agent.collectCanId)],
-                            'stateBase': agent.collectDevName,
-                            'device': 'common',
-                            'delay': agent.collectDelayTime,
-                            'active': agent.collectActive,
-                            'channel': this.channelExt});
-                    this.E3CollectExt.push(Collect);
-                    await Collect.initStates(this);
-                }
-            }
-        }
+        await this.setupE3CollectAgents(this.config.tableCollectCanExt, this.E3CollectExt, this.channelExt);
+        await this.setupE3CollectAgents(this.config.tableCollectCanInt, this.E3CollectInt, this.channelInt);
 
         // Initial setup all configured devices for UDS:
         await this.setupUdsAgents();
-
-        // Evaluate configuration for internal CAN bus
-        // ===========================================
-
-        // Setup all configured devices for collect:
-        if ( (this.config.tableCollectCanInt) && (this.config.tableCollectCanInt.length > 0) ) {
-            for (const dev of Object.values(this.config.tableCollectCanInt)) {
-                if (dev.collectActive) {
-                    const Collect = new collect.collect(
-                        {   'canID': [Number(dev.collectCanId)],
-                            'stateBase': dev.collectDevName,
-                            'device': 'common',
-                            'delay': dev.collectDelayTime,
-                            'active': dev.collectActive,
-                            'channel': this.channelInt});
-                    this.E3CollectInt.push(Collect);
-                    await Collect.initStates(this);            }
-            }
-        }
 
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:
@@ -162,38 +132,9 @@ class E3oncan extends utils.Adapter {
 
         this.subscribeObjects('*');
 
+        //await this.scanUdsDevices();
 
-        const udsAgent1 = new uds.uds(
-            {   'canID': Number(0x680),
-                'stateBase': 'udsScanAddr',
-                'device': 'common',
-                'delay': 0,
-                'active': true,
-                'channel': this.channelExt,
-                'timeout': 1500     // Commuication timeout (ms)
-            });
-        await udsAgent1.initStates(this, false);
-        await this.registerUdsAgent(udsAgent1);
-
-        await this.log.debug('Start checkDeviceAddress()');
-
-        const udsAgent2 = new uds.uds(
-            {   'canID': Number(0x6a1),
-                'stateBase': 'udsScanAddr',
-                'device': 'common',
-                'delay': 0,
-                'active': true,
-                'channel': this.channelExt,
-                'timeout': 1500     // Commuication timeout (ms)
-            });
-        await udsAgent2.initStates(this, false);
-        await this.registerUdsAgent(udsAgent2);
-
-        await this.log.debug('Start checkDeviceAddress()');
-        udsAgent1.checkDeviceAddress(this, 256, 2000, 2);
-
-        await udsAgent2.checkDeviceAddress(this, 256, 2000, 2);
-
+        /*
         await this.sleep(2*2000);
         if (udsAgent1.storage.udsScanResult) {
             this.log.debug(String(udsAgent1.canIDhex)+': '+udsAgent1.storage.udsScanResult.res.DeviceProperty.Text);
@@ -201,6 +142,7 @@ class E3oncan extends utils.Adapter {
         if (udsAgent2.storage.udsScanResult) {
             this.log.debug(String(udsAgent2.canIDhex)+': '+udsAgent2.storage.udsScanResult.res.DeviceProperty.Text);
         }
+        */
 
         this.log.debug('onReady(): Done.');
 
@@ -233,6 +175,7 @@ class E3oncan extends utils.Adapter {
         //this.log.info('check group user admin group admin: ' + result);
     }
 
+
     // Setup CAN busses
 
     async connectToCan(channel, name, onMsg) {
@@ -264,11 +207,52 @@ class E3oncan extends utils.Adapter {
         return(channel);
     }
 
+    // Setup E380 collect agent:
+
+    async setupE380CollectAgent(conf) {
+        let e380Agent = null;
+        if (conf.e380Active) {
+            e380Agent = new collect.collect(
+                {   'canID': [0x250,0x252,0x254,0x256,0x258,0x25A,0x25C],
+                    'stateBase': conf.e380Name,
+                    'device': conf.e380Name,
+                    'delay': conf.e380Delay,
+                    'active': conf.e380Active});
+            await e380Agent.initStates(this);
+        }
+        return e380Agent;
+    }
+
+    // Setup E3 collect agents:
+
+    async setupE3CollectAgents(conf, agents, channel) {
+        if ( (conf) && (conf.length > 0) ) {
+            for (const agent of Object.values(conf)) {
+                if (agent.collectActive) {
+                    const devInfo = this.config.tableUdsDevices.filter(item => item.collectCanId == agent.collectCanId);
+                    if (devInfo.length > 0) {
+                        const Collect = new collect.collect(
+                            {   'canID'    : [Number(agent.collectCanId)],
+                                'stateBase': devInfo[0].devMyName,
+                                'device'   : 'common',
+                                'delay'    : agent.collectDelayTime,
+                                'active'   : agent.collectActive,
+                                'channel'  : channel
+                            });
+                        agents[Number(agent.collectCanId)] = Collect;
+                        await Collect.initStates(this);
+                    }
+                }
+            }
+        }
+
+    }
+
     // Setup of agents for collecting data and for communication via UDS
     // Called during initial startup and on changes of configuration
 
     async registerUdsAgent(agent) {
-        const rxAddr = agent.config.canID + 0x10;
+        const rxAddr = Number(agent.config.canID) + Number(0x10);
         this.E3Uds[rxAddr] = agent;
     }
 
@@ -290,7 +274,8 @@ class E3oncan extends utils.Adapter {
                                     'channel': this.channelExt,
                                     'timeout': 1500     // Commuication timeout (ms)
                                 });
-                            await this.registerUdsAgent(udsAgent);
+                            //this.E3Uds[Number(agent.udsSelectDevAddr)+Number(0x10)] = udsAgent;
+                            this.registerUdsAgent(udsAgent);
                             this.udsAgents[agent.udsSelectDevAddr] = udsAgent;
                             await udsAgent.initStates(this, true);
                             await udsAgent.addSchedule(this, agent.udsSchedule, agent.udsScheduleDids);
@@ -307,19 +292,105 @@ class E3oncan extends utils.Adapter {
         }
     }
 
-    scanUdsDevices() {
-        this.log.debug('SCAN of UDS devices - start');
-        this.log.debug('SCAN of UDS devices - done');
+    range(size, startAt = 0) {
+        return [...Array(size).keys()].map(i => i + startAt);
+    }
+
+    async scanCallback(ctx, hexAddr, res) {
+        async function mergeDev(dev) {
+            let pushDev = true;
+            // @ts-ignore
+            for (const [i, d] of Object(ctx.udsScanDevices).entries()) {
+                if ( (d.devName == dev.devName) && (d.devAddr == dev.devAddr) ) {
+                    ctx.log.silly('UDS Scan found device already known. No change applied.');
+                    pushDev = false;
+                    break;
+                }
+                /*
+                // Won't work this way, because there my be serveral devices with the same name
+                if ( (d.devName == dev.devName) && (d.devAddr != dev.devAddr) ) {
+                    ctx.log.info('UDS Scan found known device on different address. Updating address: '+dev.devName+' ->'+dev.devAddr);
+                    pushDev = false;
+                    ctx.udsScanDevices[i].devAddr = dev.devAddr;
+                    break;
+                }
+                */
+            }
+            if (pushDev) {
+                ctx.udsScanDevices.push(dev);
+                await ctx.log.debug('UDS Scan found new device: '+String(hexAddr)+': '+res.res.DeviceProperty.Text);
+            }
+        }
+        if (res) {
+            const devName = res.res.DeviceProperty.Text;
+            const dev = {
+                'devName': devName,
+                'devMyName': devName,
+                'devAddr': String(hexAddr),
+                'collectCanId': (devName in ctx.udsDevName2CanId ? ctx.udsDevName2CanId[devName] : '')
+            };
+            mergeDev(dev);
+        } else {
+            await ctx.log.silly('UDS Scan: '+String(hexAddr)+': Timeout');
+        }
+        ctx.myScansActive -= 1;
+        if (this.myScansActive < 0) {
+            ctx.log.error('Number of actvive UDS-Scans got negative. This schould not happen.');
+        }
+    }
+
+    async scanUdsDevice(addr) {
+        const udsAgent = new uds.uds(
+            {   'canID': Number(addr),
+                'stateBase': 'udsScanAddr',
+                'device': 'common',
+                'delay': 0,
+                'active': true,
+                'channel': this.channelExt,
+                'timeout': this.udsTimeout     // Commuication timeout (ms)
+            });
+        await udsAgent.initStates(this, false);
+        await udsAgent.setCallback(this.scanCallback);
+        await this.registerUdsAgent(udsAgent);
+        udsAgent.checkDeviceAddress(this, this.udsDidForScan, this.udsTimeoutScan, this.udsMaxTrialsScan);
+        this.myScansActive += 1;
+    }
+
+    async scanUdsDevices() {
+        await this.log.info('UDS scan for devices - start');
+        if (this.E3Uds != {}) {
+            await this.log.warn('Scan for UDS devices will delete all UDS agents!');
+            this.E3Uds = {};    // Delete agents
+        }
+        this.myScansActive = 0;
+        for (const baseAddr of Object(this.myUdsAddrRange).values()) {
+            for (const addr of Object(this.range(Number(this.myUdsAddrSpan), Number(baseAddr))).values()) {
+                await this.scanUdsDevice(addr);
+                await this.sleep(50);
+            }
+        }
+        const tsAbort = new Date().getTime() + this.udsMaxTrialsScan*this.udsTimeoutScan+250;
+        while ( (this.myScansActive > 0) && (new Date().getTime() < tsAbort) ) {
+            await this.sleep(100);
+        }
+        this.E3Uds = {};    // Delete all scan agents
+        await this.log.debug('UDS scan finished. Number of active UDS scans (should be 0): '+String(this.myScansActive));
+        await this.log.info('UDS scan found '+String(this.udsScanDevices.length)+' devices: '+JSON.stringify(this.udsScanDevices));
+        await this.log.info('UDS scan for devices - done');
+        return(this.udsScanDevices);
+    }
+
+    setUdsDevicesForTesting() {
         return([
             {
                 'devName': 'HPMUMASTER',
-                'devMyName': 'HPMUMASTER',
+                'devMyName': 'vitocal',
                 'devAddr': '0x680',
                 'collectCanId': '0x693'
             },
             {
                 'devName': 'EMCUMASTER',
-                'devMyName': 'EMCUMASTER',
+                'devMyName': 'vx3',
                 'devAddr': '0x6a1',
                 'collectCanId': '0x451'
             },
@@ -332,9 +403,11 @@ class E3oncan extends utils.Adapter {
         ]);
     }
 
+    /*
     updateDevices() {
         this.log.debug('updateDevices()');
     }
+    */
 
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
@@ -345,6 +418,9 @@ class E3oncan extends utils.Adapter {
             this.disconnectFromCan(this.channelExt,this.config.canExtName);
             this.disconnectFromCan(this.channelInt,this.config.canIntName);
             this.updateInterval && clearInterval(this.updateInterval);
+            this.E3Uds = {};            // Delete all UDS agents
+            this.E3CollectExt = {};     // Delete all collect agents on external bus
+            this.E3CollectInt = {};     // Delete all collect agents on internal bus
             // Here you must clear all timeouts or intervals that may still be active
             // clearTimeout(timeout1);
             // clearTimeout(timeout2);
@@ -365,6 +441,7 @@ class E3oncan extends utils.Adapter {
     //  * @param {ioBroker.Object | null | undefined} obj
     //  */
     onObjectChange(id, obj) {
+        /*
         if (obj) {
             // The object was changed
             this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
@@ -372,7 +449,7 @@ class E3oncan extends utils.Adapter {
             // The object was deleted
             this.log.info(`object ${id} deleted`);
         }
-        this.log.debug(JSON.stringify(this.config));
+        */
     }
 
     /**
@@ -390,14 +467,6 @@ class E3oncan extends utils.Adapter {
             this.log.info(`state ${id} deleted`);
         }
         */
-        for (const agent of Object.values(this.E3Uds)) {
-            if ( (agent) && (id.includes(agent.timeoutId)) ) {
-                agent.onTimeoutChange(this, state);
-            }
-            if ( (agent) && (id.includes(agent.userDidsToReadId)) ) {
-                agent.onUserReadDidsChange(this, state);
-            }
-        }
     }
 
     sleep(milliseconds) {
@@ -416,12 +485,17 @@ class E3oncan extends utils.Adapter {
 
             if (obj.command === 'getUdsDevices') {
                 if (obj.callback) {
-                    this.log.debug(`Received data - ${JSON.stringify(obj)}`);
-                    if ( (obj.message.length == 0) && (obj.message.length == 0) ) {
-                        this.udsDevices = this.scanUdsDevices();
-                        await this.sleep(2000);
-                        this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
+                    if (!this.udsDevScanIsRunning) {
+                        this.udsDevScanIsRunning = true;
+                        await this.log.debug(`Received data - ${JSON.stringify(obj)}`);
+                        this.udsScanDevices = obj.message;
+                        //this.myUdsDevices = await this.setUdsDevicesForTesting();
+                        this.myUdsDevices = await this.scanUdsDevices();
+                        await this.sendTo(obj.from, obj.command, this.myUdsDevices, obj.callback);
+                        //await this.sendTo(obj.from, obj.command, [], obj.callback);
+                        this.udsDevScanIsRunning = false;
                     } else {
+                        await this.log.debug('Request "getUdsDevice" during running UDS scan!');
                         this.sendTo(obj.from, obj.command, obj.message, obj.callback);
                     }
                 } else {
@@ -485,20 +559,12 @@ class E3oncan extends utils.Adapter {
 
     onCanMsgExt(msg) {
         if ( (this.e380Collect) && (this.e380Collect.config.canID.includes(msg.id)) ) { this.e380Collect.msgCollect(this, msg); }
-        for (const dev of Object.values(this.E3CollectExt)) {
-            if ( (dev) && (dev.config.canID.includes(msg.id)) ) {
-                dev.msgCollect(this, msg);
-            }
-        }
+        if (this.E3CollectExt[msg.id]) this.E3CollectExt[msg.id].msgCollect(this, msg);
         if (this.E3Uds[msg.id]) this.E3Uds[msg.id].msgUds(this, msg);
     }
 
     onCanMsgInt(msg) {
-        for (const dev of Object.values(this.E3CollectInt)) {
-            if ( (dev) && (dev.config.canID.includes(msg.id)) ) {
-                dev.msgCollect(this, msg);
-            }
-        }
+        if (this.E3CollectInt[msg.id]) this.E3CollectInt[msg.id].msgCollect(this, msg);
     }
 }
 

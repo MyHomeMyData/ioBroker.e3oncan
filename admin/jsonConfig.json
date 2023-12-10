@@ -197,7 +197,7 @@
                     "type": "staticText",
                     "text": "ERROR: column 'Name of Device' must contain unique text",
                     "newLine": true,
-                    "hidden": "const x={}; for(let ii=0; data.tableCollectCanExt && ii<data.tableCollectCanExt.length; ii++){const t=data.tableCollectCanExt[ii].collectDevName; if (x[t]==='x') return false; x[t]='x';}; return true;",
+                    "hidden": "const x={}; for(let ii=0; data.tableCollectCanExt && ii<data.tableCollectCanExt.length; ii++){const t=data.tableCollectCanExt[ii].collectCanId; if (x[t]==='x') return false; x[t]='x';}; return true;",
                     "style": {
                         "color": "red"
                     }
@@ -225,13 +225,13 @@
                         {   "type": "selectSendTo",
                             "title": "Select device",
                             "command": "getExtColDeviceSelect",
-                            "attr": "collectDevName",
+                            "attr": "collectCanId",
                             "jsonData": "${JSON.stringify(globalData.tableUdsDevices)}",
                             "width": "15%",
                             "default": "Select device",
                             "alsoDependsOn": ["collectActive","tableUdsDevices"],
                             "newLine": false,
-                            "validator": "if (data.collectDevName === 'Select device') { return false; } else { return true; }",
+                            "validator": "if (data.collectCanId === 'Select device') { return false; } else { return true; }",
                             "validatorNoSaveOnError": true
                         },
                         {
@@ -337,7 +337,7 @@
                     "type": "staticText",
                     "text": "ERROR: column 'Name of Device' must contain unique text",
                     "newLine": true,
-                    "hidden": "const x={}; for(let ii=0; data.tableCollectCanInt && ii<data.tableCollectCanInt.length; ii++){const t=data.tableCollectCanInt[ii].collectDevName; if (x[t]==='x') return false; x[t]='x';}; return true;",
+                    "hidden": "const x={}; for(let ii=0; data.tableCollectCanInt && ii<data.tableCollectCanInt.length; ii++){const t=data.tableCollectCanInt[ii].collectCanId; if (x[t]==='x') return false; x[t]='x';}; return true;",
                     "style": {
                         "color": "red"
                     }
@@ -365,13 +365,13 @@
                         {   "type": "selectSendTo",
                             "title": "Select device",
                             "command": "getIntColDeviceSelect",
-                            "attr": "collectDevName",
+                            "attr": "collectCanId",
                             "jsonData": "${JSON.stringify(globalData.tableUdsDevices)}",
                             "width": "15%",
                             "default": "Select device",
                             "alsoDependsOn": ["collectActive","tableUdsDevices"],
                             "newLine": false,
-                            "validator": "if (data.collectDevName === 'Select device') { return false; } else { return true; }",
+                            "validator": "if (data.collectCanId === 'Select device') { return false; } else { return true; }",
                             "validatorNoSaveOnError": true
                         },
                         {
