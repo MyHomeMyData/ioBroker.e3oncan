@@ -51,9 +51,11 @@ class E3oncan extends utils.Adapter {
             'HPMUMASTER': '0x693',    // available only on internal bus (?)
             'EMCUMASTER': '0x451'
         };
-        this.udsKnownDids       = {};
-        this.udsScanDids        = {};
-        this.udsScanDidsRetries = 0;
+        this.udsKnownDids         = {};
+        this.udsScanDids          = {};
+        this.udsScanDidsRetries   = 0;
+        this.udsScanDidMaxRetries = 500;
+        this.udsScanDidsCntSuccess = 0;
 
         this.updateInterval = null;
 
@@ -142,8 +144,9 @@ class E3oncan extends utils.Adapter {
         }
         */
 
-        await this.sleep(2500);
-        await this.scanUdsDids([0x6a1,0x68c,0x6cf]);
+        //await this.sleep(2500);
+        //await this.scanUdsDids([0x680,0x684,0x68c,0x6a1,0x6c3,0x6c5,0x6cf]);
+        //await this.scanUdsDids([0x6a1]);
 
         await this.log.debug('onReady(): Done.');
 
@@ -287,8 +290,8 @@ class E3oncan extends utils.Adapter {
                         await this.udsAgents[agent.udsSelectDevAddr].addSchedule(this,agent.udsSchedule, agent.udsScheduleDids);
                         await this.log.debug('New Schedule ('+String(agent.udsSchedule)+'s) UDS device on '+String(agent.udsSelectDevAddr));
                     }
+                    await this.startupUdsAgent(this.E3UdsAgents, udsAgent, 'normal');
                 }
-                await this.startupUdsAgent(this.E3UdsAgents, udsAgent, 'normal');
             }
         }
     }
@@ -394,26 +397,29 @@ class E3oncan extends utils.Adapter {
             await ctx.udsKnownDids[ctxAgent.canIDhex].push(did);
         }
         if ( (response == 'ok') || (response == 'negative response') ) {
-            await ctx.log.silly('UDS did Scan: '+String(ctxAgent.config.stateBase)+'@'+String(ctxAgent.canIDhex)+' on did '+String(did)+': '+response);
+            ctx.udsScanDidsCntSuccess += 1;
+            await ctx.log.silly('UDS did scan: '+String(ctxAgent.data.did)+'@'+String(ctxAgent.canIDhex)+': '+response);
         }else {
-            await ctx.log.debug('UDS did Scan: '+String(ctxAgent.config.stateBase)+'@'+String(ctxAgent.canIDhex)+' on did '+String(did)+': '+response);
+            await ctx.log.debug('UDS did scan: '+String(ctxAgent.data.did)+'@'+String(ctxAgent.canIDhex)+': '+response);
         }
         if ( (response == 'timeout') && (ctx.udsScanDidsRetries > 0) ) {
             // Retry dids with timeout until budget for retries is 0
             ctx.udsScanDidsRetries -= 1;
             ctxAgent.pushCmnd(ctx,'read', [did]);
             if (ctx.udsScanDidsRetries == 0) {
-                await ctx.log.warn('Budget for retries after timeout is used up during dids scan.');
+                await ctx.log.warn('UDS did scan: Budget for retries after timeout is used up. Dids may be missed.');
             }
         } else {
             ctx.udsScanDids[ctxAgent.canIDhex] -= 1;
         }
         if (ctx.udsScanDids[ctxAgent.canIDhex] == 0) ctx.myScansActive -= 1;
         if (ctx.myScansActive < 0) {
-            await ctx.log.error('Number of active UDS-did-scan got negative. This should not happen.');
+            await ctx.log.error('UDS did scan: Number of active dids got negative @'+
+                String(ctxAgent.canIDhex)+' - this should not happen.');
         }
         if (ctx.udsScanDids[ctxAgent.canIDhex] < 0) {
-            await ctx.log.error('Number of remaining dids UDS-did-scan got negative. This should not happen.');
+            await ctx.log.error('UDS did scan: Number of remaining dids got negative @'+
+                String(ctxAgent.canIDhex)+' - this should not happen.');
         }
     }
 
@@ -436,7 +442,7 @@ class E3oncan extends utils.Adapter {
                 'timeout'  : this.udsTimeout
             });
         await udsAgent.setCallback(this.scanDidsCallback);
-        this.udsScanDidsRetries = 100;
+        this.udsScanDidsRetries = this.udsScanDidMaxRetries;
         this.udsScanDids[udsAgent.canIDhex] = dids.length;
         this.udsKnownDids[udsAgent.canIDhex] = [];
         await this.startupUdsAgent(udsScanAgents, udsAgent, 'udsDidScan');
@@ -464,10 +470,17 @@ class E3oncan extends utils.Adapter {
             await this.startupScanUdsDids(this.udsScanAgents, addr, dids);
             await this.sleep(50);
         }
+        this.udsScanDidsCntSuccess = 0;
         const tsAbort = new Date().getTime() + dids.length*this.udsTimeoutScan;
         while ( (this.myScansActive > 0) && (new Date().getTime() < tsAbort) ) {
             await this.sleep(990);
-            if ((new Date().getSeconds() % 10) == 0) await this.log.info('UDS dids scan remaining work: '+JSON.stringify(this.udsScanDids));
+            if ((new Date().getSeconds() % 10) == 0) {
+                await this.log.info('UDS dids scan checked '+
+                    String(Math.round(this.udsScanDidsCntSuccess/10))+
+                    ' dids/second. Dids remaining: '+
+                    JSON.stringify(this.udsScanDids));
+                this.udsScanDidsCntSuccess = 0;
+            }
         }
 
         // Stop all scan agents:
