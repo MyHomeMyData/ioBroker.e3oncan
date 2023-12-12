@@ -27,6 +27,8 @@ class E3oncan extends utils.Adapter {
             name: 'e3oncan',
         });
 
+        this.udsScanTEST = true;
+
         this.e380Collect = null;    // E380 alway is assigned to external bus
         this.E3CollectInt  = {};    // Dict of collect devices on internal bus
         this.E3CollectExt  = {};    // Dict of collect devices on external bus
@@ -35,7 +37,9 @@ class E3oncan extends utils.Adapter {
         this.udsNewDevs    = 0;     // New devices found during scan
 
         this.channelExt       = null;
+        this.channelExtName   = '';
         this.channelInt       = null;
+        this.channelIntName   = '';
         this.udsAgents        = {};
         this.udsDidForScan    = 256;                        // Busidentification
         this.udsMaxTrialsScan = 2;                          // Number of trials during UDS scan
@@ -68,8 +72,9 @@ class E3oncan extends utils.Adapter {
     }
 
     async onInstall() {
-        this.log.debug('onInstall()');
-        this.log.debug(JSON.stringify(this.config));
+        await this.log.debug('onInstall()');
+        await this.log.debug('this.config:');
+        await this.log.debug(JSON.stringify(this.config));
     }
 
     /**
@@ -78,8 +83,9 @@ class E3oncan extends utils.Adapter {
     async onReady() {
         // Initialize your adapter here
 
-        this.log.debug('onReady(): Starting.');
-        this.log.debug(JSON.stringify(this.config));
+        await this.log.debug('onReady(): Starting.');
+        await this.log.debug('this.config:');
+        await this.log.debug(JSON.stringify(this.config));
 
         /*
         this.updateInterval = setInterval(async () => {
@@ -96,14 +102,14 @@ class E3oncan extends utils.Adapter {
         // ==================================
 
         if (this.config.canExtActivated) {
-            this.channelExt = await this.connectToCan(this.channelExt, this.config.canExtName, this.onCanMsgExt);
+            [this.channelExt, this.channelExtName] = await this.connectToCan(this.channelExt, this.config.canExtName, this.onCanMsgExt);
         }
 
         // Setup internal CAN bus if required
         // ==================================
 
         if (this.config.canIntActivated) {
-            this.channelInt = await this.connectToCan(this.channelInt, this.config.canIntName, this.onCanMsgInt);
+            [this.channelInt, this.channelIntName] = await this.connectToCan(this.channelInt, this.config.canIntName, this.onCanMsgInt);
         }
 
         // Setup E380 collect agent:
@@ -183,19 +189,21 @@ class E3oncan extends utils.Adapter {
     // Setup CAN busses
 
     async connectToCan(channel, name, onMsg) {
+        let chName = name;
         if (!channel) {
             try {
                 channel = can.createRawChannel(name, true);
                 await channel.addListener('onMessage', onMsg, this);
                 await channel.start();
-                this.setState('info.connection', true, true);
-                this.log.debug('CAN-Adapter '+name+' successfully started.');
+                await this.setState('info.connection', true, true);
+                await this.log.debug('CAN-Adapter '+name+' successfully started.');
             } catch (e) {
-                this.log.error(`Could not connect to CAN "${name}" - ${JSON.stringify(e)}`);
+                await this.log.error(`Could not connect to CAN "${name}" - ${JSON.stringify(e)}`);
                 channel = null;
+                chName  = '';
             }
         }
-        return(channel);
+        return([channel, chName]);
     }
 
     async disconnectFromCan(channel, name) {
@@ -208,7 +216,7 @@ class E3oncan extends utils.Adapter {
                 channel = null;
             }
         }
-        return(channel);
+        return([channel,'']);
     }
 
     // Setup E380 collect agent:
@@ -317,7 +325,7 @@ class E3oncan extends utils.Adapter {
             const devName = res.res.DeviceProperty.Text;
             const dev = {
                 'devName': devName,
-                'devMyName': devName,
+                'devMyName': devName+'.'+String(ctxAgent.canIDhex),
                 'devAddr': String(ctxAgent.canIDhex),
                 'collectCanId': (devName in ctx.udsDevName2CanId ? ctx.udsDevName2CanId[devName] : '')
             };
@@ -361,32 +369,60 @@ class E3oncan extends utils.Adapter {
             await agent.stop(this);
         }
 
-        this.myScansActive = 0;
-        for (const baseAddr of Object(this.myUdsAddrRange).values()) {
-            for (const addr of Object(range(Number(this.myUdsAddrSpan), Number(baseAddr))).values()) {
-                await this.startupScanUdsDevice(this.udsScanAgents, addr);
-                await this.sleep(50);
+        // Startup CAN:
+        if (this.config.canExtActivated) {
+            if  ((this.channelExt) &&
+            (this.channelExtName != this.config.canExtName) ) {
+            // CAN is different from running CAN. Stop actual CAN first.
+                [this.channelExt, this.channelExtName] = await this.disconnectFromCan(this.channelExt);
             }
-        }
-        const tsAbort = new Date().getTime() + this.udsMaxTrialsScan*this.udsTimeoutScan+250;
-        while ( (this.myScansActive > 0) && (new Date().getTime() < tsAbort) ) {
-            await this.sleep(100);
+            [this.channelExt, this.channelExtName] = await this.connectToCan(this.channelExt, this.config.canExtName, this.onCanMsgExt);
         }
 
-        // Stop all scan agents:
-        for (const agent of Object.values(this.udsScanAgents)) {
-            await agent.stop(this,'normal');
+        if (!this.channelExt) {
+            await this.log.error('UDS scan devices: Could not connect to CAN. Aborting.');
+            if (!this.udsScanTEST) return(this.udsScanDevices);
         }
-        this.udsScanAgents = {};
+
+        if (this.udsScanTEST) {
+            if (this.udsScanDevices.length == 0) {
+                this.udsScanDevices = await this.setUdsDevicesForTesting();
+            }
+        } else {
+            this.myScansActive = 0;
+            for (const baseAddr of Object(this.myUdsAddrRange).values()) {
+                for (const addr of Object(range(Number(this.myUdsAddrSpan), Number(baseAddr))).values()) {
+                    await this.startupScanUdsDevice(this.udsScanAgents, addr);
+                    await this.sleep(50);
+                }
+            }
+            const tsAbort = new Date().getTime() + this.udsMaxTrialsScan*this.udsTimeoutScan+250;
+            while ( (this.myScansActive > 0) && (new Date().getTime() < tsAbort) ) {
+                await this.sleep(100);
+            }
+
+            // Stop all scan agents:
+            for (const agent of Object.values(this.udsScanAgents)) {
+                await agent.stop(this,'normal');
+            }
+            this.udsScanAgents = {};
+
+            // Restart all previously running agents:
+            for (const agent of Object.values(this.E3UdsAgents)) {
+                await agent.startup(this,'normal');
+            }
+
+            if (this.myScansActive < 0) await this.log.warn('UDS scan finished. Number of active UDS scans (should be 0): '+String(this.myScansActive));
+            await this.log.info('UDS scan found '+String(this.udsNewDevs)+' new of total '+String(this.udsScanDevices.length)+' devices: '+JSON.stringify(this.udsScanDevices));
+        }
 
         // Restart all previously running agents:
         for (const agent of Object.values(this.E3UdsAgents)) {
             await agent.startup(this,'normal');
         }
 
-        if (this.myScansActive < 0) await this.log.warn('UDS scan finished. Number of active UDS scans (should be 0): '+String(this.myScansActive));
-        await this.log.info('UDS scan found '+String(this.udsNewDevs)+' new of total '+String(this.udsScanDevices.length)+' devices: '+JSON.stringify(this.udsScanDevices));
         await this.log.info('UDS scan for devices - done');
+
         return(this.udsScanDevices);
     }
 
@@ -605,6 +641,8 @@ class E3oncan extends utils.Adapter {
     //  * @param {ioBroker.Message} obj
     //  */
     async onMessage(obj) {
+        await this.log.debug('this.config:');
+        await this.log.debug(JSON.stringify(this.config));
         if (typeof obj === 'object' && obj.message) {
             this.log.silly(`command received ${obj.command}`);
 
