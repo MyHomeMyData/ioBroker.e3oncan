@@ -268,37 +268,40 @@ class E3oncan extends utils.Adapter {
 
     async setupUdsAgents() {
         if ( (this.config.tableUdsSchedules) && (this.config.tableUdsSchedules.length > 0) ) {
-            for (const agent of Object.values(this.config.tableUdsSchedules)) {
-                let udsAgent = null;
-                if (agent.udsScheduleActive) {
-                    if (!(Object.keys(this.udsAgents).includes(agent.udsSelectDevAddr))) {
-                        const devInfo = this.config.tableUdsDevices.filter(item => item.devAddr == agent.udsSelectDevAddr);
+            for (const dev of Object.values(this.config.tableUdsSchedules)) {
+                if (dev.udsScheduleActive) {
+                    await this.sleep(50);     // 50 ms pause to next schedule
+                    const devTxAddr = Number(dev.udsSelectDevAddr);
+                    const devRxAddr = devTxAddr + 16;
+                    if (!(this.E3UdsAgents[devRxAddr])) {
+                        // Create new agent
+                        const devInfo = this.config.tableUdsDevices.filter(item => item.devAddr == dev.udsSelectDevAddr);
                         if (devInfo.length > 0) {
                             const dev_name = devInfo[0].devStateName;
-                            await this.log.debug('New UDS device on '+String(agent.udsSelectDevAddr)+' with name '+String(dev_name));
-                            udsAgent = new uds.uds(
-                                {   'canID'    : [Number(agent.udsSelectDevAddr)],
+                            await this.log.silly('New UDS device on '+String(dev.udsSelectDevAddr)+' with name '+String(dev_name));
+                            this.E3UdsAgents[devRxAddr] = new uds.uds(
+                                {   'canID'    : devTxAddr,
                                     'stateBase': dev_name,
                                     'device'   : 'common',
                                     'delay'    : 0,
-                                    'active'   : agent.udsScheduleActive,
+                                    'active'   : dev.udsScheduleActive,
                                     'channel'  : this.channelExt,
                                     'timeout'  : this.udsTimeout
                                 });
-                            this.udsAgents[agent.udsSelectDevAddr] = udsAgent;
-                            await udsAgent.initStates(this);
-                            await udsAgent.addSchedule(this, agent.udsSchedule, agent.udsScheduleDids);
-                            await this.log.debug('New Schedule ('+String(agent.udsSchedule)+'s) UDS device on '+String(agent.udsSelectDevAddr));
+                            await this.E3UdsAgents[devRxAddr].initStates(this);
+                            await this.E3UdsAgents[devRxAddr].addSchedule(this, dev.udsSchedule, dev.udsScheduleDids);
+                            await this.log.silly('New Schedule ('+String(dev.udsSchedule)+'s) UDS device on '+String(dev.udsSelectDevAddr));
                         } else {
-                            this.log.error('Could not setup UDS device on address '+String(agent.udsSelectDevAddr)+' due to missing device name.');
+                            await this.log.error('Could not setup UDS device on address '+String(dev.udsSelectDevAddr)+' due to missing device name.');
+                            break;
                         }
                     } else {
-                        await this.udsAgents[agent.udsSelectDevAddr].addSchedule(this,agent.udsSchedule, agent.udsScheduleDids);
-                        await this.log.debug('New Schedule ('+String(agent.udsSchedule)+'s) UDS device on '+String(agent.udsSelectDevAddr));
+                        await this.E3UdsAgents[devRxAddr].addSchedule(this, dev.udsSchedule, dev.udsScheduleDids);
+                        await this.log.silly('New Schedule ('+String(dev.udsSchedule)+'s) UDS device on '+String(dev.udsSelectDevAddr));
                     }
-                    await this.startupUdsAgent(this.E3UdsAgents, udsAgent, 'normal');
                 }
             }
+            for (const agent of Object.values(this.E3UdsAgents)) await agent.startup(this, 'normal');
         }
     }
 
