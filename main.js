@@ -45,12 +45,11 @@ class E3oncan extends utils.Adapter {
         this.udsMaxTrialsScan = 2;                          // Number of trials during UDS scan
         this.udsTimeout       = 1500;                       // Timeout (ms) for normal UDS communication
         this.udsTimeoutScan   = this.udsTimeout + 500;      // Timeout (ms) for scan for UDS devices per trial
-        this.myUdsDevices     = [];
-        this.udsScanDevices   = [];
-        this.myUdsAddrSpan    = 0x10;
-        //this.myUdsAddrRange   = [0x680, 0x6a0];
-        this.myUdsAddrRange   = [0x680, 0x6a0, 0x6c0, 0x6e0];
-        this.myScansActive    = 0;
+        this.udsDevices       = [];     // Confirmed & edited UDS devices
+        this.udsScanDevices   = [];     // UDS devices found during scan
+        this.udsScanAddrSpan  = 0x10;
+        this.udsScanAddrRange = [0x680, 0x6a0, 0x6c0, 0x6e0];
+        this.cntUdsScansActive= 0;
         this.udsDevName2CanId = {
             'HPMUMASTER': '0x693',    // available only on internal bus (?)
             'EMCUMASTER': '0x451'
@@ -245,7 +244,7 @@ class E3oncan extends utils.Adapter {
                     if (devInfo.length > 0) {
                         const Collect = new collect.collect(
                             {   'canID'    : [Number(agent.collectCanId)],
-                                'stateBase': devInfo[0].devMyName,
+                                'stateBase': devInfo[0].devStateName,
                                 'device'   : 'common',
                                 'delay'    : agent.collectDelayTime,
                                 'active'   : agent.collectActive,
@@ -276,7 +275,7 @@ class E3oncan extends utils.Adapter {
                     if (!(Object.keys(this.udsAgents).includes(agent.udsSelectDevAddr))) {
                         const devInfo = this.config.tableUdsDevices.filter(item => item.devAddr == agent.udsSelectDevAddr);
                         if (devInfo.length > 0) {
-                            const dev_name = devInfo[0].devMyName;
+                            const dev_name = devInfo[0].devStateName;
                             await this.log.debug('New UDS device on '+String(agent.udsSelectDevAddr)+' with name '+String(dev_name));
                             udsAgent = new uds.uds(
                                 {   'canID'    : [Number(agent.udsSelectDevAddr)],
@@ -307,6 +306,7 @@ class E3oncan extends utils.Adapter {
     async scanDevCallback(ctx, ctxAgent, args) {
         async function mergeDev(dev) {
             let pushDev = true;
+            await ctx.log.debug('UDS device scan found device: '+String(ctxAgent.canIDhex)+': '+res.res.DeviceProperty.Text);
             for (const d of Object(ctx.udsScanDevices).values()) {
                 if ( (d.devName == dev.devName) && (d.devAddr == dev.devAddr) ) {
                     ctx.log.silly('UDS device scan found device already known. No change applied.');
@@ -315,9 +315,9 @@ class E3oncan extends utils.Adapter {
                 }
             }
             if (pushDev) {
+                await ctx.log.info('UDS device scan found NEW device: '+String(ctxAgent.canIDhex)+': '+res.res.DeviceProperty.Text);
                 ctx.udsNewDevs += 1;
                 ctx.udsScanDevices.push(dev);
-                await ctx.log.debug('UDS device scan found new device: '+String(ctxAgent.canIDhex)+': '+res.res.DeviceProperty.Text);
             }
         }
         const res = ctxAgent.storage.udsScanResult;
@@ -325,7 +325,7 @@ class E3oncan extends utils.Adapter {
             const devName = res.res.DeviceProperty.Text;
             const dev = {
                 'devName': devName,
-                'devMyName': devName+'.'+String(ctxAgent.canIDhex),
+                'devStateName': devName+'.'+String(ctxAgent.canIDhex),
                 'devAddr': String(ctxAgent.canIDhex),
                 'collectCanId': (devName in ctx.udsDevName2CanId ? ctx.udsDevName2CanId[devName] : '')
             };
@@ -333,9 +333,9 @@ class E3oncan extends utils.Adapter {
         } else {
             await ctx.log.silly('UDS Scan: '+String(ctxAgent.canIDhex)+': Timeout');
         }
-        ctx.myScansActive -= 1;
-        if (this.myScansActive < 0) {
-            ctx.log.error('Number of active UDS-scans got negative. This should not happen.');
+        if (ctxAgent.cmndsQueue.length == 0) {
+            await ctxAgent.setCallback(null);    // Scan agent completed. Reset callback.
+            ctx.cntUdsScansActive -= 1;
         }
     }
 
@@ -352,7 +352,7 @@ class E3oncan extends utils.Adapter {
         await udsAgent.setCallback(this.scanDevCallback);
         await this.startupUdsAgent(udsScanAgents, udsAgent, 'udsDevScan');
         udsAgent.checkDeviceAddress(this, this.udsDidForScan, this.udsTimeoutScan, this.udsMaxTrialsScan);
-        this.myScansActive += 1;
+        this.cntUdsScansActive += 1;
     }
 
     async scanUdsDevices() {
@@ -377,43 +377,80 @@ class E3oncan extends utils.Adapter {
                 [this.channelExt, this.channelExtName] = await this.disconnectFromCan(this.channelExt);
             }
             [this.channelExt, this.channelExtName] = await this.connectToCan(this.channelExt, this.config.canExtName, this.onCanMsgExt);
-        }
-
-        if (!this.channelExt) {
-            await this.log.error('UDS scan devices: Could not connect to CAN. Aborting.');
-            if (!this.udsScanTEST) return(this.udsScanDevices);
-        }
-
-        if (this.udsScanTEST) {
-            if (this.udsScanDevices.length == 0) {
-                this.udsScanDevices = await this.setUdsDevicesForTesting();
+            if (!this.channelExt) {
+                await this.log.error('UDS scan devices: Could not connect to CAN Adapter '+this.channelExtName+'. Aborting.');
+                if (!this.udsScanTEST) return(this.udsScanDevices);
             }
         } else {
-            this.myScansActive = 0;
-            for (const baseAddr of Object(this.myUdsAddrRange).values()) {
-                for (const addr of Object(range(Number(this.myUdsAddrSpan), Number(baseAddr))).values()) {
-                    await this.startupScanUdsDevice(this.udsScanAgents, addr);
-                    await this.sleep(50);
+            this.log.error('UDS scan: External CAN not activated! Continue for TESTING !');
+            // STOPP here due to missing CAN.
+            // Continue for testing
+        }
+
+        let scanMode = '';
+        if (this.udsScanDevices.length > 0) {
+            scanMode = this.udsScanDevices[0].devStateName;
+        } else {
+            scanMode = 'TEST DEVICES';
+        }
+        switch (scanMode) {
+            case 'TEST DEVICES':
+                this.log.debug('UDS scan TEST mode: return test devices.');
+                this.udsScanDevices = await this.setUdsDevicesForTesting();
+                break;
+            case 'DELETE ALL':
+                this.log.debug('UDS scan TEST mode: return empty device list.');
+                this.udsScanDevices = [];
+                break;
+            case 'SCAN FULL RANGE':
+            case 'SCAN SMALL RANGE':
+                this.udsScanDevices = [];
+                if (scanMode == 'SCAN FULL RANGE') {
+                    this.log.debug('UDS scan TEST mode: Do a full scan.');
+                    this.udsScanAddrRange = [0x680, 0x6a0, 0x6c0, 0x6e0];
+                    this.udsScanAddrSpan  = 0x10;
+                } else {
+                    this.log.debug('UDS scan TEST mode: Do a small scan.');
+                    this.udsScanAddrRange = [0x680, 0x6a0];
+                    this.udsScanAddrSpan  = 0x02;
                 }
-            }
-            const tsAbort = new Date().getTime() + this.udsMaxTrialsScan*this.udsTimeoutScan+250;
-            while ( (this.myScansActive > 0) && (new Date().getTime() < tsAbort) ) {
-                await this.sleep(100);
-            }
+                this.cntUdsScansActive = 0;
+                for (const baseAddr of Object(this.udsScanAddrRange).values()) {
+                    for (const addr of Object(range(Number(this.udsScanAddrSpan), Number(baseAddr))).values()) {
+                        await this.startupScanUdsDevice(this.udsScanAgents, addr);
+                        await this.sleep(50);
+                    }
+                }
+                // eslint-disable-next-line no-case-declarations
+                const tsAbort = new Date().getTime() + this.udsMaxTrialsScan*this.udsTimeoutScan+250;
+                await this.log.info('UDS scan: Waiting for scans to complete.');
+                while ( (this.cntUdsScansActive > 0) && (new Date().getTime() < tsAbort) ) {
+                    await this.sleep(100);
+                }
 
-            // Stop all scan agents:
-            for (const agent of Object.values(this.udsScanAgents)) {
-                await agent.stop(this,'normal');
-            }
-            this.udsScanAgents = {};
+                // Stop all scan agents:
+                for (const agent of Object.values(this.udsScanAgents)) {
+                    await agent.stop(this,'normal');
+                }
+                this.udsScanAgents = {};
 
-            // Restart all previously running agents:
-            for (const agent of Object.values(this.E3UdsAgents)) {
-                await agent.startup(this,'normal');
-            }
+                // Restart all previously running agents:
+                for (const agent of Object.values(this.E3UdsAgents)) {
+                    await agent.startup(this,'normal');
+                }
 
-            if (this.myScansActive < 0) await this.log.warn('UDS scan finished. Number of active UDS scans (should be 0): '+String(this.myScansActive));
-            await this.log.info('UDS scan found '+String(this.udsNewDevs)+' new of total '+String(this.udsScanDevices.length)+' devices: '+JSON.stringify(this.udsScanDevices));
+                if (this.cntUdsScansActive < 0) await this.log.warn('UDS scan finished. Number of active UDS scans (should be 0): '+String(this.cntUdsScansActive));
+                await this.log.info('UDS scan found '+
+                    String(this.udsNewDevs)+
+                    ' new of total '+
+                    String(this.udsScanDevices.length)+
+                    ' devices: '+
+                    JSON.stringify(this.udsScanDevices)
+                );
+                break;
+            default:
+                // do nothing
+                this.log.debug('UDS scan TEST mode: Do nothing. return unchanged device list.');
         }
 
         // Restart all previously running agents:
@@ -429,6 +466,7 @@ class E3oncan extends utils.Adapter {
     async scanDidsCallback(ctx, ctxAgent, args) {
         const response = args[0];
         const did = args[1];
+        if (ctxAgent.cmndsQueue.length == 0) ctxAgent.setCallback(null);    // Scan agent completed. Reset callback.
         if (response == 'ok') {
             await ctx.udsKnownDids[ctxAgent.canIDhex].push(did);
         }
@@ -448,8 +486,8 @@ class E3oncan extends utils.Adapter {
         } else {
             ctx.udsScanDids[ctxAgent.canIDhex] -= 1;
         }
-        if (ctx.udsScanDids[ctxAgent.canIDhex] == 0) ctx.myScansActive -= 1;
-        if (ctx.myScansActive < 0) {
+        if (ctx.udsScanDids[ctxAgent.canIDhex] == 0) ctx.cntUdsScansActive -= 1;
+        if (ctx.cntUdsScansActive < 0) {
             await ctx.log.error('UDS did scan: Number of active dids got negative @'+
                 String(ctxAgent.canIDhex)+' - this should not happen.');
         }
@@ -464,7 +502,7 @@ class E3oncan extends utils.Adapter {
         const devInfo = this.config.tableUdsDevices.filter(item => item.devAddr == hexAddr);
         let devName = '';
         if (devInfo.length > 0) {
-            devName = devInfo[0].devMyName;
+            devName = devInfo[0].devStateName;
         } else {
             devName = String(addr);
         }
@@ -482,7 +520,7 @@ class E3oncan extends utils.Adapter {
         this.udsScanDids[udsAgent.canIDhex] = dids.length;
         this.udsKnownDids[udsAgent.canIDhex] = [];
         await this.startupUdsAgent(udsScanAgents, udsAgent, 'udsDidScan');
-        this.myScansActive += 1;
+        this.cntUdsScansActive += 1;
         await udsAgent.pushCmnd(this, 'read', dids);
     }
 
@@ -500,7 +538,7 @@ class E3oncan extends utils.Adapter {
             await agent.stop(this);
         }
 
-        this.myScansActive = 0;
+        this.cntUdsScansActive = 0;
         const dids = range(3000, 256);
         for (const addr of Object(udsAddrs).values()) {
             await this.startupScanUdsDids(this.udsScanAgents, addr, dids);
@@ -508,7 +546,7 @@ class E3oncan extends utils.Adapter {
         }
         this.udsScanDidsCntSuccess = 0;
         const tsAbort = new Date().getTime() + dids.length*this.udsTimeoutScan;
-        while ( (this.myScansActive > 0) && (new Date().getTime() < tsAbort) ) {
+        while ( (this.cntUdsScansActive > 0) && (new Date().getTime() < tsAbort) ) {
             await this.sleep(990);
             if ((new Date().getSeconds() % 10) == 0) {
                 await this.log.info('UDS dids scan checked '+
@@ -530,7 +568,7 @@ class E3oncan extends utils.Adapter {
             await agent.startup(this,'normal');
         }
 
-        if (this.myScansActive < 0) await this.log.warn('UDS did scan finished. Number of active UDS scans (should be 0): '+String(this.myScansActive));
+        if (this.cntUdsScansActive < 0) await this.log.warn('UDS did scan finished. Number of active UDS scans (should be 0): '+String(this.cntUdsScansActive));
         await this.log.info('UDS did scan found: '+JSON.stringify(this.udsKnownDids));
         await this.log.info('UDS did scan - done');
     }
@@ -538,20 +576,20 @@ class E3oncan extends utils.Adapter {
     setUdsDevicesForTesting() {
         return([
             {
-                'devName': 'HPMUMASTER',
-                'devMyName': 'vitocal',
+                'devName': 'HPMUMASTER.0x680',
+                'devStateName': 'vitocal',
                 'devAddr': '0x680',
                 'collectCanId': '0x693'
             },
             {
-                'devName': 'EMCUMASTER',
-                'devMyName': 'vx3',
+                'devName': 'EMCUMASTER.0x6a1',
+                'devStateName': 'vx3',
                 'devAddr': '0x6a1',
                 'collectCanId': '0x451'
             },
             {
-                'devName': 'VCMU',
-                'devMyName': 'VCMU',
+                'devName': 'VCMU.0x68c',
+                'devStateName': 'VCMU - List of DEVICES FOR TESTING',
                 'devAddr': '0x68c',
                 'collectCanId': ''
             }
@@ -652,9 +690,8 @@ class E3oncan extends utils.Adapter {
                         this.udsDevScanIsRunning = true;
                         await this.log.silly(`Received data - ${JSON.stringify(obj)}`);
                         this.udsScanDevices = obj.message;
-                        //this.myUdsDevices = await this.setUdsDevicesForTesting();
-                        this.myUdsDevices = await this.scanUdsDevices();
-                        await this.sendTo(obj.from, obj.command, this.myUdsDevices, obj.callback);
+                        this.udsDevices = await this.scanUdsDevices();
+                        await this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
                         //await this.sendTo(obj.from, obj.command, [], obj.callback);
                         this.udsDevScanIsRunning = false;
                     } else {
@@ -670,7 +707,7 @@ class E3oncan extends utils.Adapter {
                 if (obj.callback) {
                     this.log.silly(`Received data - ${JSON.stringify(obj)}`);
                     if (Array.isArray(obj.message) ) {
-                        const selUdsDevices = obj.message.map(item => ({label: item.devMyName, value: item.devAddr}));
+                        const selUdsDevices = obj.message.map(item => ({label: item.devStateName, value: item.devAddr}));
                         this.log.silly(`Data to send - ${JSON.stringify(selUdsDevices)}`);
                         if (selUdsDevices) {
                             this.sendTo(obj.from, obj.command, selUdsDevices, obj.callback);
@@ -687,7 +724,7 @@ class E3oncan extends utils.Adapter {
                 if (obj.callback) {
                     this.log.silly(`Received data - ${JSON.stringify(obj)}`);
                     if (Array.isArray(obj.message) ) {
-                        const selUdsDevices = obj.message.filter(item => item.collectCanId != '').map(item => ({label: item.devMyName, value: item.collectCanId}));
+                        const selUdsDevices = obj.message.filter(item => item.collectCanId != '').map(item => ({label: item.devStateName, value: item.collectCanId}));
                         this.log.silly(`Data to send - ${JSON.stringify(selUdsDevices)}`);
                         if (selUdsDevices) {
                             this.sendTo(obj.from, obj.command, selUdsDevices, obj.callback);
@@ -704,7 +741,7 @@ class E3oncan extends utils.Adapter {
                 if (obj.callback) {
                     this.log.silly(`Received data - ${JSON.stringify(obj)}`);
                     if (Array.isArray(obj.message) ) {
-                        const selUdsDevices = obj.message.filter(item => item.collectCanId != '').map(item => ({label: item.devMyName, value: item.collectCanId}));
+                        const selUdsDevices = obj.message.filter(item => item.collectCanId != '').map(item => ({label: item.devStateName, value: item.collectCanId}));
                         this.log.silly(`Data to send - ${JSON.stringify(selUdsDevices)}`);
                         if (selUdsDevices) {
                             this.sendTo(obj.from, obj.command, selUdsDevices, obj.callback);

@@ -81,6 +81,15 @@
                         "color": "red"
                     }
                 },
+                "introTableNoEmptyDevNameTxt": {
+                    "type": "staticText",
+                    "text": "'Device state name' must not be blank!",
+                    "newLine": true,
+                    "hidden": "for (const c of data.tableUdsDevices) {if (c.devStateName === '') return false;}; return true;",
+                    "style": {
+                        "color": "red"
+                    }
+                },
 
                 "tableUdsDevices": {
                     "type": "table",
@@ -88,6 +97,7 @@
                     "jsonData": "${JSON.stringify(data.tableUdsDevices)}",
                     "button": "SCAN",
                     "showProcess": true,
+                    "uniqueColumns": ["devStateName"],
                     "newLine": true,
                     "sm": 12,
                     "md": 12,
@@ -100,7 +110,7 @@
                             "type": "text",
                             "attr": "devName",
                             "width": "15% ",
-                            "title": "Device Name (Viessmann)",
+                            "title": "Device name (Viessmann)",
                             "tooltip": "ECU name (fixed)",
                             "filter": false,
                             "sort": false,
@@ -108,12 +118,14 @@
                         },
                         {
                             "type": "text",
-                            "attr": "devMyName",
+                            "attr": "devStateName",
                             "width": "15% ",
-                            "title": "Device state ame",
+                            "title": "Device state name",
                             "tooltip": "Device name in object tree",
                             "filter": false,
-                            "sort": false
+                            "sort": false,
+                            "validator": "if (data.devStateName === '') { return false; } else { return true; }",
+                            "validatorNoSaveOnError": true
                         },
                         {
                             "type": "text",
@@ -168,7 +180,7 @@
                 },
                 "e380Name": {
                     "type": "text",
-                    "label": "Name",
+                    "label": "Device state name",
                     "tooltip": "This text will be used as base for object tree",
                     "default" : "e380",
                     "newLine": false
@@ -195,7 +207,7 @@
 
                 "tableColExtErrDevName": {
                     "type": "staticText",
-                    "text": "ERROR: column 'Name of Device' must contain unique text",
+                    "text": "ERROR: column 'Device state name' must contain unique text",
                     "newLine": true,
                     "hidden": "const x={}; for(let ii=0; data.tableCollectCanExt && ii<data.tableCollectCanExt.length; ii++){const t=data.tableCollectCanExt[ii].collectCanId; if (x[t]==='x') return false; x[t]='x';}; return true;",
                     "style": {
@@ -256,7 +268,7 @@
 
                 "introTableUds": {
                     "type": "staticText",
-                    "text": "Actively request wead- and write-operations to specified data identifiers",
+                    "text": "Actively request read operations via UDSonCAN to specified data identifiers",
                     "newLine": true
                 },
                 "tableUdsSchedules": {
@@ -335,7 +347,7 @@
 
                 "tableColIntErrDevName": {
                     "type": "staticText",
-                    "text": "ERROR: column 'Name of Device' must contain unique text",
+                    "text": "ERROR: column 'Device state name' must contain unique text",
                     "newLine": true,
                     "hidden": "const x={}; for(let ii=0; data.tableCollectCanInt && ii<data.tableCollectCanInt.length; ii++){const t=data.tableCollectCanInt[ii].collectCanId; if (x[t]==='x') return false; x[t]='x';}; return true;",
                     "style": {
