@@ -94,7 +94,7 @@
                 "tableUdsDevices": {
                     "type": "table",
                     "defaultSendTo": "getUdsDevices",
-                    "jsonData": "${JSON.stringify(data.tableUdsDevices)}",
+                    "jsonData": "${JSON.stringify({\"udsDevices\":data.tableUdsDevices,\"canExt\":{\"name\":data.canExtName,\"activated\":data.canExtActivated}})}",
                     "button": "SCAN",
                     "showProcess": true,
                     "uniqueColumns": ["devStateName"],

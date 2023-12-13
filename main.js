@@ -137,8 +137,6 @@ class E3oncan extends utils.Adapter {
 
         this.subscribeObjects('*');
 
-        //await this.scanUdsDevices();
-
         /*
         await this.sleep(2*2000);
         if (udsAgent1.storage.udsScanResult) {
@@ -210,6 +208,7 @@ class E3oncan extends utils.Adapter {
             try {
                 await channel.stop();
                 this.log.debug('CAN-Adapter '+name+' stopped.');
+                channel = null;
             } catch (e) {
                 this.log.error(`Could not disconnect from CAN "${name}" - ${JSON.stringify(e)}`);
                 channel = null;
@@ -355,7 +354,7 @@ class E3oncan extends utils.Adapter {
         this.cntUdsScansActive += 1;
     }
 
-    async scanUdsDevices() {
+    async scanUdsDevices(canConfig) {
         function range(size, startAt = 0) {
             return [...Array(size).keys()].map(i => i + startAt);
         }
@@ -370,15 +369,15 @@ class E3oncan extends utils.Adapter {
         }
 
         // Startup CAN:
-        if (this.config.canExtActivated) {
+        if (canConfig.activated) {
             if  ((this.channelExt) &&
-            (this.channelExtName != this.config.canExtName) ) {
+            (this.channelExtName != canConfig.name) ) {
             // CAN is different from running CAN. Stop actual CAN first.
-                [this.channelExt, this.channelExtName] = await this.disconnectFromCan(this.channelExt);
+                [this.channelExt, this.channelExtName] = await this.disconnectFromCan(this.channelExt, this.channelExtName);
             }
-            [this.channelExt, this.channelExtName] = await this.connectToCan(this.channelExt, this.config.canExtName, this.onCanMsgExt);
+            [this.channelExt, this.channelExtName] = await this.connectToCan(this.channelExt, canConfig.name, this.onCanMsgExt);
             if (!this.channelExt) {
-                await this.log.error('UDS scan devices: Could not connect to CAN Adapter '+this.channelExtName+'. Aborting.');
+                await this.log.error('UDS scan devices: Could not connect to CAN Adapter '+canConfig.name+'. Aborting.');
                 if (!this.udsScanTEST) return(this.udsScanDevices);
             }
         } else {
@@ -688,9 +687,9 @@ class E3oncan extends utils.Adapter {
                 if (obj.callback) {
                     if (!this.udsDevScanIsRunning) {
                         this.udsDevScanIsRunning = true;
-                        await this.log.silly(`Received data - ${JSON.stringify(obj)}`);
-                        this.udsScanDevices = obj.message;
-                        this.udsDevices = await this.scanUdsDevices();
+                        await this.log.debug(`Received data - ${JSON.stringify(obj)}`);
+                        this.udsScanDevices = obj.message.udsDevices;
+                        this.udsDevices = await this.scanUdsDevices(obj.message.canExt);
                         await this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
                         //await this.sendTo(obj.from, obj.command, [], obj.callback);
                         this.udsDevScanIsRunning = false;
