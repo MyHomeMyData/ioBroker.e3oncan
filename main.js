@@ -357,7 +357,6 @@ class E3oncan extends utils.Adapter {
         let scanMode = '';
         if (this.udsScanDevices.length > 0) {
             scanMode = this.udsScanDevices[0].devStateName;
-            this.udsScanDevices[0].devStateName = '';
         } else {
             scanMode = 'TEST DEVICES';
         }
