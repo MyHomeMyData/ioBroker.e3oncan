@@ -151,10 +151,6 @@ class E3oncan extends utils.Adapter {
         }
         */
 
-        await this.sleep(2500);
-        await this.scanUdsDids([0x680,0x684,0x68c,0x6a1,0x6c3,0x6c5,0x6cf], 3000);
-        //await this.scanUdsDids([0x6a1], 100);
-
         await this.log.debug('onReady(): Done.');
 
         // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
