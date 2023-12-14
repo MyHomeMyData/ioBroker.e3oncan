@@ -6,11 +6,20 @@
             "type": "panel",
             "label": "CAN Adapter",
             "items": {
-                "canExtHeader": {
+            "introTabCanInstanceNotActiveTxt": {
+                "type": "staticText",
+                "text": "Please start this adapter instance to enable further configuration options.",
+                "newLine": true,
+                "hidden": "_alive",
+                "style": {
+                    "color": "red"
+                }
+            },
+        "canExtHeader": {
                     "type": "header",
                     "text": "External CAN Adapter",
                     "size": 2,
-                    "newLine": false
+                    "newLine": true
                 },
                 "canExtName": {
                     "type": "text",
@@ -49,7 +58,7 @@
         "tabUdsDevices": {
             "type": "panel",
             "label": "List of UDS devices",
-            "hidden": "return !data.canExtActivated;",
+            "hidden": "if ((!data.canExtActivated) || (!_alive)) { return true; } else {return false; }",
             "items": {
                 "tableUdsDevicesHdr": {
                     "type": "header",
@@ -72,11 +81,17 @@
                     "hidden": "!_alive",
                     "newLine": true
                 },
-                "introTableNoDevsTxt": {
+                "introtableReScanTxt": {
                     "type": "staticText",
-                    "text": "Press button 'SCAN' to collect device data via UDS protocol. This may take sveral minutes!",
+                    "text": "You may press button 'SCAN' to start again an UDS devices scan.",
+                    "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length == 0)) { return true; } else {return false; }",
+                    "newLine": true
+                },
+                "introTableScanIsActiveTxt": {
+                    "type": "staticText",
+                    "text": "UDS device scan is ongoing. This may take up to 10 seconds. Please be patient and DO NOT press 'Scan' button!",
                     "newLine": true,
-                    "hidden": "if ( ((data.tableUdsDevices) && (data.tableUdsDevices.length > 0)) || (_alive == false)) { return true; } else {return false; }",
+                    "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length > 0)) { return true; } else {return false; }",
                     "style": {
                         "color": "red"
                     }
@@ -94,7 +109,7 @@
                 "tableUdsDevices": {
                     "type": "table",
                     "defaultSendTo": "getUdsDevices",
-                    "jsonData": "${JSON.stringify({\"udsDevices\":data.tableUdsDevices,\"canExt\":{\"name\":data.canExtName,\"activated\":data.canExtActivated}})}",
+                    "jsonData": "${JSON.stringify({\"udsDevices\":data.tableUdsDevices,\"canExtName\":data.canExtName,\"canExtActivated\":data.canExtActivated})}",
                     "button": "SCAN",
                     "showProcess": true,
                     "uniqueColumns": ["devStateName"],
@@ -154,7 +169,7 @@
         "tabCanAdapterExt": {
             "type": "panel",
             "label": "Assignments to External CAN Adapter",
-            "hidden": "return !data.canExtActivated;",
+            "hidden": "if ((!data.canExtActivated) || (!_alive)) { return true; } else {return false; }",
             "items": {
                 "e380Header": {
                     "type": "header",

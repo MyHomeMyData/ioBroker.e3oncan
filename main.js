@@ -14,6 +14,7 @@ const utils = require('@iobroker/adapter-core');
 const codecs = require('./lib/codecs');
 const collect = require('./lib/canCollect');
 const uds = require('./lib/canUds');
+const udsCallback = require('./lib/callback');
 const can = require('socketcan');
 
 class E3oncan extends utils.Adapter {
@@ -57,8 +58,11 @@ class E3oncan extends utils.Adapter {
         this.udsKnownDids         = {};
         this.udsScanDids          = {};
         this.udsScanDidsRetries   = 0;
-        this.udsScanDidMaxRetries = 500;
+        this.udsScanDidMaxRetries = 1500;
         this.udsScanDidsCntSuccess = 0;
+        this.udsScanDidsCntTotal   = 0;
+        this.udsScanDidsCntDone    = 0;
+        this.udsScanDidsCntRetries = 0;
 
         this.updateInterval = null;
 
@@ -147,9 +151,9 @@ class E3oncan extends utils.Adapter {
         }
         */
 
-        //await this.sleep(2500);
-        //await this.scanUdsDids([0x680,0x684,0x68c,0x6a1,0x6c3,0x6c5,0x6cf]);
-        //await this.scanUdsDids([0x6a1]);
+        await this.sleep(2500);
+        await this.scanUdsDids([0x680,0x684,0x68c,0x6a1,0x6c3,0x6c5,0x6cf], 3000);
+        //await this.scanUdsDids([0x6a1], 100);
 
         await this.log.debug('onReady(): Done.');
 
@@ -305,42 +309,6 @@ class E3oncan extends utils.Adapter {
         }
     }
 
-    async scanDevCallback(ctx, ctxAgent, args) {
-        async function mergeDev(dev) {
-            let pushDev = true;
-            await ctx.log.debug('UDS device scan found device: '+String(ctxAgent.canIDhex)+': '+res.res.DeviceProperty.Text);
-            for (const d of Object(ctx.udsScanDevices).values()) {
-                if ( (d.devName == dev.devName) && (d.devAddr == dev.devAddr) ) {
-                    ctx.log.silly('UDS device scan found device already known. No change applied.');
-                    pushDev = false;
-                    break;
-                }
-            }
-            if (pushDev) {
-                await ctx.log.info('UDS device scan found NEW device: '+String(ctxAgent.canIDhex)+': '+res.res.DeviceProperty.Text);
-                ctx.udsNewDevs += 1;
-                ctx.udsScanDevices.push(dev);
-            }
-        }
-        const res = ctxAgent.storage.udsScanResult;
-        if (res) {
-            const devName = res.res.DeviceProperty.Text;
-            const dev = {
-                'devName': devName,
-                'devStateName': devName+'.'+String(ctxAgent.canIDhex),
-                'devAddr': String(ctxAgent.canIDhex),
-                'collectCanId': (devName in ctx.udsDevName2CanId ? ctx.udsDevName2CanId[devName] : '')
-            };
-            await mergeDev(dev);
-        } else {
-            await ctx.log.silly('UDS Scan: '+String(ctxAgent.canIDhex)+': Timeout');
-        }
-        if (ctxAgent.cmndsQueue.length == 0) {
-            await ctxAgent.setCallback(null);    // Scan agent completed. Reset callback.
-            ctx.cntUdsScansActive -= 1;
-        }
-    }
-
     async startupScanUdsDevice(udsScanAgents, addr) {
         const udsAgent = new uds.uds(
             {   'canID'    : Number(addr),
@@ -351,13 +319,14 @@ class E3oncan extends utils.Adapter {
                 'channel'  : this.channelExt,
                 'timeout'  : this.udsTimeout
             });
-        await udsAgent.setCallback(this.scanDevCallback);
+        const callback = new udsCallback.udsCallback();
+        await udsAgent.setCallback(callback.scanDevCallback);
         await this.startupUdsAgent(udsScanAgents, udsAgent, 'udsDevScan');
         udsAgent.checkDeviceAddress(this, this.udsDidForScan, this.udsTimeoutScan, this.udsMaxTrialsScan);
         this.cntUdsScansActive += 1;
     }
 
-    async scanUdsDevices(canConfig) {
+    async scanUdsDevices(canExtName, canExtActivated) {
         function range(size, startAt = 0) {
             return [...Array(size).keys()].map(i => i + startAt);
         }
@@ -372,15 +341,15 @@ class E3oncan extends utils.Adapter {
         }
 
         // Startup CAN:
-        if (canConfig.activated) {
+        if (canExtActivated) {
             if  ((this.channelExt) &&
-            (this.channelExtName != canConfig.name) ) {
+            (this.channelExtName != canExtName) ) {
             // CAN is different from running CAN. Stop actual CAN first.
                 [this.channelExt, this.channelExtName] = await this.disconnectFromCan(this.channelExt, this.channelExtName);
             }
-            [this.channelExt, this.channelExtName] = await this.connectToCan(this.channelExt, canConfig.name, this.onCanMsgExt);
+            [this.channelExt, this.channelExtName] = await this.connectToCan(this.channelExt, canExtName, this.onCanMsgExt);
             if (!this.channelExt) {
-                await this.log.error('UDS scan devices: Could not connect to CAN Adapter '+canConfig.name+'. Aborting.');
+                await this.log.error('UDS scan devices: Could not connect to CAN Adapter '+canExtName+'. Aborting.');
                 if (!this.udsScanTEST) return(this.udsScanDevices);
             }
         } else {
@@ -392,6 +361,7 @@ class E3oncan extends utils.Adapter {
         let scanMode = '';
         if (this.udsScanDevices.length > 0) {
             scanMode = this.udsScanDevices[0].devStateName;
+            this.udsScanDevices[0].devStateName = '';
         } else {
             scanMode = 'TEST DEVICES';
         }
@@ -450,53 +420,23 @@ class E3oncan extends utils.Adapter {
                     JSON.stringify(this.udsScanDevices)
                 );
                 break;
+            case 'SCAN SMALL RANGE DIDS':
+                await this.log.debug('UDS scan TEST mode: Do a SMALL RANGE DIDS scan. Return unchanged device list.');
+                await this.scanUdsDids([0x6c3], 100);
+                break;
+            case 'SCAN FULL RANGE DIDS':
+                await this.log.debug('UDS scan TEST mode: Do a FULL RANGE DIDS scan. Return unchanged device list.');
+                await this.scanUdsDids([0x680,0x684,0x68c,0x6a1,0x6c3,0x6c5,0x6cf], 3000);
+                break;
+
             default:
                 // do nothing
                 this.log.debug('UDS scan TEST mode: Do nothing. return unchanged device list.');
         }
 
-        // Restart all previously running agents:
-        for (const agent of Object.values(this.E3UdsAgents)) {
-            await agent.startup(this,'normal');
-        }
-
         await this.log.info('UDS scan for devices - done');
 
         return(this.udsScanDevices);
-    }
-
-    async scanDidsCallback(ctx, ctxAgent, args) {
-        const response = args[0];
-        const did = args[1];
-        if (ctxAgent.cmndsQueue.length == 0) ctxAgent.setCallback(null);    // Scan agent completed. Reset callback.
-        if (response == 'ok') {
-            await ctx.udsKnownDids[ctxAgent.canIDhex].push(did);
-        }
-        if ( (response == 'ok') || (response == 'negative response') ) {
-            ctx.udsScanDidsCntSuccess += 1;
-            await ctx.log.silly('UDS did scan: '+String(ctxAgent.data.did)+'@'+String(ctxAgent.canIDhex)+': '+response);
-        }else {
-            await ctx.log.debug('UDS did scan: '+String(ctxAgent.data.did)+'@'+String(ctxAgent.canIDhex)+': '+response);
-        }
-        if ( (response == 'timeout') && (ctx.udsScanDidsRetries > 0) ) {
-            // Retry dids with timeout until budget for retries is 0
-            ctx.udsScanDidsRetries -= 1;
-            ctxAgent.pushCmnd(ctx,'read', [did]);
-            if (ctx.udsScanDidsRetries == 0) {
-                await ctx.log.warn('UDS did scan: Budget for retries after timeout is used up. Dids may be missed.');
-            }
-        } else {
-            ctx.udsScanDids[ctxAgent.canIDhex] -= 1;
-        }
-        if (ctx.udsScanDids[ctxAgent.canIDhex] == 0) ctx.cntUdsScansActive -= 1;
-        if (ctx.cntUdsScansActive < 0) {
-            await ctx.log.error('UDS did scan: Number of active dids got negative @'+
-                String(ctxAgent.canIDhex)+' - this should not happen.');
-        }
-        if (ctx.udsScanDids[ctxAgent.canIDhex] < 0) {
-            await ctx.log.error('UDS did scan: Number of remaining dids got negative @'+
-                String(ctxAgent.canIDhex)+' - this should not happen.');
-        }
     }
 
     async startupScanUdsDids(udsScanAgents, addr, dids) {
@@ -517,16 +457,18 @@ class E3oncan extends utils.Adapter {
                 'channel'  : this.channelExt,
                 'timeout'  : this.udsTimeout
             });
-        await udsAgent.setCallback(this.scanDidsCallback);
+        const callback = new udsCallback.udsCallback();
+        await udsAgent.setCallback(callback.scanDidsCallback);
         this.udsScanDidsRetries = this.udsScanDidMaxRetries;
         this.udsScanDids[udsAgent.canIDhex] = dids.length;
-        this.udsKnownDids[udsAgent.canIDhex] = [];
+        this.udsScanDidsCntTotal += dids.length;
+        this.udsKnownDids[udsAgent.canIDhex] = {};
         await this.startupUdsAgent(udsScanAgents, udsAgent, 'udsDidScan');
         this.cntUdsScansActive += 1;
         await udsAgent.pushCmnd(this, 'read', dids);
     }
 
-    async scanUdsDids(udsAddrs) {
+    async scanUdsDids(udsAddrs, udsCntDids) {
         function range(size, startAt = 0) {
             return [...Array(size).keys()].map(i => i + startAt);
         }
@@ -540,39 +482,53 @@ class E3oncan extends utils.Adapter {
             await agent.stop(this);
         }
 
-        this.cntUdsScansActive = 0;
-        const dids = range(3000, 256);
+        this.cntUdsScansActive     = 0;
+        this.udsScanDidsCntTotal   = 0;
+        this.udsScanDidsCntRetries = 0;
+        this.udsScanDidsCntSuccess = 0;
+        this.udsScanDidsCntDone    = 0;
+        const dids = range(udsCntDids, 256);
+        //udsAddrs = [0x6c3,0x6c5];
         for (const addr of Object(udsAddrs).values()) {
             await this.startupScanUdsDids(this.udsScanAgents, addr, dids);
             await this.sleep(50);
         }
-        this.udsScanDidsCntSuccess = 0;
-        const tsAbort = new Date().getTime() + dids.length*this.udsTimeoutScan;
+        let cntDoneLast = -1;
+        const tsAbort = new Date().getTime() + this.udsScanDidsCntTotal*500;
         while ( (this.cntUdsScansActive > 0) && (new Date().getTime() < tsAbort) ) {
             await this.sleep(990);
             if ((new Date().getSeconds() % 10) == 0) {
-                await this.log.info('UDS dids scan checked '+
-                    String(Math.round(this.udsScanDidsCntSuccess/10))+
-                    ' dids/second. Dids remaining: '+
-                    JSON.stringify(this.udsScanDids));
-                this.udsScanDidsCntSuccess = 0;
+                await this.log.info('UDS dids scan status (retries/found/done/total): ('+
+                    String(this.udsScanDidsCntRetries)+'/'+
+                    String(this.udsScanDidsCntSuccess)+'/'+
+                    String(this.udsScanDidsCntDone)+'/'+
+                    String(this.udsScanDidsCntTotal)+
+                    '), remaining: '+
+                    JSON.stringify(this.udsScanDids)
+                );
+                if (cntDoneLast == this.udsScanDidsCntDone) {
+                    // No progress in last 10 seconds
+                    await this.log.warn('UDS dids scan stalled. Aborting');
+                    break;
+                }
+                cntDoneLast = this.udsScanDidsCntDone;
             }
         }
 
-        // Stop all scan agents:
+        // Store found dids and stop all scan agents:
         for (const agent of Object.values(this.udsScanAgents)) {
-            await agent.stop(this,'normal');
+            await agent.storage.storeKnownDids(this, this.udsKnownDids[agent.canIDhex]);
+            await agent.stop(this);
         }
         this.udsScanAgents = {};
+
+        if (this.cntUdsScansActive < 0) await this.log.warn('UDS did scan finished. Number of active UDS scans (should be 0): '+String(this.cntUdsScansActive));
+        await this.log.info('UDS did scan found '+String(this.udsScanDidsCntSuccess)+' dids. See state "dids" @device objects for details.');
 
         // Restart all previously running agents:
         for (const agent of Object.values(this.E3UdsAgents)) {
             await agent.startup(this,'normal');
         }
-
-        if (this.cntUdsScansActive < 0) await this.log.warn('UDS did scan finished. Number of active UDS scans (should be 0): '+String(this.cntUdsScansActive));
-        await this.log.info('UDS did scan found: '+JSON.stringify(this.udsKnownDids));
-        await this.log.info('UDS did scan - done');
     }
 
     setUdsDevicesForTesting() {
@@ -692,7 +648,7 @@ class E3oncan extends utils.Adapter {
                         this.udsDevScanIsRunning = true;
                         await this.log.debug(`Received data - ${JSON.stringify(obj)}`);
                         this.udsScanDevices = obj.message.udsDevices;
-                        this.udsDevices = await this.scanUdsDevices(obj.message.canExt);
+                        this.udsDevices = await this.scanUdsDevices(obj.message.canExtName, obj.message.canExtActivated);
                         await this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
                         //await this.sendTo(obj.from, obj.command, [], obj.callback);
                         this.udsDevScanIsRunning = false;
