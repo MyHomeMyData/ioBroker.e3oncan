@@ -41,7 +41,9 @@ class E3oncan extends utils.Adapter {
         this.channelExtName   = '';
         this.channelInt       = null;
         this.channelIntName   = '';
+
         this.udsAgents        = {};
+        this.udsOnStateChanges = {};    // onChange routines
         this.udsDidForScan    = 256;    // Busidentification
         this.udsMaxTrialsDevScan = 2;      // Number of trials during UDS device scan
         this.udsMaxTrialsDidScan = 4;      // Number of trials during UDS device scan
@@ -63,6 +65,9 @@ class E3oncan extends utils.Adapter {
         this.udsScanDidsCntTotal   = 0;
         this.udsScanDidsCntDone    = 0;
         this.udsScanDidsCntRetries = 0;
+        this.udsScanDevReqId       = 'uds.udsDevScanRequired';
+        this.udsScanDidReqId       = 'uds.udsDidScanRequired';
+        this.doUdsDevScan          = false;
 
         this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
@@ -85,8 +90,8 @@ class E3oncan extends utils.Adapter {
         // Initialize your adapter here
 
         //await this.log.debug('onReady(): Starting.');
-        //await this.log.debug('this.config:');
-        //await this.log.debug(JSON.stringify(this.config));
+        await this.log.debug('this.config:');
+        await this.log.debug(JSON.stringify(this.config));
 
         /*
         this.updateInterval = setInterval(async () => {
@@ -98,6 +103,12 @@ class E3oncan extends utils.Adapter {
         this.setState('info.connection', false, true);
 
         codecs.rawmode.setOpMode(false);
+
+        // Check for required scan for UDS devices
+        this.doUdsDevScan = Object(await this.getStateAsync(this.udsScanDevReqId)).val;
+        if (this.doUdsDevScan) this.log.info('UDS device scan is required.');
+
+        //await this.log.debug(JSON.stringify(this.getStateAsync('BACKENDGATEWAY.0x6c3.json.0256_BusIdentification')));
 
         // Setup external CAN bus if required
         // ==================================
@@ -134,10 +145,7 @@ class E3oncan extends utils.Adapter {
         Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
         */
 
-        // Startup UDS communications if configured
-        // ========================================
-
-        this.subscribeObjects('*');
+        //this.subscribeObjects('*');
 
         /*
         await this.sleep(2*2000);
@@ -149,14 +157,16 @@ class E3oncan extends utils.Adapter {
         }
         */
 
-        await this.log.debug('onReady(): Done.');
-
         // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
         // this.subscribeStates('testVariable');
         // You can also add a subscription for multiple states. The following line watches all states starting with "lights."
         // this.subscribeStates('lights.*');
         // Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
-        // this.subscribeStates('*');
+
+        await this.subscribeStates('*.udsDidsToRead');
+
+        await this.log.debug('onReady(): Done.');
+
 
         /*
             setState examples
@@ -256,6 +266,16 @@ class E3oncan extends utils.Adapter {
 
     }
 
+    async registerUdsOnStateChange(ctx, id, onChange) {
+        const fullId = this.namespace+'.'+id;
+        this.udsOnStateChanges[fullId] = { 'ctx': ctx, 'onChange': onChange };
+    }
+
+    async unRegisterUdsOnStateChange(id) {
+        const fullId = 'e3oncan.0.'+id;
+        if (this.udsOnStateChanges[fullId]) this.udsOnStateChanges[id] = null;
+    }
+
     // Setup agents for collecting data and for communication via UDS
 
     async startupUdsAgent(agents, agent, opMode) {
@@ -320,7 +340,8 @@ class E3oncan extends utils.Adapter {
         this.cntUdsScansActive += 1;
     }
 
-    async scanUdsDevices(canExtName, canExtActivated) {
+    /*
+    async scanUdsDevicesCommands(canExtName, canExtActivated) {
         function range(size, startAt = 0) {
             return [...Array(size).keys()].map(i => i + startAt);
         }
@@ -388,7 +409,7 @@ class E3oncan extends utils.Adapter {
                     }
                 }
                 // eslint-disable-next-line no-case-declarations
-                const tsAbort = new Date().getTime() + this.udsMaxTrialsScan*this.udsTimeoutDevScan+250;
+                const tsAbort = new Date().getTime() + this.udsMaxTrialsDevScan*this.udsTimeoutDevScan+250;
                 await this.log.info('UDS scan: Waiting for scans to complete.');
                 while ( (this.cntUdsScansActive > 0) && (new Date().getTime() < tsAbort) ) {
                     await this.sleep(100);
@@ -430,6 +451,81 @@ class E3oncan extends utils.Adapter {
         await this.log.info('UDS scan for devices - done');
 
         return(this.udsScanDevices);
+    }
+    */
+
+    async scanUdsDevices() {
+        function range(size, startAt = 0) {
+            return [...Array(size).keys()].map(i => i + startAt);
+        }
+
+        await this.log.info('UDS scan for devices - start');
+        this.udsScanAgents = {};
+        this.udsCntNewDevs = 0;
+        this.udsDevices = this.config.tableUdsDevices;
+
+        // Stop all running agents to avoid communication conflicts:
+        for (const agent of Object.values(this.E3UdsAgents)) {
+            await agent.stop(this);
+        }
+
+        const canExtActivated = this.config.canExtActivated;
+        const canExtName = this.config.canExtName;
+
+        // Startup CAN:
+        if (canExtActivated) {
+            if  ((this.channelExt) &&
+            (this.channelExtName != canExtName) ) {
+            // CAN is different from running CAN. Stop actual CAN first.
+                [this.channelExt, this.channelExtName] = await this.disconnectFromCan(this.channelExt, this.channelExtName);
+            }
+            [this.channelExt, this.channelExtName] = await this.connectToCan(this.channelExt, canExtName, this.onCanMsgExt);
+            if (!this.channelExt) {
+                await this.log.error('UDS scan devices: Could not connect to CAN Adapter '+canExtName+'. Aborting.');
+                return(false);
+            }
+        } else {
+            await this.log.error('UDS scan: External CAN not activated! Aborting.');
+            return(false);
+        }
+
+        this.udsScanDidsCntRetries = 0;
+        this.cntUdsScansActive = 0;
+        for (const baseAddr of Object(this.udsScanAddrRange).values()) {
+            for (const addr of Object(range(Number(this.udsScanAddrSpan), Number(baseAddr))).values()) {
+                await this.startupScanUdsDevice(this.udsScanAgents, addr);
+                await this.sleep(50);
+            }
+        }
+        // eslint-disable-next-line no-case-declarations
+        const tsAbort = new Date().getTime() + this.udsMaxTrialsDevScan*this.udsTimeoutDevScan+250;
+        await this.log.info('UDS scan: Waiting for scans to complete.');
+        while ( (this.cntUdsScansActive > 0) && (new Date().getTime() < tsAbort) ) {
+            await this.sleep(100);
+        }
+
+        // Stop all scan agents:
+        for (const agent of Object.values(this.udsScanAgents)) {
+            await agent.stop(this);
+        }
+
+        // Restart all previously running agents:
+        for (const agent of Object.values(this.E3UdsAgents)) {
+            await agent.startup(this,'normal');
+        }
+
+        if (this.cntUdsScansActive < 0) await this.log.warn('UDS scan finished. Number of retries / active UDS scans (should be 0): '+String(this.udsScanDidsCntRetries)+' / '+String(this.cntUdsScansActive));
+        await this.log.info('UDS scan found '+
+            String(this.udsCntNewDevs)+
+            ' new of total '+
+            String(this.udsDevices.length)+
+            ' devices: '+
+            JSON.stringify(this.udsDevices)
+        );
+
+        await this.log.info('UDS scan for devices - done');
+
+        return(true);
     }
 
     async startupScanUdsDids(udsScanAgents, addr, dids) {
@@ -606,15 +702,17 @@ class E3oncan extends utils.Adapter {
      * @param {ioBroker.State | null | undefined} state
      */
     onStateChange(id, state) {
-        /*
         if (state) {
             // The state was changed
-            this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+            //this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+            const agent = this.udsOnStateChanges[id];
+            if (agent) {
+                agent.onChange(this, agent.ctx, state);
+            }
         } else {
             // The state was deleted
-            this.log.info(`state ${id} deleted`);
+            //this.log.info(`state ${id} deleted`);
         }
-        */
     }
 
     sleep(milliseconds) {
@@ -636,13 +734,21 @@ class E3oncan extends utils.Adapter {
             if (obj.command === 'getUdsDevices') {
                 if (obj.callback) {
                     if (!this.udsDevScanIsRunning) {
-                        this.udsDevScanIsRunning = true;
-                        await this.log.debug(`Received data - ${JSON.stringify(obj)}`);
-                        this.udsScanDevices = obj.message.udsDevices;
-                        this.udsDevices = await this.scanUdsDevices(obj.message.canExtName, obj.message.canExtActivated);
-                        await this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
-                        //await this.sendTo(obj.from, obj.command, [], obj.callback);
-                        this.udsDevScanIsRunning = false;
+                        if (this.doUdsDevScan) {
+                            let success = false;
+                            this.udsDevScanIsRunning = true;
+                            await this.log.silly(`Received data - ${JSON.stringify(obj)}`);
+                            //this.udsScanDevices = obj.message.udsDevices;
+                            success = await this.scanUdsDevices();
+                            await this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
+                            if (success) {
+                                await this.setStateAsync(this.udsScanDevReqId, {val: false, ack: true});
+                            }
+                            this.udsDevScanIsRunning = false;
+                        } else {
+                            // Scan not required. Do nothing
+                            this.sendTo(obj.from, obj.command, obj.message, obj.callback);
+                        }
                     } else {
                         await this.log.debug('Request "getUdsDevice" during running UDS scan!');
                         this.sendTo(obj.from, obj.command, obj.message, obj.callback);

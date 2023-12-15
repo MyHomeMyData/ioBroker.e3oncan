@@ -1,21 +1,27 @@
 {
-    "i18n": true,
+    "i18n": false,
     "type": "tabs",
     "items": {
         "tabCanAdapter": {
             "type": "panel",
             "label": "CAN Adapter",
             "items": {
-            "introTabCanInstanceNotActiveTxt": {
-                "type": "staticText",
-                "text": "Please start this adapter instance to enable further configuration options.",
-                "newLine": true,
-                "hidden": "_alive",
-                "style": {
-                    "color": "red"
-                }
-            },
-        "canExtHeader": {
+                "introTabCanInstanceNotActiveTxt": {
+                    "type": "staticText",
+                    "text": "Please start this adapter instance to enable further configuration options.",
+                    "newLine": true,
+                    "hidden": "_alive",
+                    "style": {
+                        "color": "red"
+                    }
+                },
+                "introTabCanPressSaveTxt": {
+                    "type": "staticText",
+                    "text": "Please press button 'Save', when you're done on this tab.",
+                    "newLine": true,
+                    "hidden": "!_alive",
+                },
+                "canExtHeader": {
                     "type": "header",
                     "text": "External CAN Adapter",
                     "size": 2,
@@ -58,7 +64,7 @@
         "tabUdsDevices": {
             "type": "panel",
             "label": "List of UDS devices",
-            "hidden": "if ((!data.canExtActivated) || (!_alive)) { return true; } else {return false; }",
+            "hidden": "if (!data.canExtActivated) { return true; } else {return false; }",
             "items": {
                 "tableUdsDevicesHdr": {
                     "type": "header",
@@ -75,21 +81,21 @@
                         "color": "red"
                     }
                 },
+                "introTabUdsDevicesSaveTxt": {
+                    "type": "staticText",
+                    "text": "Please press button 'Save', when you're done on this tab.",
+                    "newLine": true,
+                    "hidden": "!_alive",
+                },
                 "introtableUdsDevicesTxt": {
                     "type": "staticText",
                     "text": "You may edit 2nd column to set name of state for the device (visible in object tree).",
-                    "hidden": "!_alive",
-                    "newLine": true
-                },
-                "introtableReScanTxt": {
-                    "type": "staticText",
-                    "text": "You may press button 'SCAN' to start again an UDS devices scan.",
-                    "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length == 0)) { return true; } else {return false; }",
+                    "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length > 0)) { return true; } else {return false; }",
                     "newLine": true
                 },
                 "introTableScanIsActiveTxt": {
                     "type": "staticText",
-                    "text": "UDS device scan is ongoing. This may take up to 10 seconds. Please be patient and DO NOT press 'Scan' button!",
+                    "text": "UDS device scan is ongoing. This may take up to 10 seconds.",
                     "newLine": true,
                     "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length > 0)) { return true; } else {return false; }",
                     "style": {
@@ -100,7 +106,7 @@
                     "type": "staticText",
                     "text": "'Device state name' must not be blank!",
                     "newLine": true,
-                    "hidden": "for (const c of data.tableUdsDevices) {if (c.devStateName === '') return false;}; return true;",
+                    "hidden": "if ( (data.tableUdsDevices) && (data.tableUdsDevices.length > 0) ) {for (const c of data.tableUdsDevices) {if (c.devStateName === '') return false;}; return true;} else return true;",
                     "style": {
                         "color": "red"
                     }
@@ -109,10 +115,9 @@
                 "tableUdsDevices": {
                     "type": "table",
                     "defaultSendTo": "getUdsDevices",
-                    "jsonData": "${JSON.stringify({\"udsDevices\":data.tableUdsDevices,\"canExtName\":data.canExtName,\"canExtActivated\":data.canExtActivated})}",
-                    "button": "SCAN",
-                    "showProcess": true,
+                    "jsonData": "${JSON.stringify(data.tableUdsDevices)}",
                     "uniqueColumns": ["devStateName"],
+										
                     "newLine": true,
                     "sm": 12,
                     "md": 12,
@@ -169,8 +174,17 @@
         "tabCanAdapterExt": {
             "type": "panel",
             "label": "Assignments to External CAN Adapter",
-            "hidden": "if ((!data.canExtActivated) || (!_alive)) { return true; } else {return false; }",
+            "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length == 0)) { return true; } else {return false; }",
             "items": {
+                "tableCanAdapterExtWarning": {
+                    "type": "staticText",
+                    "text": "Configuration requires a running adapter instance!",
+                    "hidden": "_alive",
+                    "newLine": true,
+                    "style": {
+                        "color": "red"
+                    }
+                },
                 "e380Header": {
                     "type": "header",
                     "text": "Energy Meter E380",
@@ -216,7 +230,7 @@
 
                 "introTableColExt": {
                     "type": "staticText",
-                    "text": "Listen for data on addresses given in this table. No writing to CAN bus.",
+                    "text": "Listen for data on addresses given in this table. No writing to CAN bus. Press '+' to begin.",
                     "newLine": true
                 },
 
@@ -277,13 +291,13 @@
                 },
                 "tableHdrUds": {
                     "type": "header",
-                    "text": "Requesting and Writing Data on External CAN Adapter via UDSonCAN",
+                    "text": "Requesting data on external CAN Adapter via UDSonCAN",
                     "size": 2
                 },
 
                 "introTableUds": {
                     "type": "staticText",
-                    "text": "Actively request read operations via UDSonCAN to specified data identifiers",
+                    "text": "Specify schedules for devices, press '+' to begin.",
                     "newLine": true
                 },
                 "tableUdsSchedules": {
@@ -310,12 +324,12 @@
                             "attr": "udsSchedule",
                             "width": "10% ",
                             "title": "Schedule (s)",
-                            "tooltip": "Schedule for requesting given DIDs",
+                            "tooltip": "Schedule for requesting given DIDs. 0 for one time request on start of adapter instance.",
                             "filter": false,
                             "sort": false,
                             "min": 0,
                             "step": 1,
-                            "default": 15
+                            "default": 0
                         },
                         {   "type": "selectSendTo",
                             "title": "Select device",
@@ -341,6 +355,7 @@
                         }
                     ]
                 }
+
             }
         },
         "tabCanAdapterInt": {
@@ -360,6 +375,15 @@
                     "newLine": true
                 },
 
+                "tableCanAdapterIntWarning": {
+                    "type": "staticText",
+                    "text": "Configuration requires a running adapter instance!",
+                    "hidden": "_alive",
+                    "newLine": true,
+                    "style": {
+                        "color": "red"
+                    }
+                },
                 "tableColIntErrDevName": {
                     "type": "staticText",
                     "text": "ERROR: column 'Device state name' must contain unique text",

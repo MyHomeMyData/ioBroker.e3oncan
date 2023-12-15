@@ -112,11 +112,39 @@
         },
         {
             "_id": "uds",
-            "type": "folder",
+            "type": "channel",
             "common": {
                 "name": "Data for UDSonCAN communication"
             },
             "native": {}
+        },
+        {
+            "_id": "uds.udsDevScanRequired",
+            "type": "state",
+            "common": {
+                "role": "state",
+                "name": "Initiate a UDS scan for devices on next start of instance",
+                "type": "boolean",
+                "read": true,
+                "write": true,
+                "def": true
+            },
+            "native": {}
+        },
+        {
+            "_id": "uds.udsDidScanRequired",
+            "type": "state",
+            "common": {
+                "role": "state",
+                "name": "Initiate a UDS scan for dids on known devices on next start of instance",
+                "type": "boolean",
+                "read": true,
+                "write": true,
+                "def": false
+            },
+            "native": {}
         }
+
+
     ]
 }
