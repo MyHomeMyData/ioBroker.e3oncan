@@ -35,17 +35,19 @@ class E3oncan extends utils.Adapter {
         this.E3CollectExt  = {};    // Dict of collect devices on external bus
         this.E3UdsAgents   = {};    // Dict of uds devices on external bus
         this.udsScanAgents = {};    // Dict for uds scan agents
-        this.udsNewDevs    = 0;     // New devices found during scan
+        this.udsCntNewDevs    = 0;     // New devices found during scan
 
         this.channelExt       = null;
         this.channelExtName   = '';
         this.channelInt       = null;
         this.channelIntName   = '';
         this.udsAgents        = {};
-        this.udsDidForScan    = 256;                        // Busidentification
-        this.udsMaxTrialsScan = 2;                          // Number of trials during UDS scan
-        this.udsTimeout       = 1500;                       // Timeout (ms) for normal UDS communication
-        this.udsTimeoutScan   = this.udsTimeout + 500;      // Timeout (ms) for scan for UDS devices per trial
+        this.udsDidForScan    = 256;    // Busidentification
+        this.udsMaxTrialsDevScan = 2;      // Number of trials during UDS device scan
+        this.udsMaxTrialsDidScan = 4;      // Number of trials during UDS device scan
+        this.udsTimeout       = 5000;   // Timeout (ms) for normal UDS communication
+        this.udsTimeoutDevScan= 1500;   // Timeout (ms) for UDS devive scan
+        this.udsTimeoutDidScan= 7500;   // Timeout (ms) for UDS dids scan
         this.udsDevices       = [];     // Confirmed & edited UDS devices
         this.udsScanDevices   = [];     // UDS devices found during scan
         this.udsScanAddrSpan  = 0x10;
@@ -57,14 +59,10 @@ class E3oncan extends utils.Adapter {
         };
         this.udsKnownDids         = {};
         this.udsScanDids          = {};
-        this.udsScanDidsRetries   = 0;
-        this.udsScanDidMaxRetries = 1500;
         this.udsScanDidsCntSuccess = 0;
         this.udsScanDidsCntTotal   = 0;
         this.udsScanDidsCntDone    = 0;
         this.udsScanDidsCntRetries = 0;
-
-        this.updateInterval = null;
 
         this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
@@ -86,9 +84,9 @@ class E3oncan extends utils.Adapter {
     async onReady() {
         // Initialize your adapter here
 
-        await this.log.debug('onReady(): Starting.');
-        await this.log.debug('this.config:');
-        await this.log.debug(JSON.stringify(this.config));
+        //await this.log.debug('onReady(): Starting.');
+        //await this.log.debug('this.config:');
+        //await this.log.debug(JSON.stringify(this.config));
 
         /*
         this.updateInterval = setInterval(async () => {
@@ -313,12 +311,12 @@ class E3oncan extends utils.Adapter {
                 'delay'    : 0,
                 'active'   : true,
                 'channel'  : this.channelExt,
-                'timeout'  : this.udsTimeout
+                'timeout'  : this.udsTimeoutDevScan
             });
         const callback = new udsCallback.udsCallback();
         await udsAgent.setCallback(callback.scanDevCallback);
         await this.startupUdsAgent(udsScanAgents, udsAgent, 'udsDevScan');
-        udsAgent.checkDeviceAddress(this, this.udsDidForScan, this.udsTimeoutScan, this.udsMaxTrialsScan);
+        await udsAgent.pushCmnd(this, 'read', [this.udsDidForScan]);
         this.cntUdsScansActive += 1;
     }
 
@@ -329,7 +327,7 @@ class E3oncan extends utils.Adapter {
 
         await this.log.info('UDS scan for devices - start');
         this.udsScanAgents = {};
-        this.udsNewDevs    = 0;
+        this.udsCntNewDevs = 0;
 
         // Stop all running agents to avoid communication conflicts:
         for (const agent of Object.values(this.E3UdsAgents)) {
@@ -372,6 +370,7 @@ class E3oncan extends utils.Adapter {
             case 'SCAN FULL RANGE':
             case 'SCAN SMALL RANGE':
                 this.udsScanDevices = [];
+                this.udsScanDidsCntRetries = 0;
                 if (scanMode == 'SCAN FULL RANGE') {
                     this.log.debug('UDS scan TEST mode: Do a full scan.');
                     this.udsScanAddrRange = [0x680, 0x6a0, 0x6c0, 0x6e0];
@@ -389,7 +388,7 @@ class E3oncan extends utils.Adapter {
                     }
                 }
                 // eslint-disable-next-line no-case-declarations
-                const tsAbort = new Date().getTime() + this.udsMaxTrialsScan*this.udsTimeoutScan+250;
+                const tsAbort = new Date().getTime() + this.udsMaxTrialsScan*this.udsTimeoutDevScan+250;
                 await this.log.info('UDS scan: Waiting for scans to complete.');
                 while ( (this.cntUdsScansActive > 0) && (new Date().getTime() < tsAbort) ) {
                     await this.sleep(100);
@@ -397,18 +396,17 @@ class E3oncan extends utils.Adapter {
 
                 // Stop all scan agents:
                 for (const agent of Object.values(this.udsScanAgents)) {
-                    await agent.stop(this,'normal');
+                    await agent.stop(this);
                 }
-                this.udsScanAgents = {};
 
                 // Restart all previously running agents:
                 for (const agent of Object.values(this.E3UdsAgents)) {
                     await agent.startup(this,'normal');
                 }
 
-                if (this.cntUdsScansActive < 0) await this.log.warn('UDS scan finished. Number of active UDS scans (should be 0): '+String(this.cntUdsScansActive));
+                if (this.cntUdsScansActive < 0) await this.log.warn('UDS scan finished. Number of retries / active UDS scans (should be 0): '+String(this.udsScanDidsCntRetries)+' / '+String(this.cntUdsScansActive));
                 await this.log.info('UDS scan found '+
-                    String(this.udsNewDevs)+
+                    String(this.udsCntNewDevs)+
                     ' new of total '+
                     String(this.udsScanDevices.length)+
                     ' devices: '+
@@ -450,11 +448,10 @@ class E3oncan extends utils.Adapter {
                 'delay'    : 0,
                 'active'   : true,
                 'channel'  : this.channelExt,
-                'timeout'  : this.udsTimeout
+                'timeout'  : this.udsTimeoutDidScan
             });
         const callback = new udsCallback.udsCallback();
         await udsAgent.setCallback(callback.scanDidsCallback);
-        this.udsScanDidsRetries = this.udsScanDidMaxRetries;
         this.udsScanDids[udsAgent.canIDhex] = dids.length;
         this.udsScanDidsCntTotal += dids.length;
         this.udsKnownDids[udsAgent.canIDhex] = {};
@@ -463,7 +460,7 @@ class E3oncan extends utils.Adapter {
         await udsAgent.pushCmnd(this, 'read', dids);
     }
 
-    async scanUdsDids(udsAddrs, udsCntDids) {
+    async scanUdsDids(udsAddrs, udsMaxCntDids) {
         function range(size, startAt = 0) {
             return [...Array(size).keys()].map(i => i + startAt);
         }
@@ -482,8 +479,7 @@ class E3oncan extends utils.Adapter {
         this.udsScanDidsCntRetries = 0;
         this.udsScanDidsCntSuccess = 0;
         this.udsScanDidsCntDone    = 0;
-        const dids = range(udsCntDids, 256);
-        //udsAddrs = [0x6c3,0x6c5];
+        const dids = range(udsMaxCntDids, 256);
         for (const addr of Object(udsAddrs).values()) {
             await this.startupScanUdsDids(this.udsScanAgents, addr, dids);
             await this.sleep(50);
@@ -510,7 +506,7 @@ class E3oncan extends utils.Adapter {
             }
         }
 
-        // Store found dids and stop all scan agents:
+        // Store dids found and stop all scan agents:
         for (const agent of Object.values(this.udsScanAgents)) {
             await agent.storage.storeKnownDids(this, this.udsKnownDids[agent.canIDhex]);
             await agent.stop(this);
@@ -632,8 +628,8 @@ class E3oncan extends utils.Adapter {
     //  * @param {ioBroker.Message} obj
     //  */
     async onMessage(obj) {
-        await this.log.debug('this.config:');
-        await this.log.debug(JSON.stringify(this.config));
+        //await this.log.debug('this.config:');
+        //await this.log.debug(JSON.stringify(this.config));
         if (typeof obj === 'object' && obj.message) {
             this.log.silly(`command received ${obj.command}`);
 
