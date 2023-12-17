@@ -30,11 +30,12 @@ class E3oncan extends utils.Adapter {
 
         this.udsScanTEST = true;
 
-        this.e380Collect = null;    // E380 alway is assigned to external bus
-        this.E3CollectInt  = {};    // Dict of collect devices on internal bus
-        this.E3CollectExt  = {};    // Dict of collect devices on external bus
-        this.E3UdsAgents   = {};    // Dict of uds devices on external bus
-        this.udsScanAgents = {};    // Dict for uds scan agents
+        this.e380Collect      = null;    // E380 alway is assigned to external bus
+        this.E3CollectInt     = {};    // Dict of collect devices on internal bus
+        this.E3CollectExt     = {};    // Dict of collect devices on external bus
+        this.collectTimeout   = 1500;  // Timeout (ms) for collecting data
+        this.E3UdsAgents      = {};    // Dict of uds devices on external bus
+        this.udsScanAgents    = {};    // Dict for uds scan agents
         this.udsCntNewDevs    = 0;     // New devices found during scan
 
         this.channelExt       = null;
@@ -233,37 +234,37 @@ class E3oncan extends utils.Adapter {
             e380Agent = new collect.collect(
                 {   'canID': [0x250,0x252,0x254,0x256,0x258,0x25A,0x25C],
                     'stateBase': conf.e380Name,
-                    'device': conf.e380Name,
+                    'device': 'e380',
                     'delay': conf.e380Delay,
                     'active': conf.e380Active});
             await e380Agent.initStates(this);
         }
+        if (e380Agent) await e380Agent.startup(this);
         return e380Agent;
     }
 
     // Setup E3 collect agents:
 
-    async setupE3CollectAgents(conf, agents, channel) {
+    async setupE3CollectAgents(conf, agents) {
         if ( (conf) && (conf.length > 0) ) {
-            for (const agent of Object.values(conf)) {
-                if (agent.collectActive) {
-                    const devInfo = this.config.tableUdsDevices.filter(item => item.collectCanId == agent.collectCanId);
+            for (const agentConf of Object.values(conf)) {
+                if (agentConf.collectActive) {
+                    const devInfo = this.config.tableUdsDevices.filter(item => item.collectCanId == agentConf.collectCanId);
                     if (devInfo.length > 0) {
-                        const Collect = new collect.collect(
-                            {   'canID'    : [Number(agent.collectCanId)],
+                        const agent = new collect.collect(
+                            {   'canID'    : [Number(agentConf.collectCanId)],
                                 'stateBase': devInfo[0].devStateName,
                                 'device'   : 'common',
-                                'delay'    : agent.collectDelayTime,
-                                'active'   : agent.collectActive,
-                                'channel'  : channel
+                                'timeout'  : this.collectTimeout,
+                                'delay'    : agentConf.collectDelayTime
                             });
-                        agents[Number(agent.collectCanId)] = Collect;
-                        await Collect.initStates(this);
+                        await agent.initStates(this);
+                        if (agent) await agent.startup(this);
+                        agents[Number(agentConf.collectCanId)] = agent;
                     }
                 }
             }
         }
-
     }
 
     async registerUdsOnStateChange(ctx, id, onChange) {
@@ -654,12 +655,13 @@ class E3oncan extends utils.Adapter {
     onUnload(callback) {
         try {
             // Stop UDS agents:
-            for (const agent of Object.values(this.E3UdsAgents)) {
-                agent.stop(this);
-            }
-            for (const agent of Object.values(this.udsScanAgents)) {
-                agent.stop(this);
-            }
+            for (const agent of Object.values(this.E3UdsAgents)) agent.stop(this);
+            for (const agent of Object.values(this.udsScanAgents)) agent.stop(this);
+
+            // Stop Collect agents:
+            if (this.e380Collect) this.e380Collect.stop(this);
+            for (const agent of Object.values(this.E3CollectExt)) agent.stop(this);
+            for (const agent of Object.values(this.E3CollectInt)) agent.stop(this);
 
             // Stop CAN communication:
             this.disconnectFromCan(this.channelExt,this.config.canExtName);
