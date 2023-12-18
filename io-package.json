@@ -17,10 +17,10 @@
                 "zh-cn": "首次出版"
             }
         },
-        "title": "Viessmann E3 series CAN listener",
+        "title": "Viessmann E3 - take control via CAN",
         "titleLang": {
-            "en": "Viessmann E3 series CAN listener",
-            "de": "Viessmann E3-Serie CAN-Listener",
+            "en": "Viessmann E3 - take control via CAN",
+            "de": "Viessmann E3 - Zugriff über CAN-Bus",
             "ru": "CAN-прослушиватель серии Viessmann E3",
             "pt": "Ouvinte CAN da série Viessmann E3",
             "nl": "Viessmann E3-serie CAN-luisteraar",
@@ -33,7 +33,7 @@
         },
         "desc": {
             "en": "Collect data on CAN bus for Viessmann E3 devices, e.g. Vitocal, Vitocharge, Energy Meter E380",
-            "de": "Sammeln Sie Daten auf dem CAN-Bus für Viessmann E3-Geräte, z.B. Vitocal, Vitocharge, Energiezähler E380",
+            "de": "Greifen Sie auf Daten per CAN-Bus zu, für Viessmann E3-Geräte, z.B. Vitocal, Vitocharge, Energiezähler E380",
             "ru": "Сбор данных по шине CAN для устройств Viessmann E3, например. Vitocal, Vitocharge, Счетчик энергии E380",
             "pt": "Colete dados no barramento CAN para dispositivos Viessmann E3, por ex. Vitocal, Vitocharge, medidor de energia E380",
             "nl": "Verzamel gegevens op de CAN-bus voor Viessmann E3-apparaten, b.v. Vitocal, Vitocharge, Energiemeter E380",
