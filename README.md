@@ -89,8 +89,10 @@ All services provided by this adapter are based on device list of your specific 
 -->
 
 ### **WORK IN PROGRESS**
-* Initial release
-* Beta stage
+* This is beta stage!
+* Implement scan for dids per device
+* Probably rework of structure of codecs to implement device specific evaluation
+* Implement WriteByDid
 
 ## License
 MIT License
