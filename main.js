@@ -92,7 +92,7 @@ class E3oncan extends utils.Adapter {
     async onReady() {
         // Initialize your adapter here
 
-        await this.log.debug('Startup of instance '+this.namespace+': Starting.');
+        await this.log.info('Startup of instance '+this.namespace+': Starting.');
         //await this.log.debug('this.config:');
         //await this.log.debug(JSON.stringify(this.config));
 
@@ -133,7 +133,7 @@ class E3oncan extends utils.Adapter {
 
         await this.subscribeStates('*.udsDidsToRead');
 
-        await this.log.debug('Startup of instance '+this.namespace+': Done.');
+        await this.log.info('Startup of instance '+this.namespace+': Done.');
     }
 
     // Setup CAN busses
@@ -146,7 +146,7 @@ class E3oncan extends utils.Adapter {
                 await channel.addListener('onMessage', onMsg, this);
                 await channel.start();
                 await this.setState('info.connection', true, true);
-                await this.log.debug('CAN-Adapter '+name+' successfully started.');
+                await this.log.info('CAN-Adapter '+name+' successfully started.');
             } catch (e) {
                 await this.log.error(`Could not connect to CAN "${name}" - ${JSON.stringify(e)}`);
                 channel = null;
