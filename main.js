@@ -48,7 +48,7 @@ class E3oncan extends utils.Adapter {
         this.udsDidForScan       = 256;    // Busidentification
         this.udsMaxTrialsDevScan = 2;      // Number of trials during UDS device scan
         this.udsMaxTrialsDidScan = 4;      // Number of trials during UDS device scan
-        this.udsTimeout          = 5000;   // Timeout (ms) for normal UDS communication
+        this.udsTimeout          = 7500;   // Timeout (ms) for normal UDS communication
         this.udsTimeoutDevScan   = 1500;   // Timeout (ms) for UDS devive scan
         this.udsTimeoutDidScan   = 7500;   // Timeout (ms) for UDS dids scan
         this.udsDevices          = [];     // Confirmed & edited UDS devices
