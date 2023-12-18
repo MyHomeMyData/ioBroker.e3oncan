@@ -340,6 +340,7 @@ class E3oncan extends utils.Adapter {
         for (const worker of Object.values(this.udsScanWorkers)) {
             await worker.stop(this);
         }
+        this.udsScanWorkers = {};
 
         // Restart all previously running workers:
         for (const worker of Object.values(this.E3UdsWorkers)) {
