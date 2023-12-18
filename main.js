@@ -70,7 +70,7 @@ class E3oncan extends utils.Adapter {
         this.udsScanDidReqId       = 'uds.udsDidScanRequired';
         this.doUdsDevScan          = false;
 
-        this.on('install', this.onInstall.bind(this));
+        //this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
         this.on('objectChange', this.onObjectChange.bind(this));
@@ -78,11 +78,13 @@ class E3oncan extends utils.Adapter {
         this.on('unload', this.onUnload.bind(this));
     }
 
+    /*
     async onInstall() {
         await this.log.debug('onInstall()');
         await this.log.debug('this.config:');
         await this.log.debug(JSON.stringify(this.config));
     }
+    */
 
     /**
      * Is called when databases are connected and adapter received configuration.
@@ -90,15 +92,9 @@ class E3oncan extends utils.Adapter {
     async onReady() {
         // Initialize your adapter here
 
-        //await this.log.debug('onReady(): Starting.');
-        await this.log.debug('this.config:');
-        await this.log.debug(JSON.stringify(this.config));
-
-        /*
-        this.updateInterval = setInterval(async () => {
-            await this.updateDevices();
-        }, this.config.interval * 1 * 1000);
-        */
+        await this.log.debug('Startup of instance '+this.namespace+': Starting.');
+        //await this.log.debug('this.config:');
+        //await this.log.debug(JSON.stringify(this.config));
 
         // Reset the connection indicator during startup
         this.setState('info.connection', false, true);
@@ -137,7 +133,7 @@ class E3oncan extends utils.Adapter {
 
         await this.subscribeStates('*.udsDidsToRead');
 
-        await this.log.debug('Startup of instance: Done.');
+        await this.log.debug('Startup of instance '+this.namespace+': Done.');
     }
 
     // Setup CAN busses
