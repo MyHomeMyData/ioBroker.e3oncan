@@ -181,7 +181,7 @@ class E3oncan extends utils.Adapter {
                     'device': 'e380',
                     'delay': conf.e380Delay,
                     'active': conf.e380Active});
-            await e380Worker.initStates(this);
+            await e380Worker.initStates(this,'standby');
         }
         if (e380Worker) await e380Worker.startup(this);
         return e380Worker;
@@ -202,7 +202,7 @@ class E3oncan extends utils.Adapter {
                                 'timeout'  : this.collectTimeout,
                                 'delay'    : workerConf.collectDelayTime
                             });
-                        await worker.initStates(this);
+                        await worker.initStates(this, 'standby');
                         if (worker) await worker.startup(this);
                         workers[Number(workerConf.collectCanId)] = worker;
                     }
@@ -251,7 +251,7 @@ class E3oncan extends utils.Adapter {
                                     'channel'  : this.channelExt,
                                     'timeout'  : this.udsTimeout
                                 });
-                            await this.E3UdsWorkers[devRxAddr].initStates(this);
+                            await this.E3UdsWorkers[devRxAddr].initStates(this,'standby');
                             await this.E3UdsWorkers[devRxAddr].addSchedule(this, dev.udsSchedule, dev.udsScheduleDids);
                             await this.log.silly('New Schedule ('+String(dev.udsSchedule)+'s) UDS device on '+String(dev.udsSelectDevAddr));
                         } else {
@@ -278,6 +278,7 @@ class E3oncan extends utils.Adapter {
                 'channel'  : this.channelExt,
                 'timeout'  : this.udsTimeoutDevScan
             });
+        await udsWorker.initStates(this, 'udsDevScan');
         const callback = new udsCallback.udsCallback();
         await udsWorker.setCallback(callback.scanDevCallback);
         await this.startupUdsWorker(udsScanWorkers, udsWorker, 'udsDevScan');
