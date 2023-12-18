@@ -17,10 +17,10 @@
                 "zh-cn": "首次出版"
             }
         },
-        "title": "Viessmann E3 - take control via CAN",
+        "title": "Viessmann E3 CAN do",
         "titleLang": {
-            "en": "Viessmann E3 - take control via CAN",
-            "de": "Viessmann E3 - Zugriff über CAN-Bus",
+            "en": "Viessmann E3 CAN do",
+            "de": "Viessmann E3 CAN do",
             "ru": "CAN-прослушиватель серии Viessmann E3",
             "pt": "Ouvinte CAN da série Viessmann E3",
             "nl": "Viessmann E3-serie CAN-luisteraar",
