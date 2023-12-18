@@ -55,7 +55,7 @@
             "PV",
             "Energy Meter"
         ],
-        "license": "Apache-2.0",
+        "license": "MIT",
         "platform": "Javascript/Node.js",
         "main": "main.js",
         "icon": "e3oncan.png",
