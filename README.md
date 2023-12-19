@@ -33,6 +33,7 @@ During first start of adapter instance a device scan will be done providing a li
 * You have a (USB to) CAN bus adapter connected to external CAN bus of Viessmann E3 device
 * CAN adapter is up and visible in system, e.g. as "can0" (use ifconfig to check)
 * Refer to open3e project for further details
+* **Make sure, open3e is not running during initial setup!** This could cause communication errors in both applications.
 
 All services provided by this adapter are based on device list of your specific Viessmann E3 setup. Therefore you have to follow following steps for first setup:
 
@@ -43,7 +44,7 @@ All services provided by this adapter are based on device list of your specific 
 * When scan was successfull two new tabs will get visible in adapter confuration: "LIST OF UDS DEVICES" and "ASSIGNMENTS TO EXTERNAL CAN ADAPTER".
 * Go to the "LIST OF UDS DEVICES" and check the list of devices. You may change the naming on 2nd column. Those names will be used to store all collected data in ioBoker's object tree. Again press "SAVE" button when you did your changes. Again this step is **mandatory**.
 * Instance will restart again and after a few seconds you are ready to configure schedules for collecting data on tab "ASSIGNMENTS TO EXTERNAL CAN ADAPTER".
-* For **energy meter E380** (if available in your setup) you just can activate or not. Please notice the value "Min. update time (s)". Updates to single datapoints are done no faster than the given value (default is 5 seconds). By choosing zero every received data will be stored. Since E380 is sending data very fast (more than 2 values per second), it's recommended not to use zero here. This would put a high load on the ioBroker system.
+* For **energy meter E380** (if available in your setup) you just can activate or not. Please notice the value "Min. update time (s)". Updates to single datapoints are done no faster than the given value (default is 5 seconds). By choosing zero every received data will be stored. Since E380 is sending data very fast (more than 20 values per second), it's recommended not to use zero here. This would put a high load on the ioBroker system.
 * If you have connected E3 devices via CAN bus, e.g. Vitocal and VX3, you can collect data exchanged between those devices in realtime by listening. Press "+" to add a line, check "active" chackbox, select a device and edit "Min. update time (s)". It's feasable to use 0s here, however, I recommend to keep to the 5s.
 * Finally, you may add schedules for requesting data via UDSonCAN protocol. Again press "+" button and edit the setting. You may have several schedules with different (!) timings. By this you can request some datapoints more often than others. Default value of 0 for "Schedule (s)" means, those datapoints will be requested just once during startup of the instance.
 * If you have configured a CAN adapter connected to the **internal CAN bus**, a tab "ASSIGNMENTS TO INTERNAL CAN ADAPTER" is visible. Please configure the devices for colletion there. UDSonCAN is not supported on internal CAN bus by E3 devices.
@@ -81,6 +82,11 @@ All services provided by this adapter are based on device list of your specific 
 * WriteByDid is not supported yet. To come soon.
 * Devices specific datapoints are not supported yet. A scan for datapoints per device (as depict tool of open3e is doing) is under development and hopefully comming soon.
 * In addation to open3e real time collecting of data via listening is supported.
+
+## May open3 be used in parallel?
+Yes, that is possible under certain conditions:
+* If you only use data collecting here, you can use open3e with no limitiations.
+* If you use UDSonCAN here, it's important not to do this for the same devices as open3e does. If you would do so, you will have sporadic communications errors.
 
 ## Changelog
 <!--

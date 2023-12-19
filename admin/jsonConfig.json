@@ -95,7 +95,7 @@
                 },
                 "introTableScanIsActiveTxt": {
                     "type": "staticText",
-                    "text": "UDS device scan is ongoing. This may take up to 10 seconds.",
+                    "text": "UDS device scan is ongoing. This may take up to 20 seconds.",
                     "newLine": true,
                     "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length > 0)) { return true; } else {return false; }",
                     "style": {
