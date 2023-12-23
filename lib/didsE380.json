@@ -11,6 +11,7 @@
             "id": "L1",
             "args": {
               "scale": 1.0,
+              "signed": true,
               "offset": 0
             }
           },
@@ -20,6 +21,7 @@
             "id": "L2",
             "args": {
               "scale": 1.0,
+              "signed": true,
               "offset": 0
             }
           },
@@ -29,6 +31,7 @@
             "id": "L3",
             "args": {
               "scale": 1.0,
+              "signed": true,
               "offset": 0
             }
           },
@@ -38,6 +41,7 @@
             "id": "Total",
             "args": {
               "scale": 1.0,
+              "signed": true,
               "offset": 0
             }
           }
@@ -56,6 +60,7 @@
             "id": "L1",
             "args": {
               "scale": 1.0,
+              "signed": true,
               "offset": 0
             }
           },
@@ -65,6 +70,7 @@
             "id": "L2",
             "args": {
               "scale": 1.0,
+              "signed": true,
               "offset": 0
             }
           },
@@ -74,6 +80,7 @@
             "id": "L3",
             "args": {
               "scale": 1.0,
+              "signed": true,
               "offset": 0
             }
           },
@@ -83,6 +90,7 @@
             "id": "Total",
             "args": {
               "scale": 1.0,
+              "signed": true,
               "offset": 0
             }
           }
@@ -101,6 +109,7 @@
             "id": "L1",
             "args": {
               "scale": 1.0,
+              "signed": true,
               "offset": 0
             }
           },
@@ -110,6 +119,7 @@
             "id": "L2",
             "args": {
               "scale": 1.0,
+              "signed": true,
               "offset": 0
             }
           },
@@ -119,6 +129,7 @@
             "id": "L3",
             "args": {
               "scale": 1.0,
+              "signed": true,
               "offset": 0
             }
           },
@@ -147,6 +158,7 @@
             "id": "L1",
             "args": {
               "scale": 1.0,
+              "signed": false,
               "offset": 0
             }
           },
@@ -156,6 +168,7 @@
             "id": "L2",
             "args": {
               "scale": 1.0,
+              "signed": false,
               "offset": 0
             }
           },
@@ -165,6 +178,7 @@
             "id": "L3",
             "args": {
               "scale": 1.0,
+              "signed": false,
               "offset": 0
             }
           },
@@ -174,6 +188,7 @@
             "id": "Frequency",
             "args": {
               "scale": 100.0,
+              "signed": false,
               "offset": 0
             }
           }
@@ -192,6 +207,7 @@
             "id": "ImportCumulated",
             "args": {
               "scale": 2000.0,
+              "signed": false,
               "offset": 0
             }
           },
@@ -201,6 +217,7 @@
             "id": "ExportCumulated",
             "args": {
               "scale": 2000.0,
+              "signed": false,
               "offset": 0
             }
           }
@@ -219,6 +236,7 @@
             "id": "ActivePower",
             "args": {
               "scale": 10.0,
+              "signed": true,
               "offset": 0
             }
           },
@@ -228,6 +246,7 @@
             "id": "ReactivePower",
             "args": {
               "scale": 10.0,
+              "signed": true,
               "offset": 0
             }
           }
@@ -246,6 +265,7 @@
             "id": "ImportCumulated",
             "args": {
               "scale": 100,
+              "signed": false,
               "offset": 0
             }
           }

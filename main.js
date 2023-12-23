@@ -146,9 +146,9 @@ class E3oncan extends utils.Adapter {
                 await channel.addListener('onMessage', onMsg, this);
                 await channel.start();
                 await this.setState('info.connection', true, true);
-                await this.log.info('CAN-Adapter '+name+' successfully started.');
+                await this.log.info('CAN-Adapter connected: '+name);
             } catch (e) {
-                await this.log.error(`Could not connect to CAN "${name}" - ${JSON.stringify(e)}`);
+                await this.log.error(`Could not connect to CAN-Adapter "${name}" - ${JSON.stringify(e)}`);
                 channel = null;
                 chName  = '';
             }
@@ -160,7 +160,7 @@ class E3oncan extends utils.Adapter {
         if (channel) {
             try {
                 await channel.stop();
-                this.log.debug('CAN-Adapter '+name+' stopped.');
+                this.log.debug('CAN-Adapter disconnected: '+name);
                 channel = null;
             } catch (e) {
                 this.log.error(`Could not disconnect from CAN "${name}" - ${JSON.stringify(e)}`);
