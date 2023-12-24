@@ -73,7 +73,7 @@ class E3oncan extends utils.Adapter {
         //this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
-        this.on('objectChange', this.onObjectChange.bind(this));
+        //this.on('objectChange', this.onObjectChange.bind(this));
         this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
     }
@@ -110,14 +110,18 @@ class E3oncan extends utils.Adapter {
         // Setup external CAN bus if required
         // ==================================
 
+        // @ts-ignore
         if (this.config.canExtActivated) {
+            // @ts-ignore
             [this.channelExt, this.channelExtName] = await this.connectToCan(this.channelExt, this.config.canExtName, this.onCanMsgExt);
         }
 
         // Setup internal CAN bus if required
         // ==================================
 
+        // @ts-ignore
         if (this.config.canIntActivated) {
+            // @ts-ignore
             [this.channelInt, this.channelIntName] = await this.connectToCan(this.channelInt, this.config.canIntName, this.onCanMsgInt);
         }
 
@@ -125,7 +129,9 @@ class E3oncan extends utils.Adapter {
         this.e380Collect = await this.setupE380CollectWorker(this.config);
 
         // Setup all configured devices for collect:
+        // @ts-ignore
         await this.setupE3CollectWorkers(this.config.tableCollectCanExt, this.E3CollectExt, this.channelExt);
+        // @ts-ignore
         await this.setupE3CollectWorkers(this.config.tableCollectCanInt, this.E3CollectInt, this.channelInt);
 
         // Initial setup all configured devices for UDS:
@@ -193,6 +199,7 @@ class E3oncan extends utils.Adapter {
         if ( (conf) && (conf.length > 0) ) {
             for (const workerConf of Object.values(conf)) {
                 if (workerConf.collectActive) {
+                    // @ts-ignore
                     const devInfo = this.config.tableUdsDevices.filter(item => item.collectCanId == workerConf.collectCanId);
                     if (devInfo.length > 0) {
                         const worker = new collect.collect(
@@ -230,7 +237,9 @@ class E3oncan extends utils.Adapter {
     }
 
     async setupUdsWorkers() {
+        // @ts-ignore
         if ( (this.config.tableUdsSchedules) && (this.config.tableUdsSchedules.length > 0) ) {
+            // @ts-ignore
             for (const dev of Object.values(this.config.tableUdsSchedules)) {
                 if (dev.udsScheduleActive) {
                     await this.sleep(50);     // 50 ms pause to next schedule
@@ -238,6 +247,7 @@ class E3oncan extends utils.Adapter {
                     const devRxAddr = devTxAddr + 16;
                     if (!(this.E3UdsWorkers[devRxAddr])) {
                         // Create new worker
+                        // @ts-ignore
                         const devInfo = this.config.tableUdsDevices.filter(item => item.devAddr == dev.udsSelectDevAddr);
                         if (devInfo.length > 0) {
                             const dev_name = devInfo[0].devStateName;
@@ -301,7 +311,9 @@ class E3oncan extends utils.Adapter {
             await worker.stop(this);
         }
 
+        // @ts-ignore
         const canExtActivated = this.config.canExtActivated;
+        // @ts-ignore
         const canExtName = this.config.canExtName;
 
         // Startup CAN:
@@ -363,6 +375,7 @@ class E3oncan extends utils.Adapter {
 
     async startupScanUdsDids(udsScanWorkers, addr, dids) {
         const hexAddr = '0x'+Number(addr).toString(16);
+        // @ts-ignore
         const devInfo = this.config.tableUdsDevices.filter(item => item.devAddr == hexAddr);
         let devName = '';
         if (devInfo.length > 0) {
@@ -467,7 +480,9 @@ class E3oncan extends utils.Adapter {
             for (const worker of Object.values(this.E3CollectInt)) worker.stop(this);
 
             // Stop CAN communication:
+            // @ts-ignore
             this.disconnectFromCan(this.channelExt,this.config.canExtName);
+            // @ts-ignore
             this.disconnectFromCan(this.channelInt,this.config.canIntName);
 
             callback();
@@ -483,8 +498,9 @@ class E3oncan extends utils.Adapter {
     //  * @param {string} id
     //  * @param {ioBroker.Object | null | undefined} obj
     //  */
+    // @ts-ignore
+    /*
     onObjectChange(id, obj) {
-        /*
         if (obj) {
             // The object was changed
             this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
@@ -492,8 +508,8 @@ class E3oncan extends utils.Adapter {
             // The object was deleted
             this.log.info(`object ${id} deleted`);
         }
-        */
     }
+    */
 
     /**
      * Is called if a subscribed state changes
