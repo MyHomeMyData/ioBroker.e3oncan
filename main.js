@@ -59,14 +59,6 @@ class E3oncan extends utils.Adapter {
         this.on('unload', this.onUnload.bind(this));
     }
 
-    /*
-    async onInstall() {
-        await this.log.debug('onInstall()');
-        await this.log.debug('this.config:');
-        await this.log.debug(JSON.stringify(this.config));
-    }
-    */
-
     /**
      * Is called when databases are connected and adapter received configuration.
      */
@@ -127,7 +119,7 @@ class E3oncan extends utils.Adapter {
             // TEST: Do did scan after some seconds
             await this.sleep(2500);
             await this.log.debug('TEST: Did scan start');
-            await this.udsScanWorkers.scanUdsDids(this,[0x680, 0x6c3, 0x6c5],3000);
+            await this.udsScanWorkers.scanUdsDids(this,[0x680, 0x684, 0x68c, 0x6a1, 0x6c3, 0x6c5, 0x6cf],3000);
             await this.setStateAsync(this.udsScanDidReqId, false, true);
             await this.log.debug('TEST: Did scan done');
         }
