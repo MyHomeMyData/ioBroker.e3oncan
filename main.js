@@ -11,11 +11,11 @@ const utils = require('@iobroker/adapter-core');
 // Load your modules here, e.g.:
 // const fs = require("fs");
 
+const can = require('socketcan');
 const codecs = require('./lib/codecs');
 const collect = require('./lib/canCollect');
 const uds = require('./lib/canUds');
-const udsCallback = require('./lib/callback');
-const can = require('socketcan');
+const udsScan = require('./lib/udsScan');
 
 class E3oncan extends utils.Adapter {
 
@@ -28,47 +28,28 @@ class E3oncan extends utils.Adapter {
             name: 'e3oncan',
         });
 
-        this.udsScanTEST = true;
+        this.e380Collect         = null;    // E380 alway is assigned to external bus
+        this.E3CollectInt        = {};    // Dict of collect devices on internal bus
+        this.E3CollectExt        = {};    // Dict of collect devices on external bus
+        this.collectTimeout      = 1500;  // Timeout (ms) for collecting data
+        this.E3UdsWorkers        = {};    // Dict of uds devices on external bus
 
-        this.e380Collect      = null;    // E380 alway is assigned to external bus
-        this.E3CollectInt     = {};    // Dict of collect devices on internal bus
-        this.E3CollectExt     = {};    // Dict of collect devices on external bus
-        this.collectTimeout   = 1500;  // Timeout (ms) for collecting data
-        this.E3UdsWorkers     = {};    // Dict of uds devices on external bus
-        this.udsScanWorkers   = {};    // Dict for uds scan workers
-        this.udsCntNewDevs    = 0;     // New devices found during scan
-
-        this.channelExt       = null;
-        this.channelExtName   = '';
-        this.channelInt       = null;
-        this.channelIntName   = '';
+        this.channelExt          = null;
+        this.channelExtName      = '';
+        this.channelInt          = null;
+        this.channelIntName      = '';
 
         this.udsWorkers          = {};
         this.udsOnStateChanges   = {};     // onChange routines
-        this.udsDidForScan       = 256;    // Busidentification
-        this.udsMaxTrialsDevScan = 2;      // Number of trials during UDS device scan
-        this.udsMaxTrialsDidScan = 4;      // Number of trials during UDS device scan
         this.udsTimeout          = 7500;   // Timeout (ms) for normal UDS communication
-        this.udsTimeoutDevScan   = 1500;   // Timeout (ms) for UDS devive scan
-        this.udsTimeoutDidScan   = 7500;   // Timeout (ms) for UDS dids scan
         this.udsDevices          = [];     // Confirmed & edited UDS devices
+
+        this.udsScanWorkers      = new udsScan.udsScan();
         this.udsScanDevices      = [];     // UDS devices found during scan
-        this.udsScanAddrSpan     = 0x10;
-        this.udsScanAddrRange    = [0x680, 0x6a0, 0x6c0, 0x6e0];
-        this.cntUdsScansActive   = 0;
-        this.udsDevName2CanId    = {
-            'HPMUMASTER': '0x693',    // available only on internal bus (?)
-            'EMCUMASTER': '0x451'
-        };
-        this.udsKnownDids          = {};
-        this.udsScanDids           = {};
-        this.udsScanDidsCntSuccess = 0;
-        this.udsScanDidsCntTotal   = 0;
-        this.udsScanDidsCntDone    = 0;
-        this.udsScanDidsCntRetries = 0;
-        this.udsScanDevReqId       = 'uds.udsDevScanRequired';
-        this.udsScanDidReqId       = 'uds.udsDidScanRequired';
-        this.doUdsDevScan          = false;
+        this.udsScanDevReqId     = 'admin.uds.udsDevScanRequired';
+        this.udsScanDidReqId     = 'admin.uds.udsDidScanRequired';
+        this.doUdsDevScan        = false;
+        this.doUdsDidScan        = false;
 
         //this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
@@ -105,7 +86,9 @@ class E3oncan extends utils.Adapter {
         this.doUdsDevScan = Object(await this.getStateAsync(this.udsScanDevReqId)).val;
         if (this.doUdsDevScan) this.log.info('UDS device scan is required.');
 
-        //await this.log.debug(JSON.stringify(this.getStateAsync('BACKENDGATEWAY.0x6c3.json.0256_BusIdentification')));
+        // Check for required scan for UDS devices
+        this.doUdsDidScan = Object(await this.getStateAsync(this.udsScanDidReqId)).val;
+        if (this.doUdsDidScan) this.log.info('UDS did scan is required.');
 
         // Setup external CAN bus if required
         // ==================================
@@ -138,6 +121,17 @@ class E3oncan extends utils.Adapter {
         await this.setupUdsWorkers();
 
         await this.subscribeStates('*.udsDidsToRead');
+
+        /*
+        if (this.doUdsDidScan) {
+            // TEST: Do did scan after some seconds
+            await this.sleep(2500);
+            await this.log.debug('TEST: Did scan start');
+            await this.udsScanWorkers.scanUdsDids(this,[0x680, 0x6c3, 0x6c5],3000);
+            await this.setStateAsync(this.udsScanDidReqId, false, true);
+            await this.log.debug('TEST: Did scan done');
+        }
+        */
 
         await this.log.info('Startup of instance '+this.namespace+': Done.');
     }
@@ -230,12 +224,6 @@ class E3oncan extends utils.Adapter {
 
     // Setup workers for collecting data and for communication via UDS
 
-    async startupUdsWorker(workers, worker, opMode) {
-        const rxAddr = Number(worker.config.canID) + Number(0x10);
-        workers[rxAddr] = worker;
-        await worker.startup(this, opMode);
-    }
-
     async setupUdsWorkers() {
         // @ts-ignore
         if ( (this.config.tableUdsSchedules) && (this.config.tableUdsSchedules.length > 0) ) {
@@ -278,191 +266,6 @@ class E3oncan extends utils.Adapter {
         }
     }
 
-    async startupScanUdsDevice(udsScanWorkers, addr) {
-        const udsWorker = new uds.uds(
-            {   'canID'    : Number(addr),
-                'stateBase': 'udsScanAddr',
-                'device'   : 'common',
-                'delay'    : 0,
-                'active'   : true,
-                'channel'  : this.channelExt,
-                'timeout'  : this.udsTimeoutDevScan
-            });
-        await udsWorker.initStates(this, 'udsDevScan');
-        const callback = new udsCallback.udsCallback();
-        await udsWorker.setCallback(callback.scanDevCallback);
-        await this.startupUdsWorker(udsScanWorkers, udsWorker, 'udsDevScan');
-        await udsWorker.pushCmnd(this, 'read', [this.udsDidForScan]);
-        this.cntUdsScansActive += 1;
-    }
-
-    async scanUdsDevices() {
-        function range(size, startAt = 0) {
-            return [...Array(size).keys()].map(i => i + startAt);
-        }
-
-        await this.log.info('UDS scan for devices - start');
-        this.udsScanWorkers = {};
-        this.udsCntNewDevs = 0;
-        this.udsDevices = this.config.tableUdsDevices;
-
-        // Stop all running workers to avoid communication conflicts:
-        for (const worker of Object.values(this.E3UdsWorkers)) {
-            await worker.stop(this);
-        }
-
-        // @ts-ignore
-        const canExtActivated = this.config.canExtActivated;
-        // @ts-ignore
-        const canExtName = this.config.canExtName;
-
-        // Startup CAN:
-        if (canExtActivated) {
-            if  ((this.channelExt) &&
-            (this.channelExtName != canExtName) ) {
-            // CAN is different from running CAN. Stop actual CAN first.
-                [this.channelExt, this.channelExtName] = await this.disconnectFromCan(this.channelExt, this.channelExtName);
-            }
-            [this.channelExt, this.channelExtName] = await this.connectToCan(this.channelExt, canExtName, this.onCanMsgExt);
-            if (!this.channelExt) {
-                await this.log.error('UDS scan devices: Could not connect to CAN Adapter '+canExtName+'. Aborting.');
-                return(false);
-            }
-        } else {
-            await this.log.error('UDS scan: External CAN not activated! Aborting.');
-            return(false);
-        }
-
-        this.udsScanDidsCntRetries = 0;
-        this.cntUdsScansActive = 0;
-        for (const baseAddr of Object(this.udsScanAddrRange).values()) {
-            for (const addr of Object(range(Number(this.udsScanAddrSpan), Number(baseAddr))).values()) {
-                await this.startupScanUdsDevice(this.udsScanWorkers, addr);
-                await this.sleep(50);
-            }
-        }
-        // eslint-disable-next-line no-case-declarations
-        const tsAbort = new Date().getTime() + this.udsMaxTrialsDevScan*this.udsTimeoutDevScan+250;
-        await this.log.info('UDS scan: Waiting for scans to complete.');
-        while ( (this.cntUdsScansActive > 0) && (new Date().getTime() < tsAbort) ) {
-            await this.sleep(100);
-        }
-
-        // Stop all scan workers:
-        for (const worker of Object.values(this.udsScanWorkers)) {
-            await worker.stop(this);
-        }
-        this.udsScanWorkers = {};
-
-        // Restart all previously running workers:
-        for (const worker of Object.values(this.E3UdsWorkers)) {
-            await worker.startup(this,'normal');
-        }
-
-        if (this.cntUdsScansActive < 0) await this.log.warn('UDS scan finished. Number of retries / active UDS scans (should be 0): '+String(this.udsScanDidsCntRetries)+' / '+String(this.cntUdsScansActive));
-        await this.log.info('UDS scan found '+
-            String(this.udsCntNewDevs)+
-            ' new of total '+
-            String(this.udsDevices.length)+
-            ' devices: '+
-            JSON.stringify(this.udsDevices)
-        );
-
-        await this.log.info('UDS scan for devices - done');
-
-        return(true);
-    }
-
-    async startupScanUdsDids(udsScanWorkers, addr, dids) {
-        const hexAddr = '0x'+Number(addr).toString(16);
-        // @ts-ignore
-        const devInfo = this.config.tableUdsDevices.filter(item => item.devAddr == hexAddr);
-        let devName = '';
-        if (devInfo.length > 0) {
-            devName = devInfo[0].devStateName;
-        } else {
-            devName = String(addr);
-        }
-        const udsWorker = new uds.uds(
-            {   'canID'    : Number(addr),
-                'stateBase': devName,
-                'device'   : 'common',
-                'delay'    : 0,
-                'active'   : true,
-                'channel'  : this.channelExt,
-                'timeout'  : this.udsTimeoutDidScan
-            });
-        const callback = new udsCallback.udsCallback();
-        await udsWorker.setCallback(callback.scanDidsCallback);
-        this.udsScanDids[udsWorker.canIDhex] = dids.length;
-        this.udsScanDidsCntTotal += dids.length;
-        this.udsKnownDids[udsWorker.canIDhex] = {};
-        await this.startupUdsWorker(udsScanWorkers, udsWorker, 'udsDidScan');
-        this.cntUdsScansActive += 1;
-        await udsWorker.pushCmnd(this, 'read', dids);
-    }
-
-    async scanUdsDids(udsAddrs, udsMaxCntDids) {
-        function range(size, startAt = 0) {
-            return [...Array(size).keys()].map(i => i + startAt);
-        }
-
-        await this.log.info('UDS did scan - start');
-        this.udsScanWorkers = {};
-        this.udsScanDids   = {};
-
-        // Stop all running workers to avoid communication conflicts:
-        for (const worker of Object.values(this.E3UdsWorkers)) {
-            await worker.stop(this);
-        }
-
-        this.cntUdsScansActive     = 0;
-        this.udsScanDidsCntTotal   = 0;
-        this.udsScanDidsCntRetries = 0;
-        this.udsScanDidsCntSuccess = 0;
-        this.udsScanDidsCntDone    = 0;
-        const dids = range(udsMaxCntDids, 256);
-        for (const addr of Object(udsAddrs).values()) {
-            await this.startupScanUdsDids(this.udsScanWorkers, addr, dids);
-            await this.sleep(50);
-        }
-        let cntDoneLast = -1;
-        const tsAbort = new Date().getTime() + this.udsScanDidsCntTotal*500;
-        while ( (this.cntUdsScansActive > 0) && (new Date().getTime() < tsAbort) ) {
-            await this.sleep(990);
-            if ((new Date().getSeconds() % 10) == 0) {
-                await this.log.info('UDS dids scan status (retries/found/done/total): ('+
-                    String(this.udsScanDidsCntRetries)+'/'+
-                    String(this.udsScanDidsCntSuccess)+'/'+
-                    String(this.udsScanDidsCntDone)+'/'+
-                    String(this.udsScanDidsCntTotal)+
-                    '), remaining: '+
-                    JSON.stringify(this.udsScanDids)
-                );
-                if (cntDoneLast == this.udsScanDidsCntDone) {
-                    // No progress in last 10 seconds
-                    await this.log.warn('UDS dids scan stalled. Aborting');
-                    break;
-                }
-                cntDoneLast = this.udsScanDidsCntDone;
-            }
-        }
-
-        // Store dids found and stop all scan workers:
-        for (const worker of Object.values(this.udsScanWorkers)) {
-            await worker.storage.storeKnownDids(this, this.udsKnownDids[worker.canIDhex]);
-            await worker.stop(this);
-        }
-        this.udsScanWorkers = {};
-
-        if (this.cntUdsScansActive < 0) await this.log.warn('UDS did scan finished. Number of active UDS scans (should be 0): '+String(this.cntUdsScansActive));
-        await this.log.info('UDS did scan found '+String(this.udsScanDidsCntSuccess)+' dids. See state "dids" @device objects for details.');
-
-        // Restart all previously running workers:
-        for (const worker of Object.values(this.E3UdsWorkers)) {
-            await worker.startup(this,'normal');
-        }
-    }
 
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
@@ -472,7 +275,7 @@ class E3oncan extends utils.Adapter {
         try {
             // Stop UDS workers:
             for (const worker of Object.values(this.E3UdsWorkers)) worker.stop(this);
-            for (const worker of Object.values(this.udsScanWorkers)) worker.stop(this);
+            for (const worker of Object.values(this.udsScanWorkers.workers)) worker.stop(this);
 
             // Stop Collect workers:
             if (this.e380Collect) this.e380Collect.stop(this);
@@ -554,7 +357,7 @@ class E3oncan extends utils.Adapter {
                             this.udsDevScanIsRunning = true;
                             await this.log.silly(`Received data - ${JSON.stringify(obj)}`);
                             //this.udsScanDevices = obj.message.udsDevices;
-                            success = await this.scanUdsDevices();
+                            success = await this.udsScanWorkers.scanUdsDevices(this);
                             await this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
                             if (success) {
                                 await this.setStateAsync(this.udsScanDevReqId, {val: false, ack: true});
@@ -631,7 +434,7 @@ class E3oncan extends utils.Adapter {
         if ( (this.e380Collect) && (this.e380Collect.config.canID.includes(msg.id)) ) { this.e380Collect.msgCollect(this, msg); }
         if (this.E3CollectExt[msg.id]) this.E3CollectExt[msg.id].msgCollect(this, msg);
         if (this.E3UdsWorkers[msg.id]) this.E3UdsWorkers[msg.id].msgUds(this, msg);
-        if (this.udsScanWorkers[msg.id]) this.udsScanWorkers[msg.id].msgUds(this, msg);
+        if (this.udsScanWorkers.workers[msg.id]) this.udsScanWorkers.workers[msg.id].msgUds(this, msg);
     }
 
     onCanMsgInt(msg) {

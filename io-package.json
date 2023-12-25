@@ -111,7 +111,15 @@
             "native": {}
         },
         {
-            "_id": "uds",
+            "_id": "admin",
+            "type": "folder",
+            "common": {
+                "name": "Admin data for instance"
+            },
+            "native": {}
+        },
+        {
+            "_id": "admin.uds",
             "type": "channel",
             "common": {
                 "name": "Data for UDSonCAN communication"
@@ -119,7 +127,7 @@
             "native": {}
         },
         {
-            "_id": "uds.udsDevScanRequired",
+            "_id": "admin.uds.udsDevScanRequired",
             "type": "state",
             "common": {
                 "role": "state",
@@ -132,7 +140,7 @@
             "native": {}
         },
         {
-            "_id": "uds.udsDidScanRequired",
+            "_id": "admin.uds.udsDidScanRequired",
             "type": "state",
             "common": {
                 "role": "state",
