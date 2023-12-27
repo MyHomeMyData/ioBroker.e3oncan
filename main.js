@@ -13,6 +13,7 @@ const utils = require('@iobroker/adapter-core');
 
 const can = require('socketcan');
 const codecs = require('./lib/codecs');
+const storage = require('./lib/storage');
 const collect = require('./lib/canCollect');
 const uds = require('./lib/canUds');
 const udsScan = require('./lib/udsScan');
@@ -50,6 +51,8 @@ class E3oncan extends utils.Adapter {
         this.udsScanDidReqId     = 'admin.uds.udsDidScanRequired';
         this.doUdsDevScan        = false;
         this.doUdsDidScan        = false;
+        this.udsDevAddrs         = [];
+        this.udsDidsMaxNmbr      = 3000;    // Max. number of dids per device for scan
 
         //this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
@@ -71,6 +74,11 @@ class E3oncan extends utils.Adapter {
 
         // Reset the connection indicator during startup
         this.setState('info.connection', false, true);
+
+        // Collect known devices adresses:
+        for (const dev of Object.values(this.config.tableUdsDevices)) {
+            this.udsDevAddrs.push(dev.devAddr);
+        }
 
         codecs.rawmode.setOpMode(false);
 
@@ -113,17 +121,6 @@ class E3oncan extends utils.Adapter {
         await this.setupUdsWorkers();
 
         await this.subscribeStates('*.udsDidsToRead');
-
-        /*
-        if (this.doUdsDidScan) {
-            // TEST: Do did scan after some seconds
-            await this.sleep(2500);
-            await this.log.debug('TEST: Did scan start');
-            await this.udsScanWorkers.scanUdsDids(this,[0x680, 0x684, 0x68c, 0x6a1, 0x6c3, 0x6c5, 0x6cf],3000);
-            await this.setStateAsync(this.udsScanDidReqId, false, true);
-            await this.log.debug('TEST: Did scan done');
-        }
-        */
 
         await this.log.info('Startup of instance '+this.namespace+': Done.');
     }
@@ -418,6 +415,62 @@ class E3oncan extends utils.Adapter {
                     this.sendTo(obj.from, obj.command, [{label: 'Not available', value: ''}], obj.callback);
                 }
             }
+
+            if (obj.command === 'startDidScan') {
+                if (obj.callback) {
+                    if (!this.udsDidScanIsRunning) {
+                        this.udsDidScanIsRunning = true;
+                        await this.log.silly(`Received data - ${JSON.stringify(obj)}`);
+                        await this.udsScanWorkers.scanUdsDids(this,this.udsDevAddrs,this.udsDidsMaxNmbr);
+                        await this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
+                        this.udsDidScanIsRunning = false;
+                    } else {
+                        await this.log.debug('Request "startDidScan" during running UDS did scan!');
+                        this.sendTo(obj.from, obj.command, obj.message, obj.callback);
+                    }
+                } else {
+                    this.sendTo(obj.from, obj.command, obj.message, obj.callback);
+                }
+            }
+
+            if (obj.command === 'getUdsDids') {
+                if (obj.callback) {
+                    this.log.debug(`Received data - ${JSON.stringify(obj)}`);
+                    if ( (obj.message) && (obj.message != 'undefined') ) {
+                        const udsDids = new storage.storageDids({stateBase:obj.message, device:obj.message});
+                        await udsDids.readKnownDids(this);
+                        const udsDidsTable = [];
+                        for (const [did, item] of Object.entries(udsDids.didsDictCommon)) {
+                            udsDidsTable.push({didId:Number(did), didLen:Number(item.len), didName:item.id, didCodec:item.codec});
+                            //if (udsDidsTable.length >= 50) break;
+                        }
+                        for (const [did, item] of Object.entries(udsDids.didsDictDevSpec)) {
+                            udsDidsTable.push({didId:Number(did), didLen:Number(item.len), didName:item.id, didCodec:item.codec});
+                            //if (udsDidsTable.length >= 60) break;
+                        }
+                        udsDidsTable.sort((a,b) => a.didId-b.didId);
+                        this.sendTo(obj.from, obj.command, udsDidsTable, obj.callback);
+                    } else {
+                        this.sendTo(obj.from, obj.command, [], obj.callback);
+                    }
+                } else {
+                    this.sendTo(obj.from, obj.command, [], obj.callback);
+                }
+            }
+
+            if (obj.command === 'getUdsDidsDevSelect') {
+                if (obj.callback) {
+                    this.log.debug(`Received data - ${JSON.stringify(obj)}`);
+                    const selUdsDevices = await this.config.tableUdsDevices.map(item => ({label: item.devStateName, value: item.devStateName}));
+                    await this.log.silly(`Data to send - ${JSON.stringify(selUdsDevices)}`);
+                    if (selUdsDevices) {
+                        await this.sendTo(obj.from, obj.command, selUdsDevices, obj.callback);
+                    }
+                } else {
+                    await this.sendTo(obj.from, obj.command, [{label: 'Not available', value: ''}], obj.callback);
+                }
+            }
+
 
         }
     }
