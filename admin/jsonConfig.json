@@ -19,7 +19,10 @@
                     "type": "staticText",
                     "text": "Please press button 'Save', when you're done on this tab.",
                     "newLine": true,
-                    "hidden": "!_alive",
+                    "hidden": "!_changed",
+                    "style": {
+                        "color": "red"
+                    }
                 },
                 "canExtHeader": {
                     "type": "header",
@@ -85,7 +88,10 @@
                     "type": "staticText",
                     "text": "Please press button 'Save', when you're done on this tab.",
                     "newLine": true,
-                    "hidden": "!_alive",
+                    "hidden": "!_changed",
+                    "style": {
+                        "color": "red"
+                    }
                 },
                 "introtableUdsDevicesTxt": {
                     "type": "staticText",
@@ -169,6 +175,118 @@
                             "readOnly": false
                         }
                     ]
+                }
+            }
+        },
+        "tabUdsDids": {
+            "type": "panel",
+            "label": "List of datapoints",
+            "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length == 0)) { return true; } else {return false; }",
+            "items": {
+                "tableUdsDidsWarning": {
+                    "type": "staticText",
+                    "text": "Configuration requires a running adapter instance!",
+                    "hidden": "_alive",
+                    "newLine": true,
+                    "style": {
+                        "color": "red"
+                    }
+                },
+                "tableUdsDidsStartScan": {
+                    "type": "sendTo",
+                    "label": "Start scan for datapoints of all devices",
+                    "variant": "outlined",
+                    "showProcess": true,
+                    "style": {
+                        "align": "right"
+                    },
+                    "jsonData": "{}",
+                    "command": "startDidScan",
+                    "confirm": {
+                        "condition": "true",
+                        "title": "Confirm did scan",
+                        "text": "Did scan will take up to 5 minutes. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
+                        "ok": "OK",
+                        "cancel": "Cancel"
+                    },
+                    "hidden": "!_alive",
+                    "newLine": true
+                },
+                "tableUdsDidsSelDev": {
+                    "type": "selectSendTo",
+                    "label": "Select device",
+                    "jsonData": "{}",
+                    "command": "getUdsDidsDevSelect",
+                    "sm": 8,
+                    "md": 6,
+                    "lg": 4,
+                    "default": "Select device",
+                    "hidden": "!_alive",
+                    "alsoDependsOn": ["udsSchedule","tableUdsDevices"],
+                    "newLine": true
+                },
+
+                "tableUdsDids": {
+                    "type": "table",
+                    "defaultSendTo": "getUdsDids",
+                    "jsonData": "${JSON.stringify(data.tableUdsDidsSelDev)}",
+                    "button": "Update",
+                    "showProcess": true,
+                    "newLine": true,
+                    "doNotSave": true,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "label": "List of device specific datapoints",
+                    "onChange": {"alsoDependsOn": ["tableUdsDidsSelDev"], "calculateFunc": "", "ignoreOwnChanges": false},
+                    "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) && (data.tableUdsDidsSelDev != 'Select device') ) { return false; }; return true;",
+                    "noDelete": true,
+                    "import": false,
+                    "export": true,
+                    "items": [
+                        {
+                            "type": "number",
+                            "attr": "didId",
+                            "doNotSave": true,
+                            "width": "10% ",
+                            "title": "ID",
+                            "tooltip": "Did id",
+                            "filter": false,
+                            "sort": false
+                        },
+                        {
+                            "type": "number",
+                            "attr": "didLen",
+                            "doNotSave": true,
+                            "width": "10% ",
+                            "title": "Length",
+                            "tooltip": "Did length",
+                            "filter": false,
+                            "sort": false
+                        },
+                        {
+                            "type": "text",
+                            "attr": "didName",
+                            "doNotSave": true,
+                            "width": "55% ",
+                            "title": "Name",
+                            "tooltip": "Name of did",
+                            "filter": true,
+                            "sort": false,
+                            "readOnly": true
+                        },
+                        {
+                            "type": "text",
+                            "attr": "didCodec",
+                            "doNotSave": true,
+                            "width": "25% ",
+                            "title": "Codec",
+                            "tooltip": "Codec used for did",
+                            "filter": true,
+                            "sort": false,
+                            "readOnly": true
+                        }
+                   ]
                 }
             }
         },
@@ -357,118 +475,6 @@
                     ]
                 }
 
-            }
-        },
-        "tabUdsDids": {
-            "type": "panel",
-            "label": "List of datapoints",
-            "items": {
-                "tableUdsDidsHdr": {
-                    "type": "header",
-                    "text": "List of available dids",
-                    "size": 2
-                },
-
-                "tableUdsDidsWarning": {
-                    "type": "staticText",
-                    "text": "Configuration requires a running adapter instance!",
-                    "hidden": "_alive",
-                    "newLine": true,
-                    "style": {
-                        "color": "red"
-                    }
-                },
-                "tableUdsDidsSelDev": {
-                    "type": "selectSendTo",
-                    "label": "Select device",
-                    "jsonData": "{}",
-                    "command": "getUdsDidsDevSelect",
-                    "sm": 8,
-                    "md": 6,
-                    "lg": 4,
-                    "default": "Select device",
-                    "hidden": "!_alive",
-                    "alsoDependsOn": ["udsSchedule","tableUdsDevices"],
-                    "newLine": true
-                },
-                "tableUdsDidsStartScan": {
-                    "type": "sendTo",
-                    "label": "Start did scan",
-                    "variant": "outlined",
-                    "showProcess": true,
-                    "style": {
-                        "align": "right"
-                    },
-                    "jsonData": "{}",
-                    "command": "startDidScan",
-                    "confirm": {
-                        "condition": "true",
-                        "title": "Confirm did scan",
-                        "text": "Did scan will take up to 5 minutes. Please do not close the tab during scan.",
-                        "ok": "OK",
-                        "cancel": "Cancel"
-                    },
-                    "hidden": "!_alive",
-                    "newLine": false
-                },
-
-                "tableUdsDids": {
-                    "type": "table",
-                    "doNotSave": true,
-                    "defaultSendTo": "getUdsDids",
-                    "jsonData": "${JSON.stringify(data.tableUdsDidsSelDev)}",
-                    "button": "Update",
-                    "newLine": true,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "label": "List of available dids",
-                    "onChange": {"alsoDependsOn": ["tableUdsDidsSelDev.value"], "calculateFunc": "", "ignoreOwnChanges": false},
-                    "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) && (data.tableUdsDidsSelDev != 'Select device') ) { return false; }; return true;",
-                    "noDelete": true,
-                    "import": false,
-                    "export": true,
-                    "items": [
-                        {
-                            "type": "number",
-                            "attr": "didId",
-                            "width": "10% ",
-                            "title": "ID",
-                            "tooltip": "Did id",
-                            "filter": false,
-                            "sort": false
-                        },
-                        {
-                            "type": "number",
-                            "attr": "didLen",
-                            "width": "10% ",
-                            "title": "Length",
-                            "tooltip": "Did length",
-                            "filter": false,
-                            "sort": false
-                        },
-                        {
-                            "type": "text",
-                            "attr": "didName",
-                            "width": "55% ",
-                            "title": "Name",
-                            "tooltip": "Name of did",
-                            "filter": true,
-                            "sort": false,
-                            "readOnly": true
-                        },
-                        {
-                            "type": "text",
-                            "attr": "didCodec",
-                            "width": "25% ",
-                            "title": "Codec",
-                            "tooltip": "Codec used for did",
-                            "filter": true,
-                            "sort": false,
-                            "readOnly": true
-                        }
-                   ]
-                }
             }
         },
         "tabCanAdapterInt": {

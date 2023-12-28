@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "e3oncan",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "news": {
             "0.0.1": {
                 "en": "initial release",
@@ -109,50 +109,6 @@
                 "def": false
             },
             "native": {}
-        },
-        {
-            "_id": "admin",
-            "type": "folder",
-            "common": {
-                "name": "Admin data for instance"
-            },
-            "native": {}
-        },
-        {
-            "_id": "admin.uds",
-            "type": "channel",
-            "common": {
-                "name": "Data for UDSonCAN communication"
-            },
-            "native": {}
-        },
-        {
-            "_id": "admin.uds.udsDevScanRequired",
-            "type": "state",
-            "common": {
-                "role": "state",
-                "name": "Initiate a UDS scan for devices on next start of instance",
-                "type": "boolean",
-                "read": true,
-                "write": true,
-                "def": true
-            },
-            "native": {}
-        },
-        {
-            "_id": "admin.uds.udsDidScanRequired",
-            "type": "state",
-            "common": {
-                "role": "state",
-                "name": "Initiate a UDS scan for dids on known devices on next start of instance",
-                "type": "boolean",
-                "read": true,
-                "write": true,
-                "def": false
-            },
-            "native": {}
         }
-
-
     ]
 }
