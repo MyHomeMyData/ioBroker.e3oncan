@@ -26,6 +26,7 @@ A python based implementation of a pure listening approach using MQTT messaging 
 **Present implementation is restricted on listening and reading via UDSonCAN (ReadByDid).** One of next steps will be implemention of UDSonCAN service WriteByDid.
 
 During first start of adapter instance a device scan will be done providing a list of all available devices for configuration dialog.
+A scan for datapoints of each device is also available.
 
 # Getting started
 
@@ -40,13 +41,17 @@ All services provided by this adapter are based on device list of your specific 
 **Configuration**
 * When installation od adapter has finished a confuration dialog will show up to configure up to two CAN bus adapters (tab "CAN ADAPTER")
 * Edit name of adapter and check the "Connect to adapter" checkbox at least the external adapter
-* When you're done, press "SAVE" button to apply the changes. This step is **mandatory**. The instance will restart, connect to the CAN adapter and do a scan for devices available on bus. **Please be patient** - this may take 10 to 20 seconds. You may watch the activities in a 2nd browser tab by looking on the logging info of the adapter.
-* When scan was successfull two new tabs will get visible in adapter confuration: "LIST OF UDS DEVICES" and "ASSIGNMENTS TO EXTERNAL CAN ADAPTER".
+* When you're done, press "SAVE" button to apply the changes. This step is **mandatory**. The instance will restart, connect to the CAN adapter and do a scan for devices available on bus. **Please be patient** - this may take up to 20 seconds. You may watch the activities in a 2nd browser tab by looking on the logging info of the adapter.
+* When scan was successful new tabs will get visible in adapter confuration: "LIST OF UDS DEVICES", "LIST OF DATAPOINTS" and "ASSIGNMENTS TO EXTERNAL CAN ADAPTER".
 * Go to the "LIST OF UDS DEVICES" and check the list of devices. You may change the naming on 2nd column. Those names will be used to store all collected data in ioBoker's object tree. Again press "SAVE" button when you did your changes. Again this step is **mandatory**.
-* Instance will restart again and after a few seconds you are ready to configure schedules for collecting data on tab "ASSIGNMENTS TO EXTERNAL CAN ADAPTER".
+* Instance will restart again and after a few seconds you are ready to a scan for available datapoints. Go to tab "LIST OF DATAPOINTS", press button "Scan ..." and confirm with "OK" to start the scan. Again, **please be patient** - this may take **up to 5 minutes**. You may watch the progress in a 2nd browser tab by looking on the logging info of the adapter.
+This step is not mandatory but recomended.
+* When datapoint scan was completed successfully, the datapoints are available in object tree for each device. You may view the datapoints in configuration by selecting a device and pressing button "Update". Press filter symbol and type search pattern to filter for name and/or codec. This is for your information only.
+* Last step is to configure schedules for collecting data on tab "ASSIGNMENTS TO EXTERNAL CAN ADAPTER".
 * For **energy meter E380** (if available in your setup) you just can activate or not. Please notice the value "Min. update time (s)". Updates to single datapoints are done no faster than the given value (default is 5 seconds). By choosing zero every received data will be stored. Since E380 is sending data very fast (more than 20 values per second), it's recommended not to use zero here. This would put a high load on the ioBroker system.
 * If you have connected E3 devices via CAN bus, e.g. Vitocal and VX3, you can collect data exchanged between those devices in realtime by listening. Press "+" to add a line, check "active" chackbox, select a device and edit "Min. update time (s)". It's feasable to use 0s here, however, I recommend to keep to the 5s.
 * Finally, you may add schedules for requesting data via UDSonCAN protocol. Again press "+" button and edit the setting. You may have several schedules with different (!) timings. By this you can request some datapoints more often than others. Default value of 0 for "Schedule (s)" means, those datapoints will be requested just once during startup of the instance.
+You may use datapoints informations on tab "LIST OF DATAPOINTS" for reference (opening on 2nd tab could help).
 * If you have configured a CAN adapter connected to the **internal CAN bus**, a tab "ASSIGNMENTS TO INTERNAL CAN ADAPTER" is visible. Please configure the devices for colletion there. UDSonCAN is not supported on internal CAN bus by E3 devices.
 * That's it. Press "SAVE & CLOSE" button and check the data collected in object tree.
 
@@ -96,9 +101,8 @@ Yes, that is possible under certain conditions:
 
 ### **WORK IN PROGRESS**
 * This is beta stage!
-* Implement scan for dids per device
-* Probably rework of structure of codecs to implement device specific evaluation
 * Implement WriteByDid
+* Improve usability for tab "LIST OF DATAPOINTS"
 
 ## License
 MIT License
