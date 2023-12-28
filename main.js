@@ -50,6 +50,7 @@ class E3oncan extends utils.Adapter {
         this.udsScanDevices      = [];     // UDS devices found during scan
         this.doUdsDevScan        = false;
         this.udsDevAddrs         = [];
+        this.udsDevStateNames    = [];
         this.udsDidsMaxNmbr      = 3000;    // Max. number of dids per device for scan
 
         //this.on('install', this.onInstall.bind(this));
@@ -75,7 +76,10 @@ class E3oncan extends utils.Adapter {
 
         // Collect known devices adresses:
         for (const dev of Object.values(this.config.tableUdsDevices)) {
+            // @ts-ignore
             this.udsDevAddrs.push(dev.devAddr);
+            // @ts-ignore
+            this.udsDevStateNames.push(dev.devStateName);
         }
 
         codecs.rawmode.setOpMode(false);
@@ -428,7 +432,7 @@ class E3oncan extends utils.Adapter {
             if (obj.command === 'getUdsDids') {
                 if (obj.callback) {
                     this.log.silly(`Received data - ${JSON.stringify(obj)}`);
-                    if ( (obj.message) && (obj.message != 'undefined') ) {
+                    if ( (obj.message) && (this.udsDevStateNames.includes(obj.message)) ) {
                         const udsDids = new storage.storageDids({stateBase:obj.message, device:obj.message});
                         await udsDids.readKnownDids(this);
                         const udsDidsTable = [];
@@ -453,7 +457,8 @@ class E3oncan extends utils.Adapter {
             if (obj.command === 'getUdsDidsDevSelect') {
                 if (obj.callback) {
                     this.log.silly(`Received data - ${JSON.stringify(obj)}`);
-                    const selUdsDevices = await this.config.tableUdsDevices.map(item => ({label: item.devStateName, value: item.devStateName}));
+                    // @ts-ignore
+                    const selUdsDevices = this.config.tableUdsDevices.map(item => ({ label: item.devStateName, value: item.devStateName }));
                     await this.log.silly(`Data to send - ${JSON.stringify(selUdsDevices)}`);
                     if (selUdsDevices) {
                         await this.sendTo(obj.from, obj.command, selUdsDevices, obj.callback);
