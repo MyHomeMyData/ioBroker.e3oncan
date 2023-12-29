@@ -118,7 +118,7 @@ class E3oncan extends utils.Adapter {
         // Initial setup all configured devices for UDS:
         await this.setupUdsWorkers();
 
-        await this.subscribeStates('*.udsDidsToRead');
+        await this.subscribeStates('*.udsReadByDid');
 
         await this.log.info('Startup of instance '+this.namespace+': Done.');
     }
@@ -199,14 +199,14 @@ class E3oncan extends utils.Adapter {
         }
     }
 
-    async registerUdsOnStateChange(ctx, id, onChange) {
+    async registerUdsOnStateChange(ctx, ctxWorker, id, onChange) {
         const fullId = this.namespace+'.'+id;
-        this.udsOnStateChanges[fullId] = { 'ctx': ctx, 'onChange': onChange };
+        this.udsOnStateChanges[fullId] = { 'ctx': ctxWorker, 'onChange': onChange };
     }
 
     async unRegisterUdsOnStateChange(id) {
-        const fullId = 'e3oncan.0.'+id;
-        if (this.udsOnStateChanges[fullId]) this.udsOnStateChanges[id] = null;
+        const fullId = this.namespace+'.'+id;
+        if (this.udsOnStateChanges[fullId]) this.udsOnStateChanges[fullId] = null;
     }
 
     // Setup workers for collecting data and for communication via UDS
