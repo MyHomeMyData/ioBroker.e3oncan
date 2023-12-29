@@ -204,8 +204,8 @@
                     "command": "startDidScan",
                     "confirm": {
                         "condition": "true",
-                        "title": "Confirm did scan",
-                        "text": "Did scan will take up to 5 minutes. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
+                        "title": "Confirm scan for datapoints",
+                        "text": "Scan will take up to 5 minutes. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
                         "ok": "OK",
                         "cancel": "Cancel"
                     },
