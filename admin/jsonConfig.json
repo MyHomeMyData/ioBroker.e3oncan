@@ -205,7 +205,7 @@
                     "confirm": {
                         "condition": "true",
                         "title": "Confirm scan for datapoints",
-                        "text": "Scan will take up to 5 minutes. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
+                        "text": "Scan will take up to 5 minutes. Plaese make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
                         "ok": "OK",
                         "cancel": "Cancel"
                     },
@@ -241,7 +241,7 @@
                     "onChange": {"alsoDependsOn": ["tableUdsDidsSelDev"], "calculateFunc": "", "ignoreOwnChanges": false},
                     "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) && (data.tableUdsDidsSelDev != 'Select device') ) { return false; }; return true;",
                     "noDelete": true,
-                    "import": false,
+                    "import": true,
                     "export": true,
                     "items": [
                         {
@@ -350,6 +350,14 @@
                 "introTableColExt": {
                     "type": "staticText",
                     "text": "Listen for data on addresses given in this table. No writing to CAN bus. Press '+' to begin.",
+                    "hidden": "if (data.tableUdsDevices) {for(let i=0; i<data.tableUdsDevices.length; i++){if (data.tableUdsDevices[i].collectCanId != '') return false;}; return true;} else {return true;}",
+                    "newLine": true
+                },
+
+                "introTableColExtNoDevs": {
+                    "type": "staticText",
+                    "text": "No device for collecting available (missing CAN ID).",
+                    "hidden": "if (data.tableUdsDevices) {for(let i=0; i<data.tableUdsDevices.length; i++){if (data.tableUdsDevices[i].collectCanId != '') return true;}; return false;} else {return false;}",
                     "newLine": true
                 },
 
@@ -370,6 +378,7 @@
                     "md": 12,
                     "lg": 12,
                     "label": "",
+                    "hidden": "if (data.tableUdsDevices) {for(let i=0; i<data.tableUdsDevices.length; i++){if (data.tableUdsDevices[i].collectCanId != '') return false;}; return true;} else {return true;}",
                     "showSecondAddAt": 5,
                     "items": [
                         {
