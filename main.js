@@ -147,10 +147,10 @@ class E3oncan extends utils.Adapter {
         if (channel) {
             try {
                 await channel.stop();
-                this.log.debug('CAN-Adapter disconnected: '+name);
+                await this.log.info('CAN-Adapter disconnected: '+name);
                 channel = null;
             } catch (e) {
-                this.log.error(`Could not disconnect from CAN "${name}" - err=${e.message}`);
+                await this.log.error(`Could not disconnect from CAN "${name}" - err=${e.message}`);
                 channel = null;
             }
         }
@@ -277,6 +277,7 @@ class E3oncan extends utils.Adapter {
 
             callback();
         } catch (e) {
+            this.log.error('unLoad() could not be completed. err='+e.message);
             callback();
         }
     }
