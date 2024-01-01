@@ -299,7 +299,7 @@ class E3oncan extends utils.Adapter {
     onStateChange(id, state) {
         if ( (state) && (!state.ack) ) {
             // The state was changed and ack == false
-            this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+            this.log.silly(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
             for (const worker of Object.values(this.E3UdsWorkers)) {
                 if (id.includes(this.namespace+'.'+worker.config.stateBase)) {
                     worker.onUdsStateChange(this, id, state);
