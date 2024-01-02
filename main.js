@@ -41,7 +41,6 @@ class E3oncan extends utils.Adapter {
         this.channelIntName      = '';
 
         this.udsWorkers          = {};
-        this.udsOnStateChanges   = {};     // onChange routines
         this.udsTimeout          = 7500;   // Timeout (ms) for normal UDS communication
         this.udsDevices          = [];     // Confirmed & edited UDS devices
 
@@ -117,8 +116,6 @@ class E3oncan extends utils.Adapter {
 
         // Initial setup all configured devices for UDS:
         await this.setupUdsWorkers();
-
-        await this.subscribeStates('*.udsReadByDid');
 
         await this.log.info('Startup of instance '+this.namespace+': Done.');
     }
@@ -199,16 +196,6 @@ class E3oncan extends utils.Adapter {
         }
     }
 
-    async registerUdsOnStateChange(ctx, ctxWorker, id, onChange) {
-        const fullId = this.namespace+'.'+id;
-        this.udsOnStateChanges[fullId] = { 'ctx': ctxWorker, 'onChange': onChange };
-    }
-
-    async unRegisterUdsOnStateChange(id) {
-        const fullId = this.namespace+'.'+id;
-        if (this.udsOnStateChanges[fullId]) this.udsOnStateChanges[fullId] = null;
-    }
-
     // Setup workers for collecting data and for communication via UDS
 
     async setupUdsWorkers() {
@@ -249,7 +236,10 @@ class E3oncan extends utils.Adapter {
                     }
                 }
             }
-            for (const worker of Object.values(this.E3UdsWorkers)) await worker.startup(this, 'normal');
+            for (const worker of Object.values(this.E3UdsWorkers)) {
+                await worker.startup(this, 'normal');
+                await this.subscribeStates(this.namespace+'.'+worker.config.stateBase+'.*',this.onStateChange);
+            }
         }
     }
 
@@ -308,16 +298,14 @@ class E3oncan extends utils.Adapter {
      * @param {ioBroker.State | null | undefined} state
      */
     onStateChange(id, state) {
-        if (state) {
-            // The state was changed
-            //this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-            const worker = this.udsOnStateChanges[id];
-            if (worker) {
-                worker.onChange(this, worker.ctx, state);
+        if ( (state) && (!state.ack) ) {
+            // The state was changed and ack == false
+            this.log.silly(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+            for (const worker of Object.values(this.E3UdsWorkers)) {
+                if (id.includes(this.namespace+'.'+worker.config.stateBase)) {
+                    worker.onUdsStateChange(this, id, state);
+                }
             }
-        } else {
-            // The state was deleted
-            //this.log.info(`state ${id} deleted`);
         }
     }
 

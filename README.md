@@ -23,7 +23,7 @@ Important parts are based on the project [open3e](https://github.com/open3e).
 
 A python based implementation of a pure listening approach using MQTT messaging is also availabe, see [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
 
-**Present implementation is restricted on listening and reading via UDSonCAN (ReadByDid).** One of next steps will be implemention of UDSonCAN service WriteByDid.
+**Present implementation supports reading and writing of datapoints via UDSonCAN (ReadByDid and WriteByDid).** Writing is restricted to raw data and numeric datapoints w/o sub structure.
 
 During first start of adapter instance a device scan will be done providing a list of all available devices for configuration dialog.
 A scan for datapoints of each device is also available.
@@ -84,8 +84,8 @@ You may use datapoints informations on tab "LIST OF DATAPOINTS" for reference (o
 
 ## What is different to open3e project?
 * Obviously, the main differece is the direct integration to ioBroker. Configuration can be done via dialogs, data get's directly listed in object tree.
-* WriteByDid is not supported yet. To come soon.
-* Devices specific datapoints are not supported yet. A scan for datapoints per device (as depict tool of open3e is doing) is under development and hopefully comming soon.
+* WriteByDid is supported for raw data and for numeric datapoints without sub structure under tree-view of objects. Writing of data is triggered by storing the datapoint with ack=false. The datapoint will be read again two seconds after writing.
+* A scan for datapoints per device (as depict tool of open3e is doing) is available now. After a successful scan, device specific datapoints are listed in object tree.
 * In addation to open3e real time collecting of data via listening is supported.
 
 ## May open3 be used in parallel?
@@ -101,7 +101,7 @@ Yes, that is possible under certain conditions:
 
 ### **WORK IN PROGRESS**
 * This is beta stage!
-* Implement WriteByDid
+* Add writing for datapoints with complex structure.
 * Improve usability for tab "LIST OF DATAPOINTS"
 
 ## License
