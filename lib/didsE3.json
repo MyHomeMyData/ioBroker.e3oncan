@@ -22950,16 +22950,98 @@
       }
     },
     "2369": {
-      "codec": "O3ECompStat",
+      "codec": "O3EComplexType",
       "len": 14,
       "id": "HeatPumpCompressorStatistical",
-      "args": {}
+      "args": {
+        "subTypes": [
+          {
+            "codec": "RawCodec",
+            "len": 6,
+            "id": "Unknown1",
+            "args": {}
+          },
+          {
+            "codec": "O3EInt16",
+            "len": 2,
+            "id": "starts",
+            "args": {
+              "scale": 1,
+              "signed": false,
+              "offset": 0
+            }
+          },
+          {
+            "codec": "RawCodec",
+            "len": 2,
+            "id": "Unknown2",
+            "args": {}
+          },
+          {
+            "codec": "O3EInt16",
+            "len": 2,
+            "id": "hours",
+            "args": {
+              "scale": 1,
+              "signed": false,
+              "offset": 0
+            }
+          },
+          {
+            "codec": "RawCodec",
+            "len": 2,
+            "id": "Unknown3",
+            "args": {}
+          }
+        ]
+      }
     },
     "2370": {
-      "codec": "O3EAddElHeaterStat",
+      "codec": "O3EComplexType",
       "len": 11,
       "id": "AdditionalElectricHeaterStatistical",
-      "args": {}
+      "args": {
+        "subTypes": [
+          {
+            "codec": "RawCodec",
+            "len": 3,
+            "id": "Unknown1",
+            "args": {}
+          },
+          {
+            "codec": "O3EInt16",
+            "len": 2,
+            "id": "starts",
+            "args": {
+              "scale": 1,
+              "signed": false,
+              "offset": 0
+            }
+          },
+          {
+            "codec": "RawCodec",
+            "len": 2,
+            "id": "Unknown2",
+            "args": {}
+          },
+          {
+            "codec": "O3EInt16",
+            "len": 2,
+            "id": "hours",
+            "args": {
+              "scale": 1,
+              "signed": false,
+              "offset": 0
+            }
+          },
+          {
+            "codec": "RawCodec",
+            "len": 2,
+            "id": "Unknown3",
+            "args": {}
+          }
+        ]
+      }
     },
     "2371": {
       "codec": "O3EComplexType",
