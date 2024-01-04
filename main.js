@@ -303,7 +303,8 @@ class E3oncan extends utils.Adapter {
             this.log.silly(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
             for (const worker of Object.values(this.E3UdsWorkers)) {
                 if (id.includes(this.namespace+'.'+worker.config.stateBase)) {
-                    worker.onUdsStateChange(this, id, state);
+                    this.log.silly(`Call worker for ${worker.config.stateBase}`);
+                    worker.onUdsStateChange(this, worker, id, state);
                 }
             }
         }
