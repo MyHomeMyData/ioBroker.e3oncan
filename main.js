@@ -408,6 +408,7 @@ class E3oncan extends utils.Adapter {
                         this.udsDidScanIsRunning = true;
                         await this.log.silly(`Received data - ${JSON.stringify(obj)}`);
                         await this.udsScanWorker.scanUdsDids(this,this.udsDevAddrs,this.udsDidsMaxNmbr);
+                        //await this.udsScanWorker.scanUdsDids(this,this.udsDevAddrs,300);
                         await this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
                         this.udsDidScanIsRunning = false;
                     } else {
@@ -426,7 +427,7 @@ class E3oncan extends utils.Adapter {
                         const udsDids = new storage.storageDids({stateBase:obj.message, device:obj.message});
                         await udsDids.readKnownDids(this);
                         const udsDidsTable = [];
-                        for (const [did, item] of Object.entries(udsDids.didsDictCommon)) {
+                        for (const [did, item] of Object.entries(udsDids.didsDictDevCom)) {
                             udsDidsTable.push({didId:Number(did), didLen:Number(item.len), didName:item.id, didCodec:item.codec});
                             //if (udsDidsTable.length >= 50) break;
                         }
