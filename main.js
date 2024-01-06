@@ -248,22 +248,22 @@ class E3oncan extends utils.Adapter {
      * Is called when adapter shuts down - callback has to be called under any circumstances!
      * @param {() => void} callback
      */
-    onUnload(callback) {
+    async onUnload(callback) {
         try {
             // Stop UDS workers:
-            for (const worker of Object.values(this.E3UdsWorkers)) worker.stop(this);
-            for (const worker of Object.values(this.udsScanWorker.workers)) worker.stop(this);
+            for (const worker of Object.values(this.E3UdsWorkers)) await worker.stop(this);
+            for (const worker of Object.values(this.udsScanWorker.workers)) await worker.stop(this);
 
             // Stop Collect workers:
             if (this.e380Collect) this.e380Collect.stop(this);
-            for (const worker of Object.values(this.E3CollectExt)) worker.stop(this);
-            for (const worker of Object.values(this.E3CollectInt)) worker.stop(this);
+            for (const worker of Object.values(this.E3CollectExt)) await worker.stop(this);
+            for (const worker of Object.values(this.E3CollectInt)) await worker.stop(this);
 
             // Stop CAN communication:
             // @ts-ignore
-            this.disconnectFromCan(this.channelExt,this.config.canExtName);
+            await this.disconnectFromCan(this.channelExt,this.config.canExtName);
             // @ts-ignore
-            this.disconnectFromCan(this.channelInt,this.config.canIntName);
+            await this.disconnectFromCan(this.channelInt,this.config.canIntName);
 
             callback();
         } catch (e) {
