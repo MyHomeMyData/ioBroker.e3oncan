@@ -23,10 +23,10 @@ Important parts are based on the project [open3e](https://github.com/open3e).
 
 A python based implementation of a pure listening approach using MQTT messaging is also availabe, see [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
 
-**Present implementation supports reading and writing of datapoints via UDSonCAN (ReadByDid and WriteByDid).** Writing is restricted to raw data and numeric datapoints w/o sub structure.
+**Present implementation supports reading and writing of datapoints via UDSonCAN (ReadByDid and WriteByDid).** By writing to datapoints it's possible to change setpoints, schedules and so on. It's even possible to add new schedules e.g. for domestic hot water circulation pump. Writing is restricted to a set of datapoints using a white list.
 
 During first start of adapter instance a device scan will be done providing a list of all available devices for configuration dialog.
-A scan for datapoints of each device is also available.
+A scan for datapoints of each device is also available and should be done during first setup.
 
 # Getting started
 
@@ -45,7 +45,7 @@ All services provided by this adapter are based on device list of your specific 
 * When scan was successful new tabs will get visible in adapter confuration: "LIST OF UDS DEVICES", "LIST OF DATAPOINTS" and "ASSIGNMENTS TO EXTERNAL CAN ADAPTER".
 * Go to the "LIST OF UDS DEVICES" and check the list of devices. You may change the naming on 2nd column. Those names will be used to store all collected data in ioBoker's object tree. Again press "SAVE" button when you did your changes. Again this step is **mandatory**.
 * Instance will restart again and after a few seconds you are ready to a scan for available datapoints. Go to tab "LIST OF DATAPOINTS", press button "Start scan ..." and confirm with "OK" to start the scan. Again, **please be patient** - this may take **up to 5 minutes**. You may watch the progress in a 2nd browser tab by looking on the logging info of the adapter.
-This step is not mandatory but recomended.
+This step is not mandatory but strongly recomended. If you would like to write to datapoints you need to do a datapoint scan first.
 * When datapoint scan was completed successfully, the datapoints are available in object tree for each device. You may view the datapoints in configuration by selecting a device and pressing button "Update". Press filter symbol and type search pattern to filter for name and/or codec. This is for your information only. Please deactivate filtering before selecting another device to avoid error messages.
 * Last step is to configure schedules for collecting data on tab "ASSIGNMENTS TO EXTERNAL CAN ADAPTER".
 * For **energy meter E380** (if available in your setup) you just can activate or not. Please notice the value "Min. update time (s)". Updates to single datapoints are done no faster than the given value (default is 5 seconds). By choosing zero every received data will be stored. Since E380 is sending data very fast (more than 20 values per second), it's recommended not to use zero here. This would put a high load on the ioBroker system.
@@ -84,7 +84,7 @@ You may use datapoints informations on tab "LIST OF DATAPOINTS" for reference (o
 
 ## What is different to open3e project?
 * Obviously, the main differece is the direct integration to ioBroker. Configuration can be done via dialogs, data get's directly listed in object tree.
-* WriteByDid is supported for raw data and for numeric datapoints without sub structure under tree-view of objects. Writing of data is triggered by storing the datapoint with ack=false. The datapoint will be read again two seconds after writing.
+* **WriteByDid is supported for all data types** but restricted to datapoints on device specific white list, see info section of device. You need to do a datapoint scan to enable writing. Writing of data is triggered by storing the datapoint with ack=false - yes, it's that simple! The datapoint will be read again from device two seconds after writing. If datapoint not get's acknowledged, please take a look to the logs.
 * A scan for datapoints per device (as depict tool of open3e is doing) is available now. After a successful scan, device specific datapoints are listed in object tree.
 * In addation to open3e real time collecting of data via listening is supported.
 
@@ -101,7 +101,6 @@ Yes, that is possible under certain conditions:
 
 ### **WORK IN PROGRESS**
 * This is beta stage!
-* Add writing for datapoints with complex structure.
 * Improve usability for tab "LIST OF DATAPOINTS"
 
 ## License
