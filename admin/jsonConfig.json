@@ -117,6 +117,15 @@
                         "color": "red"
                     }
                 },
+                "introTableNoDotInDevNameTxt": {
+                    "type": "staticText",
+                    "text": "Symbol '.' not allowed in 'Device state name'!",
+                    "newLine": true,
+                    "hidden": "if ( (data.tableUdsDevices) && (data.tableUdsDevices.length > 0) ) {for (const c of data.tableUdsDevices) {if (c.devStateName.includes('.')) return false;}; return true;} else return true;",
+                    "style": {
+                        "color": "red"
+                    }
+                },
 
                 "tableUdsDevices": {
                     "type": "table",
@@ -148,10 +157,10 @@
                             "attr": "devStateName",
                             "width": "15% ",
                             "title": "Device state name",
-                            "tooltip": "Device name in object tree",
+                            "tooltip": "Device name in object tree. Must not contain dots.",
                             "filter": false,
                             "sort": false,
-                            "validator": "if (data.devStateName === '') { return false; } else { return true; }",
+                            "validator": "if ( (data.devStateName === '') || (data.devStateName.includes('.')) ) { return false; } else { return true; }",
                             "validatorNoSaveOnError": true
                         },
                         {
