@@ -1,5 +1,10 @@
 {
-    "e3oncan adapter settings": "Adapter settings for e3oncan",
-    "option1": "option1",
-    "option2": "option2"
+    "CAN Adapter": "CAN Adapter",
+    "Please start this adapter instance to enable further configuration options.": "Please start this adapter instance to enable further configuration options.",
+    "Please press button 'Save', when you're done on this tab.": "Please press button 'Save', when you're done on this tab.",
+    "External CAN Adapter":"External CAN Adapter",
+    "Device mame of CAN adapter connected to external bus, e.g. can0":"Device mame of CAN adapter connected to external bus, e.g. can0",
+    "Connect to Adapter":"Connect to Adapter",
+    "Internal CAN Adapter":"Internal CAN Adapter",
+    "Device mame of CAN adapter connected to internal bus, e.g. can1":"Device mame of CAN adapter connected to internal bus, e.g. can1"
 }
