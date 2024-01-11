@@ -1,11 +1,11 @@
 {
     "common": {
         "name": "e3oncan",
-        "version": "0.6.5",
+        "version": "0.6.6",
         "news": {
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
+            "0.6.6": {
+                "en": "initial npm release",
+                "de": "Erstveröffentlichung auf npm",
                 "ru": "Начальная версия",
                 "pt": "lançamento inicial",
                 "nl": "Eerste uitgave",
@@ -84,8 +84,7 @@
         ]
     },
     "native": {
-        "tableUdsDevices": [
-        ]
+        "tableUdsDevices": []
     },
     "objects": [],
     "instanceObjects": [
@@ -93,7 +92,19 @@
             "_id": "info",
             "type": "channel",
             "common": {
-                "name": "Information"
+                "name": {
+                    "en": "Information",
+                    "de": "Informationen",
+                    "ru": "Информация",
+                    "pt": "Informação",
+                    "nl": "Informatie",
+                    "fr": "Informations",
+                    "it": "Informazioni",
+                    "es": "Información",
+                    "pl": "Informacje",
+                    "uk": "Інформація",
+                    "zh-cn": "资料"
+                  }
             },
             "native": {}
         },
@@ -102,7 +113,19 @@
             "type": "state",
             "common": {
                 "role": "indicator.connected",
-                "name": "Device or service connected",
+                "name": {
+                    "en": "Device or service connected",
+                    "de": "Geräte oder Service vrbunden",
+                    "ru": "Устройство или служба подключены",
+                    "pt": "Dispositivo ou serviço conectado",
+                    "nl": "Apparaat of dienst verbonden",
+                    "fr": "Appareil ou service connecté",
+                    "it": "Dispositivo o servizio collegato",
+                    "es": "Dispositivo o servicio conectado",
+                    "pl": "Przyłączone urządzenie lub usługa",
+                    "uk": "Пристрої або послуги підключені",
+                    "zh-cn": "设备或服务已连接"
+                  },
                 "type": "boolean",
                 "read": true,
                 "write": false,
