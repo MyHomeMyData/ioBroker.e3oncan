@@ -106,16 +106,16 @@ class E3oncan extends utils.Adapter {
         }
 
         // Setup E380 collect worker:
-        this.e380Collect = await this.setupE380CollectWorker(this.config);
+        if (this.channelExt) this.e380Collect = await this.setupE380CollectWorker(this.config);
 
         // Setup all configured devices for collect:
         // @ts-ignore
-        await this.setupE3CollectWorkers(this.config.tableCollectCanExt, this.E3CollectExt, this.channelExt);
+        if (this.channelExt) await this.setupE3CollectWorkers(this.config.tableCollectCanExt, this.E3CollectExt, this.channelExt);
         // @ts-ignore
-        await this.setupE3CollectWorkers(this.config.tableCollectCanInt, this.E3CollectInt, this.channelInt);
+        if (this.channelInt) await this.setupE3CollectWorkers(this.config.tableCollectCanInt, this.E3CollectInt, this.channelInt);
 
         // Initial setup all configured devices for UDS:
-        await this.setupUdsWorkers();
+        if (this.channelExt) await this.setupUdsWorkers();
 
         await this.log.info('Startup of instance '+this.namespace+': Done.');
     }
