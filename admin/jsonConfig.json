@@ -259,7 +259,7 @@
                             "doNotSave": true,
                             "width": "10% ",
                             "title": "ID",
-                            "tooltip": "Did id",
+                            "tooltip": "Id of datapoint",
                             "filter": false,
                             "sort": false
                         },
@@ -269,7 +269,7 @@
                             "doNotSave": true,
                             "width": "10% ",
                             "title": "Length",
-                            "tooltip": "Did length",
+                            "tooltip": "Length of datapoint",
                             "filter": false,
                             "sort": false
                         },
@@ -279,7 +279,7 @@
                             "doNotSave": true,
                             "width": "55% ",
                             "title": "Name",
-                            "tooltip": "Name of did",
+                            "tooltip": "Name of datapoint",
                             "filter": true,
                             "sort": false,
                             "readOnly": true
@@ -290,7 +290,7 @@
                             "doNotSave": true,
                             "width": "25% ",
                             "title": "Codec",
-                            "tooltip": "Codec used for did",
+                            "tooltip": "Codec used for datapoint",
                             "filter": true,
                             "sort": false,
                             "readOnly": true
@@ -358,7 +358,7 @@
 
                 "introTableColExt": {
                     "type": "staticText",
-                    "text": "Listen for data on addresses given in this table. No writing to CAN bus. Press '+' to begin.",
+                    "text": "Devices for collecting data. No writing to CAN bus. Press '+' to add device.",
                     "hidden": "if (data.tableUdsDevices) {for(let i=0; i<data.tableUdsDevices.length; i++){if (data.tableUdsDevices[i].collectCanId != '') return false;}; return true;} else {return true;}",
                     "newLine": true
                 },
@@ -372,7 +372,7 @@
 
                 "tableColExtErrDevName": {
                     "type": "staticText",
-                    "text": "ERROR: column 'Device state name' must contain unique text",
+                    "text": "ERROR: column 'Device state name' must contain unique text.",
                     "newLine": true,
                     "hidden": "const x={}; for(let ii=0; data.tableCollectCanExt && ii<data.tableCollectCanExt.length; ii++){const t=data.tableCollectCanExt[ii].collectCanId; if (x[t]==='x') return false; x[t]='x';}; return true;",
                     "style": {
@@ -461,7 +461,7 @@
                             "attr": "udsSchedule",
                             "width": "10% ",
                             "title": "Schedule (s)",
-                            "tooltip": "Schedule for requesting given DIDs. 0 for one time request on start of adapter instance.",
+                            "tooltip": "Schedule for requesting given datapoints. 0 for one time request on start of adapter instance.",
                             "filter": false,
                             "sort": false,
                             "min": 0,
@@ -484,8 +484,8 @@
                             "type": "text",
                             "attr": "udsScheduleDids",
                             "width": "30% ",
-                            "title": "List of DIDs",
-                            "tooltip": "Separate by comma! All given DIDs will be requested with specified schedule an ECU address.",
+                            "title": "List of datapoints",
+                            "tooltip": "Separate by comma! All given datapoints will be requested with specified schedule and ECU address.",
                             "filter": false,
                             "sort": false,
                             "default": "256"
@@ -508,7 +508,7 @@
 
                 "introTableColInt": {
                     "type": "staticText",
-                    "text": "Listen for data on addresses given in this table. No writing to CAN bus.",
+                    "text": "Devices for collecting data. No writing to CAN bus. Press '+' to add device.",
                     "newLine": true
                 },
 
@@ -523,7 +523,7 @@
                 },
                 "tableColIntErrDevName": {
                     "type": "staticText",
-                    "text": "ERROR: column 'Device state name' must contain unique text",
+                    "text": "ERROR: column 'Device state name' must contain unique text.",
                     "newLine": true,
                     "hidden": "const x={}; for(let ii=0; data.tableCollectCanInt && ii<data.tableCollectCanInt.length; ii++){const t=data.tableCollectCanInt[ii].collectCanId; if (x[t]==='x') return false; x[t]='x';}; return true;",
                     "style": {
