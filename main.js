@@ -406,13 +406,13 @@ class E3oncan extends utils.Adapter {
                 if (obj.callback) {
                     if (!this.udsDidScanIsRunning) {
                         this.udsDidScanIsRunning = true;
-                        await this.log.silly(`Received data - ${JSON.stringify(obj)}`);
-                        //await this.udsScanWorker.scanUdsDids(this,this.udsDevAddrs,this.udsDidsMaxNmbr);
-                        await this.udsScanWorker.scanUdsDids(this,this.udsDevAddrs,300);
-                        await this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
+                        this.log.silly(`Received data - ${JSON.stringify(obj)}`);
+                        await this.udsScanWorker.scanUdsDids(this,this.udsDevAddrs,this.udsDidsMaxNmbr);
+                        //await this.udsScanWorker.scanUdsDids(this,this.udsDevAddrs,300);
+                        this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
                         this.udsDidScanIsRunning = false;
                     } else {
-                        await this.log.debug('Request "startDidScan" during running UDS did scan!');
+                        this.log.silly('Request "startDidScan" during running UDS did scan!');
                         this.sendTo(obj.from, obj.command, obj.message, obj.callback);
                     }
                 } else {
