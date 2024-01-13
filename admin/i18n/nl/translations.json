@@ -57,5 +57,6 @@
     "Assignments to Internal CAN Adapter": "Toewijzingen aan interne CAN-adapter",
     "Collecting Data on Internal CAN Adapter": "Gegevens verzamelen over de interne CAN-adapter",
     "Listen for data on addresses given in this table. No writing to CAN bus.": "Luister naar gegevens over adressen in deze tabel. Geen schrijven naar CAN-bus.",
-    "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "Apparaten voor het verzamelen van gegevens. Geen schrijven naar CAN-bus. Druk op '+' om apparaat toe te voegen."
+    "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "Apparaten voor het verzamelen van gegevens. Geen schrijven naar CAN-bus. Druk op '+' om apparaat toe te voegen.",
+    "Update list of datapoints": "Lijst met datapunten bijwerken"
 }

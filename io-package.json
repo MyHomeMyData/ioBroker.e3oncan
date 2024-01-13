@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "e3oncan",
-        "version": "0.6.6",
+        "version": "0.6.7",
         "news": {
             "0.6.6": {
                 "en": "initial npm release",
@@ -84,7 +84,8 @@
         ]
     },
     "native": {
-        "tableUdsDevices": []
+        "tableUdsDevices": [],
+        "tableUdsDids": []
     },
     "objects": [],
     "instanceObjects": [
@@ -104,7 +105,7 @@
                     "pl": "Informacje",
                     "uk": "Інформація",
                     "zh-cn": "资料"
-                  }
+                }
             },
             "native": {}
         },
@@ -125,7 +126,7 @@
                     "pl": "Przyłączone urządzenie lub usługa",
                     "uk": "Пристрої або послуги підключені",
                     "zh-cn": "设备或服务已连接"
-                  },
+                },
                 "type": "boolean",
                 "read": true,
                 "write": false,

@@ -32,7 +32,8 @@ A scan for datapoints of each device is also available and should be done during
 
 **Preconditions:**
 * You have a (USB to) CAN bus adapter connected to external CAN bus of Viessmann E3 device
-* CAN adapter is up and visible in system, e.g. as "can0" (use ifconfig to check)
+* Currently only Linux based systems are supported.
+* CAN adapter is up and visible in system, e.g. as "can0" (use ifconfig to check).
 * Refer to open3e project for further details
 * **Make sure, open3e is not running during initial setup!** This could cause communication errors in both applications.
 
@@ -46,7 +47,7 @@ All services provided by this adapter are based on device list of your specific 
 * Go to the "LIST OF UDS DEVICES" and check the list of devices. You may change the naming on 2nd column. Those names will be used to store all collected data in ioBoker's object tree. Again press "SAVE" button when you did your changes. Again this step is **mandatory**.
 * Instance will restart again and after a few seconds you are ready to a scan for available datapoints. Go to tab "LIST OF DATAPOINTS", press button "Start scan ..." and confirm with "OK" to start the scan. Again, **please be patient** - this may take **up to 5 minutes**. You may watch the progress in a 2nd browser tab by looking on the logging info of the adapter.
 This step is not mandatory but strongly recomended. If you would like to write to datapoints you need to do a datapoint scan first.
-* When datapoint scan was completed successfully, the datapoints are available in object tree for each device. You may view the datapoints in configuration by selecting a device and pressing button "Update". Press filter symbol and type search pattern to filter for name and/or codec. This is for your information only. Please deactivate filtering before selecting another device to avoid error messages.
+* When datapoint scan was completed successfully, the datapoints are available in object tree for each device. You may view the datapoints in configuration by selecting a device and pressing button "Update list of datapoints". Press filter symbol and type search pattern to filter for name and/or codec. This is for your information only. Please deactivate filtering before selecting another device to avoid error messages.
 * Last step is to configure schedules for collecting data on tab "ASSIGNMENTS TO EXTERNAL CAN ADAPTER".
 * For **energy meter E380** (if available in your setup) you just can activate or not. Please notice the value "Min. update time (s)". Updates to single datapoints are done no faster than the given value (default is 5 seconds). By choosing zero every received data will be stored. Since E380 is sending data very fast (more than 20 values per second), it's recommended not to use zero here. This would put a high load on the ioBroker system.
 * If you have connected E3 devices via CAN bus, e.g. Vitocal and VX3, you can collect data exchanged between those devices in realtime by listening. Press "+" to add a line, check "active" chackbox, select a device and edit "Min. update time (s)". It's feasable to use 0s here, however, I recommend to keep to the 5s.
@@ -100,8 +101,7 @@ Yes, that is possible under certain conditions:
 -->
 
 ### **WORK IN PROGRESS**
-* This is beta stage!
-* Improve usability for tab "LIST OF DATAPOINTS"
+* Initial npm version
 
 ## License
 MIT License
