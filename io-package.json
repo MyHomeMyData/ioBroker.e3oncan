@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.6.8",
+    "version": "0.6.9",
     "news": {
+      "0.6.9": {
+        "en": "Bugfix: Only Linux is supported",
+        "de": "Bugfix: Nur Linux wird unterstützt",
+        "ru": "Исправление: Только Linux поддерживается",
+        "pt": "Bugfix: Apenas o Linux é suportado",
+        "nl": "Bugfix: Alleen Linux wordt ondersteund",
+        "fr": "Correction : Seul Linux est pris en charge",
+        "it": "Bugfix: Solo Linux è supportato",
+        "es": "Bugfix: Sólo Linux es compatible",
+        "pl": "Bugfix: Tylko Linux jest obsługiwany",
+        "uk": "Помилки: Тільки Linux підтримується",
+        "zh-cn": "错误修正 : 仅支持 Linux"
+      },
       "0.6.8": {
         "en": "Initial npm version",
         "de": "Ursprüngliche npm-Version",
