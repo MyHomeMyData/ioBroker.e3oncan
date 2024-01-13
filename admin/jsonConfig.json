@@ -219,7 +219,10 @@
                         "cancel": "Cancel"
                     },
                     "hidden": "!_alive",
-                    "newLine": true
+                    "newLine": true,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12
                 },
                 "tableUdsDidsSelDev": {
                     "type": "selectSendTo",
@@ -235,20 +238,29 @@
                     "newLine": true
                 },
 
-                "tableUdsDids": {
-                    "type": "table",
-                    "defaultSendTo": "getUdsDids",
+                "tableUdsDidsButton": {
+                    "type": "sendTo",
+                    "command": "getUdsDids",
                     "jsonData": "${JSON.stringify(data.tableUdsDidsSelDev)}",
-                    "button": "Update",
+                    "label": "Update list of datapoints",
+                    "variant": "outlined",
+                    "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) ) { return false; }; return true;",
+                    "useNative": true,
                     "showProcess": true,
                     "newLine": true,
-                    "doNotSave": true,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12
+                },
+
+                "tableUdsDids": {
+                    "type": "table",
+                    "newLine": true,
                     "sm": 12,
                     "md": 12,
                     "lg": 12,
                     "label": "List of device specific datapoints",
-                    "onChange": {"alsoDependsOn": ["tableUdsDidsSelDev"], "calculateFunc": "", "ignoreOwnChanges": false},
-                    "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) && (data.tableUdsDidsSelDev != 'Select device') ) { return false; }; return true;",
+                    "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) ) { return false; }; return true;",
                     "noDelete": true,
                     "import": true,
                     "export": true,

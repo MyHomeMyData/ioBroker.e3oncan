@@ -57,5 +57,6 @@
     "Assignments to Internal CAN Adapter": "Призначення внутрішнього адаптера CAN",
     "Collecting Data on Internal CAN Adapter": "Збір даних про внутрішній адаптер CAN",
     "Listen for data on addresses given in this table. No writing to CAN bus.": "Прослухайте дані за адресами, наведені в цій таблиці. Немає запису на шину CAN.",
-    "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "Пристрої для збору даних. Немає запису на шину CAN. Натисніть «+», щоб додати пристрій."
+    "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "Пристрої для збору даних. Немає запису на шину CAN. Натисніть «+», щоб додати пристрій.",
+    "Update list of datapoints": "Оновити список точок даних"
 }

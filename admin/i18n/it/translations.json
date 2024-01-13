@@ -57,5 +57,6 @@
     "Assignments to Internal CAN Adapter": "Assegnazioni all'adattatore CAN interno",
     "Collecting Data on Internal CAN Adapter": "Raccolta dati sull'adattatore CAN interno",
     "Listen for data on addresses given in this table. No writing to CAN bus.": "Ascoltare i dati sugli indirizzi forniti in questa tabella. Nessuna scrittura sul bus CAN.",
-    "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "Dispositivi per la raccolta dei dati. Nessuna scrittura sul bus CAN. Premi \"+\" per aggiungere il dispositivo."
+    "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "Dispositivi per la raccolta dei dati. Nessuna scrittura sul bus CAN. Premi \"+\" per aggiungere il dispositivo.",
+    "Update list of datapoints": "Aggiorna l'elenco dei punti dati"
 }

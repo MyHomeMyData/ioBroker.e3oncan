@@ -57,5 +57,6 @@
     "Assignments to Internal CAN Adapter": "Przypisania do wewnętrznego adaptera CAN",
     "Collecting Data on Internal CAN Adapter": "Zbieranie danych na wewnętrznym adapterze CAN",
     "Listen for data on addresses given in this table. No writing to CAN bus.": "Posłuchaj danych o adresach podanych w tej tabeli. Brak zapisu do magistrali CAN.",
-    "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "Urządzenia do gromadzenia danych. Brak zapisu do magistrali CAN. Naciśnij „+”, aby dodać urządzenie."
+    "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "Urządzenia do gromadzenia danych. Brak zapisu do magistrali CAN. Naciśnij „+”, aby dodać urządzenie.",
+    "Update list of datapoints": "Zaktualizuj listę punktów danych"
 }
