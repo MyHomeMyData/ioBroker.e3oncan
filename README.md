@@ -101,12 +101,12 @@ Yes, that is possible under certain conditions:
 -->
 
 ### **WORK IN PROGRESS**
-* Initial npm version
+* (MyHomeMyData) Initial npm version
 
 ## License
 MIT License
 
-Copyright (c) 2023 MyHomeMyData
+Copyright (c) 2023 MyHomeMyData <juergen.bonfert@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
