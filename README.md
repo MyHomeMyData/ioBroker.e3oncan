@@ -99,6 +99,9 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Bugfix: Only Linux is supported
+
 ### 0.6.8 (2024-01-13)
 * (MyHomeMyData) Initial npm version
 
