@@ -12,7 +12,6 @@ const utils = require('@iobroker/adapter-core');
 // const fs = require("fs");
 
 const can = require('socketcan');
-const codecs = require('./lib/codecs');
 const storage = require('./lib/storage');
 const collect = require('./lib/canCollect');
 const uds = require('./lib/canUds');
@@ -80,8 +79,6 @@ class E3oncan extends utils.Adapter {
             // @ts-ignore
             this.udsDevStateNames.push(dev.devStateName);
         }
-
-        codecs.rawmode.setOpMode(false);
 
         // Check for required scan for UDS devices
         this.doUdsDevScan = (this.config.tableUdsDevices.length == 0);

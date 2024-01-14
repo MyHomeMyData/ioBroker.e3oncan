@@ -99,6 +99,10 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Removed code for Rawmode because it's never activated
+
 ### 0.6.9 (2024-01-13)
 * (MyHomeMyData) Bugfix: Only Linux is supported
 
