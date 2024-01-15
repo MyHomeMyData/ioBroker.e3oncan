@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.6.9",
+    "version": "0.6.10",
     "news": {
+      "0.6.10": {
+        "en": "Removed code for Rawmode because it's never activated",
+        "de": "Entfernter Code für Rawmode, weil es nie aktiviert ist",
+        "ru": "Удаленный код для Rawmode, потому что он никогда не активирован",
+        "pt": "Código removido para Rawmode porque nunca foi ativado",
+        "nl": "Verwijderde code voor Rawmode omdat het nooit is geactiveerd",
+        "fr": "Code supprimé pour Rawmode car il n'est jamais activé",
+        "it": "Codice rimosso per Rawmode perché non è mai attivato",
+        "es": "Código eliminado para Rawmode porque nunca se activa",
+        "pl": "Usunięto kod dla Rawmode ponieważ nigdy nie jest aktywowany",
+        "uk": "Видалити код для Rawmode, тому що він ніколи не активований",
+        "zh-cn": "删除了Rawmode的代码,因为它从未被激活"
+      },
       "0.6.9": {
         "en": "Bugfix: Only Linux is supported",
         "de": "Bugfix: Nur Linux wird unterstützt",
