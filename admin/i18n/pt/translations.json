@@ -58,5 +58,6 @@
     "Collecting Data on Internal CAN Adapter": "Coletando dados no adaptador CAN interno",
     "Listen for data on addresses given in this table. No writing to CAN bus.": "Ouça os dados sobre os endereços fornecidos nesta tabela. Não há gravação no barramento CAN.",
     "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "Dispositivos para coleta de dados. Não há gravação no barramento CAN. Pressione '+' para adicionar dispositivo.",
-    "Update list of datapoints": "Atualizar lista de pontos de dados"
+    "Update list of datapoints": "Atualizar lista de pontos de dados",
+    "Start scan to update list of devices": "Inicie a verificação para atualizar a lista de dispositivos"
 }

@@ -58,5 +58,6 @@
     "Collecting Data on Internal CAN Adapter": "收集内部 CAN 适配器的数据",
     "Listen for data on addresses given in this table. No writing to CAN bus.": "侦听此表中给出的地址上的数据。不写入 CAN 总线。",
     "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "用于收集数据的设备。不写入 CAN 总线。按“+”添加设备。",
-    "Update list of datapoints": "更新数据点列表"
+    "Update list of datapoints": "更新数据点列表",
+    "Start scan to update list of devices": "开始扫描以更新设备列表"
 }

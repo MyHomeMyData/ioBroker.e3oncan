@@ -99,15 +99,6 @@
                     "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length > 0)) { return true; } else {return false; }",
                     "newLine": true
                 },
-                "introTableScanIsActiveTxt": {
-                    "type": "staticText",
-                    "text": "UDS device scan is ongoing. This may take up to 20 seconds.",
-                    "newLine": true,
-                    "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length > 0)) { return true; } else {return false; }",
-                    "style": {
-                        "color": "red"
-                    }
-                },
                 "introTableNoEmptyDevNameTxt": {
                     "type": "staticText",
                     "text": "'Device state name' must not be blank!",
@@ -126,11 +117,23 @@
                         "color": "red"
                     }
                 },
+                "tableUdsDevicesButton": {
+                    "type": "sendTo",
+                    "label": "Start scan to update list of devices",
+                    "variant": "outlined",
+                    "showProcess": true,
+                    "command": "getUdsDevices",
+                    "jsonData": "{}",
+                    "useNative": true,
+                    "hidden": "!_alive",
+                    "newLine": true,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12
+                },
 
                 "tableUdsDevices": {
                     "type": "table",
-                    "defaultSendTo": "getUdsDevices",
-                    "jsonData": "${JSON.stringify(data.tableUdsDevices)}",
                     "uniqueColumns": ["devStateName"],
                     "newLine": true,
                     "sm": 12,
@@ -206,9 +209,6 @@
                     "label": "Start scan for datapoints of all devices",
                     "variant": "outlined",
                     "showProcess": true,
-                    "style": {
-                        "align": "right"
-                    },
                     "jsonData": "{}",
                     "command": "startDidScan",
                     "confirm": {

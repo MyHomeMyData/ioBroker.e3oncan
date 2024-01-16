@@ -46,7 +46,6 @@ class E3oncan extends utils.Adapter {
         this.udsDidForScan       = 256;    // Busidentification is in this id
         this.udsScanWorker       = new udsScan.udsScan();
         this.udsScanDevices      = [];     // UDS devices found during scan
-        this.doUdsDevScan        = false;
         this.udsDevAddrs         = [];
         this.udsDevStateNames    = [];
         this.udsDidsMaxNmbr      = 3000;    // Max. number of dids per device for scan
@@ -79,10 +78,6 @@ class E3oncan extends utils.Adapter {
             // @ts-ignore
             this.udsDevStateNames.push(dev.devStateName);
         }
-
-        // Check for required scan for UDS devices
-        this.doUdsDevScan = (this.config.tableUdsDevices.length == 0);
-        if (this.doUdsDevScan) await this.log.info('UDS device scan is required.');
 
         // Setup external CAN bus if required
         // ==================================
@@ -326,25 +321,18 @@ class E3oncan extends utils.Adapter {
             if (obj.command === 'getUdsDevices') {
                 if (obj.callback) {
                     if (!this.udsDevScanIsRunning) {
-                        if (this.doUdsDevScan) {
-                            let success = false;
-                            this.udsDevScanIsRunning = true;
-                            await this.log.silly(`Received data - ${JSON.stringify(obj)}`);
-                            //this.udsScanDevices = obj.message.udsDevices;
-                            success = await this.udsScanWorker.scanUdsDevices(this);
-                            await this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
-                            if (success) this.doUdsDevScan = false;
-                            this.udsDevScanIsRunning = false;
-                        } else {
-                            // Scan not required. Do nothing
-                            this.sendTo(obj.from, obj.command, obj.message, obj.callback);
-                        }
+                        this.udsDevScanIsRunning = true;
+                        await this.log.silly(`Received data - ${JSON.stringify(obj)}`);
+                        await this.udsScanWorker.scanUdsDevices(this);
+                        await this.log.silly(`Data to send - ${JSON.stringify({native: {tableUdsDevices: this.udsDevices}})}`);
+                        await this.sendTo(obj.from, obj.command, {native: {tableUdsDevices: this.udsDevices}}, obj.callback);
+                        this.udsDevScanIsRunning = false;
                     } else {
                         await this.log.debug('Request "getUdsDevice" during running UDS scan!');
-                        this.sendTo(obj.from, obj.command, obj.message, obj.callback);
+                        this.sendTo(obj.from, obj.command, {native: {tableUdsDevices: this.udsDevices}}, obj.callback);
                     }
                 } else {
-                    this.sendTo(obj.from, obj.command, [], obj.callback);
+                    this.sendTo(obj.from, obj.command, {native: {tableUdsDevices: []}}, obj.callback);
                 }
             }
 

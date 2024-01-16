@@ -58,5 +58,6 @@
     "Collecting Data on Internal CAN Adapter": "Сбор данных о внутреннем CAN-адаптере",
     "Listen for data on addresses given in this table. No writing to CAN bus.": "Прослушайте данные по адресам, указанным в этой таблице. Нет записи в CAN-шину.",
     "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "Устройства для сбора данных. Нет записи в CAN-шину. Нажмите «+», чтобы добавить устройство.",
-    "Update list of datapoints": "Обновить список точек данных"
+    "Update list of datapoints": "Обновить список точек данных",
+    "Start scan to update list of devices": "Запустите сканирование, чтобы обновить список устройств."
 }

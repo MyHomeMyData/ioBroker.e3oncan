@@ -56,5 +56,6 @@
     "Separate by comma! All given datapoints will be requested with specified schedule and ECU address.":"Separate by comma! All given datapoints will be requested with specified schedule and ECU address.",
     "Assignments to Internal CAN Adapter":"Assignments to Internal CAN Adapter",
     "Collecting Data on Internal CAN Adapter":"Collecting Data on Internal CAN Adapter",
-    "Update list of datapoints":"Update list of datapoints"
+    "Update list of datapoints":"Update list of datapoints",
+    "Start scan to update list of devices":"Start scan to update list of devices"
 }

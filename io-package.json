@@ -1,177 +1,177 @@
 {
-  "common": {
-    "name": "e3oncan",
-    "version": "0.6.10",
-    "news": {
-      "0.6.10": {
-        "en": "Removed code for Rawmode because it's never activated",
-        "de": "Entfernter Code für Rawmode, weil es nie aktiviert ist",
-        "ru": "Удаленный код для Rawmode, потому что он никогда не активирован",
-        "pt": "Código removido para Rawmode porque nunca foi ativado",
-        "nl": "Verwijderde code voor Rawmode omdat het nooit is geactiveerd",
-        "fr": "Code supprimé pour Rawmode car il n'est jamais activé",
-        "it": "Codice rimosso per Rawmode perché non è mai attivato",
-        "es": "Código eliminado para Rawmode porque nunca se activa",
-        "pl": "Usunięto kod dla Rawmode ponieważ nigdy nie jest aktywowany",
-        "uk": "Видалити код для Rawmode, тому що він ніколи не активований",
-        "zh-cn": "删除了Rawmode的代码,因为它从未被激活"
-      },
-      "0.6.9": {
-        "en": "Bugfix: Only Linux is supported",
-        "de": "Bugfix: Nur Linux wird unterstützt",
-        "ru": "Исправление: Только Linux поддерживается",
-        "pt": "Bugfix: Apenas o Linux é suportado",
-        "nl": "Bugfix: Alleen Linux wordt ondersteund",
-        "fr": "Correction : Seul Linux est pris en charge",
-        "it": "Bugfix: Solo Linux è supportato",
-        "es": "Bugfix: Sólo Linux es compatible",
-        "pl": "Bugfix: Tylko Linux jest obsługiwany",
-        "uk": "Помилки: Тільки Linux підтримується",
-        "zh-cn": "错误修正 : 仅支持 Linux"
-      },
-      "0.6.8": {
-        "en": "Initial npm version",
-        "de": "Ursprüngliche npm-Version",
-        "ru": "Первоначальная версия npm",
-        "pt": "Versão inicial npm",
-        "nl": "Eerste npm-versie",
-        "fr": "Version initiale npm",
-        "it": "Versione npm iniziale",
-        "es": "Versión inicial npm",
-        "pl": "Początkowa wersja npm",
-        "uk": "Початкова версія npm",
-        "zh-cn": "初始 npm 版本"
-      },
-      "0.6.6": {
-        "en": "initial npm release",
-        "de": "Erstveröffentlichung auf npm",
-        "ru": "Начальная версия",
-        "pt": "lançamento inicial",
-        "nl": "Eerste uitgave",
-        "fr": "Première version",
-        "it": "Versione iniziale",
-        "es": "Versión inicial",
-        "pl": "Pierwsze wydanie",
-        "uk": "Початкова версія",
-        "zh-cn": "首次出版"
-      }
-    },
-    "title": "Viessmann E3 CAN do",
-    "titleLang": {
-      "en": "Viessmann E3 CAN do",
-      "de": "Viessmann E3 CAN do",
-      "ru": "CAN-прослушиватель серии Viessmann E3",
-      "pt": "Ouvinte CAN da série Viessmann E3",
-      "nl": "Viessmann E3-serie CAN-luisteraar",
-      "fr": "Écouteur CAN Viessmann série E3",
-      "it": "Ascoltatore CAN Viessmann serie E3",
-      "es": "Oyente CAN serie Viessmann E3",
-      "pl": "Odbiornik CAN firmy Viessmann serii E3",
-      "uk": "CAN-слухач серії Viessmann E3",
-      "zh-cn": "菲斯曼E3系列CAN监听器"
-    },
-    "desc": {
-      "en": "Collect data on CAN bus for Viessmann E3 devices, e.g. Vitocal, Vitocharge, Energy Meter E380",
-      "de": "Greifen Sie auf Daten per CAN-Bus zu, für Viessmann E3-Geräte, z.B. Vitocal, Vitocharge, Energiezähler E380",
-      "ru": "Сбор данных по шине CAN для устройств Viessmann E3, например. Vitocal, Vitocharge, Счетчик энергии E380",
-      "pt": "Colete dados no barramento CAN para dispositivos Viessmann E3, por ex. Vitocal, Vitocharge, medidor de energia E380",
-      "nl": "Verzamel gegevens op de CAN-bus voor Viessmann E3-apparaten, b.v. Vitocal, Vitocharge, Energiemeter E380",
-      "fr": "Collectez des données sur le bus CAN pour les appareils Viessmann E3, par ex. Vitocal, Vitocharge, Compteur d'énergie E380",
-      "it": "Raccogliere dati sul bus CAN per dispositivi Viessmann E3, ad es. Vitocal, Vitocharge, Contatore di energia E380",
-      "es": "Recopilar datos en el bus CAN para dispositivos Viessmann E3, p. Vitocal, Vitocharge, Contador de energía E380",
-      "pl": "Zbieraj dane na magistrali CAN dla urządzeń Viessmann E3, np.: Vitocal, Vitocharge, licznik energii E380",
-      "uk": "Збір даних на шині CAN для пристроїв Viessmann E3, напр. Vitocal, Vitocharge, Енерголічильник E380",
-      "zh-cn": "收集 Viessmann E3 设备 CAN 总线上的数据，例如Vitocal、Vitocharge、能量计 E380"
-    },
-    "authors": [
-      "MyHomeMyData <juergen.bonfert@gmail.com>"
-    ],
-    "keywords": [
-      "Viessmann",
-      "E3",
-      "CAN",
-      "Heating",
-      "PV",
-      "Energy Meter"
-    ],
-    "license": "MIT",
-    "platform": "Javascript/Node.js",
-    "main": "main.js",
-    "icon": "e3oncan.png",
-    "enabled": true,
-    "messagebox": true,
-    "extIcon": "https://raw.githubusercontent.com/MyHomeMyData/ioBroker.e3oncan/main/admin/e3oncan.png",
-    "readme": "https://github.com/MyHomeMyData/ioBroker.e3oncan/blob/main/README.md",
-    "loglevel": "debug",
-    "mode": "daemon",
-    "type": "iot-systems",
-    "compact": true,
-    "connectionType": "local",
-    "dataSource": "push",
-    "adminUI": {
-      "config": "json"
-    },
-    "dependencies": [
-      {
-        "js-controller": ">=3.3.22"
-      }
-    ],
-    "globalDependencies": [
-      {
-        "admin": ">=5.1.13"
-      }
-    ]
-  },
-  "native": {
-    "tableUdsDevices": [],
-    "tableUdsDids": []
-  },
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": {
-          "en": "Information",
-          "de": "Informationen",
-          "ru": "Информация",
-          "pt": "Informação",
-          "nl": "Informatie",
-          "fr": "Informations",
-          "it": "Informazioni",
-          "es": "Información",
-          "pl": "Informacje",
-          "uk": "Інформація",
-          "zh-cn": "资料"
-        }
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "role": "indicator.connected",
-        "name": {
-          "en": "Device or service connected",
-          "de": "Geräte oder Service vrbunden",
-          "ru": "Устройство или служба подключены",
-          "pt": "Dispositivo ou serviço conectado",
-          "nl": "Apparaat of dienst verbonden",
-          "fr": "Appareil ou service connecté",
-          "it": "Dispositivo o servizio collegato",
-          "es": "Dispositivo o servicio conectado",
-          "pl": "Przyłączone urządzenie lub usługa",
-          "uk": "Пристрої або послуги підключені",
-          "zh-cn": "设备或服务已连接"
+    "common": {
+        "name": "e3oncan",
+        "version": "0.6.10",
+        "news": {
+            "0.6.10": {
+                "en": "Removed code for Rawmode because it's never activated",
+                "de": "Entfernter Code für Rawmode, weil es nie aktiviert ist",
+                "ru": "Удаленный код для Rawmode, потому что он никогда не активирован",
+                "pt": "Código removido para Rawmode porque nunca foi ativado",
+                "nl": "Verwijderde code voor Rawmode omdat het nooit is geactiveerd",
+                "fr": "Code supprimé pour Rawmode car il n'est jamais activé",
+                "it": "Codice rimosso per Rawmode perché non è mai attivato",
+                "es": "Código eliminado para Rawmode porque nunca se activa",
+                "pl": "Usunięto kod dla Rawmode ponieważ nigdy nie jest aktywowany",
+                "uk": "Видалити код для Rawmode, тому що він ніколи не активований",
+                "zh-cn": "删除了Rawmode的代码,因为它从未被激活"
+            },
+            "0.6.9": {
+                "en": "Bugfix: Only Linux is supported",
+                "de": "Bugfix: Nur Linux wird unterstützt",
+                "ru": "Исправление: Только Linux поддерживается",
+                "pt": "Bugfix: Apenas o Linux é suportado",
+                "nl": "Bugfix: Alleen Linux wordt ondersteund",
+                "fr": "Correction : Seul Linux est pris en charge",
+                "it": "Bugfix: Solo Linux è supportato",
+                "es": "Bugfix: Sólo Linux es compatible",
+                "pl": "Bugfix: Tylko Linux jest obsługiwany",
+                "uk": "Помилки: Тільки Linux підтримується",
+                "zh-cn": "错误修正 : 仅支持 Linux"
+            },
+            "0.6.8": {
+                "en": "Initial npm version",
+                "de": "Ursprüngliche npm-Version",
+                "ru": "Первоначальная версия npm",
+                "pt": "Versão inicial npm",
+                "nl": "Eerste npm-versie",
+                "fr": "Version initiale npm",
+                "it": "Versione npm iniziale",
+                "es": "Versión inicial npm",
+                "pl": "Początkowa wersja npm",
+                "uk": "Початкова версія npm",
+                "zh-cn": "初始 npm 版本"
+            },
+            "0.6.6": {
+                "en": "initial npm release",
+                "de": "Erstveröffentlichung auf npm",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "uk": "Початкова версія",
+                "zh-cn": "首次出版"
+            }
         },
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    }
-  ]
+        "title": "Viessmann E3 CAN do",
+        "titleLang": {
+            "en": "Viessmann E3 CAN do",
+            "de": "Viessmann E3 CAN do",
+            "ru": "CAN-прослушиватель серии Viessmann E3",
+            "pt": "Ouvinte CAN da série Viessmann E3",
+            "nl": "Viessmann E3-serie CAN-luisteraar",
+            "fr": "Écouteur CAN Viessmann série E3",
+            "it": "Ascoltatore CAN Viessmann serie E3",
+            "es": "Oyente CAN serie Viessmann E3",
+            "pl": "Odbiornik CAN firmy Viessmann serii E3",
+            "uk": "CAN-слухач серії Viessmann E3",
+            "zh-cn": "菲斯曼E3系列CAN监听器"
+        },
+        "desc": {
+            "en": "Collect data on CAN bus for Viessmann E3 devices, e.g. Vitocal, Vitocharge, Energy Meter E380",
+            "de": "Greifen Sie auf Daten per CAN-Bus zu, für Viessmann E3-Geräte, z.B. Vitocal, Vitocharge, Energiezähler E380",
+            "ru": "Сбор данных по шине CAN для устройств Viessmann E3, например. Vitocal, Vitocharge, Счетчик энергии E380",
+            "pt": "Colete dados no barramento CAN para dispositivos Viessmann E3, por ex. Vitocal, Vitocharge, medidor de energia E380",
+            "nl": "Verzamel gegevens op de CAN-bus voor Viessmann E3-apparaten, b.v. Vitocal, Vitocharge, Energiemeter E380",
+            "fr": "Collectez des données sur le bus CAN pour les appareils Viessmann E3, par ex. Vitocal, Vitocharge, Compteur d'énergie E380",
+            "it": "Raccogliere dati sul bus CAN per dispositivi Viessmann E3, ad es. Vitocal, Vitocharge, Contatore di energia E380",
+            "es": "Recopilar datos en el bus CAN para dispositivos Viessmann E3, p. Vitocal, Vitocharge, Contador de energía E380",
+            "pl": "Zbieraj dane na magistrali CAN dla urządzeń Viessmann E3, np.: Vitocal, Vitocharge, licznik energii E380",
+            "uk": "Збір даних на шині CAN для пристроїв Viessmann E3, напр. Vitocal, Vitocharge, Енерголічильник E380",
+            "zh-cn": "收集 Viessmann E3 设备 CAN 总线上的数据，例如Vitocal、Vitocharge、能量计 E380"
+        },
+        "authors": [
+            "MyHomeMyData <juergen.bonfert@gmail.com>"
+        ],
+        "keywords": [
+            "Viessmann",
+            "E3",
+            "CAN",
+            "Heating",
+            "PV",
+            "Energy Meter"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "e3oncan.png",
+        "enabled": true,
+        "messagebox": true,
+        "extIcon": "https://raw.githubusercontent.com/MyHomeMyData/ioBroker.e3oncan/main/admin/e3oncan.png",
+        "readme": "https://github.com/MyHomeMyData/ioBroker.e3oncan/blob/main/README.md",
+        "loglevel": "debug",
+        "mode": "daemon",
+        "type": "iot-systems",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "push",
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=3.3.22"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=5.1.13"
+            }
+        ]
+    },
+    "native": {
+        "tableUdsDevices": [],
+        "tableUdsDids": []
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": {
+                    "en": "Information",
+                    "de": "Informationen",
+                    "ru": "Информация",
+                    "pt": "Informação",
+                    "nl": "Informatie",
+                    "fr": "Informations",
+                    "it": "Informazioni",
+                    "es": "Información",
+                    "pl": "Informacje",
+                    "uk": "Інформація",
+                    "zh-cn": "资料"
+                }
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": {
+                    "en": "Device or service connected",
+                    "de": "Geräte oder Service vrbunden",
+                    "ru": "Устройство или служба подключены",
+                    "pt": "Dispositivo ou serviço conectado",
+                    "nl": "Apparaat of dienst verbonden",
+                    "fr": "Appareil ou service connecté",
+                    "it": "Dispositivo o servizio collegato",
+                    "es": "Dispositivo o servicio conectado",
+                    "pl": "Przyłączone urządzenie lub usługa",
+                    "uk": "Пристрої або послуги підключені",
+                    "zh-cn": "设备或服务已连接"
+                },
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
 }

@@ -40,14 +40,14 @@ A scan for datapoints of each device is also available and should be done during
 All services provided by this adapter are based on device list of your specific Viessmann E3 setup. Therefore you have to follow following steps for first setup:
 
 **Configuration**
-* When installation od adapter has finished a confuration dialog will show up to configure up to two CAN bus adapters (tab "CAN ADAPTER")
+* When installation of adapter has finished a confuration dialog will show up to configure up to two CAN bus adapters (tab "CAN ADAPTER")
 * Edit name of adapter and check the "Connect to adapter" checkbox at least the external adapter
-* When you're done, press "SAVE" button to apply the changes. This step is **mandatory**. The instance will restart, connect to the CAN adapter and do a scan for devices available on bus. **Please be patient** - this may take up to 20 seconds. You may watch the activities in a 2nd browser tab by looking on the logging info of the adapter.
-* When scan was successful new tabs will get visible in adapter confuration: "LIST OF UDS DEVICES", "LIST OF DATAPOINTS" and "ASSIGNMENTS TO EXTERNAL CAN ADAPTER".
-* Go to the "LIST OF UDS DEVICES" and check the list of devices. You may change the naming on 2nd column. Those names will be used to store all collected data in ioBoker's object tree. Again press "SAVE" button when you did your changes. Again this step is **mandatory**.
-* Instance will restart again and after a few seconds you are ready to a scan for available datapoints. Go to tab "LIST OF DATAPOINTS", press button "Start scan ..." and confirm with "OK" to start the scan. Again, **please be patient** - this may take **up to 5 minutes**. You may watch the progress in a 2nd browser tab by looking on the logging info of the adapter.
+* When you're done, press "SAVE" button to apply the changes. This step is **mandatory**. The instance will restart and connect to the CAN adapter.
+* Go to tab "LIST OF UDS DEVICES" and do a scan for devices available on bus by pressing the scan button. **This will take a few seconds.** You may watch the activities in a 2nd browser tab by looking on the logging info of the adapter.
+* You may change the naming of the devices at 2nd column. Those names will be used to store all collected data in ioBoker's object tree. Again press "SAVE" button when you did your changes.
+* Instance will restart again and after a few seconds you are ready to do a scan for available datapoints. Go to tab "LIST OF DATAPOINTS", press button "Start scan ..." and confirm with "OK". **Please be patient** - this may take **up to 5 minutes**. You may watch the progress in a 2nd browser tab by looking on the logging info of the adapter.
 This step is not mandatory but strongly recomended. If you would like to write to datapoints you need to do a datapoint scan first.
-* When datapoint scan was completed successfully, the datapoints are available in object tree for each device. You may view the datapoints in configuration by selecting a device and pressing button "Update list of datapoints". Press filter symbol and type search pattern to filter for name and/or codec. This is for your information only. Please deactivate filtering before selecting another device to avoid error messages.
+* When datapoint scan was completed successfully, the datapoints are available in the object tree for each device. You may view the datapoints in configuration by selecting a device and pressing button "Update list of datapoints". Press filter symbol and type search pattern to filter for name and/or codec. This is for your information only. Please deactivate filtering before selecting another device to avoid error messages.
 * Last step is to configure schedules for collecting data on tab "ASSIGNMENTS TO EXTERNAL CAN ADAPTER".
 * For **energy meter E380** (if available in your setup) you just can activate or not. Please notice the value "Min. update time (s)". Updates to single datapoints are done no faster than the given value (default is 5 seconds). By choosing zero every received data will be stored. Since E380 is sending data very fast (more than 20 values per second), it's recommended not to use zero here. This would put a high load on the ioBroker system.
 * If you have connected E3 devices via CAN bus, e.g. Vitocal and VX3, you can collect data exchanged between those devices in realtime by listening. Press "+" to add a line, check "active" chackbox, select a device and edit "Min. update time (s)". It's feasable to use 0s here, however, I recommend to keep to the 5s.
@@ -84,12 +84,11 @@ You may use datapoints informations on tab "LIST OF DATAPOINTS" for reference (o
 * At present, the communication protocol is known only for Vitocal (listener on CAN id 0x693) and Vitocharge VX3 (listener on CAN id 0x451).
 
 ## What is different to open3e project?
-* Obviously, the main differece is the direct integration to ioBroker. Configuration can be done via dialogs, data get's directly listed in object tree.
-* **WriteByDid is supported for all data types** but restricted to datapoints on device specific white list, see info section of device. You need to do a datapoint scan to enable writing. Writing of data is triggered by storing the datapoint with ack=false - yes, it's that simple! The datapoint will be read again from device two seconds after writing. If datapoint not get's acknowledged, please take a look to the logs.
-* A scan for datapoints per device (as depict tool of open3e is doing) is available now. After a successful scan, device specific datapoints are listed in object tree.
-* In addation to open3e real time collecting of data via listening is supported.
+* Obviously, the main differece is the direct integration to ioBroker. Configuration can be done via dialogs, data get's directly listed in object trees.
+* **WriteByDid is supported for all data types** but restricted to datapoints on device specific white list, see info section of devices. You need to do a datapoint scan to enable writing. Writing of data is triggered by storing the datapoint with ack=false - yes, it's that simple! The datapoint will be read again from device two seconds after writing. If datapoint not get's acknowledged, please take a look to the logs.
+* In addition to open3e real time collecting of data via listening is supported.
 
-## May open3 be used in parallel?
+## May open3e be used in parallel?
 Yes, that is possible under certain conditions:
 * If you only use data collecting here, you can use open3e with no limitiations.
 * If you use UDSonCAN here, it's important not to do this for the same devices as open3e does. If you would do so, you will have sporadic communications errors.
@@ -99,6 +98,9 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Improved layout of configuration dialog for device scan
+
 ### 0.6.10 (2024-01-15)
 * (MyHomeMyData) Removed code for Rawmode because it's never activated
 

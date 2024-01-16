@@ -56,5 +56,6 @@
     "Separate by comma! All given datapoints will be requested with specified schedule and ECU address.": "Durch Komma trennen! Alle angegebenen Datenpunkte werden mit der angegebenen Wiederholungszeit von der ECU-Adresse angefordert.",
     "Assignments to Internal CAN Adapter": "Zuordnungen zum internen CAN-Adapter",
     "Collecting Data on Internal CAN Adapter": "Sammeln von Daten auf dem internen CAN-Adapter",
-    "Update list of datapoints": "Liste der Datenpunkte aktualisieren"
+    "Update list of datapoints": "Liste der Datenpunkte aktualisieren",
+    "Start scan to update list of devices": "Scan starten, um die Liste der UDS-Geräte zu aktualisieren"
 }
