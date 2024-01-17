@@ -98,7 +98,7 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.6.11 (2024-01-17)
 * (MyHomeMyData) Improved layout of configuration dialog for device scan
 
 ### 0.6.10 (2024-01-15)
