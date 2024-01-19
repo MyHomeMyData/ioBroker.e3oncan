@@ -98,6 +98,12 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Added datapoints to list writable dids
+* (MyHomeMyData) Added unit test cases for codecs
+* (MyHomeMyData) Improved speed of codes for numerical values
+* (MyHomeMyData) Improved error messages on UDS negative response
+
 ### 0.6.11 (2024-01-17)
 * (MyHomeMyData) Improved layout of configuration dialog for device scan
 
