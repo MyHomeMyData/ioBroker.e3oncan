@@ -1,6 +1,13 @@
 'use strict';
 
 /*
+* Unveil life data of Viessmann E3 series devices via CAN bus
+*
+* Based on project open3e: https://github.com/open3e/open3e
+*
+*/
+
+/*
  * Created with @iobroker/create-adapter v2.5.0
  */
 
@@ -8,9 +15,7 @@
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
 
-// Load your modules here, e.g.:
-// const fs = require("fs");
-
+// Loading modules:
 const can = require('socketcan');
 const storage = require('./lib/storage');
 const collect = require('./lib/canCollect');
@@ -28,7 +33,7 @@ class E3oncan extends utils.Adapter {
             name: 'e3oncan',
         });
 
-        this.e380Collect         = null;    // E380 alway is assigned to external bus
+        this.e380Collect         = null;  // E380 always is assigned to external bus
         this.E3CollectInt        = {};    // Dict of collect devices on internal bus
         this.E3CollectExt        = {};    // Dict of collect devices on external bus
         this.collectTimeout      = 1500;  // Timeout (ms) for collecting data

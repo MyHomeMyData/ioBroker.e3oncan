@@ -51,7 +51,7 @@ This step is not mandatory but strongly recomended. If you would like to write t
 * Last step is to configure schedules for collecting data on tab "ASSIGNMENTS TO EXTERNAL CAN ADAPTER".
 * For **energy meter E380** (if available in your setup) you just can activate or not. Please notice the value "Min. update time (s)". Updates to single datapoints are done no faster than the given value (default is 5 seconds). By choosing zero every received data will be stored. Since E380 is sending data very fast (more than 20 values per second), it's recommended not to use zero here. This would put a high load on the ioBroker system.
 * If you have connected E3 devices via CAN bus, e.g. Vitocal and VX3, you can collect data exchanged between those devices in realtime by listening. Press "+" to add a line, check "active" chackbox, select a device and edit "Min. update time (s)". It's feasable to use 0s here, however, I recommend to keep to the 5s.
-* Finally, you may add schedules for requesting data via UDSonCAN protocol. Again press "+" button and edit the setting. You may have several schedules with different (!) timings. By this you can request some datapoints more often than others. Default value of 0 for "Schedule (s)" means, those datapoints will be requested just once during startup of the instance.
+* Finally, you may add schedules for requesting data via UDSonCAN protocol. Again press "+" button and edit the settings. You may have several schedules on each device. By this you can request some datapoints more often than others. Default value of 0 for "Schedule (s)" means, those datapoints will be requested just once during startup of the instance.
 You may use datapoints informations on tab "LIST OF DATAPOINTS" for reference (opening on 2nd tab could help).
 * If you have configured a CAN adapter connected to the **internal CAN bus**, a tab "ASSIGNMENTS TO INTERNAL CAN ADAPTER" is visible. Please configure the devices for colletion there. UDSonCAN is not supported on internal CAN bus by E3 devices.
 * That's it. Press "SAVE & CLOSE" button and check the data collected in object tree.
@@ -81,7 +81,7 @@ You may use datapoints informations on tab "LIST OF DATAPOINTS" for reference (o
 * Therfore from my point of view, combination of both methods is best approach.
 
 ## Limitation of collecting data
-* At present, the communication protocol is known only for Vitocal (listener on CAN id 0x693) and Vitocharge VX3 (listener on CAN id 0x451).
+* At present, the communication protocol is known only for Vitocal (listener on CAN id 0x693), Vitocharge VX3 and Vitoair (both listener on CAN id 0x451).
 
 ## What is different to open3e project?
 * Obviously, the main differece is the direct integration to ioBroker. Configuration can be done via dialogs, data get's directly listed in object trees.
@@ -98,6 +98,9 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Now supports multiple definitions of same schedule on a device 
+
 ### 0.6.12 (2024-01-19)
 * (MyHomeMyData) Added datapoints to list writable dids
 * (MyHomeMyData) Added unit test cases for codecs
