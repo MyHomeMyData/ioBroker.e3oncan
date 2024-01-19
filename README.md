@@ -98,7 +98,7 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.6.12 (2024-01-19)
 * (MyHomeMyData) Added datapoints to list writable dids
 * (MyHomeMyData) Added unit test cases for codecs
 * (MyHomeMyData) Improved speed of codes for numerical values

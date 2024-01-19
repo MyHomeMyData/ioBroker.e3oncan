@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.6.11",
+    "version": "0.6.12",
     "news": {
+      "0.6.12": {
+        "en": "Added datapoints to list writable dids\nAdded unit test cases for codecs\nImproved speed of codes for numerical values\nImproved error messages on UDS negative response",
+        "de": "Datenpunkte zur Liste der schreibbaren Dossiers hinzugefügt\nHinzugefügte Einheit Testfälle für Codecs\nVerbesserte Geschwindigkeit von Codes für Zahlenwerte\nVerbesserte Fehlermeldungen auf UDS negative Antwort",
+        "ru": "Добавлены точки данных в список значимых дел\n4.1.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.1.2.1.2.1.1.2.1.1.2.1.1.1.1.1.2.1.1.1.1.1.1.1.1.2.2.1.1.1.1.1.2.1.1.1.1.1.1.1.2.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2.1.1.1.2.1.1.2.1.1.1.1.1.1.1.1.1.1.1.1.1\nПовышение скорости кодов для численных значений\nУлучшенные сообщения об ошибках в негативном ответе на СОД",
+        "pt": "Adicionado datapoints para lista writable dids\nAdicionados casos de teste de unidade para codecs\nVelocidade melhorada de códigos para valores numéricos\nMensagens de erro melhoradas na resposta negativa do UDS",
+        "nl": "Toegevoegd datapunten aan lijst schrijfbare does\nToegevoegde testcases per eenheid voor codecs\nVerbeterde snelheid van codes voor numerieke waarden\nVerbeterde foutmeldingen op UDS-negatieve reactie",
+        "fr": "Ajout de points de données pour lister les dids en écriture\nAjout de cas de test unitaire pour codecs\nAmélioration de la vitesse des codes pour les valeurs numériques\nMessages d'erreur améliorés sur la réponse négative UDS",
+        "it": "Aggiunti i datapoints per elencare i fatti scrivibili\nAggiunti casi di prova unità per codecs\nVelocità migliorata dei codici per i valori numerici\nMessaggi di errore migliorati sulla risposta negativa UDS",
+        "es": "Puntos de datos añadidos a la lista de hechos\nCasos de prueba de unidad adicionales para codecs\nMejora de la velocidad de los códigos para los valores numéricos\nMensajes de error mejorados en respuesta negativa UDS",
+        "pl": "Dodano punkty danych do listy zapisanych didów\nDodano jednostkowe przypadki badań kodeków\nZwiększona prędkość kodów dla wartości numerycznych\nUlepszone komunikaty błędów w odpowiedzi negatywnej UDS",
+        "uk": "Додано точки даних для списання збитих даних\nДодані випадки тестування блоку для кодеків\nПокращена швидкість кодів для чисельних значень\nПокращуйте повідомлення про помилки у UDS",
+        "zh-cn": "添加数据点到列表可写作的\n为解码器添加单位测试例\n数字值代码速度提高\nUDS 负面响应上改进错误信息"
+      },
       "0.6.11": {
         "en": "Improved layout of configuration dialog for device scan",
         "de": "Verbessertes Layout des Konfigurationsdialogs für den Gerätescan",
