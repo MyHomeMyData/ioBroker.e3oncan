@@ -98,7 +98,7 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.6.13 (2024-01-20)
 * (MyHomeMyData) Now supports multiple definitions of same schedule on a device 
 * (MyHomeMyData) Added unit test cases for codecs
 

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.6.12",
+    "version": "0.6.13",
     "news": {
+      "0.6.13": {
+        "en": "Now supports multiple definitions of same schedule on a device \nAdded unit test cases for codecs",
+        "de": "Jetzt unterstützt mehrere Definitionen desselben Zeitplans auf einem Gerät\nHinzugefügte Einheit Testfälle für Codecs",
+        "ru": "Теперь поддерживает несколько определений одного и того же расписания на устройстве\n4.1.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.1.2.1.2.1.1.2.1.1.2.1.1.1.1.1.2.1.1.1.1.1.1.1.1.2.2.1.1.1.1.1.2.1.1.1.1.1.1.1.2.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2.1.1.1.2.1.1.2.1.1.1.1.1.1.1.1.1.1.1.1.1",
+        "pt": "Agora suporta várias definições da mesma programação em um dispositivo\nAdicionados casos de teste de unidade para codecs",
+        "nl": "Nu ondersteunt meerdere definities van hetzelfde schema op een apparaat\nToegevoegde testcases per eenheid voor codecs",
+        "fr": "Maintenant prend en charge plusieurs définitions de même horaire sur un appareil\nAjout de cas de test unitaire pour codecs",
+        "it": "Ora supporta più definizioni dello stesso programma su un dispositivo\nAggiunti casi di prova unità per codecs",
+        "es": "Ahora soporta múltiples definiciones del mismo horario en un dispositivo\nCasos de prueba de unidad adicionales para codecs",
+        "pl": "Teraz obsługuje wiele definicji tego samego harmonogramu na urządzeniu\nDodano jednostkowe przypadki badań kodeków",
+        "uk": "Тепер підтримує декілька визначень одного графіка на пристрої\nДодані випадки тестування блоку для кодеків",
+        "zh-cn": "现在支持设备上同一时刻表的多个定义\n为解码器添加单位测试例"
+      },
       "0.6.12": {
         "en": "Added datapoints to list writable dids\nAdded unit test cases for codecs\nImproved speed of codes for numerical values\nImproved error messages on UDS negative response",
         "de": "Datenpunkte zur Liste der schreibbaren Dossiers hinzugefügt\nHinzugefügte Einheit Testfälle für Codecs\nVerbesserte Geschwindigkeit von Codes für Zahlenwerte\nVerbesserte Fehlermeldungen auf UDS negative Antwort",
