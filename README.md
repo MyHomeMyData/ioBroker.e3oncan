@@ -100,6 +100,7 @@ Yes, that is possible under certain conditions:
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Now supports multiple definitions of same schedule on a device 
+* (MyHomeMyData) Added unit test cases for codecs
 
 ### 0.6.12 (2024-01-19)
 * (MyHomeMyData) Added datapoints to list writable dids
