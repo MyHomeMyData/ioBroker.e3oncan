@@ -15,18 +15,22 @@
 # Basic concept
 Viessmann E3 series devices (One Base) are doing a lot of data exchange on CAN bus.
 
-This adapter can listen to this communication and extract many useful information. The often used energy meter E380 CA is also supported.
+This adapter can listen to this communication and extract many useful information. The often used energy meter E380 CA also is supported.
 
-In parallel UDSonCAN service ReadByDid is supported. Informations not available via listening can be actively requested. This protocol is also used by other equipment, e.g. by well known WAGO gateway.
+In parallel **reading of datapoints** (ReadByDid) is supported. Informations not available via listening can be actively requested. The UDSonCAN protocol is also used by other equipment, e.g. by well known WAGO gateway.
 
-Important parts are based on the project [open3e](https://github.com/open3e).
+**Writing of datapoints** via UDSonCAN (WriteByDid) is supported as well. By writing to datapoints it's possible to change setpoints, schedules and so on. It's even possible to add new schedules e.g. for domestic hot water circulation pump.
 
-A python based implementation of a pure listening approach using MQTT messaging is also availabe, see [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
+Writing of data is triggered by storing the corresponding state with `Acknowledged` not checked (ack=false) - yes, it's that simple! The datapoint will be read again from device and stored in the state two seconds after writing. If state not get's acknowledged, please take a look to the logs.
 
-**Present implementation supports reading and writing of datapoints via UDSonCAN (ReadByDid and WriteByDid).** By writing to datapoints it's possible to change setpoints, schedules and so on. It's even possible to add new schedules e.g. for domestic hot water circulation pump. Writing is restricted to a set of datapoints using a white list.
+Writing is restricted to a set of datapoints using a **white list**. The list is stored in the info section of each device, e.g. at `e3oncan.0.vitocal.info.udsDidsWritable`. You can add more datapoints by editing this state. Make sure, **not** to check `Acknowledged` when saving the state.
 
 During first start of adapter instance a device scan will be done providing a list of all available devices for configuration dialog.
-A scan for datapoints of each device is also available and should be done during first setup.
+A scan for datapoints of each device should be done during first setup.
+
+Important parts of this adpater are based on the project [open3e](https://github.com/open3e).
+
+A python based implementation of a pure listening approach using MQTT messaging is also availabe, see [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
 
 # Getting started
 
@@ -85,8 +89,8 @@ You may use datapoints informations on tab "LIST OF DATAPOINTS" for reference (o
 
 ## What is different to open3e project?
 * Obviously, the main differece is the direct integration to ioBroker. Configuration can be done via dialogs, data get's directly listed in object trees.
-* **WriteByDid is supported for all data types** but restricted to datapoints on device specific white list, see info section of devices. You need to do a datapoint scan to enable writing. Writing of data is triggered by storing the datapoint with ack=false - yes, it's that simple! The datapoint will be read again from device two seconds after writing. If datapoint not get's acknowledged, please take a look to the logs.
 * In addition to open3e real time collecting of data via listening is supported.
+* Writing of data is much simpler. Just change the data in corresponding state and press Save button. 
 
 ## May open3e be used in parallel?
 Yes, that is possible under certain conditions:
@@ -100,6 +104,7 @@ Yes, that is possible under certain conditions:
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Replace '.' by '_' in datapoint ids to avoid unwanted sub structure in data states
+* (MyHomeMyData) Added more informations about white list for writables in Readme.
 
 ### 0.6.13 (2024-01-20)
 * (MyHomeMyData) Now supports multiple definitions of same schedule on a device 
