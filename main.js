@@ -33,6 +33,7 @@ class E3oncan extends utils.Adapter {
             name: 'e3oncan',
         });
 
+        this.stoppingInstance    = false; // true during unLoad()
         this.e380Collect         = null;  // E380 always is assigned to external bus
         this.E3CollectInt        = {};    // Dict of collect devices on internal bus
         this.E3CollectExt        = {};    // Dict of collect devices on external bus
@@ -43,6 +44,8 @@ class E3oncan extends utils.Adapter {
         this.channelExtName      = '';
         this.channelInt          = null;
         this.channelIntName      = '';
+        this.cntCanConnDesired   = 0;     // Number of activated CAN connections in config
+        this.cntCanConnActual    = 0;     // Number if actualy connected CAN buses
 
         this.udsWorkers          = {};
         this.udsTimeout          = 7500;   // Timeout (ms) for normal UDS communication
@@ -89,8 +92,9 @@ class E3oncan extends utils.Adapter {
 
         // @ts-ignore
         if (this.config.canExtActivated) {
+            this.cntCanConnDesired++;
             // @ts-ignore
-            [this.channelExt, this.channelExtName] = await this.connectToCan(this.channelExt, this.config.canExtName, this.onCanMsgExt);
+            [this.channelExt, this.channelExtName] = await this.connectToCan(this.channelExt, this.config.canExtName, this.onCanMsgExt, this.onCanExtStopped);
         }
 
         // Setup internal CAN bus if required
@@ -98,8 +102,14 @@ class E3oncan extends utils.Adapter {
 
         // @ts-ignore
         if (this.config.canIntActivated) {
+            this.cntCanConnDesired++;
             // @ts-ignore
-            [this.channelInt, this.channelIntName] = await this.connectToCan(this.channelInt, this.config.canIntName, this.onCanMsgInt);
+            [this.channelInt, this.channelIntName] = await this.connectToCan(this.channelInt, this.config.canIntName, this.onCanMsgInt, this.onCanIntStopped);
+        }
+
+        if (this.cntCanConnActual == this.cntCanConnDesired) {
+            // All configured CAN connections are established
+            await this.setState('info.connection', true, true);
         }
 
         // Setup E380 collect worker:
@@ -119,14 +129,15 @@ class E3oncan extends utils.Adapter {
 
     // Setup CAN busses
 
-    async connectToCan(channel, name, onMsg) {
+    async connectToCan(channel, name, onMsg, onStop) {
         let chName = name;
         if (!channel) {
             try {
                 channel = can.createRawChannel(name, true);
                 await channel.addListener('onMessage', onMsg, this);
+                await channel.addListener('onStopped', onStop, this);
                 await channel.start();
-                await this.setState('info.connection', true, true);
+                this.cntCanConnActual++;
                 await this.log.info('CAN-Adapter connected: '+name);
             } catch (e) {
                 await this.log.error(`Could not connect to CAN-Adapter "${name}" - err=${e.message}`);
@@ -148,7 +159,6 @@ class E3oncan extends utils.Adapter {
                 channel = null;
             }
         }
-        return([channel,'']);
     }
 
     // Setup E380 collect worker:
@@ -247,6 +257,7 @@ class E3oncan extends utils.Adapter {
      */
     async onUnload(callback) {
         try {
+            this.stoppingInstance = true;
             // Stop UDS workers:
             for (const worker of Object.values(this.E3UdsWorkers)) await worker.stop(this);
             for (const worker of Object.values(this.udsScanWorker.workers)) await worker.stop(this);
@@ -261,6 +272,7 @@ class E3oncan extends utils.Adapter {
             await this.disconnectFromCan(this.channelExt,this.config.canExtName);
             // @ts-ignore
             await this.disconnectFromCan(this.channelInt,this.config.canIntName);
+            this.setState('info.connection', false, true);
 
             callback();
         } catch (e) {
@@ -453,6 +465,24 @@ class E3oncan extends utils.Adapter {
 
 
         }
+    }
+
+    onCanExtStopped() {
+        if (!this.stoppingInstance) {
+            // External CAN connection was terminated unexpectedly
+            this.log.error('External CAN bus was stopped.');
+        }
+        this.cntCanConnActual--;
+        this.setState('info.connection', false, true);
+    }
+
+    onCanIntStopped() {
+        if (!this.stoppingInstance) {
+            // External CAN connection was terminated unexpectedly
+            this.log.error('Internal CAN bus was stopped.');
+        }
+        this.cntCanConnActual--;
+        this.setState('info.connection', false, true);
     }
 
     onCanMsgExt(msg) {

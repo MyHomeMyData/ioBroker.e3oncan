@@ -105,6 +105,8 @@ Yes, that is possible under certain conditions:
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Replace '.' by '_' in datapoint ids to avoid unwanted sub structure in data states
 * (MyHomeMyData) Added more informations about white list for writables in Readme.
+* (MyHomeMyData) Recognize loss of CAN connection.
+* (MyHomeMyData) Improved handling of info.connection.
 
 ### 0.6.13 (2024-01-20)
 * (MyHomeMyData) Now supports multiple definitions of same schedule on a device 
