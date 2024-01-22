@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.6.13",
+    "version": "0.6.14",
     "news": {
+      "0.6.14": {
+        "en": "Replace '.' by '_' in datapoint ids to avoid unwanted sub structure in data states\nAdded more informations about white list for writables in Readme.\nRecognize loss of CAN connection.\nImproved handling of info.connection.",
+        "de": "Ersetzen Sie '.' durch '_' in Datapoint ids, um unerwünschte Unterstruktur in Datenzuständen zu vermeiden\nWeitere Informationen zur Weißen Liste für schreibbare in Readme.\nErkennen Verlust der CAN-Verbindung.\nVerbesserte Handhabung von info.connection.",
+        "ru": "Заменить '.' на '_' в идентификаторах точки данных, чтобы избежать нежелательной субструктуры в состояниях данных\nДобавлено больше информации о белом списке для редакций в Readme.\nУзнать потерю соединения CAN.\nУлучшена обработка info.connection.",
+        "pt": "Substituir '.' por '_' em datapoint ids para evitar subestrutura indesejada em estados de dados\nAdicionado mais informações sobre lista branca para writables em Readme.\nReconhecer a perda de conexão CAN.\nMelhor manuseio de info.connection.",
+        "nl": "Vervang '.' door '_' in datapoint ids om ongewenste substructuur in data states te voorkomen\nToegevoegd meer informatie over witte lijst voor schrijfsels in Readme.\nHerkennen verlies van KAN verbinding.\nVerbeterde behandeling van info.connectie.",
+        "fr": "Remplacer '.' par '_' dans les identifiants de points de données pour éviter une sous-structure indésirable dans les états de données\nAjout de plus d'informations sur la liste blanche pour les écritures dans Readme.\nReconnaître la perte de connexion CAN.\nAmélioration de la gestion d'info.connection.",
+        "it": "Sostituire '.' da '_' in datapoint ids per evitare la struttura sub indesiderata in stati di dati\nAggiunto più informazioni su white list per writables in Readme.\nRiconoscere la perdita di connessione CAN.\nGestione migliorata di info.connection.",
+        "es": "Reemplazar '.' por '_' en datospoint ids para evitar la subestructura no deseada en los estados de datos\nAgregó más información sobre la lista blanca para writables en Readme.\nReconocer la pérdida de conexión CAN.\nMejor manejo de info.conexión.",
+        "pl": "Zastąp '.' przez' _ 'w idach punktów danych, aby uniknąć niepożądanej podstruktury w stanach danych\nDodano więcej informacji na temat białej listy pism w Readme.\nRozpoznaj utratę połączenia CAN.\nUlepszone obchodzenie się z info.connection.",
+        "uk": "Замініть \".\" по \"_\" у полицях даних, щоб уникнути небажаної структури під даних\nДодайте більше інформації про білий список для життєздатних в Readme.\nВизначте втрату з'єднання CAN.\nПокращення обробки інформації.",
+        "zh-cn": "在数据点编号中将“.”改为“_”,以避免数据状态中不必要的子结构\n在Readme中添加了更多关于白名单的可写信息.\n识别失去的CAN连接.\n完善信息联通处理."
+      },
       "0.6.13": {
         "en": "Now supports multiple definitions of same schedule on a device \nAdded unit test cases for codecs",
         "de": "Jetzt unterstützt mehrere Definitionen desselben Zeitplans auf einem Gerät\nHinzugefügte Einheit Testfälle für Codecs",
@@ -80,19 +93,6 @@
         "pl": "Początkowa wersja npm",
         "uk": "Початкова версія npm",
         "zh-cn": "初始 npm 版本"
-      },
-      "0.6.6": {
-        "en": "initial npm release",
-        "de": "Erstveröffentlichung auf npm",
-        "ru": "Начальная версия",
-        "pt": "lançamento inicial",
-        "nl": "Eerste uitgave",
-        "fr": "Première version",
-        "it": "Versione iniziale",
-        "es": "Versión inicial",
-        "pl": "Pierwsze wydanie",
-        "uk": "Початкова версія",
-        "zh-cn": "首次出版"
       }
     },
     "title": "Viessmann E3 CAN do",
