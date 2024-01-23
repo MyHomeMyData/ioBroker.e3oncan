@@ -102,6 +102,9 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Fix for Utf8 codec for handling of special characters, e.g. umlauts
+
 ### 0.6.14 (2024-01-22)
 * (MyHomeMyData) Replace '.' by '_' in datapoint ids to avoid unwanted sub structure in data states
 * (MyHomeMyData) Added more informations about white list for writables in Readme.
