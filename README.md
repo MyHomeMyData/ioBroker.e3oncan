@@ -102,7 +102,7 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.6.15 (2024-01-23)
 * (MyHomeMyData) Fix for Utf8 codec for handling of special characters, e.g. umlauts
 
 ### 0.6.14 (2024-01-22)

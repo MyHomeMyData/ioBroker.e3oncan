@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.6.14",
+    "version": "0.6.15",
     "news": {
+      "0.6.15": {
+        "en": "Fix for Utf8 codec for handling of special characters, e.g. umlauts",
+        "de": "Fix für Utf8-Codec zum Umgang mit Sonderzeichen, z.B. umlauts",
+        "ru": "Fix for Utf8 codec для обработки специальных символов, например, umlauts",
+        "pt": "Fix para Codec Utf8 para manipulação de caracteres especiais, por exemplo, umlauts",
+        "nl": "Fix voor Utf8 codec voor het hanteren van speciale tekens, bijvoorbeeld umlauts",
+        "fr": "Correction pour Codec Utf8 pour la manipulation de caractères spéciaux, p.ex. umlauts",
+        "it": "Fissaggio per Codice Utf8 per la gestione di caratteri speciali, ad esempio umlauts",
+        "es": "Corrección Utf8 codec para el manejo de caracteres especiales, por ejemplo umlauts",
+        "pl": "Napraw dla Kod Utf8 do obsługi znaków specjalnych, np. umlautów",
+        "uk": "Фіксація Utf8 кодека для обробки спеціальних символів, наприклад, umlauts",
+        "zh-cn": "修复 Utf8 处理特殊字符的编码器, 例如 umlauts"
+      },
       "0.6.14": {
         "en": "Replace '.' by '_' in datapoint ids to avoid unwanted sub structure in data states\nAdded more informations about white list for writables in Readme.\nRecognize loss of CAN connection.\nImproved handling of info.connection.",
         "de": "Ersetzen Sie '.' durch '_' in Datapoint ids, um unerwünschte Unterstruktur in Datenzuständen zu vermeiden\nWeitere Informationen zur Weißen Liste für schreibbare in Readme.\nErkennen Verlust der CAN-Verbindung.\nVerbesserte Handhabung von info.connection.",
@@ -80,19 +93,6 @@
         "pl": "Bugfix: Tylko Linux jest obsługiwany",
         "uk": "Помилки: Тільки Linux підтримується",
         "zh-cn": "错误修正 : 仅支持 Linux"
-      },
-      "0.6.8": {
-        "en": "Initial npm version",
-        "de": "Ursprüngliche npm-Version",
-        "ru": "Первоначальная версия npm",
-        "pt": "Versão inicial npm",
-        "nl": "Eerste npm-versie",
-        "fr": "Version initiale npm",
-        "it": "Versione npm iniziale",
-        "es": "Versión inicial npm",
-        "pl": "Początkowa wersja npm",
-        "uk": "Початкова версія npm",
-        "zh-cn": "初始 npm 版本"
       }
     },
     "title": "Viessmann E3 CAN do",
