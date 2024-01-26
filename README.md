@@ -21,7 +21,7 @@ In parallel **reading of datapoints** (ReadByDid) is supported. Informations not
 
 **Writing of datapoints** via UDSonCAN (WriteByDid) is supported as well. By writing to datapoints it's possible to change setpoints, schedules and so on. It's even possible to add new schedules e.g. for domestic hot water circulation pump.
 
-Writing of data is triggered by storing the corresponding state with `Acknowledged` not checked (ack=false) - yes, it's that simple! The datapoint will be read again from device and stored in the state two seconds after writing. If state not get's acknowledged, please take a look to the logs.
+Writing of data is triggered by storing the corresponding state with `Acknowledged` not checked (ack=false) - yes, it's that simple! The datapoint will be read again from device and stored in the state 2.5 seconds after writing. If state not get's acknowledged, please take a look to the logs.
 
 Writing is restricted to a set of datapoints using a **white list**. The list is stored in the info section of each device, e.g. at `e3oncan.0.vitocal.info.udsDidsWritable`. You can add more datapoints by editing this state. Make sure, **not** to check `Acknowledged` when saving the state.
 
@@ -39,13 +39,13 @@ A python based implementation of a pure listening approach using MQTT messaging 
 * Currently only Linux based systems are supported.
 * CAN adapter is up and visible in system, e.g. as "can0" (use ifconfig to check).
 * Refer to open3e project for further details
-* **Make sure, open3e is not running during initial setup!** This could cause communication errors in both applications.
+* **Make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running during initial setup!** This could cause communication errors in both applications.
 
 All services provided by this adapter are based on device list of your specific Viessmann E3 setup. Therefore you have to follow following steps for first setup:
 
 **Configuration**
 * When installation of adapter has finished a confuration dialog will show up to configure up to two CAN bus adapters (tab "CAN ADAPTER")
-* Edit name of adapter and check the "Connect to adapter" checkbox at least the external adapter
+* Edit name of adapter and check the "Connect to adapter" checkbox at least for the external adapter
 * When you're done, press "SAVE" button to apply the changes. This step is **mandatory**. The instance will restart and connect to the CAN adapter.
 * Go to tab "LIST OF UDS DEVICES" and do a scan for devices available on bus by pressing the scan button. **This will take a few seconds.** You may watch the activities in a 2nd browser tab by looking on the logging info of the adapter.
 * You may change the naming of the devices at 2nd column. Those names will be used to store all collected data in ioBoker's object tree. Again press "SAVE" button when you did your changes.
@@ -65,11 +65,11 @@ You may use datapoints informations on tab "LIST OF DATAPOINTS" for reference (o
 | ID | Data| Unit |
 | ------|:--- |------|
 | 0x250 | Active Power L1, L2, L3, Total |  W |
-| 0x252 | Reactive Power L1, L2, L3, Total | W |
+| 0x252 | Reactive Power L1, L2, L3, Total | VA |
 | 0x254 | Current, L1, L2, L3, cosPhi | A, - |
 | 0x256 | Voltage, L1, L2, L3, Frequency | V, Hz |
 | 0x258 | Cumulated Import, Export | kWh |
-| 0x25A | Total Active Power, Total Reactive Power | W |
+| 0x25A | Total Active Power, Total Reactive Power | W, VA |
 | 0x25C | Cumulated Import | kWh |
 
 # Hints and limitations
@@ -102,6 +102,9 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Improvements based on findings in review as of 2024-01-25
+
 ### 0.6.15 (2024-01-23)
 * (MyHomeMyData) Fix for Utf8 codec for handling of special characters, e.g. umlauts
 

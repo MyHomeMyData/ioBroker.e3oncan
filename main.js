@@ -257,6 +257,7 @@ class E3oncan extends utils.Adapter {
      */
     async onUnload(callback) {
         try {
+            const tStart = new Date().getTime();
             this.stoppingInstance = true;
             // Stop UDS workers:
             for (const worker of Object.values(this.E3UdsWorkers)) await worker.stop(this);
@@ -273,6 +274,7 @@ class E3oncan extends utils.Adapter {
             // @ts-ignore
             await this.disconnectFromCan(this.channelInt,this.config.canIntName);
             this.setState('info.connection', false, true);
+            this.log.debug('inUnload() took '+String(new Date().getTime()-tStart)+' ms to complete.');
 
             callback();
         } catch (e) {
@@ -320,7 +322,7 @@ class E3oncan extends utils.Adapter {
     }
 
     sleep(milliseconds) {
-        return new Promise(resolve => setTimeout(resolve, milliseconds));
+        return new Promise(resolve => this.setTimeout(resolve, milliseconds));
     }
 
     // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
