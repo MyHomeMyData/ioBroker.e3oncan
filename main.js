@@ -274,7 +274,7 @@ class E3oncan extends utils.Adapter {
             // @ts-ignore
             await this.disconnectFromCan(this.channelInt,this.config.canIntName);
             this.setState('info.connection', false, true);
-            this.log.debug('inUnload() took '+String(new Date().getTime()-tStart)+' ms to complete.');
+            this.log.debug('onUnload() took '+String(new Date().getTime()-tStart)+' ms to complete.');
 
             callback();
         } catch (e) {
