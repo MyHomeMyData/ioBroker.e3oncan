@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.6.15",
+    "version": "0.6.16",
     "news": {
+      "0.6.16": {
+        "en": "Improvements based on findings in review as of 2024-01-25\nCheckbox for data collectiton on internal bus is now checked per default",
+        "de": "Verbesserungen auf der Grundlage der Ergebnisse in der Überprüfung ab 2024-01-25\nCheckbox für Datensammler im internen Bus wird nun standardmäßig überprüft",
+        "ru": "Совершенствование на основе результатов, рассмотренных на 2024-01-25 годы\nCheckbox для сбора данных на внутреннем автобусе теперь проверяется по умолчанию",
+        "pt": "Aperfeiçoamentos baseados em achados em revisão a partir de 2024-01-25\nCaixa de seleção para coleta de dados no ônibus interno é agora verificada por padrão",
+        "nl": "Verbeteringen op basis van de resultaten van het onderzoek per 2024-01-25\nCheckbox voor gegevensverzameling op interne bus is nu standaard aangevinkt",
+        "fr": "Améliorations fondées sur les conclusions de l'examen en 2024-01-25\nLa case à cocher pour les données collectiton sur le bus interne est maintenant cochée par défaut",
+        "it": "Miglioramenti basati sui risultati in esame a partire dal 2024-01-25\nLa casella di controllo per i dati collettivi sul bus interno è ora controllata per impostazione predefinita",
+        "es": "Mejoras basadas en los resultados examinados al 2024-01-25\nCheckbox for data collectiton on internal bus is now check per default",
+        "pl": "Poprawki oparte na ustaleniach w przeglądzie z 2024- 01- 25\nSkrzynka kontrolna dla kolekcji danych w autobusie wewnętrznym jest teraz sprawdzana na domyślnym",
+        "uk": "Удосконалення на основі пошуку в рецензії на 2024-01-25\nCheckbox для збору даних у внутрішньому автобусі тепер перевіряється за замовчуванням",
+        "zh-cn": "根据截至2024-01-25年审查结果作出的改进\n内部总线上数据集合的复选框现在按默认检查"
+      },
       "0.6.15": {
         "en": "Fix for Utf8 codec for handling of special characters, e.g. umlauts",
         "de": "Fix für Utf8-Codec zum Umgang mit Sonderzeichen, z.B. umlauts",
@@ -80,19 +93,6 @@
         "pl": "Usunięto kod dla Rawmode ponieważ nigdy nie jest aktywowany",
         "uk": "Видалити код для Rawmode, тому що він ніколи не активований",
         "zh-cn": "删除了Rawmode的代码,因为它从未被激活"
-      },
-      "0.6.9": {
-        "en": "Bugfix: Only Linux is supported",
-        "de": "Bugfix: Nur Linux wird unterstützt",
-        "ru": "Исправление: Только Linux поддерживается",
-        "pt": "Bugfix: Apenas o Linux é suportado",
-        "nl": "Bugfix: Alleen Linux wordt ondersteund",
-        "fr": "Correction : Seul Linux est pris en charge",
-        "it": "Bugfix: Solo Linux è supportato",
-        "es": "Bugfix: Sólo Linux es compatible",
-        "pl": "Bugfix: Tylko Linux jest obsługiwany",
-        "uk": "Помилки: Тільки Linux підтримується",
-        "zh-cn": "错误修正 : 仅支持 Linux"
       }
     },
     "title": "Viessmann E3 CAN do",
