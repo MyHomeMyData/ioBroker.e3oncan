@@ -560,7 +560,7 @@
                             "tooltip": "Activate communication",
                             "filter": false,
                             "sort": false,
-                            "default": false
+                            "default": true
                         },
                         {   "type": "selectSendTo",
                             "title": "Select device",

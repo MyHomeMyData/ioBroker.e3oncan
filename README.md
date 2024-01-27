@@ -104,6 +104,7 @@ Yes, that is possible under certain conditions:
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Improvements based on findings in review as of 2024-01-25
+* (MyHomeMyData) Checkbox for data collectiton on internal bus is now checked per default
 
 ### 0.6.15 (2024-01-23)
 * (MyHomeMyData) Fix for Utf8 codec for handling of special characters, e.g. umlauts
