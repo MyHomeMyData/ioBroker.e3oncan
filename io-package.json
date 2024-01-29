@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.6.16",
+    "version": "0.6.17",
     "news": {
+      "0.6.17": {
+        "en": "Added/removed datapoints to/from list of writable dids\nPreparations for device specific list of writable dids",
+        "de": "Hinzugefügt/entfernte Datenpunkte zu/aus der Liste der schreibbaren Taten\nVorbereitungen für die gerätespezifische Liste der schreibbaren Taten",
+        "ru": "Добавлены/удалены точки данных в/из списка заслуживающих доверия дел\nПодготовка к конкретному списку реальных дел",
+        "pt": "Datapoints adicionados/removed para / da lista de dids writable\nPreparações para a lista específica do dispositivo de dids",
+        "nl": "Toegevoegd/verwijderde datapunten aan/van lijst van schrijfbare dids\nVoorbereidingen voor apparaatspecifieke lijst van schrijfbare dids",
+        "fr": "Ajout/retrait de points de données à la liste des dids en écriture\nPréparations pour la liste spécifique des dids à écrire",
+        "it": "Datapoint aggiunti/rimovibili da/per l'elenco di fazioni scrivibili\nPreparazioni per l'elenco specifico del dispositivo di fazioni scrivibili",
+        "es": "Puntos de datos añadidos/removidos a/desde la lista de didas\nPreparaciones para la lista específica del dispositivo de didas",
+        "pl": "Dodano / usunięto punkty danych do / z listy zapisanych did\nPreparaty do specyficznego dla urządzenia wykazu dysków pisanych",
+        "uk": "Додано/видалення точок даних до/з списку збитих\nПрепарати для пристрою специфічного переліку життєздатних",
+        "zh-cn": "已添加/删除数据点到/从可写作的列表中\n编写设备特定可写行为清单"
+      },
       "0.6.16": {
         "en": "Improvements based on findings in review as of 2024-01-25\nCheckbox for data collectiton on internal bus is now checked per default",
         "de": "Verbesserungen auf der Grundlage der Ergebnisse in der Überprüfung ab 2024-01-25\nCheckbox für Datensammler im internen Bus wird nun standardmäßig überprüft",
@@ -80,19 +93,6 @@
         "pl": "Ulepszony układ okna konfiguracji skanowania urządzenia",
         "uk": "Покращений макет діалогу конфігурації для сканування пристроїв",
         "zh-cn": "设备扫描配置对话框的改进版式"
-      },
-      "0.6.10": {
-        "en": "Removed code for Rawmode because it's never activated",
-        "de": "Entfernter Code für Rawmode, weil es nie aktiviert ist",
-        "ru": "Удаленный код для Rawmode, потому что он никогда не активирован",
-        "pt": "Código removido para Rawmode porque nunca foi ativado",
-        "nl": "Verwijderde code voor Rawmode omdat het nooit is geactiveerd",
-        "fr": "Code supprimé pour Rawmode car il n'est jamais activé",
-        "it": "Codice rimosso per Rawmode perché non è mai attivato",
-        "es": "Código eliminado para Rawmode porque nunca se activa",
-        "pl": "Usunięto kod dla Rawmode ponieważ nigdy nie jest aktywowany",
-        "uk": "Видалити код для Rawmode, тому що він ніколи не активований",
-        "zh-cn": "删除了Rawmode的代码,因为它从未被激活"
       }
     },
     "title": "Viessmann E3 CAN do",

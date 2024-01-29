@@ -102,7 +102,7 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.6.17 (2024-01-29)
 * (MyHomeMyData) Added/removed datapoints to/from list of writable dids
 * (MyHomeMyData) Preparations for device specific list of writable dids
 
