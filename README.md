@@ -102,7 +102,7 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.6.18 (2024-02-08)
 * (MyHomeMyData) Added versioning to list of datapoints and check for updates on start of adapter
 * (MyHomeMyData) Added optional description in configuration of UDS schedules
 
