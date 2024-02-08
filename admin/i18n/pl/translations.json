@@ -59,5 +59,7 @@
     "Listen for data on addresses given in this table. No writing to CAN bus.": "Posłuchaj danych o adresach podanych w tej tabeli. Brak zapisu do magistrali CAN.",
     "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "Urządzenia do gromadzenia danych. Brak zapisu do magistrali CAN. Naciśnij „+”, aby dodać urządzenie.",
     "Update list of datapoints": "Zaktualizuj listę punktów danych",
-    "Start scan to update list of devices": "Rozpocznij skanowanie, aby zaktualizować listę urządzeń"
+    "Start scan to update list of devices": "Rozpocznij skanowanie, aby zaktualizować listę urządzeń",
+    "Description": "Opis",
+    "Optional description of this schedule.": "Opcjonalny opis tego harmonogramu."
 }

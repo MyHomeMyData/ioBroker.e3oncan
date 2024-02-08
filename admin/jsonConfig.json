@@ -501,6 +501,16 @@
                             "filter": false,
                             "sort": false,
                             "default": "256"
+                        },
+                        {
+                            "type": "text",
+                            "attr": "udsScheduleUserComment",
+                            "width": "30% ",
+                            "title": "Description",
+                            "tooltip": "Optional description of this schedule.",
+                            "filter": false,
+                            "sort": false,
+                            "default": ""
                         }
                     ]
                 }

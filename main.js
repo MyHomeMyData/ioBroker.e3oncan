@@ -18,6 +18,7 @@ const utils = require('@iobroker/adapter-core');
 // Loading modules:
 const can = require('socketcan');
 const storage = require('./lib/storage');
+const E3DidsDict = require('./lib/didsE3.json');
 const collect = require('./lib/canCollect');
 const uds = require('./lib/canUds');
 const udsScan = require('./lib/udsScan');
@@ -39,6 +40,7 @@ class E3oncan extends utils.Adapter {
         this.E3CollectExt        = {};    // Dict of collect devices on external bus
         this.collectTimeout      = 1500;  // Timeout (ms) for collecting data
         this.E3UdsWorkers        = {};    // Dict of uds devices on external bus
+        this.cntWorkersActive    = 0;     // Total number of active workers (collect + UDS)
 
         this.channelExt          = null;
         this.channelExtName      = '';
@@ -87,6 +89,9 @@ class E3oncan extends utils.Adapter {
             this.udsDevStateNames.push(dev.devStateName);
         }
 
+        // Check for updates of list of datapoints and perform update if needed:
+        await this.updateDatapoints(this.config.tableUdsDevices);
+
         // Setup external CAN bus if required
         // ==================================
 
@@ -124,7 +129,30 @@ class E3oncan extends utils.Adapter {
         // Initial setup all configured devices for UDS:
         if (this.channelExt) await this.setupUdsWorkers();
 
+        await this.log.debug('Total number of active workers: '+String(this.cntWorkersActive));
+
         await this.log.info('Startup of instance '+this.namespace+': Done.');
+    }
+
+    // Check for updates:
+
+    async updateDatapoints(udsDevs) {
+        // Update list of datapoints of all devices during startup of adapter
+        for (const dev of Object.values(udsDevs)) {
+            const devDids = new storage.storageDids({stateBase:dev.devStateName, device:dev.devStateName});
+            await devDids.readKnownDids(this,'normal');
+            if (devDids.didsDevSpecAvail) {
+                if ( (devDids.didsDictDevCom.Version === undefined) ||
+                    (Number(E3DidsDict.Version) > Number(devDids.didsDictDevCom.Version)) ) {
+                    this.log.debug('Updating list of datapoints to version '+E3DidsDict.Version+' for device '+dev.devStateName);
+                    for (const key of Object.keys(devDids.didsDictDevCom)) {
+                        devDids.didsDictDevCom[key] = E3DidsDict[key];
+                    }
+                    devDids.didsDictDevCom['Version'] = E3DidsDict.Version;     // In case, 'Version' not avalable yet
+                }
+            }
+            await devDids.storeKnownDids(this);
+        }
     }
 
     // Setup CAN busses
@@ -148,14 +176,14 @@ class E3oncan extends utils.Adapter {
         return([channel, chName]);
     }
 
-    async disconnectFromCan(channel, name) {
+    disconnectFromCan(channel, name) {
         if (channel) {
             try {
-                await channel.stop();
-                await this.log.info('CAN-Adapter disconnected: '+name);
+                channel.stop();
+                this.log.info('CAN-Adapter disconnected: '+name);
                 channel = null;
             } catch (e) {
-                await this.log.error(`Could not disconnect from CAN "${name}" - err=${e.message}`);
+                this.log.error(`Could not disconnect from CAN "${name}" - err=${e.message}`);
                 channel = null;
             }
         }
@@ -264,16 +292,22 @@ class E3oncan extends utils.Adapter {
             for (const worker of Object.values(this.udsScanWorker.workers)) await worker.stop(this);
 
             // Stop Collect workers:
-            if (this.e380Collect) this.e380Collect.stop(this);
+            if (this.e380Collect) await this.e380Collect.stop(this);
             for (const worker of Object.values(this.E3CollectExt)) await worker.stop(this);
             for (const worker of Object.values(this.E3CollectInt)) await worker.stop(this);
 
+            if (this.cntWorkersActive > 0) {
+                // Timeout - there are still unstopped workers
+                this.log.warn('Not all workers could be stopped during onOnload(). Number of still active workers: '+String(this.cntWorkersActive));
+            }
+
             // Stop CAN communication:
             // @ts-ignore
-            await this.disconnectFromCan(this.channelExt,this.config.canExtName);
+            this.disconnectFromCan(this.channelExt,this.config.canExtName);
             // @ts-ignore
-            await this.disconnectFromCan(this.channelInt,this.config.canIntName);
+            this.disconnectFromCan(this.channelInt,this.config.canIntName);
             this.setState('info.connection', false, true);
+
             this.log.debug('onUnload() took '+String(new Date().getTime()-tStart)+' ms to complete.');
 
             callback();

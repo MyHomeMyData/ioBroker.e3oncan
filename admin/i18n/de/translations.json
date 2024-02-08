@@ -57,5 +57,7 @@
     "Assignments to Internal CAN Adapter": "Zuordnungen zum internen CAN-Adapter",
     "Collecting Data on Internal CAN Adapter": "Sammeln von Daten auf dem internen CAN-Adapter",
     "Update list of datapoints": "Liste der Datenpunkte aktualisieren",
-    "Start scan to update list of devices": "Scan starten, um die Liste der UDS-Geräte zu aktualisieren"
+    "Start scan to update list of devices": "Scan starten, um die Liste der UDS-Geräte zu aktualisieren",
+    "Description": "Beschreibung",
+    "Optional description of this schedule.": "Optionale Beschreibung dieses Zeitplans."
 }

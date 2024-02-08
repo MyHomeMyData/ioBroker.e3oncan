@@ -59,5 +59,7 @@
     "Listen for data on addresses given in this table. No writing to CAN bus.": "Ascoltare i dati sugli indirizzi forniti in questa tabella. Nessuna scrittura sul bus CAN.",
     "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "Dispositivi per la raccolta dei dati. Nessuna scrittura sul bus CAN. Premi \"+\" per aggiungere il dispositivo.",
     "Update list of datapoints": "Aggiorna l'elenco dei punti dati",
-    "Start scan to update list of devices": "Avvia la scansione per aggiornare l'elenco dei dispositivi"
+    "Start scan to update list of devices": "Avvia la scansione per aggiornare l'elenco dei dispositivi",
+    "Description": "Descrizione",
+    "Optional description of this schedule.": "Descrizione facoltativa di questa pianificazione."
 }

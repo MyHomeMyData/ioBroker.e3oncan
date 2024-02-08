@@ -59,5 +59,7 @@
     "Listen for data on addresses given in this table. No writing to CAN bus.": "Escuche los datos sobre las direcciones que figuran en esta tabla. No se puede escribir en el bus CAN.",
     "Devices for collecting data. No writing to CAN bus. Press '+' to add device.": "Dispositivos para la recogida de datos. No se puede escribir en el bus CAN. Presione '+' para agregar el dispositivo.",
     "Update list of datapoints": "Actualizar lista de puntos de datos",
-    "Start scan to update list of devices": "Iniciar escaneo para actualizar la lista de dispositivos"
+    "Start scan to update list of devices": "Iniciar escaneo para actualizar la lista de dispositivos",
+    "Description": "Descripción",
+    "Optional description of this schedule.": "Descripción opcional de este horario."
 }
