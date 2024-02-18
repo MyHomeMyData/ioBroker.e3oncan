@@ -140,7 +140,8 @@ class E3oncan extends utils.Adapter {
         // Update list of datapoints of all devices during startup of adapter
         for (const dev of Object.values(udsDevs)) {
             const devDids = new storage.storageDids({stateBase:dev.devStateName, device:dev.devStateName});
-            await devDids.readKnownDids(this,'normal');
+            await devDids.initStates(this, 'standby');
+            await devDids.readKnownDids(this,'standby');
             if (devDids.didsDevSpecAvail) {
                 if ( (devDids.didsDictDevCom.Version === undefined) ||
                     (Number(E3DidsDict.Version) > Number(devDids.didsDictDevCom.Version)) ) {

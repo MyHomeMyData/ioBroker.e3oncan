@@ -104,6 +104,7 @@ Yes, that is possible under certain conditions:
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Check for changed structure of datapoints during startup
 * (MyHomeMyData) Update of list of datapoints to version 20240218
+* (MyHomeMyData) Bugfix to avoid warnings on very first start of adapter
 
 ### 0.6.18 (2024-02-08)
 * (MyHomeMyData) Added versioning to list of datapoints and check for updates on start of adapter
