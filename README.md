@@ -101,7 +101,7 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.6.19 (2024-02-19)
 * (MyHomeMyData) Check for changed structure of datapoints during startup
 * (MyHomeMyData) Update of list of datapoints to version 20240218
 * (MyHomeMyData) Bugfix to avoid warnings on very first start of adapter
