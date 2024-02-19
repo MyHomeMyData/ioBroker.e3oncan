@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.6.18",
+    "version": "0.6.19",
     "news": {
+      "0.6.19": {
+        "en": "Check for changed structure of datapoints during startup\nUpdate of list of datapoints to version 20240218\nBugfix to avoid warnings on very first start of adapter",
+        "de": "Überprüfen Sie die geänderte Struktur der Datenpunkte während des Starts\nAktualisierung der Liste der Datenpunkte auf Version 20240218\nBugfix, um Warnungen am ersten Adapterstart zu vermeiden",
+        "ru": "Проверка измененной структуры точек данных во время запуска\nОбновление списка точек данных к версии 20240218\nИсправление, чтобы избежать предупреждений на самом первом запуске адаптера",
+        "pt": "Verifique a estrutura alterada de datapoints durante a inicialização\nAtualização da lista de datapoints para a versão 20240218\nBugfix para evitar avisos no primeiro início do adaptador",
+        "nl": "Controleren op gewijzigde structuur van datapunten tijdens opstarten\nBijwerken van de lijst van datapunten naar versie 20240218\nBugfix om waarschuwingen te voorkomen bij de eerste start van de adapter",
+        "fr": "Vérifier la modification de la structure des points de données lors du démarrage\nMise à jour de la liste des points de données de la version 20240218\nBugfix pour éviter les avertissements au tout premier début de l'adaptateur",
+        "it": "Controllare la struttura modificata dei datapoint durante l'avvio\nAggiornamento dell'elenco dei datapoint alla versione 20240218\nBugfix per evitare avvisi sul primo avvio dell'adattatore",
+        "es": "Compruebe la estructura modificada de los puntos de datos durante el inicio\nActualización de la lista de datos a la versión 20240218\nBugfix para evitar advertencias en el primer comienzo del adaptador",
+        "pl": "Sprawdź zmianę struktury punktów danych podczas uruchamiania\nAktualizacja wykazu punktów danych do wersji 20240218\nBugfix, aby uniknąć ostrzeżeń na pierwszym starcie adaptera",
+        "uk": "Перевірка змінної структури точок даних при запуску\nОновлення списку точок даних до версії 20240218\nВиправлення помилок, щоб уникнути попередження про перший запуск адаптера",
+        "zh-cn": "检查启动时数据点结构的变化\n数据点列表更新至20240218版本\n在适配器初始启动时避免警告的错误fix"
+      },
       "0.6.18": {
         "en": "Added versioning to list of datapoints and check for updates on start of adapter\nAdded optional description in configuration of UDS schedules",
         "de": "Hinzugefügte Versionierung zur Liste der Datenpunkte und überprüfen Sie Updates am Anfang des Adapters\nOptionale Beschreibung in Konfiguration von UDS-Zeitplänen hinzugefügt",
@@ -80,19 +93,6 @@
         "pl": "Teraz obsługuje wiele definicji tego samego harmonogramu na urządzeniu\nDodano jednostkowe przypadki badań kodeków",
         "uk": "Тепер підтримує декілька визначень одного графіка на пристрої\nДодані випадки тестування блоку для кодеків",
         "zh-cn": "现在支持设备上同一时刻表的多个定义\n为解码器添加单位测试例"
-      },
-      "0.6.12": {
-        "en": "Added datapoints to list writable dids\nAdded unit test cases for codecs\nImproved speed of codes for numerical values\nImproved error messages on UDS negative response",
-        "de": "Datenpunkte zur Liste der schreibbaren Dossiers hinzugefügt\nHinzugefügte Einheit Testfälle für Codecs\nVerbesserte Geschwindigkeit von Codes für Zahlenwerte\nVerbesserte Fehlermeldungen auf UDS negative Antwort",
-        "ru": "Добавлены точки данных в список значимых дел\n4.1.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.1.2.1.2.1.1.2.1.1.2.1.1.1.1.1.2.1.1.1.1.1.1.1.1.2.2.1.1.1.1.1.2.1.1.1.1.1.1.1.2.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2.1.1.1.2.1.1.2.1.1.1.1.1.1.1.1.1.1.1.1.1\nПовышение скорости кодов для численных значений\nУлучшенные сообщения об ошибках в негативном ответе на СОД",
-        "pt": "Adicionado datapoints para lista writable dids\nAdicionados casos de teste de unidade para codecs\nVelocidade melhorada de códigos para valores numéricos\nMensagens de erro melhoradas na resposta negativa do UDS",
-        "nl": "Toegevoegd datapunten aan lijst schrijfbare does\nToegevoegde testcases per eenheid voor codecs\nVerbeterde snelheid van codes voor numerieke waarden\nVerbeterde foutmeldingen op UDS-negatieve reactie",
-        "fr": "Ajout de points de données pour lister les dids en écriture\nAjout de cas de test unitaire pour codecs\nAmélioration de la vitesse des codes pour les valeurs numériques\nMessages d'erreur améliorés sur la réponse négative UDS",
-        "it": "Aggiunti i datapoints per elencare i fatti scrivibili\nAggiunti casi di prova unità per codecs\nVelocità migliorata dei codici per i valori numerici\nMessaggi di errore migliorati sulla risposta negativa UDS",
-        "es": "Puntos de datos añadidos a la lista de hechos\nCasos de prueba de unidad adicionales para codecs\nMejora de la velocidad de los códigos para los valores numéricos\nMensajes de error mejorados en respuesta negativa UDS",
-        "pl": "Dodano punkty danych do listy zapisanych didów\nDodano jednostkowe przypadki badań kodeków\nZwiększona prędkość kodów dla wartości numerycznych\nUlepszone komunikaty błędów w odpowiedzi negatywnej UDS",
-        "uk": "Додано точки даних для списання збитих даних\nДодані випадки тестування блоку для кодеків\nПокращена швидкість кодів для чисельних значень\nПокращуйте повідомлення про помилки у UDS",
-        "zh-cn": "添加数据点到列表可写作的\n为解码器添加单位测试例\n数字值代码速度提高\nUDS 负面响应上改进错误信息"
       }
     },
     "title": "Viessmann E3 CAN do",

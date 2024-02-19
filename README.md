@@ -101,6 +101,11 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.6.19 (2024-02-19)
+* (MyHomeMyData) Check for changed structure of datapoints during startup
+* (MyHomeMyData) Update of list of datapoints to version 20240218
+* (MyHomeMyData) Bugfix to avoid warnings on very first start of adapter
+
 ### 0.6.18 (2024-02-08)
 * (MyHomeMyData) Added versioning to list of datapoints and check for updates on start of adapter
 * (MyHomeMyData) Added optional description in configuration of UDS schedules
