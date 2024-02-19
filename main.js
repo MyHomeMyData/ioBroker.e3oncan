@@ -147,7 +147,7 @@ class E3oncan extends utils.Adapter {
                     (Number(E3DidsDict.Version) > Number(devDids.didsDictDevCom.Version)) ) {
                     this.log.debug('Updating datapoints to version '+E3DidsDict.Version+' for device '+dev.devStateName);
                     for (const did of Object.keys(devDids.didsDictDevCom)) {
-                        if (did != 'Version') {
+                        if ( (did != 'Version') &&  (did in E3DidsDict) ) {
                             // Check for changes in datapoint structure
                             const devStruct = await devDids.getDidStruct(this,[],devDids.didsDictDevCom[did]);
                             const E3Struct  = await devDids.getDidStruct(this,[],E3DidsDict[did]);
@@ -168,8 +168,8 @@ class E3oncan extends utils.Adapter {
                                     await devDids.storeObjectTree(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, res.val);
                                 }
                             }
+                            devDids.didsDictDevCom[did] = await E3DidsDict[did];
                         }
-                        devDids.didsDictDevCom[did] = await E3DidsDict[did];
                     }
                     devDids.didsDictDevCom['Version'] = E3DidsDict.Version;
                 }
