@@ -140,15 +140,38 @@ class E3oncan extends utils.Adapter {
         // Update list of datapoints of all devices during startup of adapter
         for (const dev of Object.values(udsDevs)) {
             const devDids = new storage.storageDids({stateBase:dev.devStateName, device:dev.devStateName});
-            await devDids.readKnownDids(this,'normal');
+            await devDids.initStates(this, 'standby');
+            await devDids.readKnownDids(this,'standby');
             if (devDids.didsDevSpecAvail) {
                 if ( (devDids.didsDictDevCom.Version === undefined) ||
                     (Number(E3DidsDict.Version) > Number(devDids.didsDictDevCom.Version)) ) {
-                    this.log.debug('Updating list of datapoints to version '+E3DidsDict.Version+' for device '+dev.devStateName);
-                    for (const key of Object.keys(devDids.didsDictDevCom)) {
-                        devDids.didsDictDevCom[key] = E3DidsDict[key];
+                    this.log.debug('Updating datapoints to version '+E3DidsDict.Version+' for device '+dev.devStateName);
+                    for (const did of Object.keys(devDids.didsDictDevCom)) {
+                        if ( (did != 'Version') &&  (did in E3DidsDict) ) {
+                            // Check for changes in datapoint structure
+                            const devStruct = await devDids.getDidStruct(this,[],devDids.didsDictDevCom[did]);
+                            const E3Struct  = await devDids.getDidStruct(this,[],E3DidsDict[did]);
+                            if (JSON.stringify(devStruct) != JSON.stringify(E3Struct)) {
+                                // Structure of datapoint has changed
+                                // Replace .json and .tree state(s) based on raw data of did
+                                const didStateName = await devDids.getDidStr(did)+'_'+devDids.didsDictDevCom[did].id;
+                                this.log.debug('  > Structure of datapoint '+didStateName+' has changed. Updating.');
+                                // Delete states based on old structure:
+                                await this.delObjectAsync(this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, { recursive: true });
+                                await this.delObjectAsync(this.namespace+'.'+dev.devStateName+'.json.'+didStateName, { recursive: true });
+                                const raw = await devDids.getObjectVal(this, dev.devStateName+'.raw.'+didStateName);
+                                if (raw != null) {
+                                    // Create states based on new structure if raw data is available:
+                                    const cdi = E3DidsDict[did];
+                                    const res = await devDids.decodeDid(this, dev.devStateName, did, cdi, await devDids.arr2Hex(raw));
+                                    await devDids.storeObjectJson(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.json.'+didStateName, res.val);
+                                    await devDids.storeObjectTree(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, res.val);
+                                }
+                            }
+                            devDids.didsDictDevCom[did] = await E3DidsDict[did];
+                        }
                     }
-                    devDids.didsDictDevCom['Version'] = E3DidsDict.Version;     // In case, 'Version' not avalable yet
+                    devDids.didsDictDevCom['Version'] = E3DidsDict.Version;
                 }
             }
             await devDids.storeKnownDids(this);
