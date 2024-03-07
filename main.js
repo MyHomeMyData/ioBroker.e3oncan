@@ -164,8 +164,8 @@ class E3oncan extends utils.Adapter {
                                     // Create states based on new structure if raw data is available:
                                     const cdi = E3DidsDict[did];
                                     const res = await devDids.decodeDid(this, dev.devStateName, did, cdi, await devDids.arr2Hex(raw));
-                                    await devDids.storeObjectJson(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.json.'+didStateName, res.val);
-                                    await devDids.storeObjectTree(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, res.val);
+                                    await devDids.storeObjectJson(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.json.'+didStateName, res.obj);
+                                    await devDids.storeObjectTree(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, res.obj);
                                 }
                             }
                             devDids.didsDictDevCom[did] = await E3DidsDict[did];
