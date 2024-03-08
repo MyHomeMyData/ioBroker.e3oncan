@@ -156,9 +156,8 @@ class E3oncan extends utils.Adapter {
                                 // Replace .json and .tree state(s) based on raw data of did
                                 const didStateName = await devDids.getDidStr(did)+'_'+await devDids.didsDictDevCom[did].id;
                                 this.log.info('  > Structure of datapoint '+didStateName+' has changed. Updating.');
-                                // Delete states based on old structure:
+                                // Delete tree states based on old structure:
                                 await this.delObjectAsync(this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, { recursive: true });
-                                await this.delObjectAsync(this.namespace+'.'+dev.devStateName+'.json.'+didStateName, { recursive: true });
                                 const raw = await devDids.getObjectVal(this, dev.devStateName+'.raw.'+didStateName);
                                 if (raw != null) {
                                     // Create states based on new structure if raw data is available:
