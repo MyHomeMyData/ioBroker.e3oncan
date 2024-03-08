@@ -101,6 +101,11 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Store numbers in tree states with type Number instead of String
+* (MyHomeMyData) IMPORTANT: This may affect handling of tree states, e.g. in vis or history
+* (MyHomeMyData) Bugfix for update of changed datapoint structure
+
 ### 0.6.19 (2024-02-19)
 * (MyHomeMyData) Check for changed structure of datapoints during startup
 * (MyHomeMyData) Update of list of datapoints to version 20240218
