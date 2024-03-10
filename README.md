@@ -102,7 +102,12 @@ Yes, that is possible under certain conditions:
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (MyHomeMyData) Store numerical values with state data type number
+* (MyHomeMyData) Store numbers in states of channel 'tree' with type "Number" instead of "String"
+* (MyHomeMyData) IMPORTANT: This may affect handling of tree states, e.g. in scripts, vis and history
+* (MyHomeMyData) Update of list of datapoints to version 20240309
+* (MyHomeMyData) Bugfix for update of changed datapoint structure during start of adapter
+* (MyHomeMyData) Changed default values for CAN adapters to can0 and can1
+* (MyHomeMyData) Increased value for collect timeout to 2000 ms
 
 ### 0.6.19 (2024-02-19)
 * (MyHomeMyData) Check for changed structure of datapoints during startup

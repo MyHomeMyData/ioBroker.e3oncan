@@ -1,216 +1,272 @@
 {
-  "common": {
-    "name": "e3oncan",
-    "version": "0.6.19",
-    "news": {
-      "0.6.19": {
-        "en": "Check for changed structure of datapoints during startup\nUpdate of list of datapoints to version 20240218\nBugfix to avoid warnings on very first start of adapter",
-        "de": "Überprüfen Sie die geänderte Struktur der Datenpunkte während des Starts\nAktualisierung der Liste der Datenpunkte auf Version 20240218\nBugfix, um Warnungen am ersten Adapterstart zu vermeiden",
-        "ru": "Проверка измененной структуры точек данных во время запуска\nОбновление списка точек данных к версии 20240218\nИсправление, чтобы избежать предупреждений на самом первом запуске адаптера",
-        "pt": "Verifique a estrutura alterada de datapoints durante a inicialização\nAtualização da lista de datapoints para a versão 20240218\nBugfix para evitar avisos no primeiro início do adaptador",
-        "nl": "Controleren op gewijzigde structuur van datapunten tijdens opstarten\nBijwerken van de lijst van datapunten naar versie 20240218\nBugfix om waarschuwingen te voorkomen bij de eerste start van de adapter",
-        "fr": "Vérifier la modification de la structure des points de données lors du démarrage\nMise à jour de la liste des points de données de la version 20240218\nBugfix pour éviter les avertissements au tout premier début de l'adaptateur",
-        "it": "Controllare la struttura modificata dei datapoint durante l'avvio\nAggiornamento dell'elenco dei datapoint alla versione 20240218\nBugfix per evitare avvisi sul primo avvio dell'adattatore",
-        "es": "Compruebe la estructura modificada de los puntos de datos durante el inicio\nActualización de la lista de datos a la versión 20240218\nBugfix para evitar advertencias en el primer comienzo del adaptador",
-        "pl": "Sprawdź zmianę struktury punktów danych podczas uruchamiania\nAktualizacja wykazu punktów danych do wersji 20240218\nBugfix, aby uniknąć ostrzeżeń na pierwszym starcie adaptera",
-        "uk": "Перевірка змінної структури точок даних при запуску\nОновлення списку точок даних до версії 20240218\nВиправлення помилок, щоб уникнути попередження про перший запуск адаптера",
-        "zh-cn": "检查启动时数据点结构的变化\n数据点列表更新至20240218版本\n在适配器初始启动时避免警告的错误fix"
-      },
-      "0.6.18": {
-        "en": "Added versioning to list of datapoints and check for updates on start of adapter\nAdded optional description in configuration of UDS schedules",
-        "de": "Hinzugefügte Versionierung zur Liste der Datenpunkte und überprüfen Sie Updates am Anfang des Adapters\nOptionale Beschreibung in Konfiguration von UDS-Zeitplänen hinzugefügt",
-        "ru": "Добавлена версия в список точек данных и проверяется на обновления в начале адаптера\nДобавлено дополнительное описание в конфигурации графиков СОД",
-        "pt": "Versão adicionada para lista de datapoints e verificar para atualizações no início do adaptador\nDescrição opcional adicionada na configuração de horários UDS",
-        "nl": "Versie toevoegen aan lijst van datapunten en controleren op updates bij het begin van de adapter\nOptionele beschrijving toegevoegd in configuratie van UDS-schema's",
-        "fr": "Ajout de la version à la liste des points de données et vérification des mises à jour au début de l'adaptateur\nAjout d'une description facultative dans la configuration des horaires UDS",
-        "it": "Aggiunta la versione per l'elenco dei datapoint e controllare gli aggiornamenti sull'avvio dell'adattatore\nAggiunta la descrizione facoltativa nella configurazione degli orari UDS",
-        "es": "Versión agregada a la lista de puntos de datos y comprobar para actualizaciones en el inicio del adaptador\nDescripción opcional agregada en la configuración de los calendarios UDS",
-        "pl": "Dodano wersję do listy punktów danych i sprawdź aktualizacje na początku adaptera\nDodano opcjonalny opis w konfiguracji harmonogramów UDS",
-        "uk": "Додано версію для списку точок даних і перевірте оновлення на старті адаптера\nДодано додатковий опис в конфігурації графіків UDS",
-        "zh-cn": "在数据点列表中添加版本, 并在适配器启动时检查更新\n在配置 UDS 调度时添加的可选描述"
-      },
-      "0.6.17": {
-        "en": "Added/removed datapoints to/from list of writable dids\nPreparations for device specific list of writable dids",
-        "de": "Hinzugefügt/entfernte Datenpunkte zu/aus der Liste der schreibbaren Taten\nVorbereitungen für die gerätespezifische Liste der schreibbaren Taten",
-        "ru": "Добавлены/удалены точки данных в/из списка заслуживающих доверия дел\nПодготовка к конкретному списку реальных дел",
-        "pt": "Datapoints adicionados/removed para / da lista de dids writable\nPreparações para a lista específica do dispositivo de dids",
-        "nl": "Toegevoegd/verwijderde datapunten aan/van lijst van schrijfbare dids\nVoorbereidingen voor apparaatspecifieke lijst van schrijfbare dids",
-        "fr": "Ajout/retrait de points de données à la liste des dids en écriture\nPréparations pour la liste spécifique des dids à écrire",
-        "it": "Datapoint aggiunti/rimovibili da/per l'elenco di fazioni scrivibili\nPreparazioni per l'elenco specifico del dispositivo di fazioni scrivibili",
-        "es": "Puntos de datos añadidos/removidos a/desde la lista de didas\nPreparaciones para la lista específica del dispositivo de didas",
-        "pl": "Dodano / usunięto punkty danych do / z listy zapisanych did\nPreparaty do specyficznego dla urządzenia wykazu dysków pisanych",
-        "uk": "Додано/видалення точок даних до/з списку збитих\nПрепарати для пристрою специфічного переліку життєздатних",
-        "zh-cn": "已添加/删除数据点到/从可写作的列表中\n编写设备特定可写行为清单"
-      },
-      "0.6.16": {
-        "en": "Improvements based on findings in review as of 2024-01-25\nCheckbox for data collectiton on internal bus is now checked per default",
-        "de": "Verbesserungen auf der Grundlage der Ergebnisse in der Überprüfung ab 2024-01-25\nCheckbox für Datensammler im internen Bus wird nun standardmäßig überprüft",
-        "ru": "Совершенствование на основе результатов, рассмотренных на 2024-01-25 годы\nCheckbox для сбора данных на внутреннем автобусе теперь проверяется по умолчанию",
-        "pt": "Aperfeiçoamentos baseados em achados em revisão a partir de 2024-01-25\nCaixa de seleção para coleta de dados no ônibus interno é agora verificada por padrão",
-        "nl": "Verbeteringen op basis van de resultaten van het onderzoek per 2024-01-25\nCheckbox voor gegevensverzameling op interne bus is nu standaard aangevinkt",
-        "fr": "Améliorations fondées sur les conclusions de l'examen en 2024-01-25\nLa case à cocher pour les données collectiton sur le bus interne est maintenant cochée par défaut",
-        "it": "Miglioramenti basati sui risultati in esame a partire dal 2024-01-25\nLa casella di controllo per i dati collettivi sul bus interno è ora controllata per impostazione predefinita",
-        "es": "Mejoras basadas en los resultados examinados al 2024-01-25\nCheckbox for data collectiton on internal bus is now check per default",
-        "pl": "Poprawki oparte na ustaleniach w przeglądzie z 2024- 01- 25\nSkrzynka kontrolna dla kolekcji danych w autobusie wewnętrznym jest teraz sprawdzana na domyślnym",
-        "uk": "Удосконалення на основі пошуку в рецензії на 2024-01-25\nCheckbox для збору даних у внутрішньому автобусі тепер перевіряється за замовчуванням",
-        "zh-cn": "根据截至2024-01-25年审查结果作出的改进\n内部总线上数据集合的复选框现在按默认检查"
-      },
-      "0.6.15": {
-        "en": "Fix for Utf8 codec for handling of special characters, e.g. umlauts",
-        "de": "Fix für Utf8-Codec zum Umgang mit Sonderzeichen, z.B. umlauts",
-        "ru": "Fix for Utf8 codec для обработки специальных символов, например, umlauts",
-        "pt": "Fix para Codec Utf8 para manipulação de caracteres especiais, por exemplo, umlauts",
-        "nl": "Fix voor Utf8 codec voor het hanteren van speciale tekens, bijvoorbeeld umlauts",
-        "fr": "Correction pour Codec Utf8 pour la manipulation de caractères spéciaux, p.ex. umlauts",
-        "it": "Fissaggio per Codice Utf8 per la gestione di caratteri speciali, ad esempio umlauts",
-        "es": "Corrección Utf8 codec para el manejo de caracteres especiales, por ejemplo umlauts",
-        "pl": "Napraw dla Kod Utf8 do obsługi znaków specjalnych, np. umlautów",
-        "uk": "Фіксація Utf8 кодека для обробки спеціальних символів, наприклад, umlauts",
-        "zh-cn": "修复 Utf8 处理特殊字符的编码器, 例如 umlauts"
-      },
-      "0.6.14": {
-        "en": "Replace '.' by '_' in datapoint ids to avoid unwanted sub structure in data states\nAdded more informations about white list for writables in Readme.\nRecognize loss of CAN connection.\nImproved handling of info.connection.",
-        "de": "Ersetzen Sie '.' durch '_' in Datapoint ids, um unerwünschte Unterstruktur in Datenzuständen zu vermeiden\nWeitere Informationen zur Weißen Liste für schreibbare in Readme.\nErkennen Verlust der CAN-Verbindung.\nVerbesserte Handhabung von info.connection.",
-        "ru": "Заменить '.' на '_' в идентификаторах точки данных, чтобы избежать нежелательной субструктуры в состояниях данных\nДобавлено больше информации о белом списке для редакций в Readme.\nУзнать потерю соединения CAN.\nУлучшена обработка info.connection.",
-        "pt": "Substituir '.' por '_' em datapoint ids para evitar subestrutura indesejada em estados de dados\nAdicionado mais informações sobre lista branca para writables em Readme.\nReconhecer a perda de conexão CAN.\nMelhor manuseio de info.connection.",
-        "nl": "Vervang '.' door '_' in datapoint ids om ongewenste substructuur in data states te voorkomen\nToegevoegd meer informatie over witte lijst voor schrijfsels in Readme.\nHerkennen verlies van KAN verbinding.\nVerbeterde behandeling van info.connectie.",
-        "fr": "Remplacer '.' par '_' dans les identifiants de points de données pour éviter une sous-structure indésirable dans les états de données\nAjout de plus d'informations sur la liste blanche pour les écritures dans Readme.\nReconnaître la perte de connexion CAN.\nAmélioration de la gestion d'info.connection.",
-        "it": "Sostituire '.' da '_' in datapoint ids per evitare la struttura sub indesiderata in stati di dati\nAggiunto più informazioni su white list per writables in Readme.\nRiconoscere la perdita di connessione CAN.\nGestione migliorata di info.connection.",
-        "es": "Reemplazar '.' por '_' en datospoint ids para evitar la subestructura no deseada en los estados de datos\nAgregó más información sobre la lista blanca para writables en Readme.\nReconocer la pérdida de conexión CAN.\nMejor manejo de info.conexión.",
-        "pl": "Zastąp '.' przez' _ 'w idach punktów danych, aby uniknąć niepożądanej podstruktury w stanach danych\nDodano więcej informacji na temat białej listy pism w Readme.\nRozpoznaj utratę połączenia CAN.\nUlepszone obchodzenie się z info.connection.",
-        "uk": "Замініть \".\" по \"_\" у полицях даних, щоб уникнути небажаної структури під даних\nДодайте більше інформації про білий список для життєздатних в Readme.\nВизначте втрату з'єднання CAN.\nПокращення обробки інформації.",
-        "zh-cn": "在数据点编号中将“.”改为“_”,以避免数据状态中不必要的子结构\n在Readme中添加了更多关于白名单的可写信息.\n识别失去的CAN连接.\n完善信息联通处理."
-      },
-      "0.6.13": {
-        "en": "Now supports multiple definitions of same schedule on a device \nAdded unit test cases for codecs",
-        "de": "Jetzt unterstützt mehrere Definitionen desselben Zeitplans auf einem Gerät\nHinzugefügte Einheit Testfälle für Codecs",
-        "ru": "Теперь поддерживает несколько определений одного и того же расписания на устройстве\n4.1.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.1.2.1.2.1.1.2.1.1.2.1.1.1.1.1.2.1.1.1.1.1.1.1.1.2.2.1.1.1.1.1.2.1.1.1.1.1.1.1.2.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2.1.1.1.2.1.1.2.1.1.1.1.1.1.1.1.1.1.1.1.1",
-        "pt": "Agora suporta várias definições da mesma programação em um dispositivo\nAdicionados casos de teste de unidade para codecs",
-        "nl": "Nu ondersteunt meerdere definities van hetzelfde schema op een apparaat\nToegevoegde testcases per eenheid voor codecs",
-        "fr": "Maintenant prend en charge plusieurs définitions de même horaire sur un appareil\nAjout de cas de test unitaire pour codecs",
-        "it": "Ora supporta più definizioni dello stesso programma su un dispositivo\nAggiunti casi di prova unità per codecs",
-        "es": "Ahora soporta múltiples definiciones del mismo horario en un dispositivo\nCasos de prueba de unidad adicionales para codecs",
-        "pl": "Teraz obsługuje wiele definicji tego samego harmonogramu na urządzeniu\nDodano jednostkowe przypadki badań kodeków",
-        "uk": "Тепер підтримує декілька визначень одного графіка на пристрої\nДодані випадки тестування блоку для кодеків",
-        "zh-cn": "现在支持设备上同一时刻表的多个定义\n为解码器添加单位测试例"
-      }
-    },
-    "title": "Viessmann E3 CAN do",
-    "titleLang": {
-      "en": "Viessmann E3 CAN do",
-      "de": "Viessmann E3 CAN do",
-      "ru": "CAN-прослушиватель серии Viessmann E3",
-      "pt": "Ouvinte CAN da série Viessmann E3",
-      "nl": "Viessmann E3-serie CAN-luisteraar",
-      "fr": "Écouteur CAN Viessmann série E3",
-      "it": "Ascoltatore CAN Viessmann serie E3",
-      "es": "Oyente CAN serie Viessmann E3",
-      "pl": "Odbiornik CAN firmy Viessmann serii E3",
-      "uk": "CAN-слухач серії Viessmann E3",
-      "zh-cn": "菲斯曼E3系列CAN监听器"
-    },
-    "desc": {
-      "en": "Collect data on CAN bus for Viessmann E3 devices, e.g. Vitocal, Vitocharge, Energy Meter E380",
-      "de": "Greifen Sie auf Daten per CAN-Bus zu, für Viessmann E3-Geräte, z.B. Vitocal, Vitocharge, Energiezähler E380",
-      "ru": "Сбор данных по шине CAN для устройств Viessmann E3, например. Vitocal, Vitocharge, Счетчик энергии E380",
-      "pt": "Colete dados no barramento CAN para dispositivos Viessmann E3, por ex. Vitocal, Vitocharge, medidor de energia E380",
-      "nl": "Verzamel gegevens op de CAN-bus voor Viessmann E3-apparaten, b.v. Vitocal, Vitocharge, Energiemeter E380",
-      "fr": "Collectez des données sur le bus CAN pour les appareils Viessmann E3, par ex. Vitocal, Vitocharge, Compteur d'énergie E380",
-      "it": "Raccogliere dati sul bus CAN per dispositivi Viessmann E3, ad es. Vitocal, Vitocharge, Contatore di energia E380",
-      "es": "Recopilar datos en el bus CAN para dispositivos Viessmann E3, p. Vitocal, Vitocharge, Contador de energía E380",
-      "pl": "Zbieraj dane na magistrali CAN dla urządzeń Viessmann E3, np.: Vitocal, Vitocharge, licznik energii E380",
-      "uk": "Збір даних на шині CAN для пристроїв Viessmann E3, напр. Vitocal, Vitocharge, Енерголічильник E380",
-      "zh-cn": "收集 Viessmann E3 设备 CAN 总线上的数据，例如Vitocal、Vitocharge、能量计 E380"
-    },
-    "authors": [
-      "MyHomeMyData <juergen.bonfert@gmail.com>"
-    ],
-    "keywords": [
-      "Viessmann",
-      "E3",
-      "CAN",
-      "Heating",
-      "PV",
-      "Energy Meter"
-    ],
-    "license": "MIT",
-    "platform": "Javascript/Node.js",
-    "main": "main.js",
-    "icon": "e3oncan.png",
-    "enabled": true,
-    "messagebox": true,
-    "extIcon": "https://raw.githubusercontent.com/MyHomeMyData/ioBroker.e3oncan/main/admin/e3oncan.png",
-    "readme": "https://github.com/MyHomeMyData/ioBroker.e3oncan/blob/main/README.md",
-    "loglevel": "debug",
-    "mode": "daemon",
-    "type": "iot-systems",
-    "compact": true,
-    "connectionType": "local",
-    "dataSource": "push",
-    "adminUI": {
-      "config": "json"
-    },
-    "dependencies": [
-      {
-        "js-controller": ">=3.3.22"
-      }
-    ],
-    "globalDependencies": [
-      {
-        "admin": ">=5.1.13"
-      }
-    ]
-  },
-  "native": {
-    "tableUdsDevices": [],
-    "tableUdsDids": []
-  },
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": {
-          "en": "Information",
-          "de": "Informationen",
-          "ru": "Информация",
-          "pt": "Informação",
-          "nl": "Informatie",
-          "fr": "Informations",
-          "it": "Informazioni",
-          "es": "Información",
-          "pl": "Informacje",
-          "uk": "Інформація",
-          "zh-cn": "资料"
-        }
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "role": "indicator.connected",
-        "name": {
-          "en": "Device or service connected",
-          "de": "Geräte oder Service vrbunden",
-          "ru": "Устройство или служба подключены",
-          "pt": "Dispositivo ou serviço conectado",
-          "nl": "Apparaat of dienst verbonden",
-          "fr": "Appareil ou service connecté",
-          "it": "Dispositivo o servizio collegato",
-          "es": "Dispositivo o servicio conectado",
-          "pl": "Przyłączone urządzenie lub usługa",
-          "uk": "Пристрої або послуги підключені",
-          "zh-cn": "设备或服务已连接"
+    "common": {
+        "name": "e3oncan",
+        "version": "0.6.19",
+        "news": {
+            "0.6.19": {
+                "en": "Check for changed structure of datapoints during startup\nUpdate of list of datapoints to version 20240218\nBugfix to avoid warnings on very first start of adapter",
+                "de": "Überprüfen Sie die geänderte Struktur der Datenpunkte während des Starts\nAktualisierung der Liste der Datenpunkte auf Version 20240218\nBugfix, um Warnungen am ersten Adapterstart zu vermeiden",
+                "ru": "Проверка измененной структуры точек данных во время запуска\nОбновление списка точек данных к версии 20240218\nИсправление, чтобы избежать предупреждений на самом первом запуске адаптера",
+                "pt": "Verifique a estrutura alterada de datapoints durante a inicialização\nAtualização da lista de datapoints para a versão 20240218\nBugfix para evitar avisos no primeiro início do adaptador",
+                "nl": "Controleren op gewijzigde structuur van datapunten tijdens opstarten\nBijwerken van de lijst van datapunten naar versie 20240218\nBugfix om waarschuwingen te voorkomen bij de eerste start van de adapter",
+                "fr": "Vérifier la modification de la structure des points de données lors du démarrage\nMise à jour de la liste des points de données de la version 20240218\nBugfix pour éviter les avertissements au tout premier début de l'adaptateur",
+                "it": "Controllare la struttura modificata dei datapoint durante l'avvio\nAggiornamento dell'elenco dei datapoint alla versione 20240218\nBugfix per evitare avvisi sul primo avvio dell'adattatore",
+                "es": "Compruebe la estructura modificada de los puntos de datos durante el inicio\nActualización de la lista de datos a la versión 20240218\nBugfix para evitar advertencias en el primer comienzo del adaptador",
+                "pl": "Sprawdź zmianę struktury punktów danych podczas uruchamiania\nAktualizacja wykazu punktów danych do wersji 20240218\nBugfix, aby uniknąć ostrzeżeń na pierwszym starcie adaptera",
+                "uk": "Перевірка змінної структури точок даних при запуску\nОновлення списку точок даних до версії 20240218\nВиправлення помилок, щоб уникнути попередження про перший запуск адаптера",
+                "zh-cn": "检查启动时数据点结构的变化\n数据点列表更新至20240218版本\n在适配器初始启动时避免警告的错误fix"
+            },
+            "0.6.18": {
+                "en": "Added versioning to list of datapoints and check for updates on start of adapter\nAdded optional description in configuration of UDS schedules",
+                "de": "Hinzugefügte Versionierung zur Liste der Datenpunkte und überprüfen Sie Updates am Anfang des Adapters\nOptionale Beschreibung in Konfiguration von UDS-Zeitplänen hinzugefügt",
+                "ru": "Добавлена версия в список точек данных и проверяется на обновления в начале адаптера\nДобавлено дополнительное описание в конфигурации графиков СОД",
+                "pt": "Versão adicionada para lista de datapoints e verificar para atualizações no início do adaptador\nDescrição opcional adicionada na configuração de horários UDS",
+                "nl": "Versie toevoegen aan lijst van datapunten en controleren op updates bij het begin van de adapter\nOptionele beschrijving toegevoegd in configuratie van UDS-schema's",
+                "fr": "Ajout de la version à la liste des points de données et vérification des mises à jour au début de l'adaptateur\nAjout d'une description facultative dans la configuration des horaires UDS",
+                "it": "Aggiunta la versione per l'elenco dei datapoint e controllare gli aggiornamenti sull'avvio dell'adattatore\nAggiunta la descrizione facoltativa nella configurazione degli orari UDS",
+                "es": "Versión agregada a la lista de puntos de datos y comprobar para actualizaciones en el inicio del adaptador\nDescripción opcional agregada en la configuración de los calendarios UDS",
+                "pl": "Dodano wersję do listy punktów danych i sprawdź aktualizacje na początku adaptera\nDodano opcjonalny opis w konfiguracji harmonogramów UDS",
+                "uk": "Додано версію для списку точок даних і перевірте оновлення на старті адаптера\nДодано додатковий опис в конфігурації графіків UDS",
+                "zh-cn": "在数据点列表中添加版本, 并在适配器启动时检查更新\n在配置 UDS 调度时添加的可选描述"
+            },
+            "0.6.17": {
+                "en": "Added/removed datapoints to/from list of writable dids\nPreparations for device specific list of writable dids",
+                "de": "Hinzugefügt/entfernte Datenpunkte zu/aus der Liste der schreibbaren Taten\nVorbereitungen für die gerätespezifische Liste der schreibbaren Taten",
+                "ru": "Добавлены/удалены точки данных в/из списка заслуживающих доверия дел\nПодготовка к конкретному списку реальных дел",
+                "pt": "Datapoints adicionados/removed para / da lista de dids writable\nPreparações para a lista específica do dispositivo de dids",
+                "nl": "Toegevoegd/verwijderde datapunten aan/van lijst van schrijfbare dids\nVoorbereidingen voor apparaatspecifieke lijst van schrijfbare dids",
+                "fr": "Ajout/retrait de points de données à la liste des dids en écriture\nPréparations pour la liste spécifique des dids à écrire",
+                "it": "Datapoint aggiunti/rimovibili da/per l'elenco di fazioni scrivibili\nPreparazioni per l'elenco specifico del dispositivo di fazioni scrivibili",
+                "es": "Puntos de datos añadidos/removidos a/desde la lista de didas\nPreparaciones para la lista específica del dispositivo de didas",
+                "pl": "Dodano / usunięto punkty danych do / z listy zapisanych did\nPreparaty do specyficznego dla urządzenia wykazu dysków pisanych",
+                "uk": "Додано/видалення точок даних до/з списку збитих\nПрепарати для пристрою специфічного переліку життєздатних",
+                "zh-cn": "已添加/删除数据点到/从可写作的列表中\n编写设备特定可写行为清单"
+            },
+            "0.6.16": {
+                "en": "Improvements based on findings in review as of 2024-01-25\nCheckbox for data collectiton on internal bus is now checked per default",
+                "de": "Verbesserungen auf der Grundlage der Ergebnisse in der Überprüfung ab 2024-01-25\nCheckbox für Datensammler im internen Bus wird nun standardmäßig überprüft",
+                "ru": "Совершенствование на основе результатов, рассмотренных на 2024-01-25 годы\nCheckbox для сбора данных на внутреннем автобусе теперь проверяется по умолчанию",
+                "pt": "Aperfeiçoamentos baseados em achados em revisão a partir de 2024-01-25\nCaixa de seleção para coleta de dados no ônibus interno é agora verificada por padrão",
+                "nl": "Verbeteringen op basis van de resultaten van het onderzoek per 2024-01-25\nCheckbox voor gegevensverzameling op interne bus is nu standaard aangevinkt",
+                "fr": "Améliorations fondées sur les conclusions de l'examen en 2024-01-25\nLa case à cocher pour les données collectiton sur le bus interne est maintenant cochée par défaut",
+                "it": "Miglioramenti basati sui risultati in esame a partire dal 2024-01-25\nLa casella di controllo per i dati collettivi sul bus interno è ora controllata per impostazione predefinita",
+                "es": "Mejoras basadas en los resultados examinados al 2024-01-25\nCheckbox for data collectiton on internal bus is now check per default",
+                "pl": "Poprawki oparte na ustaleniach w przeglądzie z 2024- 01- 25\nSkrzynka kontrolna dla kolekcji danych w autobusie wewnętrznym jest teraz sprawdzana na domyślnym",
+                "uk": "Удосконалення на основі пошуку в рецензії на 2024-01-25\nCheckbox для збору даних у внутрішньому автобусі тепер перевіряється за замовчуванням",
+                "zh-cn": "根据截至2024-01-25年审查结果作出的改进\n内部总线上数据集合的复选框现在按默认检查"
+            },
+            "0.6.15": {
+                "en": "Fix for Utf8 codec for handling of special characters, e.g. umlauts",
+                "de": "Fix für Utf8-Codec zum Umgang mit Sonderzeichen, z.B. umlauts",
+                "ru": "Fix for Utf8 codec для обработки специальных символов, например, umlauts",
+                "pt": "Fix para Codec Utf8 para manipulação de caracteres especiais, por exemplo, umlauts",
+                "nl": "Fix voor Utf8 codec voor het hanteren van speciale tekens, bijvoorbeeld umlauts",
+                "fr": "Correction pour Codec Utf8 pour la manipulation de caractères spéciaux, p.ex. umlauts",
+                "it": "Fissaggio per Codice Utf8 per la gestione di caratteri speciali, ad esempio umlauts",
+                "es": "Corrección Utf8 codec para el manejo de caracteres especiales, por ejemplo umlauts",
+                "pl": "Napraw dla Kod Utf8 do obsługi znaków specjalnych, np. umlautów",
+                "uk": "Фіксація Utf8 кодека для обробки спеціальних символів, наприклад, umlauts",
+                "zh-cn": "修复 Utf8 处理特殊字符的编码器, 例如 umlauts"
+            },
+            "0.6.14": {
+                "en": "Replace '.' by '_' in datapoint ids to avoid unwanted sub structure in data states\nAdded more informations about white list for writables in Readme.\nRecognize loss of CAN connection.\nImproved handling of info.connection.",
+                "de": "Ersetzen Sie '.' durch '_' in Datapoint ids, um unerwünschte Unterstruktur in Datenzuständen zu vermeiden\nWeitere Informationen zur Weißen Liste für schreibbare in Readme.\nErkennen Verlust der CAN-Verbindung.\nVerbesserte Handhabung von info.connection.",
+                "ru": "Заменить '.' на '_' в идентификаторах точки данных, чтобы избежать нежелательной субструктуры в состояниях данных\nДобавлено больше информации о белом списке для редакций в Readme.\nУзнать потерю соединения CAN.\nУлучшена обработка info.connection.",
+                "pt": "Substituir '.' por '_' em datapoint ids para evitar subestrutura indesejada em estados de dados\nAdicionado mais informações sobre lista branca para writables em Readme.\nReconhecer a perda de conexão CAN.\nMelhor manuseio de info.connection.",
+                "nl": "Vervang '.' door '_' in datapoint ids om ongewenste substructuur in data states te voorkomen\nToegevoegd meer informatie over witte lijst voor schrijfsels in Readme.\nHerkennen verlies van KAN verbinding.\nVerbeterde behandeling van info.connectie.",
+                "fr": "Remplacer '.' par '_' dans les identifiants de points de données pour éviter une sous-structure indésirable dans les états de données\nAjout de plus d'informations sur la liste blanche pour les écritures dans Readme.\nReconnaître la perte de connexion CAN.\nAmélioration de la gestion d'info.connection.",
+                "it": "Sostituire '.' da '_' in datapoint ids per evitare la struttura sub indesiderata in stati di dati\nAggiunto più informazioni su white list per writables in Readme.\nRiconoscere la perdita di connessione CAN.\nGestione migliorata di info.connection.",
+                "es": "Reemplazar '.' por '_' en datospoint ids para evitar la subestructura no deseada en los estados de datos\nAgregó más información sobre la lista blanca para writables en Readme.\nReconocer la pérdida de conexión CAN.\nMejor manejo de info.conexión.",
+                "pl": "Zastąp '.' przez' _ 'w idach punktów danych, aby uniknąć niepożądanej podstruktury w stanach danych\nDodano więcej informacji na temat białej listy pism w Readme.\nRozpoznaj utratę połączenia CAN.\nUlepszone obchodzenie się z info.connection.",
+                "uk": "Замініть \".\" по \"_\" у полицях даних, щоб уникнути небажаної структури під даних\nДодайте більше інформації про білий список для життєздатних в Readme.\nВизначте втрату з'єднання CAN.\nПокращення обробки інформації.",
+                "zh-cn": "在数据点编号中将“.”改为“_”,以避免数据状态中不必要的子结构\n在Readme中添加了更多关于白名单的可写信息.\n识别失去的CAN连接.\n完善信息联通处理."
+            },
+            "0.6.13": {
+                "en": "Now supports multiple definitions of same schedule on a device \nAdded unit test cases for codecs",
+                "de": "Jetzt unterstützt mehrere Definitionen desselben Zeitplans auf einem Gerät\nHinzugefügte Einheit Testfälle für Codecs",
+                "ru": "Теперь поддерживает несколько определений одного и того же расписания на устройстве\n4.1.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.1.2.1.2.1.1.2.1.1.2.1.1.1.1.1.2.1.1.1.1.1.1.1.1.2.2.1.1.1.1.1.2.1.1.1.1.1.1.1.2.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2.1.1.1.2.1.1.2.1.1.1.1.1.1.1.1.1.1.1.1.1",
+                "pt": "Agora suporta várias definições da mesma programação em um dispositivo\nAdicionados casos de teste de unidade para codecs",
+                "nl": "Nu ondersteunt meerdere definities van hetzelfde schema op een apparaat\nToegevoegde testcases per eenheid voor codecs",
+                "fr": "Maintenant prend en charge plusieurs définitions de même horaire sur un appareil\nAjout de cas de test unitaire pour codecs",
+                "it": "Ora supporta più definizioni dello stesso programma su un dispositivo\nAggiunti casi di prova unità per codecs",
+                "es": "Ahora soporta múltiples definiciones del mismo horario en un dispositivo\nCasos de prueba de unidad adicionales para codecs",
+                "pl": "Teraz obsługuje wiele definicji tego samego harmonogramu na urządzeniu\nDodano jednostkowe przypadki badań kodeków",
+                "uk": "Тепер підтримує декілька визначень одного графіка на пристрої\nДодані випадки тестування блоку для кодеків",
+                "zh-cn": "现在支持设备上同一时刻表的多个定义\n为解码器添加单位测试例"
+            }
         },
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    }
-  ]
+        "title": "Viessmann E3 CAN do",
+        "titleLang": {
+            "en": "Viessmann E3 CAN do",
+            "de": "Viessmann E3 CAN do",
+            "ru": "CAN-прослушиватель серии Viessmann E3",
+            "pt": "Ouvinte CAN da série Viessmann E3",
+            "nl": "Viessmann E3-serie CAN-luisteraar",
+            "fr": "Écouteur CAN Viessmann série E3",
+            "it": "Ascoltatore CAN Viessmann serie E3",
+            "es": "Oyente CAN serie Viessmann E3",
+            "pl": "Odbiornik CAN firmy Viessmann serii E3",
+            "uk": "CAN-слухач серії Viessmann E3",
+            "zh-cn": "菲斯曼E3系列CAN监听器"
+        },
+        "desc": {
+            "en": "Collect data on CAN bus for Viessmann E3 devices, e.g. Vitocal, Vitocharge, Energy Meter E380",
+            "de": "Greifen Sie auf Daten per CAN-Bus zu, für Viessmann E3-Geräte, z.B. Vitocal, Vitocharge, Energiezähler E380",
+            "ru": "Сбор данных по шине CAN для устройств Viessmann E3, например. Vitocal, Vitocharge, Счетчик энергии E380",
+            "pt": "Colete dados no barramento CAN para dispositivos Viessmann E3, por ex. Vitocal, Vitocharge, medidor de energia E380",
+            "nl": "Verzamel gegevens op de CAN-bus voor Viessmann E3-apparaten, b.v. Vitocal, Vitocharge, Energiemeter E380",
+            "fr": "Collectez des données sur le bus CAN pour les appareils Viessmann E3, par ex. Vitocal, Vitocharge, Compteur d'énergie E380",
+            "it": "Raccogliere dati sul bus CAN per dispositivi Viessmann E3, ad es. Vitocal, Vitocharge, Contatore di energia E380",
+            "es": "Recopilar datos en el bus CAN para dispositivos Viessmann E3, p. Vitocal, Vitocharge, Contador de energía E380",
+            "pl": "Zbieraj dane na magistrali CAN dla urządzeń Viessmann E3, np.: Vitocal, Vitocharge, licznik energii E380",
+            "uk": "Збір даних на шині CAN для пристроїв Viessmann E3, напр. Vitocal, Vitocharge, Енерголічильник E380",
+            "zh-cn": "收集 Viessmann E3 设备 CAN 总线上的数据，例如Vitocal、Vitocharge、能量计 E380"
+        },
+        "authors": [
+            "MyHomeMyData <juergen.bonfert@gmail.com>"
+        ],
+        "keywords": [
+            "Viessmann",
+            "E3",
+            "CAN",
+            "Heating",
+            "PV",
+            "Energy Meter"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "e3oncan.png",
+        "enabled": true,
+        "messagebox": true,
+        "extIcon": "https://raw.githubusercontent.com/MyHomeMyData/ioBroker.e3oncan/main/admin/e3oncan.png",
+        "readme": "https://github.com/MyHomeMyData/ioBroker.e3oncan/blob/main/README.md",
+        "loglevel": "debug",
+        "mode": "daemon",
+        "type": "iot-systems",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "push",
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=3.3.22"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=5.1.13"
+            }
+        ],
+        "messages": [
+            {
+                "condition": {
+                    "operand": "and",
+                    "rules": [
+                        "oldVersion<0.7.0",
+                        "newVersion>=0.7.0"
+                    ]
+                },
+                "title": {
+                    "en": "Important notice!",
+                    "de": "Wichtiger Hinweis!",
+                    "ru": "Важное замечание!",
+                    "pt": "Notícia importante!",
+                    "nl": "Belangrijke mededeling!",
+                    "fr": "Avis important!",
+                    "it": "Avviso IMPORTANTE!",
+                    "es": "Noticia importante!",
+                    "pl": "Ważna uwaga!",
+                    "zh-cn": "重要通知!",
+                    "uk": "Важливе повідомлення!"
+                },
+                "text": {
+                    "en": "The data type of the numeric values for states in the channel 'tree' has been changed for version 0.7.0 (and later). Numeric values are now stored with the Number data type instead of String. This makes these values easier to use, but may require manual adjustments, such as in existing scripts, history, and vis.",
+                    "de": "Der Datentyp der Zahlenwerte für States im Kanal 'tree' wurde für Version 0.7.0 (und neuer) geändert. Zahlenwerte werden nun mit dem Datentyp 'Zahl' anstelle von 'Zeichenkette' gespeichert. Dies erleichtert die Verwendung dieser Werte, kann aber manuelle Anpassungen erfordern, wie z.B. in vorhandenen Skripten, History-Daten und Vis.",
+                    "ru": "Тип данных числовых значений для состояний в канале «дерево» был изменен для версии 0.7.0 (и позже). Численные значения теперь хранятся с типом данных Number вместо String. Это облегчает использование этих значений, но может потребовать корректировки вручную, например, в существующих сценариях, истории и vis.",
+                    "pt": "O tipo de dados dos valores numéricos para estados no canal 'árvore' foi alterado para a versão 0.7.0 (e mais tarde). Os valores numéricos agora são armazenados com o tipo de dados de Número em vez de String. Isso torna esses valores mais fáceis de usar, mas pode exigir ajustes manuais, como em scripts existentes, história e vis.",
+                    "nl": "Het gegevenstype van de numerieke waarden voor toestanden in het kanaal 'boom' is gewijzigd voor versie 0.7.0 (en later). Numerieke waarden worden nu opgeslagen met het gegevenstype Nummer in plaats van String. Dit maakt deze waarden gemakkelijker te gebruiken, maar kan handmatige aanpassingen vereisen, zoals in bestaande scripts, geschiedenis en vis.",
+                    "fr": "Le type de données des valeurs numériques pour les états du canal 'tree' a été modifié pour la version 0.7.0 (et plus tard). Les valeurs numériques sont maintenant stockées avec le type de données Numéro au lieu de String. Cela rend ces valeurs plus faciles à utiliser, mais peut nécessiter des ajustements manuels, comme dans les scripts existants, l'historique et vis.",
+                    "it": "Il tipo di dati dei valori numerici per gli stati nel canale 'tree' è stato modificato per la versione 0.7.0 (e successivamente). I valori numerici sono ora memorizzati con il tipo di dati Numero invece di String. Questo rende questi valori più facili da usare, ma può richiedere modifiche manuali, come in script esistenti, storia e vis.",
+                    "es": "El tipo de datos de los valores numéricos para los estados en el canal 'tree' ha sido cambiado para la versión 0.7.0 (y más tarde). Los valores numéricos se almacenan ahora con el tipo de datos Número en lugar de String. Esto facilita el uso de estos valores, pero puede requerir ajustes manuales, como en scripts existentes, historia y vis.",
+                    "pl": "Typ danych wartości liczbowych dla stanów w kanale 'tree' został zmieniony dla wersji 0.7.0 (i później). Wartości numeryczne są teraz zapisywane z typem danych liczbowych zamiast String. Ułatwia to korzystanie z tych wartości, ale może wymagać ręcznych regulacji, takich jak w istniejących skryptach, historii i vis.",
+                    "uk": "Тип даних нумеричних значень для станів в каналі 'Жіноча' було змінено для версії 0.7.0 (і пізніше). Чисельні значення тепер зберігаються з типом даних Кількість замість String. Це робить ці значення простіше використовувати, але може знадобитися ручні налаштування, такі як існуючі сценарії, історія і в'язкість.",
+                    "zh-cn": "频道\"tree\"中状态数字值的数据类型已更改为0.7.0版本(以及后来的版本). 现在用数字数据类型而不是字符串存储数字值。 这使得这些值更容易使用,但可能需要手工调整,如在现有脚本,历史和相对上."
+                  },
+                "link": "https://github.com/MyHomeMyData/ioBroker.e3oncan#changelog",
+                "level": "warn",
+                "linkText": {
+                    "en": "Changelog",
+                    "de": "Änderungsprotokoll",
+                    "ru": "Список изменений",
+                    "pt": "Registro de alterações",
+                    "nl": "Wijzigingslog",
+                    "fr": "Journal des modifications",
+                    "it": "Registro delle modifiche",
+                    "es": "registro de cambios",
+                    "pl": "Dziennik zmian",
+                    "zh-cn": "变更日志",
+                    "uk": "Журнал змін"
+                },
+                "buttons": [
+                    "agree",
+                    "cancel"
+                ]
+            }
+        ]
+    },
+    "native": {
+        "tableUdsDevices": [],
+        "tableUdsDids": []
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": {
+                    "en": "Information",
+                    "de": "Informationen",
+                    "ru": "Информация",
+                    "pt": "Informação",
+                    "nl": "Informatie",
+                    "fr": "Informations",
+                    "it": "Informazioni",
+                    "es": "Información",
+                    "pl": "Informacje",
+                    "uk": "Інформація",
+                    "zh-cn": "资料"
+                }
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": {
+                    "en": "Device or service connected",
+                    "de": "Geräte oder Service vrbunden",
+                    "ru": "Устройство или служба подключены",
+                    "pt": "Dispositivo ou serviço conectado",
+                    "nl": "Apparaat of dienst verbonden",
+                    "fr": "Appareil ou service connecté",
+                    "it": "Dispositivo o servizio collegato",
+                    "es": "Dispositivo o servicio conectado",
+                    "pl": "Przyłączone urządzenie lub usługa",
+                    "uk": "Пристрої або послуги підключені",
+                    "zh-cn": "设备或服务已连接"
+                },
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
 }

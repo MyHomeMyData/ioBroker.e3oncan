@@ -38,7 +38,7 @@ class E3oncan extends utils.Adapter {
         this.e380Collect         = null;  // E380 always is assigned to external bus
         this.E3CollectInt        = {};    // Dict of collect devices on internal bus
         this.E3CollectExt        = {};    // Dict of collect devices on external bus
-        this.collectTimeout      = 1500;  // Timeout (ms) for collecting data
+        this.collectTimeout      = 2000;  // Timeout (ms) for collecting data
         this.E3UdsWorkers        = {};    // Dict of uds devices on external bus
         this.cntWorkersActive    = 0;     // Total number of active workers (collect + UDS)
 
@@ -145,7 +145,7 @@ class E3oncan extends utils.Adapter {
             if (devDids.didsDevSpecAvail) {
                 if ( (devDids.didsDictDevCom.Version === undefined) ||
                     (Number(E3DidsDict.Version) > Number(devDids.didsDictDevCom.Version)) ) {
-                    this.log.debug('Updating datapoints to version '+E3DidsDict.Version+' for device '+dev.devStateName);
+                    this.log.info('Updating datapoints to version '+E3DidsDict.Version+' for device '+dev.devStateName);
                     for (const did of Object.keys(devDids.didsDictDevCom)) {
                         if ( (did != 'Version') &&  (did in E3DidsDict) ) {
                             // Check for changes in datapoint structure
@@ -154,18 +154,30 @@ class E3oncan extends utils.Adapter {
                             if (JSON.stringify(devStruct) != JSON.stringify(E3Struct)) {
                                 // Structure of datapoint has changed
                                 // Replace .json and .tree state(s) based on raw data of did
-                                const didStateName = await devDids.getDidStr(did)+'_'+devDids.didsDictDevCom[did].id;
-                                this.log.debug('  > Structure of datapoint '+didStateName+' has changed. Updating.');
-                                // Delete states based on old structure:
+                                const didStateName = await devDids.getDidStr(did)+'_'+await devDids.didsDictDevCom[did].id;
+                                this.log.info('  > Structure of datapoint '+didStateName+' has changed. Updating.');
+                                // Delete tree states based on old structure:
                                 await this.delObjectAsync(this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, { recursive: true });
-                                await this.delObjectAsync(this.namespace+'.'+dev.devStateName+'.json.'+didStateName, { recursive: true });
                                 const raw = await devDids.getObjectVal(this, dev.devStateName+'.raw.'+didStateName);
                                 if (raw != null) {
                                     // Create states based on new structure if raw data is available:
-                                    const cdi = E3DidsDict[did];
-                                    const res = await devDids.decodeDid(this, dev.devStateName, did, cdi, await devDids.arr2Hex(raw));
-                                    await devDids.storeObjectJson(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.json.'+didStateName, res.obj);
-                                    await devDids.storeObjectTree(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, res.obj);
+                                    const cdi = await E3DidsDict[did];
+                                    const obj = await devDids.decodeDid(this, dev.devStateName, did, cdi, devDids.toByteArray(raw));
+                                    await devDids.storeObjectJson(this, did, obj.idStr, this.namespace+'.'+dev.devStateName+'.json.'+didStateName, obj.obj);
+                                    await devDids.storeObjectTree(this, did, obj.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, obj.obj);
+                                }
+                            } else {
+                                // No change of structure of datapoint
+                                // Make sure, data type and role of tree objects are correct
+                                // Force update of .tree state(s) based on raw data of did
+                                const didStateName = await devDids.getDidStr(did)+'_'+await devDids.didsDictDevCom[did].id;
+                                const raw = await devDids.getObjectVal(this, dev.devStateName+'.raw.'+didStateName);
+                                if (raw != null) {
+                                    // Update .tree states:
+                                    this.log.silly('  > Update type and role of datapoint '+didStateName);
+                                    const cdi = await E3DidsDict[did];
+                                    const obj = await devDids.decodeDid(this, dev.devStateName, did, cdi, devDids.toByteArray(raw));
+                                    await devDids.storeObjectTree(this, did, obj.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, obj.obj, true);
                                 }
                             }
                             devDids.didsDictDevCom[did] = await E3DidsDict[did];
