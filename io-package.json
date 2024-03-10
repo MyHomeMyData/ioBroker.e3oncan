@@ -5,7 +5,7 @@
         "news": {
             "0.6.19": {
                 "en": "Check for changed structure of datapoints during startup\nUpdate of list of datapoints to version 20240218\nBugfix to avoid warnings on very first start of adapter",
-                "de": "Überprüfen Sie die geänderte Struktur der Datenpunkte während des Starts\nAktualisierung der Liste der Datenpunkte auf Version 20240218\nBugfix, um Warnungen am ersten Adapterstart zu vermeiden",
+                "de": "Aktualisierung von geänderten Datenpunkte während des Starts\nAktualisierung der Liste der Datenpunkte auf Version 20240218\nBugfix, um Warnungen beim ersten Adapterstart zu vermeiden",
                 "ru": "Проверка измененной структуры точек данных во время запуска\nОбновление списка точек данных к версии 20240218\nИсправление, чтобы избежать предупреждений на самом первом запуске адаптера",
                 "pt": "Verifique a estrutura alterada de datapoints durante a inicialização\nAtualização da lista de datapoints para a versão 20240218\nBugfix para evitar avisos no primeiro início do adaptador",
                 "nl": "Controleren op gewijzigde structuur van datapunten tijdens opstarten\nBijwerken van de lijst van datapunten naar versie 20240218\nBugfix om waarschuwingen te voorkomen bij de eerste start van de adapter",
@@ -18,7 +18,7 @@
             },
             "0.6.18": {
                 "en": "Added versioning to list of datapoints and check for updates on start of adapter\nAdded optional description in configuration of UDS schedules",
-                "de": "Hinzugefügte Versionierung zur Liste der Datenpunkte und überprüfen Sie Updates am Anfang des Adapters\nOptionale Beschreibung in Konfiguration von UDS-Zeitplänen hinzugefügt",
+                "de": "Versionierung für die Liste der Datenpunkte ergänzt, Prüfung auf Updates beim Start des Adapters\nOptionale Beschreibung in Konfiguration von UDS-Zeitplänen hinzugefügt",
                 "ru": "Добавлена версия в список точек данных и проверяется на обновления в начале адаптера\nДобавлено дополнительное описание в конфигурации графиков СОД",
                 "pt": "Versão adicionada para lista de datapoints e verificar para atualizações no início do adaptador\nDescrição opcional adicionada na configuração de horários UDS",
                 "nl": "Versie toevoegen aan lijst van datapunten en controleren op updates bij het begin van de adapter\nOptionele beschrijving toegevoegd in configuratie van UDS-schema's",
@@ -31,7 +31,7 @@
             },
             "0.6.17": {
                 "en": "Added/removed datapoints to/from list of writable dids\nPreparations for device specific list of writable dids",
-                "de": "Hinzugefügt/entfernte Datenpunkte zu/aus der Liste der schreibbaren Taten\nVorbereitungen für die gerätespezifische Liste der schreibbaren Taten",
+                "de": "Liste der schreibbaren Datenpunkte aktualisiert\nVorbereitungen für gerätespezifische Listen der schreibbaren Datenpunkte",
                 "ru": "Добавлены/удалены точки данных в/из списка заслуживающих доверия дел\nПодготовка к конкретному списку реальных дел",
                 "pt": "Datapoints adicionados/removed para / da lista de dids writable\nPreparações para a lista específica do dispositivo de dids",
                 "nl": "Toegevoegd/verwijderde datapunten aan/van lijst van schrijfbare dids\nVoorbereidingen voor apparaatspecifieke lijst van schrijfbare dids",
@@ -44,7 +44,7 @@
             },
             "0.6.16": {
                 "en": "Improvements based on findings in review as of 2024-01-25\nCheckbox for data collectiton on internal bus is now checked per default",
-                "de": "Verbesserungen auf der Grundlage der Ergebnisse in der Überprüfung ab 2024-01-25\nCheckbox für Datensammler im internen Bus wird nun standardmäßig überprüft",
+                "de": "Verbesserungen auf der Grundlage des Reviews vom 25.01.2024\nCheckbox für 'Collect' im internen Bus wird nun standardmäßig aktiviert",
                 "ru": "Совершенствование на основе результатов, рассмотренных на 2024-01-25 годы\nCheckbox для сбора данных на внутреннем автобусе теперь проверяется по умолчанию",
                 "pt": "Aperfeiçoamentos baseados em achados em revisão a partir de 2024-01-25\nCaixa de seleção para coleta de dados no ônibus interno é agora verificada por padrão",
                 "nl": "Verbeteringen op basis van de resultaten van het onderzoek per 2024-01-25\nCheckbox voor gegevensverzameling op interne bus is nu standaard aangevinkt",
@@ -57,7 +57,7 @@
             },
             "0.6.15": {
                 "en": "Fix for Utf8 codec for handling of special characters, e.g. umlauts",
-                "de": "Fix für Utf8-Codec zum Umgang mit Sonderzeichen, z.B. umlauts",
+                "de": "Fix für Utf8-Codec zum Umgang mit Sonderzeichen, z.B. Umlaute",
                 "ru": "Fix for Utf8 codec для обработки специальных символов, например, umlauts",
                 "pt": "Fix para Codec Utf8 para manipulação de caracteres especiais, por exemplo, umlauts",
                 "nl": "Fix voor Utf8 codec voor het hanteren van speciale tekens, bijvoorbeeld umlauts",
@@ -70,7 +70,7 @@
             },
             "0.6.14": {
                 "en": "Replace '.' by '_' in datapoint ids to avoid unwanted sub structure in data states\nAdded more informations about white list for writables in Readme.\nRecognize loss of CAN connection.\nImproved handling of info.connection.",
-                "de": "Ersetzen Sie '.' durch '_' in Datapoint ids, um unerwünschte Unterstruktur in Datenzuständen zu vermeiden\nWeitere Informationen zur Weißen Liste für schreibbare in Readme.\nErkennen Verlust der CAN-Verbindung.\nVerbesserte Handhabung von info.connection.",
+                "de": "Ersetzen von '.' durch '_' in State Ids, um unerwünschte Unterstruktur in Datenzuständen zu vermeiden\nWeitere Informationen zur Liste für schreibbare in Readme.\nErkennen Verlust der CAN-Verbindung.\nVerbesserte Handhabung von info.connection.",
                 "ru": "Заменить '.' на '_' в идентификаторах точки данных, чтобы избежать нежелательной субструктуры в состояниях данных\nДобавлено больше информации о белом списке для редакций в Readme.\nУзнать потерю соединения CAN.\nУлучшена обработка info.connection.",
                 "pt": "Substituir '.' por '_' em datapoint ids para evitar subestrutura indesejada em estados de dados\nAdicionado mais informações sobre lista branca para writables em Readme.\nReconhecer a perda de conexão CAN.\nMelhor manuseio de info.connection.",
                 "nl": "Vervang '.' door '_' in datapoint ids om ongewenste substructuur in data states te voorkomen\nToegevoegd meer informatie over witte lijst voor schrijfsels in Readme.\nHerkennen verlies van KAN verbinding.\nVerbeterde behandeling van info.connectie.",
@@ -83,7 +83,7 @@
             },
             "0.6.13": {
                 "en": "Now supports multiple definitions of same schedule on a device \nAdded unit test cases for codecs",
-                "de": "Jetzt unterstützt mehrere Definitionen desselben Zeitplans auf einem Gerät\nHinzugefügte Einheit Testfälle für Codecs",
+                "de": "Unterstützt nun mehrere Definitionen desselben Zeitplans auf einem Gerät\nTestfälle für Codecs ergänzt",
                 "ru": "Теперь поддерживает несколько определений одного и того же расписания на устройстве\n4.1.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.1.2.1.2.1.1.2.1.1.2.1.1.1.1.1.2.1.1.1.1.1.1.1.1.2.2.1.1.1.1.1.2.1.1.1.1.1.1.1.2.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2.1.1.1.2.1.1.2.1.1.1.1.1.1.1.1.1.1.1.1.1",
                 "pt": "Agora suporta várias definições da mesma programação em um dispositivo\nAdicionados casos de teste de unidade para codecs",
                 "nl": "Nu ondersteunt meerdere definities van hetzelfde schema op een apparaat\nToegevoegde testcases per eenheid voor codecs",
