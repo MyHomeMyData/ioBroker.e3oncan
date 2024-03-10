@@ -33,7 +33,7 @@
                 "canExtName": {
                     "type": "text",
                     "tooltip": "Device mame of CAN adapter connected to external bus, e.g. can0",
-                    "default" : "vcan0",
+                    "default" : "can0",
                     "newLine": false
                 },
                 "canExtActivated": {
@@ -52,7 +52,7 @@
                 "canIntName": {
                     "type": "text",
                     "tooltip": "Device mame of CAN adapter connected to internal bus, e.g. can1",
-                    "default" : "vcan1",
+                    "default" : "can1",
                     "newLine": false
                 },
                "canIntActivated": {

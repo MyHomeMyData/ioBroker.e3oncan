@@ -38,7 +38,7 @@ class E3oncan extends utils.Adapter {
         this.e380Collect         = null;  // E380 always is assigned to external bus
         this.E3CollectInt        = {};    // Dict of collect devices on internal bus
         this.E3CollectExt        = {};    // Dict of collect devices on external bus
-        this.collectTimeout      = 1500;  // Timeout (ms) for collecting data
+        this.collectTimeout      = 2000;  // Timeout (ms) for collecting data
         this.E3UdsWorkers        = {};    // Dict of uds devices on external bus
         this.cntWorkersActive    = 0;     // Total number of active workers (collect + UDS)
 
@@ -167,9 +167,9 @@ class E3oncan extends utils.Adapter {
                                     await devDids.storeObjectTree(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, res.val);
                                 }
                             } else {
-                                // No change of Structure of datapoint
+                                // No change of structure of datapoint
                                 // Make sure, data type and role of tree objects are correct
-                                // Forde update if .tree state(s) based on raw data of did
+                                // Force update of .tree state(s) based on raw data of did
                                 const didStateName = await devDids.getDidStr(did)+'_'+await devDids.didsDictDevCom[did].id;
                                 const raw = await devDids.getObjectVal(this, dev.devStateName+'.raw.'+didStateName);
                                 if (raw != null) {
