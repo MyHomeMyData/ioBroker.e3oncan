@@ -84,7 +84,7 @@
             "0.6.13": {
                 "en": "Now supports multiple definitions of same schedule on a device \nAdded unit test cases for codecs",
                 "de": "Unterstützt nun mehrere Definitionen desselben Zeitplans auf einem Gerät\nTestfälle für Codecs ergänzt",
-                "ru": "Теперь поддерживает несколько определений одного и того же расписания на устройстве\n4.1.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.2.1.1.2.1.2.1.1.2.1.1.2.1.1.1.1.1.2.1.1.1.1.1.1.1.1.2.2.1.1.1.1.1.2.1.1.1.1.1.1.1.2.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2.1.1.1.2.1.1.2.1.1.1.1.1.1.1.1.1.1.1.1.1",
+                "ru": "Теперь поддерживает несколько определений одного и того же расписания на устройстве\n",
                 "pt": "Agora suporta várias definições da mesma programação em um dispositivo\nAdicionados casos de teste de unidade para codecs",
                 "nl": "Nu ondersteunt meerdere definities van hetzelfde schema op een apparaat\nToegevoegde testcases per eenheid voor codecs",
                 "fr": "Maintenant prend en charge plusieurs définitions de même horaire sur un appareil\nAjout de cas de test unitaire pour codecs",
