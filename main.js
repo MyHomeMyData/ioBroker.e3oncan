@@ -92,8 +92,9 @@ class E3oncan extends utils.Adapter {
 
         // Check for updates of list of datapoints and perform update if needed:
         await this.updateDatapoints(this.config.tableUdsDevices);               // UDS devices
-        // @ts-ignore
-        await this.updateDatapoints([{devStateName: this.config.e380Name}]);    // E380 Energy Meter
+        if ('e380Name' in this.config) {
+            await this.updateDatapoints([{devStateName: this.config.e380Name, device:'e380'}]);    // E380 Energy Meter
+        }
 
         // Setup external CAN bus if required
         // ==================================
@@ -142,8 +143,8 @@ class E3oncan extends utils.Adapter {
     async updateDatapoints(devices) {
         // Update list of datapoints of all devices during startup of adapter
         for (const dev of Object.values(devices)) {
-            const didsDictNew = (dev.devStateName == 'e380' ? E380DidsDict : E3DidsDict);
-            const devDids = new storage.storageDids({stateBase:dev.devStateName, device:dev.devStateName});
+            const didsDictNew = (dev.device == 'e380' ? E380DidsDict : E3DidsDict);
+            const devDids = new storage.storageDids({stateBase:dev.devStateName, device:dev.device});
             await devDids.initStates(this, 'standby');
             await devDids.readKnownDids(this,'standby');
             if (devDids.didsDevSpecAvail) {
