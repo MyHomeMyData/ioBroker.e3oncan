@@ -255,7 +255,7 @@
     },
     "604": {
       "codec": "O3EComplexType",
-      "len": 4,
+      "len": 8,
       "id": "GridEnergy",
       "args": {
         "subTypes": [
@@ -268,9 +268,19 @@
               "signed": false,
               "offset": 0
             }
+          },
+          {
+            "codec": "O3EInt32",
+            "len": 4,
+            "id": "Unkown",
+            "args": {
+              "scale": 1,
+              "signed": false,
+              "offset": 0
+            }
           }
         ]
       }
     },
-    "Version": "20240208"
+    "Version": "20240309"
 }
