@@ -182,7 +182,7 @@ class E3oncan extends utils.Adapter {
                                     const didStateName = await devDids.getDidStr(did)+'_'+await devDids.didsDictDevCom[did].id;
                                     if (this.udsDidsVarLength.includes(Number(did))) {
                                         // Did with variable length has to be deleted to avoid type confilct, when length gets larger in future
-                                        this.log.silly('   > Delete datapoint '+didStateName+' to secure change of data type');
+                                        this.log.silly('  > Delete datapoint '+didStateName+' to secure change of data type');
                                         await this.delObjectAsync(this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, { recursive: true });
                                     }
                                     const raw = await devDids.getObjectVal(this, dev.devStateName+'.raw.'+didStateName);
