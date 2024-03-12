@@ -54,7 +54,9 @@ class E3oncan extends utils.Adapter {
         this.udsTimeout          = 7500;   // Timeout (ms) for normal UDS communication
         this.udsDevices          = [];     // Confirmed & edited UDS devices
 
+        this.didsVersionTC       = '20240309';  // Change of type of numerical dids to Number at this version
         this.udsDidForScan       = 256;    // Busidentification is in this id
+        this.udsDidsVarLength    = [257,258,259,260,261,262,263,264,265,266];   // Dids have variable length
         this.udsScanWorker       = new udsScan.udsScan();
         this.udsScanDevices      = [];     // UDS devices found during scan
         this.udsDevAddrs         = [];
@@ -173,16 +175,24 @@ class E3oncan extends utils.Adapter {
                                 }
                             } else {
                                 // No change of structure of datapoint
-                                // Make sure, data type and role of tree objects are correct
-                                // Force update of .tree state(s) based on raw data of did
-                                const didStateName = await devDids.getDidStr(did)+'_'+await devDids.didsDictDevCom[did].id;
-                                const raw = await devDids.getObjectVal(this, dev.devStateName+'.raw.'+didStateName);
-                                if (raw != null) {
-                                    // Update .tree states:
-                                    this.log.silly('  > Update type and role of datapoint '+didStateName);
-                                    const cdi = await didsDictNew[did];
-                                    const res = await devDids.decodeDid(this, dev.devStateName, did, cdi, devDids.toByteArray(raw));
-                                    await devDids.storeObjectTree(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, res.val, true);
+                                // Check for change of data type for numerical values
+                                if (Number(devDids.didsDictDevCom.Version) < Number(this.didsVersionTC)) {
+                                    // Make sure, data type and role of tree objects are correct
+                                    // Force update of .tree state(s) based on raw data of did
+                                    const didStateName = await devDids.getDidStr(did)+'_'+await devDids.didsDictDevCom[did].id;
+                                    if (this.udsDidsVarLength.includes(Number(did))) {
+                                        // Did with variable length has to be deleted to avoid type confilct, when length gets larger in future
+                                        this.log.silly('   > Delete datapoint '+didStateName+' to secure change of data type');
+                                        await this.delObjectAsync(this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, { recursive: true });
+                                    }
+                                    const raw = await devDids.getObjectVal(this, dev.devStateName+'.raw.'+didStateName);
+                                    if (raw != null) {
+                                        // Update .tree states:
+                                        this.log.silly('  > Update type and role of datapoint '+didStateName);
+                                        const cdi = await didsDictNew[did];
+                                        const res = await devDids.decodeDid(this, dev.devStateName, did, cdi, devDids.toByteArray(raw));
+                                        await devDids.storeObjectTree(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, res.val, true);
+                                    }
                                 }
                             }
                             devDids.didsDictDevCom[did] = await didsDictNew[did];
