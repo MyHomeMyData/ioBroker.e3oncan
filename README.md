@@ -102,9 +102,9 @@ Yes, that is possible under certain conditions:
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (MyHomeMyData) Store numbers in states of channel 'tree' with type "Number" instead of "String"
+* (MyHomeMyData) Store numbers in states of channel "tree" with type "Number" instead of "String"
 * (MyHomeMyData) IMPORTANT: This may affect handling of tree states, e.g. in scripts, vis and history
-* (MyHomeMyData) Bugfix for E380 datapoint 0x25C
+* (MyHomeMyData) Bugfix for Energy Meter E380 datapoint id 0x25C
 * (MyHomeMyData) Update of list of datapoints to version 20240309
 * (MyHomeMyData) Bugfix for update of changed datapoint structure during start of adapter
 * (MyHomeMyData) Changed default values for CAN adapters to can0 and can1
