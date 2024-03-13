@@ -101,7 +101,7 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.7.0 (2024-03-13)
 * (MyHomeMyData) Store numbers in states of channel "tree" with type "Number" instead of "String"
 * (MyHomeMyData) IMPORTANT: This may affect handling of tree states, e.g. in scripts, vis and history
 * (MyHomeMyData) Bugfix for Energy Meter E380 datapoint id 0x25C
