@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.7.0",
+    "version": "0.7.1",
     "news": {
+      "0.7.1": {
+        "en": "Bugfix for datapoint 1190: Scaling changed back to 10.0\nUpdate of list of datapoints to version 20240314",
+        "de": "Bugfix für Datenpunkt 1190: Skalierung zurückgeändert auf 10.0\nAktualisierung der Liste der Datenpunkte auf Version 20240314",
+        "ru": "Bugfix for datapoint 1190: Scaling изменился на 10.0\nОбновление списка точек данных к версии 20240314",
+        "pt": "Bugfix para datapoint 1190: Scaling mudou de volta para 10.0\nAtualização da lista de datapoints para a versão 20240314",
+        "nl": "Bugfix voor datapunt 1190: Schalen is teruggedraaid naar 10.0\nBijwerken van de lijst van datapunten naar versie 20240314",
+        "fr": "Bugfix pour le point de données 1190 : l'échelle est revenue à 10.0\nMise à jour de la liste des points de données vers la version 20240314",
+        "it": "Bugfix per datapoint 1190: La scala è cambiata a 10,0\nAggiornamento dell'elenco dei datapoint alla versione 20240314",
+        "es": "Bugfix para datapoint 1190: El escalado cambió de nuevo a 10.0\nActualización de la lista de puntos de datos a la versión 20240314",
+        "pl": "Bugfix dla punktu danych 1190: Skalowanie z powrotem do 10.0\nAktualizacja wykazu punktów danych do wersji 20240314",
+        "uk": "Виправлення даних 1190: Складання змінено назад до 10.0\nОновлення списку точок даних до версії 20240314",
+        "zh-cn": "数据点1190的bugfix:缩放后改为10.0\n数据点列表更新至20240314版本"
+      },
       "0.7.0": {
         "en": "Store numbers in states of channel \"tree\" with type \"Number\" instead of \"String\"\nIMPORTANT: This may affect handling of tree states, e.g. in scripts, vis and history\nBugfix for Energy Meter E380 datapoint id 0x25C\nUpdate of list of datapoints to version 20240309\nBugfix for update of changed datapoint structure during start of adapter\nChanged default values for CAN adapters to can0 and can1\nIncreased value for collect timeout to 2000 ms",
         "de": "Numerische Werte werden nun im Kanal \"tree\" mit Datentyp \"Zahl\" statt \"Zeichenkette\" gespeichert.\nWICHTIG: Dies kann die Handhabung dieser Daten beeinflussen, z.B. in Skripten, Vis und History\nBugfix für Energy Meter E380 Datenpunkt id 0x25C\nAktualisierung der Liste der Datenpunkte auf Version 20240309\nBugfix zum Update der geänderten Datenpunktstruktur beim Start des Adapters\nStandardwerte für CAN-Adapter auf can0 und can1 geändert\nWert für Timeout bei \"Collect\" auf 2000 ms erhöht",
@@ -80,19 +93,6 @@
         "pl": "Napraw dla Kod Utf8 do obsługi znaków specjalnych, np. umlautów",
         "uk": "Фіксація Utf8 кодека для обробки спеціальних символів, наприклад, umlauts",
         "zh-cn": "修复 Utf8 处理特殊字符的编码器, 例如 umlauts"
-      },
-      "0.6.14": {
-        "en": "Replace '.' by '_' in datapoint ids to avoid unwanted sub structure in data states\nAdded more informations about white list for writables in Readme.\nRecognize loss of CAN connection.\nImproved handling of info.connection.",
-        "de": "Ersetzen von '.' durch '_' in State Ids, um unerwünschte Unterstruktur in Datenzuständen zu vermeiden\nWeitere Informationen zur Liste für schreibbare in Readme.\nErkennen Verlust der CAN-Verbindung.\nVerbesserte Handhabung von info.connection.",
-        "ru": "Заменить '.' на '_' в идентификаторах точки данных, чтобы избежать нежелательной субструктуры в состояниях данных\nДобавлено больше информации о белом списке для редакций в Readme.\nУзнать потерю соединения CAN.\nУлучшена обработка info.connection.",
-        "pt": "Substituir '.' por '_' em datapoint ids para evitar subestrutura indesejada em estados de dados\nAdicionado mais informações sobre lista branca para writables em Readme.\nReconhecer a perda de conexão CAN.\nMelhor manuseio de info.connection.",
-        "nl": "Vervang '.' door '_' in datapoint ids om ongewenste substructuur in data states te voorkomen\nToegevoegd meer informatie over witte lijst voor schrijfsels in Readme.\nHerkennen verlies van KAN verbinding.\nVerbeterde behandeling van info.connectie.",
-        "fr": "Remplacer '.' par '_' dans les identifiants de points de données pour éviter une sous-structure indésirable dans les états de données\nAjout de plus d'informations sur la liste blanche pour les écritures dans Readme.\nReconnaître la perte de connexion CAN.\nAmélioration de la gestion d'info.connection.",
-        "it": "Sostituire '.' da '_' in datapoint ids per evitare la struttura sub indesiderata in stati di dati\nAggiunto più informazioni su white list per writables in Readme.\nRiconoscere la perdita di connessione CAN.\nGestione migliorata di info.connection.",
-        "es": "Reemplazar '.' por '_' en datospoint ids para evitar la subestructura no deseada en los estados de datos\nAgregó más información sobre la lista blanca para writables en Readme.\nReconocer la pérdida de conexión CAN.\nMejor manejo de info.conexión.",
-        "pl": "Zastąp '.' przez' _ 'w idach punktów danych, aby uniknąć niepożądanej podstruktury w stanach danych\nDodano więcej informacji na temat białej listy pism w Readme.\nRozpoznaj utratę połączenia CAN.\nUlepszone obchodzenie się z info.connection.",
-        "uk": "Замініть \".\" по \"_\" у полицях даних, щоб уникнути небажаної структури під даних\nДодайте більше інформації про білий список для життєздатних в Readme.\nВизначте втрату з'єднання CAN.\nПокращення обробки інформації.",
-        "zh-cn": "在数据点编号中将“.”改为“_”,以避免数据状态中不必要的子结构\n在Readme中添加了更多关于白名单的可写信息.\n识别失去的CAN连接.\n完善信息联通处理."
       }
     },
     "title": "Viessmann E3 CAN do",
