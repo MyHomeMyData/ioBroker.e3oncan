@@ -101,6 +101,9 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Update of data type and role added for device specific datapoints
+
 ### 0.7.1 (2024-03-15)
 * (MyHomeMyData) Bugfix for datapoint 1190: Scaling changed back to 10.0
 * (MyHomeMyData) Update of list of datapoints to version 20240314

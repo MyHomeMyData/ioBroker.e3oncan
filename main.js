@@ -93,9 +93,10 @@ class E3oncan extends utils.Adapter {
         }
 
         // Check for updates of list of datapoints and perform update if needed:
-        await this.updateDatapoints(this.config.tableUdsDevices);               // UDS devices
+        await this.updateDatapointsSpecific(this.config.tableUdsDevices);             // UDS devices, specific dids
+        await this.updateDatapointsCommon(this.config.tableUdsDevices);               // UDS devices, common dids
         if ('e380Name' in this.config) {
-            await this.updateDatapoints([{devStateName: this.config.e380Name, device:'e380'}]);    // E380 Energy Meter
+            await this.updateDatapointsCommon([{devStateName: this.config.e380Name, device:'e380'}]);    // E380 Energy Meter
         }
 
         // Setup external CAN bus if required
@@ -142,8 +143,8 @@ class E3oncan extends utils.Adapter {
 
     // Check for updates:
 
-    async updateDatapoints(devices) {
-        // Update list of datapoints of all devices during startup of adapter
+    async updateDatapointsCommon(devices) {
+        // Update list of common datapoints of all devices during startup of adapter
         for (const dev of Object.values(devices)) {
             const didsDictNew = (dev.device == 'e380' ? E380DidsDict : E3DidsDict);
             const devDids = new storage.storageDids({stateBase:dev.devStateName, device:dev.device});
@@ -152,7 +153,7 @@ class E3oncan extends utils.Adapter {
             if (devDids.didsDevSpecAvail) {
                 if ( (devDids.didsDictDevCom.Version === undefined) ||
                     (Number(didsDictNew.Version) > Number(devDids.didsDictDevCom.Version)) ) {
-                    this.log.info('Updating datapoints to version '+didsDictNew.Version+' for device '+dev.devStateName);
+                    this.log.info('Updating common datapoints to version '+didsDictNew.Version+' for device '+dev.devStateName);
                     for (const did of Object.keys(devDids.didsDictDevCom)) {
                         if ( (did != 'Version') &&  (did in didsDictNew) ) {
                             // Check for changes in datapoint structure
@@ -202,6 +203,49 @@ class E3oncan extends utils.Adapter {
                 }
             }
             await devDids.storeKnownDids(this);
+        }
+    }
+
+    async updateDatapointsSpecific(devices) {
+        // Update list of device-specific datapoints of all devices during startup of adapter
+        for (const dev of Object.values(devices)) {
+            const didsDictNew = E3DidsDict;
+            const devDids = new storage.storageDids({stateBase:dev.devStateName, device:dev.device});
+            await devDids.initStates(this, 'standby');
+            await devDids.readKnownDids(this,'standby');
+            if (devDids.didsDevSpecAvail) {
+                if ( (devDids.didsDictDevCom.Version === undefined) ||
+                    ((Number(didsDictNew.Version) > Number(devDids.didsDictDevCom.Version)) &&
+                     (Number(devDids.didsDictDevCom.Version) < Number(this.didsVersionTC))) ) {
+                    this.log.info('Updating device specific datapoints to version '+didsDictNew.Version+' for device '+dev.devStateName);
+                    for (const did of Object.keys(devDids.didsDictDevSpec)) {
+                        if (did.length <= 4) {
+                            try {
+                                const didNo = Number(did);
+                                // Make sure, data type and role of tree objects are correct
+                                // Force update of .tree state(s) based on raw data of did
+                                const didStateName = await devDids.getDidStr(did)+'_'+await devDids.didsDictDevSpec[did].id;
+                                if (this.udsDidsVarLength.includes(didNo)) {
+                                    // Did with variable length has to be deleted to avoid type confilct, when length gets larger in future
+                                    this.log.debug('  > Delete datapoint '+didStateName+' to secure change of data type');
+                                    await this.delObjectAsync(this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, { recursive: true });
+                                }
+                                const raw = await devDids.getObjectVal(this, dev.devStateName+'.raw.'+didStateName);
+                                if (raw != null) {
+                                    // Update .tree states:
+                                    this.log.debug('  > Update type and role of datapoint '+didStateName);
+                                    const cdi = await devDids.didsDictDevSpec[did];
+                                    const res = await devDids.decodeDid(this, dev.devStateName, did, cdi, devDids.toByteArray(raw));
+                                    await devDids.storeObjectTree(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, res.val, true);
+                                }
+                            } catch {
+                                this.log.warn('  > Could not update did '+did+' because of wrong format (expected a number).');
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
