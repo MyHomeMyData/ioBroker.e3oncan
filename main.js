@@ -18,9 +18,9 @@ const utils = require('@iobroker/adapter-core');
 // Loading modules:
 const can = require('socketcan');
 const storage = require('./lib/storage');
-const E3DidsDict      = require('./lib/didsE3.json');
-const E380DidsDict    = require('./lib/didsE380.json');
-const E3DidsWritables = require('./lib/didsE3Writables.json');
+const E3DidsDict     = require('./lib/didsE3.json');
+const E380DidsDict   = require('./lib/didsE380.json');
+const E3DidsWritable = require('./lib/didsE3Writables.json');
 const collect = require('./lib/canCollect');
 const uds = require('./lib/canUds');
 const udsScan = require('./lib/udsScan');
@@ -148,7 +148,7 @@ class E3oncan extends utils.Adapter {
         // Update list of common datapoints of all devices during startup of adapter
         for (const dev of Object.values(devices)) {
             const didsDictNew   = (dev.device == 'e380' ? E380DidsDict : E3DidsDict);
-            const didsWritables = (dev.device == 'e380' ? {} : E3DidsWritables);
+            const didsWritable = (dev.device == 'e380' ? {} : E3DidsWritable);
             const devDids = new storage.storageDids({stateBase:dev.devStateName, device:dev.device});
             await devDids.initStates(this, 'standby');
             await devDids.readKnownDids(this,'standby');
@@ -200,9 +200,9 @@ class E3oncan extends utils.Adapter {
                             // Update datapoint description:
                             devDids.didsDictDevCom[did] = await didsDictNew[did];
                             // Update list of writable datapoints:
-                            if ( (did in didsWritables) && (!(did in devDids.didsWritable)) ) {
-                                this.log.debug('  > Add '+didStateName+' to list of writable datapoints');
-                                devDids.didsWritable[did] = await didsWritables[did];
+                            if ( (did in didsWritable) && (!(did in devDids.didsWritable)) ) {
+                                this.log.silly('  > Add '+didStateName+' to list of writable datapoints');
+                                devDids.didsWritable[did] = await didsWritable[did];
                             }
                         }
                     }
