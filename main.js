@@ -18,8 +18,9 @@ const utils = require('@iobroker/adapter-core');
 // Loading modules:
 const can = require('socketcan');
 const storage = require('./lib/storage');
-const E3DidsDict   = require('./lib/didsE3.json');
-const E380DidsDict = require('./lib/didsE380.json');
+const E3DidsDict      = require('./lib/didsE3.json');
+const E380DidsDict    = require('./lib/didsE380.json');
+const E3DidsWritables = require('./lib/didsE3Writables.json');
 const collect = require('./lib/canCollect');
 const uds = require('./lib/canUds');
 const udsScan = require('./lib/udsScan');
@@ -146,7 +147,8 @@ class E3oncan extends utils.Adapter {
     async updateDatapointsCommon(devices) {
         // Update list of common datapoints of all devices during startup of adapter
         for (const dev of Object.values(devices)) {
-            const didsDictNew = (dev.device == 'e380' ? E380DidsDict : E3DidsDict);
+            const didsDictNew   = (dev.device == 'e380' ? E380DidsDict : E3DidsDict);
+            const didsWritables = (dev.device == 'e380' ? {} : E3DidsWritables);
             const devDids = new storage.storageDids({stateBase:dev.devStateName, device:dev.device});
             await devDids.initStates(this, 'standby');
             await devDids.readKnownDids(this,'standby');
@@ -157,12 +159,12 @@ class E3oncan extends utils.Adapter {
                     for (const did of Object.keys(devDids.didsDictDevCom)) {
                         if ( (did != 'Version') &&  (did in didsDictNew) ) {
                             // Check for changes in datapoint structure
+                            const didStateName = await devDids.getDidStr(did)+'_'+await devDids.didsDictDevCom[did].id;
                             const devStruct = await devDids.getDidStruct(this,[],devDids.didsDictDevCom[did]);
                             const E3Struct  = await devDids.getDidStruct(this,[],didsDictNew[did]);
                             if (JSON.stringify(devStruct) != JSON.stringify(E3Struct)) {
                                 // Structure of datapoint has changed
                                 // Replace .json and .tree state(s) based on raw data of did
-                                const didStateName = await devDids.getDidStr(did)+'_'+await devDids.didsDictDevCom[did].id;
                                 this.log.info('  > Structure of datapoint '+didStateName+' has changed. Updating.');
                                 // Delete tree states based on old structure:
                                 await this.delObjectAsync(this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, { recursive: true });
@@ -180,7 +182,6 @@ class E3oncan extends utils.Adapter {
                                 if (Number(devDids.didsDictDevCom.Version) < Number(this.didsVersionTC)) {
                                     // Make sure, data type and role of tree objects are correct
                                     // Force update of .tree state(s) based on raw data of did
-                                    const didStateName = await devDids.getDidStr(did)+'_'+await devDids.didsDictDevCom[did].id;
                                     if (this.udsDidsVarLength.includes(Number(did))) {
                                         // Did with variable length has to be deleted to avoid type confilct, when length gets larger in future
                                         this.log.silly('  > Delete datapoint '+didStateName+' to secure change of data type');
@@ -189,14 +190,20 @@ class E3oncan extends utils.Adapter {
                                     const raw = await devDids.getObjectVal(this, dev.devStateName+'.raw.'+didStateName);
                                     if (raw != null) {
                                         // Update .tree states:
-                                        this.log.silly('  > Update type and role of datapoint '+didStateName);
+                                        this.log.debug('  > Update type and role of datapoint '+didStateName);
                                         const cdi = await didsDictNew[did];
                                         const res = await devDids.decodeDid(this, dev.devStateName, did, cdi, devDids.toByteArray(raw));
                                         await devDids.storeObjectTree(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, res.val, true);
                                     }
                                 }
                             }
+                            // Update datapoint description:
                             devDids.didsDictDevCom[did] = await didsDictNew[did];
+                            // Update list of writable datapoints:
+                            if ( (did in didsWritables) && (!(did in devDids.didsWritable)) ) {
+                                this.log.debug('  > Add '+didStateName+' to list of writable datapoints');
+                                devDids.didsWritable[did] = await didsWritables[did];
+                            }
                         }
                     }
                     devDids.didsDictDevCom['Version'] = didsDictNew.Version;
@@ -227,13 +234,13 @@ class E3oncan extends utils.Adapter {
                                 const didStateName = await devDids.getDidStr(did)+'_'+await devDids.didsDictDevSpec[did].id;
                                 if (this.udsDidsVarLength.includes(didNo)) {
                                     // Did with variable length has to be deleted to avoid type confilct, when length gets larger in future
-                                    this.log.debug('  > Delete datapoint '+didStateName+' to secure change of data type');
+                                    this.log.silly('  > Delete datapoint '+didStateName+' to secure change of data type');
                                     await this.delObjectAsync(this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, { recursive: true });
                                 }
                                 const raw = await devDids.getObjectVal(this, dev.devStateName+'.raw.'+didStateName);
                                 if (raw != null) {
                                     // Update .tree states:
-                                    this.log.debug('  > Update type and role of datapoint '+didStateName);
+                                    this.log.silly('  > Update type and role of datapoint '+didStateName);
                                     const cdi = await devDids.didsDictDevSpec[did];
                                     const res = await devDids.decodeDid(this, dev.devStateName, did, cdi, devDids.toByteArray(raw));
                                     await devDids.storeObjectTree(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, res.val, true);

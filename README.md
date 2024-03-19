@@ -103,6 +103,8 @@ Yes, that is possible under certain conditions:
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Update of data type and role added for device specific datapoints
+* (MyHomeMyData) Update list of writable datapoints when updating datapoints to newer version
+* (MyHomeMyData) Improved handling of failed CAN communication during scan for datapoints
 
 ### 0.7.1 (2024-03-15)
 * (MyHomeMyData) Bugfix for datapoint 1190: Scaling changed back to 10.0
