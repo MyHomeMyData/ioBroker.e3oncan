@@ -190,7 +190,7 @@ class E3oncan extends utils.Adapter {
                                     const raw = await devDids.getObjectVal(this, dev.devStateName+'.raw.'+didStateName);
                                     if (raw != null) {
                                         // Update .tree states:
-                                        this.log.debug('  > Update type and role of datapoint '+didStateName);
+                                        this.log.silly('  > Update type and role of datapoint '+didStateName);
                                         const cdi = await didsDictNew[did];
                                         const res = await devDids.decodeDid(this, dev.devStateName, did, cdi, devDids.toByteArray(raw));
                                         await devDids.storeObjectTree(this, did, res.idStr, this.namespace+'.'+dev.devStateName+'.tree.'+didStateName, res.val, true);
