@@ -101,7 +101,7 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.7.2 (2024-03-20)
 * (MyHomeMyData) Update of data type and role added for device specific datapoints
 * (MyHomeMyData) Update list of writable datapoints when updating datapoints to newer version
 * (MyHomeMyData) Improved handling of failed CAN communication during scan for datapoints

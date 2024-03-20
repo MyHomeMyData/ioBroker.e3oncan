@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.7.1",
+    "version": "0.7.2",
     "news": {
+      "0.7.2": {
+        "en": "Update of data type and role added for device specific datapoints\nUpdate list of writable datapoints when updating datapoints to newer version\nImproved handling of failed CAN communication during scan for datapoints\nUpdate of list of datapoints to version 20240319",
+        "de": "Aktualisierung des Datentyps auch für gerätespezifische Datenpunkte\nAktualisierung der Liste der schreibbaren Datenpunkte bei der Aktualisierung von Datenpunkten auf neuere Version\nVerbesserte Handhabung fehlerhafter CAN-Kommunikation beim Scannen von Datenpunkten\nAktualisierung der Liste der Datenpunkte auf Version 20240319",
+        "ru": "Обновление типа данных и добавленной роли для конкретных точек данных устройства\nОбновление списка реальных точек данных при обновлении точек данных на более новую версию\nУлучшена обработка неудавшейся связи CAN во время сканирования для точек данных\nОбновление списка точек данных к версии 20240319",
+        "pt": "Atualização do tipo de dados e função adicionada para datapoints específicos do dispositivo\nLista de atualizações de datapoints variáveis ao atualizar datapoints para versão mais recente\nManuseio melhorado da comunicação CAN falha durante a verificação de pontos de dados\nAtualização da lista de datapoints para a versão 20240319",
+        "nl": "Bijwerken van gegevenstype en rol toegevoegd voor apparaatspecifieke datapunten\nLijst van schrijfbare datapunten bijwerken bij het bijwerken van datapunten naar nieuwere versie\nVerbeterde behandeling van mislukte CAN communicatie tijdens het scannen op datapunten\nBijwerken van de lijst van datapunten naar versie 20240319",
+        "fr": "Mise à jour du type de données et du rôle ajouté pour les points de données spécifiques aux appareils\nMettre à jour la liste des points de données en écriture lors de la mise à jour des points de données vers une version plus récente\nAmélioration de la gestion de la communication CAN défaillante lors de l'analyse des points de données\nMise à jour de la liste des points de données vers la version 20240319",
+        "it": "Aggiornamento del tipo di dati e del ruolo aggiunto per i datapoint specifici del dispositivo\nAggiorna l'elenco dei datapoint scrivibili durante l'aggiornamento dei datapoint alla versione più recente\nGestione migliorata della comunicazione CAN non riuscita durante la scansione per datapoint\nAggiornamento dell'elenco dei datapoint alla versione 20240319",
+        "es": "Actualización del tipo de datos y el papel añadido para los puntos de datos específicos del dispositivo\nActualizar lista de puntos de datos útiles al actualizar los puntos de datos a la versión más reciente\nMejor manejo de comunicación CAN fallida durante el escaneo para puntos de datos\nActualización de la lista de puntos de datos a la versión 20240319",
+        "pl": "Aktualizacja typu danych i dodanej roli dla poszczególnych punktów danych urządzenia\nAktualizacja listy zapisywalnych punktów danych podczas aktualizacji danych do nowszej wersji\nLepsza obsługa nieudanej komunikacji CAN podczas skanowania punktów danych\nAktualizacja wykazu punktów danych do wersji 20240319",
+        "uk": "Оновлення типу даних та ролі, що додано для конкретних точок даних\nОновити список можливих точок даних при оновленні точок даних до нової версії\nПоліпшення обробки не вдалося зв'язку CAN під час сканування для точок даних\nОновлення списку точок даних до версії 20240319",
+        "zh-cn": "为设备特定数据点添加的数据类型和角色更新\n更新数据点到更新版本时更新可写数据点列表\n在扫描数据点时改进对CAN故障通信的处理\n数据点列表更新至20240319版本"
+      },
       "0.7.1": {
         "en": "Bugfix for datapoint 1190: Scaling changed back to 10.0\nUpdate of list of datapoints to version 20240314",
         "de": "Bugfix für Datenpunkt 1190: Skalierung zurückgeändert auf 10.0\nAktualisierung der Liste der Datenpunkte auf Version 20240314",
@@ -80,19 +93,6 @@
         "pl": "Poprawki oparte na ustaleniach w przeglądzie z 2024- 01- 25\nSkrzynka kontrolna dla kolekcji danych w autobusie wewnętrznym jest teraz sprawdzana na domyślnym",
         "uk": "Удосконалення на основі пошуку в рецензії на 2024-01-25\nCheckbox для збору даних у внутрішньому автобусі тепер перевіряється за замовчуванням",
         "zh-cn": "根据截至2024-01-25年审查结果作出的改进\n内部总线上数据集合的复选框现在按默认检查"
-      },
-      "0.6.15": {
-        "en": "Fix for Utf8 codec for handling of special characters, e.g. umlauts",
-        "de": "Fix für Utf8-Codec zum Umgang mit Sonderzeichen, z.B. Umlaute",
-        "ru": "Fix for Utf8 codec для обработки специальных символов, например, umlauts",
-        "pt": "Fix para Codec Utf8 para manipulação de caracteres especiais, por exemplo, umlauts",
-        "nl": "Fix voor Utf8 codec voor het hanteren van speciale tekens, bijvoorbeeld umlauts",
-        "fr": "Correction pour Codec Utf8 pour la manipulation de caractères spéciaux, p.ex. umlauts",
-        "it": "Fissaggio per Codice Utf8 per la gestione di caratteri speciali, ad esempio umlauts",
-        "es": "Corrección Utf8 codec para el manejo de caracteres especiales, por ejemplo umlauts",
-        "pl": "Napraw dla Kod Utf8 do obsługi znaków specjalnych, np. umlautów",
-        "uk": "Фіксація Utf8 кодека для обробки спеціальних символів, наприклад, umlauts",
-        "zh-cn": "修复 Utf8 处理特殊字符的编码器, 例如 umlauts"
       }
     },
     "title": "Viessmann E3 CAN do",
