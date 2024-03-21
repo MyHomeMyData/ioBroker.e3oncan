@@ -192,7 +192,7 @@
         },
         "tabUdsDids": {
             "type": "panel",
-            "label": "List of data points",
+            "label": "List of datapoints",
             "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length == 0)) { return true; } else {return false; }",
             "items": {
                 "tableUdsDidsWarning": {
@@ -206,14 +206,14 @@
                 },
                 "tableUdsDidsStartScan": {
                     "type": "sendTo",
-                    "label": "Start scan for data points of all devices",
+                    "label": "Start scan for datapoints of all devices",
                     "variant": "outlined",
                     "showProcess": true,
                     "jsonData": "{}",
                     "command": "startDidScan",
                     "confirm": {
                         "condition": "true",
-                        "title": "Confirm scan for data points",
+                        "title": "Confirm scan for datapoints",
                         "text": "Scan will take up to 5 minutes. Plaese make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
                         "ok": "OK",
                         "cancel": "Cancel"
@@ -242,7 +242,7 @@
                     "type": "sendTo",
                     "command": "getUdsDids",
                     "jsonData": "${JSON.stringify(data.tableUdsDidsSelDev)}",
-                    "label": "Update list of data points",
+                    "label": "Update list of datapoints",
                     "variant": "outlined",
                     "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) ) { return false; }; return true;",
                     "useNative": true,
@@ -259,7 +259,7 @@
                     "sm": 12,
                     "md": 12,
                     "lg": 12,
-                    "label": "List of device specific data points",
+                    "label": "List of device specific datapoints",
                     "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) ) { return false; }; return true;",
                     "noDelete": true,
                     "import": true,
@@ -271,7 +271,7 @@
                             "doNotSave": true,
                             "width": "10% ",
                             "title": "ID",
-                            "tooltip": "Id of data point",
+                            "tooltip": "Id of datapoint",
                             "filter": false,
                             "sort": false
                         },
@@ -281,7 +281,7 @@
                             "doNotSave": true,
                             "width": "10% ",
                             "title": "Length",
-                            "tooltip": "Length of data point",
+                            "tooltip": "Length of datapoint",
                             "filter": false,
                             "sort": false
                         },
@@ -291,7 +291,7 @@
                             "doNotSave": true,
                             "width": "55% ",
                             "title": "Name",
-                            "tooltip": "Name of data point",
+                            "tooltip": "Name of datapoint",
                             "filter": true,
                             "sort": false,
                             "readOnly": true
@@ -302,7 +302,7 @@
                             "doNotSave": true,
                             "width": "25% ",
                             "title": "Codec",
-                            "tooltip": "Codec used for data point",
+                            "tooltip": "Codec used for datapoint",
                             "filter": true,
                             "sort": false,
                             "readOnly": true
@@ -473,7 +473,7 @@
                             "attr": "udsSchedule",
                             "width": "10% ",
                             "title": "Schedule (s)",
-                            "tooltip": "Schedule for requesting given data points. 0 for one time request on start of adapter instance.",
+                            "tooltip": "Schedule for requesting given datapoints. 0 for one time request on start of adapter instance.",
                             "filter": false,
                             "sort": false,
                             "min": 0,
@@ -496,8 +496,8 @@
                             "type": "text",
                             "attr": "udsScheduleDids",
                             "width": "30% ",
-                            "title": "List of data points",
-                            "tooltip": "Separate by comma! All given data points will be requested with specified schedule and ECU address.",
+                            "title": "List of datapoints",
+                            "tooltip": "Separate by comma! All given datapoints will be requested with specified schedule and ECU address.",
                             "filter": false,
                             "sort": false,
                             "default": "256"
