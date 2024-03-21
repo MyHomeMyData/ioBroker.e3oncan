@@ -291,16 +291,22 @@ class E3oncan extends utils.Adapter {
     }
 
     // Setup E380 collect worker:
-
     async setupE380CollectWorker(conf) {
         let e380Worker = null;
         if (conf.e380Active) {
-            e380Worker = new collect.collect(
-                {   'canID': [0x250,0x252,0x254,0x256,0x258,0x25A,0x25C],
-                    'stateBase': conf.e380Name,
-                    'device': 'e380',
-                    'delay': conf.e380Delay,
-                    'active': conf.e380Active});
+            e380Worker = new collect.collect({
+                'canID': [
+                    0x250,0x251,
+                    0x252,0x253,
+                    0x254,0x255,
+                    0x256,0x257,
+                    0x258,0x259,
+                    0x25A,0x25B,
+                    0x25C,0x25D],
+                'stateBase': conf.e380Name,
+                'device': 'e380',
+                'delay': conf.e380Delay,
+                'active': conf.e380Active});
             await e380Worker.initStates(this,'standby');
         }
         if (e380Worker) await e380Worker.startup(this);
