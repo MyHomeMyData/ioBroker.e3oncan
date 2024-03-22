@@ -108,8 +108,8 @@ Yes, that is possible under certain conditions:
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (MyHomeMyData) Update of of list of data points for E380 to version 20240320
 * (MyHomeMyData) Added support for energy meter E380 with CAN-address=98
+* (MyHomeMyData) Update of list of data points for E380 to version 20240320
 
 ### 0.7.2 (2024-03-20)
 * (MyHomeMyData) Update of data type and role added for device specific data points
