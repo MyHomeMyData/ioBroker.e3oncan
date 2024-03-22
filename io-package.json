@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.7.2",
+    "version": "0.8.0",
     "news": {
+      "0.8.0": {
+        "en": "Added support for energy meter E380 with CAN-address=98\nUpdate of list of data points for E380 to version 20240320",
+        "de": "Unterstützung für Energiezähler E380 mit CAN-Adresse=98 ergänzt\nAktualisierung der Liste der Datenpunkte für E380 auf Version 20240320",
+        "ru": "Добавлена поддержка энергометра Е380 с CAN-адресом=98\nОбновление списка точек данных для E380 до версии 20240320",
+        "pt": "Adicionado suporte para medidor de energia E380 com CAN-endereço=98\nAtualização da lista de pontos de dados para E380 para a versão 20240320",
+        "nl": "Toegevoegde ondersteuning voor energiemeter E380 met CAN-adres=98\nBijwerken van de lijst van datapunten voor E380 naar versie 20240320",
+        "fr": "Ajout du support pour le compteur d'énergie E380 avec adresse CAN=98\nMise à jour de la liste des points de données pour E380 à la version 20240320",
+        "it": "Aggiunto il supporto per il contatore di energia E380 con CAN-address=98\nAggiornamento dell'elenco dei punti di dati per E380 alla versione 20240320",
+        "es": "Soporte añadido para medidor de energía E380 con dirección CAN=98\nActualización de la lista de puntos de datos para E380 a la versión 20240320",
+        "pl": "Dodano wsparcie dla licznika energii E380 z adresem CAN = 98\nAktualizacja wykazu punktów danych dla E380 do wersji 20240320",
+        "uk": "Додано підтримку лічильника енергії E380 з CAN-address=98\nОновлення списку точок даних для E380 до версії 20240320",
+        "zh-cn": "对能量计 E380 加上 CAN-address=98 的支持\nE380至20240320版本数据点列表更新"
+      },
       "0.7.2": {
         "en": "Update of data type and role added for device specific data points\nUpdate list of writable data points when updating data points to newer version\nImproved handling of failed CAN communication during scan for data points\nUpdate of list of data points to version 20240319",
         "de": "Aktualisierung des Datentyps auch für gerätespezifische Datenpunkte\nAktualisierung der Liste der schreibbaren Datenpunkte bei der Aktualisierung von Datenpunkten auf neuere Version\nVerbesserte Handhabung fehlerhafter CAN-Kommunikation beim Scannen von Datenpunkten\nAktualisierung der Liste der Datenpunkte auf Version 20240319",
@@ -80,19 +93,6 @@
         "pl": "Dodano / usunięto punkty danych do / z listy zapisanych did\nPreparaty do specyficznego dla urządzenia wykazu dysków pisanych",
         "uk": "Додано/видалення точок даних до/з списку збитих\nПрепарати для пристрою специфічного переліку життєздатних",
         "zh-cn": "已添加/删除数据点到/从可写作的列表中\n编写设备特定可写行为清单"
-      },
-      "0.6.16": {
-        "en": "Improvements based on findings in review as of 2024-01-25\nCheckbox for data collectiton on internal bus is now checked per default",
-        "de": "Verbesserungen auf der Grundlage des Reviews vom 25.01.2024\nCheckbox für 'Collect' im internen Bus wird nun standardmäßig aktiviert",
-        "ru": "Совершенствование на основе результатов, рассмотренных на 2024-01-25 годы\nCheckbox для сбора данных на внутреннем автобусе теперь проверяется по умолчанию",
-        "pt": "Aperfeiçoamentos baseados em achados em revisão a partir de 2024-01-25\nCaixa de seleção para coleta de dados no ônibus interno é agora verificada por padrão",
-        "nl": "Verbeteringen op basis van de resultaten van het onderzoek per 2024-01-25\nCheckbox voor gegevensverzameling op interne bus is nu standaard aangevinkt",
-        "fr": "Améliorations fondées sur les conclusions de l'examen en 2024-01-25\nLa case à cocher pour les données collectiton sur le bus interne est maintenant cochée par défaut",
-        "it": "Miglioramenti basati sui risultati in esame a partire dal 2024-01-25\nLa casella di controllo per i dati collettivi sul bus interno è ora controllata per impostazione predefinita",
-        "es": "Mejoras basadas en los resultados examinados al 2024-01-25\nCheckbox for data collectiton on internal bus is now check per default",
-        "pl": "Poprawki oparte na ustaleniach w przeglądzie z 2024- 01- 25\nSkrzynka kontrolna dla kolekcji danych w autobusie wewnętrznym jest teraz sprawdzana na domyślnym",
-        "uk": "Удосконалення на основі пошуку в рецензії на 2024-01-25\nCheckbox для збору даних у внутрішньому автобусі тепер перевіряється за замовчуванням",
-        "zh-cn": "根据截至2024-01-25年审查结果作出的改进\n内部总线上数据集合的复选框现在按默认检查"
       }
     },
     "title": "Viessmann E3 CAN do",

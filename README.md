@@ -107,7 +107,7 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.8.0 (2024-03-22)
 * (MyHomeMyData) Added support for energy meter E380 with CAN-address=98
 * (MyHomeMyData) Update of list of data points for E380 to version 20240320
 
