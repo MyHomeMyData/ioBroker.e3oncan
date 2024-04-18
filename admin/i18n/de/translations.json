@@ -59,5 +59,6 @@
     "Update list of datapoints": "Liste der Datenpunkte aktualisieren",
     "Start scan to update list of devices": "Scan starten, um die Liste der UDS-Geräte zu aktualisieren",
     "Description": "Beschreibung",
-    "Optional description of this schedule.": "Optionale Beschreibung dieses Zeitplans."
+    "Optional description of this schedule.": "Optionale Beschreibung dieses Zeitplans.",
+    "Energy Meters": "Energiezähler"
 }

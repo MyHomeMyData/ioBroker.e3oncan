@@ -61,5 +61,6 @@
     "Update list of datapoints": "Mettre à jour la liste des points de données",
     "Start scan to update list of devices": "Démarrer l'analyse pour mettre à jour la liste des appareils",
     "Description": "Description",
-    "Optional description of this schedule.": "Description facultative de cet horaire."
+    "Optional description of this schedule.": "Description facultative de cet horaire.",
+    "Energy Meters": "Compteurs d'énergie"
 }

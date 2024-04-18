@@ -61,5 +61,6 @@
     "Update list of datapoints": "Lijst met datapunten bijwerken",
     "Start scan to update list of devices": "Start de scan om de lijst met apparaten bij te werken",
     "Description": "Beschrijving",
-    "Optional description of this schedule.": "Optionele beschrijving van dit schema."
+    "Optional description of this schedule.": "Optionele beschrijving van dit schema.",
+    "Energy Meters": "Energiemeters"
 }

@@ -61,5 +61,6 @@
     "Update list of datapoints": "Оновити список точок даних",
     "Start scan to update list of devices": "Почніть сканування, щоб оновити список пристроїв",
     "Description": "опис",
-    "Optional description of this schedule.": "Додатковий опис цього розкладу."
+    "Optional description of this schedule.": "Додатковий опис цього розкладу.",
+    "Energy Meters": "Лічильники енергії"
 }

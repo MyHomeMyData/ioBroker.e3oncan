@@ -110,17 +110,17 @@
       "zh-cn": "菲斯曼E3系列CAN监听器"
     },
     "desc": {
-      "en": "Collect data on CAN bus for Viessmann E3 devices, e.g. Vitocal, Vitocharge, Energy Meter E380",
-      "de": "Greifen Sie auf Daten per CAN-Bus zu, für Viessmann E3-Geräte, z.B. Vitocal, Vitocharge, Energiezähler E380",
-      "ru": "Сбор данных по шине CAN для устройств Viessmann E3, например. Vitocal, Vitocharge, Счетчик энергии E380",
-      "pt": "Colete dados no barramento CAN para dispositivos Viessmann E3, por ex. Vitocal, Vitocharge, medidor de energia E380",
-      "nl": "Verzamel gegevens op de CAN-bus voor Viessmann E3-apparaten, b.v. Vitocal, Vitocharge, Energiemeter E380",
-      "fr": "Collectez des données sur le bus CAN pour les appareils Viessmann E3, par ex. Vitocal, Vitocharge, Compteur d'énergie E380",
-      "it": "Raccogliere dati sul bus CAN per dispositivi Viessmann E3, ad es. Vitocal, Vitocharge, Contatore di energia E380",
-      "es": "Recopilar datos en el bus CAN para dispositivos Viessmann E3, p. Vitocal, Vitocharge, Contador de energía E380",
-      "pl": "Zbieraj dane na magistrali CAN dla urządzeń Viessmann E3, np.: Vitocal, Vitocharge, licznik energii E380",
-      "uk": "Збір даних на шині CAN для пристроїв Viessmann E3, напр. Vitocal, Vitocharge, Енерголічильник E380",
-      "zh-cn": "收集 Viessmann E3 设备 CAN 总线上的数据，例如Vitocal、Vitocharge、能量计 E380"
+      "en": "Collect data on CAN bus for Viessmann E3 devices, e.g. Vitocal, Vitocharge, Energy Meters E380CA and E3100CB",
+      "de": "Greifen Sie auf Daten per CAN-Bus zu, für Viessmann E3-Geräte, z.B. Vitocal, Vitocharge, Energiezähler E380CA und E3100CB",
+      "ru": "Сбор данных по шине CAN для устройств Viessmann E3, например. Vitocal, Vitocharge, Счетчик энергии E380CA, E3100CB",
+      "pt": "Colete dados no barramento CAN para dispositivos Viessmann E3, por ex. Vitocal, Vitocharge, medidor de energia E380CA, E3100CB",
+      "nl": "Verzamel gegevens op de CAN-bus voor Viessmann E3-apparaten, b.v. Vitocal, Vitocharge, Energiemeter E380CA, E3100CB",
+      "fr": "Collectez des données sur le bus CAN pour les appareils Viessmann E3, par ex. Vitocal, Vitocharge, Compteur d'énergie E380CA, E3100CB",
+      "it": "Raccogliere dati sul bus CAN per dispositivi Viessmann E3, ad es. Vitocal, Vitocharge, Contatore di energia E380CA, E3100CB",
+      "es": "Recopilar datos en el bus CAN para dispositivos Viessmann E3, p. Vitocal, Vitocharge, Contador de energía E380CA, E3100CB",
+      "pl": "Zbieraj dane na magistrali CAN dla urządzeń Viessmann E3, np.: Vitocal, Vitocharge, licznik energii E380CA, E3100CB",
+      "uk": "Збір даних на шині CAN для пристроїв Viessmann E3, напр. Vitocal, Vitocharge, Енерголічильник E380CA, E3100CB",
+      "zh-cn": "收集 Viessmann E3 设备 CAN 总线上的数据，例如Vitocal、Vitocharge、能量计 E380CA, E3100CB"
     },
     "authors": [
       "MyHomeMyData <juergen.bonfert@gmail.com>"

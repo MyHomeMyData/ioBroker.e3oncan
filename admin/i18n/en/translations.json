@@ -59,5 +59,6 @@
     "Update list of datapoints":"Update list of data points",
     "Start scan to update list of devices":"Start scan to update list of devices",
     "Description":"Description",
-    "Optional description of this schedule.":"Optional description of this schedule."
+    "Optional description of this schedule.":"Optional description of this schedule.",
+    "Energy Meters":"Energy Meters"
 }

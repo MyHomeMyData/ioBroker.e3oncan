@@ -16,11 +16,12 @@
 const utils = require('@iobroker/adapter-core');
 
 // Loading modules:
-const can = require('socketcan');
-const storage = require('./lib/storage');
-const E3DidsDict     = require('./lib/didsE3.json');
-const E380DidsDict   = require('./lib/didsE380.json');
-const E3DidsWritable = require('./lib/didsE3Writables.json');
+const can             = require('socketcan');
+const storage         = require('./lib/storage');
+const E3DidsDict      = require('./lib/didsE3.json');
+const E380DidsDict    = require('./lib/didsE380.json');
+const E3100CBDidsDict = require('./lib/didsE3100CB.json');
+const E3DidsWritable  = require('./lib/didsE3Writables.json');
 const collect = require('./lib/canCollect');
 const uds = require('./lib/canUds');
 const udsScan = require('./lib/udsScan');
@@ -38,6 +39,7 @@ class E3oncan extends utils.Adapter {
 
         this.stoppingInstance    = false; // true during unLoad()
         this.e380Collect         = null;  // E380 always is assigned to external bus
+        this.e3100cbCollect      = null;  // E3100CB always is assigned to external bus
         this.E3CollectInt        = {};    // Dict of collect devices on internal bus
         this.E3CollectExt        = {};    // Dict of collect devices on external bus
         this.collectTimeout      = 2000;  // Timeout (ms) for collecting data
@@ -99,6 +101,9 @@ class E3oncan extends utils.Adapter {
         if ('e380Name' in this.config) {
             await this.updateDatapointsCommon([{devStateName: this.config.e380Name, device:'e380'}]);    // E380 Energy Meter
         }
+        if ('e3100cbName' in this.config) {
+            await this.updateDatapointsCommon([{devStateName: this.config.e3100cbName, device:'e3100cb'}]); // E3100CB Energy Meter
+        }
 
         // Setup external CAN bus if required
         // ==================================
@@ -128,6 +133,9 @@ class E3oncan extends utils.Adapter {
         // Setup E380 collect worker:
         if (this.channelExt) this.e380Collect = await this.setupE380CollectWorker(this.config);
 
+        // Setup E3100CB collect worker:
+        if (this.channelExt) this.e3100cbCollect = await this.setupE3100cbCollectWorker(this.config);
+
         // Setup all configured devices for collect:
         // @ts-ignore
         if (this.channelExt) await this.setupE3CollectWorkers(this.config.tableCollectCanExt, this.E3CollectExt, this.channelExt);
@@ -147,8 +155,21 @@ class E3oncan extends utils.Adapter {
     async updateDatapointsCommon(devices) {
         // Update list of common datapoints of all devices during startup of adapter
         for (const dev of Object.values(devices)) {
-            const didsDictNew   = (dev.device == 'e380' ? E380DidsDict : E3DidsDict);
-            const didsWritable = (dev.device == 'e380' ? {} : E3DidsWritable);
+            let didsDictNew  = null;
+            let didsWritable = null;
+            switch (dev.device) {
+                case 'e380':
+                    didsDictNew   = E380DidsDict;
+                    didsWritable  = {};
+                    break;
+                case 'e3100cb':
+                    didsDictNew   = E3100CBDidsDict;
+                    didsWritable  = {};
+                    break;
+                default:
+                    didsDictNew   = E3DidsDict;
+                    didsWritable  = E3DidsWritable;
+            }
             const devDids = new storage.storageDids({stateBase:dev.devStateName, device:dev.device});
             await devDids.initStates(this, 'standby');
             await devDids.readKnownDids(this,'standby');
@@ -313,6 +334,22 @@ class E3oncan extends utils.Adapter {
         return e380Worker;
     }
 
+    // Setup E3100CB collect worker:
+    async setupE3100cbCollectWorker(conf) {
+        let e3100cbWorker = null;
+        if (conf.e3100cbActive) {
+            e3100cbWorker = new collect.collect({
+                'canID': [0x569],
+                'stateBase': conf.e3100cbName,
+                'device': 'e3100cb',
+                'delay': conf.e3100cbDelay,
+                'active': conf.e3100cbActive});
+            await e3100cbWorker.initStates(this,'standby');
+        }
+        if (e3100cbWorker) await e3100cbWorker.startup(this);
+        return e3100cbWorker;
+    }
+
     // Setup E3 collect workers:
 
     async setupE3CollectWorkers(conf, workers) {
@@ -400,6 +437,7 @@ class E3oncan extends utils.Adapter {
 
             // Stop Collect workers:
             if (this.e380Collect) await this.e380Collect.stop(this);
+            if (this.e3100cbCollect) await this.e3100cbCollect.stop(this);
             for (const worker of Object.values(this.E3CollectExt)) await worker.stop(this);
             for (const worker of Object.values(this.E3CollectInt)) await worker.stop(this);
 
@@ -630,6 +668,7 @@ class E3oncan extends utils.Adapter {
 
     onCanMsgExt(msg) {
         if ( (this.e380Collect) && (this.e380Collect.config.canID.includes(msg.id)) ) { this.e380Collect.msgCollect(this, msg); }
+        if ( (this.e3100cbCollect) && (this.e3100cbCollect.config.canID.includes(msg.id)) ) { this.e3100cbCollect.msgCollect(this, msg); }
         if (this.E3CollectExt[msg.id]) this.E3CollectExt[msg.id].msgCollect(this, msg);
         if (this.E3UdsWorkers[msg.id]) this.E3UdsWorkers[msg.id].msgUds(this, msg);
         if (this.udsScanWorker.workers[msg.id]) this.udsScanWorker.workers[msg.id].msgUds(this, msg);

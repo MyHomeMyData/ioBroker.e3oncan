@@ -15,7 +15,7 @@
 # Basic concept
 Viessmann E3 series devices (One Base) are doing a lot of data exchange on CAN bus.
 
-This adapter can listen to this communication and extract many useful information. The often used energy meter E380 CA also is supported.
+This adapter can listen to this communication and extract many useful information. Energy meter E380CA and E3100CB also are supported.
 
 In parallel **reading of data points** (ReadByDid) is supported. Informations not available via listening can be actively requested. The UDSonCAN protocol is also used by other equipment, e.g. by well known WAGO gateway.
 
@@ -53,7 +53,7 @@ All services provided by this adapter are based on device list of your specific 
 This step is not mandatory but strongly recomended. If you would like to write to data points you need to do a data point scan first.
 * When data point scan was completed successfully, the data points are available in the object tree for each device. You may view the data points in configuration by selecting a device and pressing button "Update list of data points". Press filter symbol and type search pattern to filter for name and/or codec. This is for your information only. Please deactivate filtering before selecting another device to avoid error messages.
 * Last step is to configure schedules for collecting data on tab "ASSIGNMENTS TO EXTERNAL CAN ADAPTER".
-* For **energy meter E380** (if available in your setup) you just can activate or not. Please notice the value "Min. update time (s)". Updates to single data points are done no faster than the given value (default is 5 seconds). By choosing zero every received data will be stored. Since E380 is sending data very fast (more than 20 values per second), it's recommended not to use zero here. This would put a high load on the ioBroker system.
+* For **energy meters** (if available in your setup) you just can activate or not. Please notice the value "Min. update time (s)". Updates to single data points are done no faster than the given value (default is 5 seconds). By choosing zero every received data will be stored. Since energy meters are sending data very fast (more than 20 values per second), it's recommended not to use zero here. This would put a high load on the ioBroker system.
 * If you have connected E3 devices via CAN bus, e.g. Vitocal and VX3, you can collect data exchanged between those devices in realtime by listening. Press "+" to add a line, check "active" chackbox, select a device and edit "Min. update time (s)". It's feasable to use 0s here, however, I recommend to keep to the 5s.
 * Finally, you may add schedules for requesting data via UDSonCAN protocol. Again press "+" button and edit the settings. You may have several schedules on each device. By this you can request some data points more often than others. Default value of 0 for "Schedule (s)" means, those data points will be requested just once during startup of the instance.
 You may use data points informations on tab "LIST OF DATA POINTS" for reference (opening on 2nd tab could help).
@@ -77,6 +77,28 @@ CAN-address=98: data points with odd IDs
 | 600,601 | Cumulated Import, Export | kWh |
 | 602,603 | Total Active Power, Total Reactive Power | W, var |
 | 604,605 | Cumulated Import | kWh |
+
+# E3100CB data and units
+
+| ID | Data| Unit |
+| ------|:--- |------|
+| 1385_01 | Cumulated Import | kWh |
+| 1385_02 | Cumulated Export | kWh |
+| 1385_03 | State: -1 => feedin \| +1 => supply | |
+| 1385_04 | Active Power Total |  W |
+| 1385_08 | Active Power L1 |  W |
+| 1385_12 | Active Power L2 |  W |
+| 1385_16 | Active Power L3 |  W |
+| 1385_05 | Reactive Power Total | var |
+| 1385_09 | Reactive Power L1 | var |
+| 1385_13 | Reactive Power L2 | var |
+| 1385_17 | Reactive Power L3 | var |
+| 1385_06 | Current, Absolute L1 | A |
+| 1385_10 | Current, Absolute L2 | A |
+| 1385_14 | Current, Absolute L3 | A |
+| 1385_07 | Voltage, L1 | V |
+| 1385_11 | Voltage, L2 | V |
+| 1385_15 | Voltage, L3 | V |
 
 # Hints and limitations
 
@@ -108,6 +130,7 @@ Yes, that is possible under certain conditions:
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (MyHomeMyData) Added support for energy meter E3100CB
 * (MyHomeMyData) Update of list of data points for E380 to version 20240418
 * (MyHomeMyData) Main change for E380 id 600/601 (GridEnergy): Now using correct data format. Many thanks to @M4n197 for unveiling the right data format.
 

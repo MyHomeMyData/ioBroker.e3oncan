@@ -325,17 +325,17 @@
                         "color": "red"
                     }
                 },
-                "e380Header": {
+                "energyMetersHeader": {
                     "type": "header",
-                    "text": "Energy Meter E380",
+                    "text": "Energy Meters",
                     "size": 2,
                     "newLine": true
                 },
-                "e380WarnUpdateTime": {
+                "energyMetersWarnUpdateTime": {
                     "type": "staticText",
                     "text": "WARNING: Values below 2 seconds may cause heavy system load!",
                     "newLine": true,
-                    "hidden": "if (data.e380Delay < 2) { return false; }; return true;",
+                    "hidden": "if ( (data.e380Delay < 2) || (data.e3100cbDelay < 2) ) { return false; }; return true;",
                     "style": {
                         "color": "red"
                     }
@@ -355,6 +355,28 @@
                     "newLine": false
                 },
                 "e380Delay": {
+                    "type": "number",
+                    "label": "Min. update time (s)",
+                    "tooltip": "Minumum update time for states. 0 for immediate update.",
+                    "default" : 5,
+                    "min": 0,
+                    "newLine": false
+                },
+                "e3100cbActive": {
+                    "type": "checkbox",
+                    "label": "active",
+                    "tooltip": "Activate communication",
+                    "default" : false,
+                    "newLine": true
+                },
+                "e3100cbName": {
+                    "type": "text",
+                    "label": "Device state name",
+                    "tooltip": "This text will be used as base for object tree",
+                    "default" : "e3100cb",
+                    "newLine": false
+                },
+                "e3100cbDelay": {
                     "type": "number",
                     "label": "Min. update time (s)",
                     "tooltip": "Minumum update time for states. 0 for immediate update.",

@@ -61,5 +61,6 @@
     "Update list of datapoints": "更新数据点列表",
     "Start scan to update list of devices": "开始扫描以更新设备列表",
     "Description": "描述",
-    "Optional description of this schedule.": "此时间表的可选描述。"
+    "Optional description of this schedule.": "此时间表的可选描述。",
+    "Energy Meters": "电能表"
 }
