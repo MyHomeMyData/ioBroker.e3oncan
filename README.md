@@ -71,11 +71,11 @@ CAN-address=98: data points with odd IDs
 | ID | Data| Unit |
 | ------|:--- |------|
 | 592,593 | Active Power L1, L2, L3, Total |  W |
-| 594,595 | Reactive Power L1, L2, L3, Total | VA |
-| 596,597 | Current, L1, L2, L3, cosPhi | A, - |
+| 594,595 | Reactive Power L1, L2, L3, Total | var |
+| 596,597 | Absolute Current, L1, L2, L3, cosPhi | A, - |
 | 598,599 | Voltage, L1, L2, L3, Frequency | V, Hz |
 | 600,601 | Cumulated Import, Export | kWh |
-| 602,603 | Total Active Power, Total Reactive Power | W, VA |
+| 602,603 | Total Active Power, Total Reactive Power | W, var |
 | 604,605 | Cumulated Import | kWh |
 
 # Hints and limitations
@@ -108,7 +108,7 @@ Yes, that is possible under certain conditions:
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (MyHomeMyData) Update of list of data points for E380 to version 20240417
+* (MyHomeMyData) Update of list of data points for E380 to version 20240418
 * (MyHomeMyData) Main change for E380 id 600/601 (GridEnergy): Now using correct data format. Many thanks to @M4n197 for unveiling the right data format.
 
 ### 0.8.0 (2024-03-22)
