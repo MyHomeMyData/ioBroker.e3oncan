@@ -134,7 +134,7 @@ Yes, that is possible under certain conditions:
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20240420
 * (MyHomeMyData) Added support for energy meter E3100CB
 * (MyHomeMyData) Update of list of data points for E380 to version 20240418
-* (MyHomeMyData) Main change for E380 id 600/601 (GridEnergy): Now using correct data format. Many thanks to @M4n197 for unveiling the right data format.
+* (MyHomeMyData) Main change for E380 id 600/601 (GridEnergy): Now using correct data format. Many thanks to @M4n197 for unveiling the right data format. Manual adaptations may be needed, please check!
 
 ### 0.8.0 (2024-03-22)
 * (MyHomeMyData) Added support for energy meter E380 with CAN-address=98
