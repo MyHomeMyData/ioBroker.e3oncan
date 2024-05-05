@@ -129,6 +129,11 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Added info for data points 2404_BivalenceControlMode and 2831_BivalenceControlAlternativeTemperature
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20240505
+
 ### 0.9.0 (2024-04-21)
 * (MyHomeMyData) Structure of data point 1690 (ElectricalEnergySystemPhotovoltaicStatus) changed based on issue https://github.com/MyHomeMyData/E3onCAN/issues/6. Manual adaptations may be needed, please check!
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20240420
