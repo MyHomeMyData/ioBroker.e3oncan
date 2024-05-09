@@ -29,7 +29,7 @@
     "include": [
         "**/*.js",
         "**/*.d.ts"
-    ],
+, "eslint.config.mjs"    ],
     "exclude": [
         "node_modules/**",
         "widgets/**"
