@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.9.0",
+    "version": "0.9.1",
     "news": {
+      "0.9.1": {
+        "en": "Updated README, added links for description of device topology and to uses cases\nAdded info for data points 2404_BivalenceControlMode and 2831_BivalenceControlAlternativeTemperature\nUpdate of list of data points for E3 devices to version 20240505",
+        "de": "README aktualisiert, Links zur Beschreibung der Gerätetopologie und zu Anwendungsbeispielen ergänzt\nStruktur zu den Datenpunkten 2404_BivalenceControlMode und 2831_BivalenceControlAlternativeTemperature ergänzt\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20240505",
+        "ru": "Обновленный README, добавленные ссылки для описания топологии устройств и для использования случаев\nДобавлена информация для точек данных 2404_BivalenceControlMode и 2831_BivalenceControlAlternativeTemperature\nОбновление списка точек данных для устройств E3 к версии 20240505",
+        "pt": "README atualizado, links adicionados para descrição da topologia do dispositivo e para usar casos\nAdicionado info para pontos de dados 2404_BivalenceControlMode e 2831_BivalenceControlAlternativeTemperature\nAtualização da lista de pontos de dados para dispositivos E3 para a versão 20240505",
+        "nl": "Bijgewerkt README, toegevoegde links voor de beschrijving van apparaat topologie en te gebruiken gevallen\nToegevoegde info voor datapunten 2404_BivalenceControlMode en 2831_BivalenceControlAlternativeTemperature\nUpdate van de lijst van gegevenspunten voor E3-apparaten naar versie 20240505",
+        "fr": "Mise à jour du README, ajout de liens pour la description de la topologie des appareils et pour les cas d'utilisation\nAjouté info pour les points de données 2404_BivalenceControlMode et 2831_BivalenceControlAlternativeTemperature\nMise à jour de la liste des points de données pour les appareils E3 vers la version 20240505",
+        "it": "README aggiornato, link aggiunti per la descrizione della topologia del dispositivo e per usi casi\nInformazioni aggiuntive per i punti dati 2404_BivalenceControlMode e 2831_BivalenceControlAlternativeTemperature\nAggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 202405",
+        "es": "Actualizado README, añadido enlaces para descripción de la topología del dispositivo y para uso de casos\nInformación adicional para los puntos de datos 2404_BivalenceControlMode y 2831_BivalenceControlAlternativeTemperature\nActualización de la lista de puntos de datos para dispositivos E3 a la versión 20240505",
+        "pl": "Aktualizacja README, dodane linki do opisu topologii urządzenia i do zastosowań przypadków\nDodano informacje dla punktów danych 2404 _ BivaleceControlMode i 2831 _ BivaleceControlAltertiveTemperatura\nAktualizacja listy punktów danych dla urządzeń E3 do wersji 20240505",
+        "uk": "Оновлено README, додані посилання для опису топології пристрою і для використання випадків\nДодано інформацію для точок даних 2404_BivalenceControlMode та 2831_BivalenceControlAlternativeTemperature\nОновлення списку точок даних для пристроїв E3 до версії 20240505",
+        "zh-cn": "更新了 README, 添加了描述设备地形的链接并使用了大小写\n数据点2404_Bivalence Control Mode 和 2831_Bivalence Control AlternativeTemperature 添加信息\nE3设备数据点列表更新至20240505版本"
+      },
       "0.9.0": {
         "en": "Structure of data point 1690 (ElectricalEnergySystemPhotovoltaicStatus) changed based on issue https://github.com/MyHomeMyData/E3onCAN/issues/6. Manual adaptations may be needed, please check!\nUpdate of list of data points for E3 devices to version 20240420\nAdded support for energy meter E3100CB\nUpdate of list of data points for E380 to version 20240418\nMain change for E380 id 600/601 (GridEnergy): Now using correct data format. Many thanks to @M4n197 for unveiling the right data format. Manual adaptations may be needed, please check!",
         "de": "Struktur des Datenpunktes 1690 (ElectricalEnergySystemPhotovoltaicStatus) geändert auf der Grundlage des issues https://github.com/MyHomeMyData/E3onCAN/issues/6. Manuelle Anpassungen können erforderlich sein, bitte prüfen!\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20240420\nUnterstützung für Energiezähler E3100CB\nAktualisierung der Liste der Datenpunkte für E380 auf Version 20240418\nWichtige Änderung für E380 id 600/601 (GridEnergy): Jetzt mit korrektem Datenformat. Vielen Dank an @M4n197 für das Aufdecken des richtigen Datenformats. Manuelle Anpassungen können erforderlich sein, bitte prüfen!",
@@ -80,19 +93,6 @@
         "pl": "Sprawdź zmianę struktury punktów danych podczas uruchamiania\nAktualizacja wykazu punktów danych do wersji 20240218\nBugfix, aby uniknąć ostrzeżeń na pierwszym starcie adaptera",
         "uk": "Перевірка змінної структури точок даних при запуску\nОновлення списку точок даних до версії 20240218\nВиправлення помилок, щоб уникнути попередження про перший запуск адаптера",
         "zh-cn": "检查启动时数据点结构的变化\n数据点列表更新至20240218版本\n在适配器初始启动时避免警告的错误fix"
-      },
-      "0.6.18": {
-        "en": "Added versioning to list of data points and check for updates on start of adapter\nAdded optional description in configuration of UDS schedules",
-        "de": "Versionierung für die Liste der Datenpunkte ergänzt, Prüfung auf Updates beim Start des Adapters\nOptionale Beschreibung in Konfiguration von UDS-Zeitplänen hinzugefügt",
-        "ru": "Добавлена версия в список точек данных и проверяется на обновления в начале адаптера\nДобавлено дополнительное описание в конфигурации графиков СОД",
-        "pt": "Versão adicionada para lista de data points e verificar para atualizações no início do adaptador\nDescrição opcional adicionada na configuração de horários UDS",
-        "nl": "Versie toevoegen aan lijst van datapunten en controleren op updates bij het begin van de adapter\nOptionele beschrijving toegevoegd in configuratie van UDS-schema's",
-        "fr": "Ajout de la version à la liste des points de données et vérification des mises à jour au début de l'adaptateur\nAjout d'une description facultative dans la configuration des horaires UDS",
-        "it": "Aggiunta la versione per l'elenco dei data point e controllare gli aggiornamenti sull'avvio dell'adattatore\nAggiunta la descrizione facoltativa nella configurazione degli orari UDS",
-        "es": "Versión agregada a la lista de puntos de datos y comprobar para actualizaciones en el inicio del adaptador\nDescripción opcional agregada en la configuración de los calendarios UDS",
-        "pl": "Dodano wersję do listy punktów danych i sprawdź aktualizacje na początku adaptera\nDodano opcjonalny opis w konfiguracji harmonogramów UDS",
-        "uk": "Додано версію для списку точок даних і перевірте оновлення на старті адаптера\nДодано додатковий опис в конфігурації графіків UDS",
-        "zh-cn": "在数据点列表中添加版本, 并在适配器启动时检查更新\n在配置 UDS 调度时添加的可选描述"
       }
     },
     "title": "Viessmann E3 CAN do",
