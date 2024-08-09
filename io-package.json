@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.9.1",
+    "version": "0.9.2",
     "news": {
+      "0.9.2": {
+        "en": "Update of dependencies, fixes based on issue #53\nUpdate of list of data points for E3 devices to version 20240808",
+        "de": "Aktualisierung von Abhängigkeiten, Korrekturen basierend auf Issue #53\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20240808",
+        "ru": "Обновление зависимостей, исправлений на основе вопроса #53\nОбновление списка точек данных для устройств E3 к версии 20240808",
+        "pt": "Atualização de dependências, correções com base no problema #53\nAtualização da lista de pontos de dados para dispositivos E3 para a versão 20240808",
+        "nl": "Update van afhankelijkheden, fixes op basis van probleem #53\nUpdate van de lijst van gegevenspunten voor E3-apparaten naar versie 20240808",
+        "fr": "Mise à jour des dépendances, corrections basées sur le numéro 53\nMise à jour de la liste des points de données pour les appareils E3 vers la version 20240808",
+        "it": "Aggiornamento delle dipendenze, correzioni in base al numero #53\nAggiornamento dell'elenco dei punti dati per i dispositivi E3 alla versione 20240808",
+        "es": "Actualización de dependencias, correcciones basadas en el número #53\nActualización de la lista de puntos de datos para dispositivos E3 a la versión 202408",
+        "pl": "Aktualizacja zależności, poprawki oparte na numerze # 53\nAktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20240808",
+        "uk": "Оновлення залежностей, виправлень на основі випуску #53\nОновлення списку точок даних для пристроїв E3 до версії 202408",
+        "zh-cn": "更新依附关系,根据问题53进行修正\nE3设备数据点列表更新至20240808版本"
+      },
       "0.9.1": {
         "en": "Updated README, added links for description of device topology and to uses cases\nAdded info for data points 2404_BivalenceControlMode and 2831_BivalenceControlAlternativeTemperature\nUpdate of list of data points for E3 devices to version 20240505",
         "de": "README aktualisiert, Links zur Beschreibung der Gerätetopologie und zu Anwendungsbeispielen ergänzt\nStruktur zu den Datenpunkten 2404_BivalenceControlMode und 2831_BivalenceControlAlternativeTemperature ergänzt\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20240505",
@@ -80,19 +93,6 @@
         "pl": "Numery sklepu w stanach kanału \"tree\" z typem \"number\" zamiast \"String\"\nWAŻNE: Może to wpływać na obsługę stanów drzew, np. w skryptach, vis i historii\nBugfix for Energy Meter E380 data point id 0x25C\nAktualizacja wykazu punktów danych do wersji 20240309\nBugfix do aktualizacji zmiany struktury punktu danych podczas uruchamiania adaptera\nZmienione wartości domyślne dla adapterów CAN do can0 i can1\nZwiększona wartość dla zbierania czasu do 2000 ms",
         "uk": "Номери магазинів в штатах каналу \"дерева\" з типом \"Кількість\" замість \"String\"\nВАЖЛИВО: Це може вплинути на обробку деревних станів, наприклад в сценах, в'язках і історії\nПомилки для енергоблоків E380 id 0x25C\nОновлення списку точок даних до версії 20240309\nВиправлення помилок при запуску адаптера змінного струму\nЗмінені значення за замовчуванням для адаптерів CAN до can0 і can1\nЗбільшення значення для збору часу до 2000 мс",
         "zh-cn": "在频道状态的\"树\"中存储编号,其类型为\"数量\"而非\"String\"\n重要性:这可能影响到树状状态的处理,例如脚本、相对于历史和历史\n能源测量仪 E380 数据点 id 0x25C 的错误修正\n数据点列表更新至20240309版本\n在适配器启动时更新已改变数据点结构的臭虫\n将 CAN 适配器的默认值更改为 can0 和 can1\n收集超时到2000毫秒的值增加"
-      },
-      "0.6.19": {
-        "en": "Check for changed structure of data points during startup\nUpdate of list of data points to version 20240218\nBugfix to avoid warnings on very first start of adapter",
-        "de": "Aktualisierung von geänderten Datenpunkte während des Starts\nAktualisierung der Liste der Datenpunkte auf Version 20240218\nBugfix, um Warnungen beim ersten Adapterstart zu vermeiden",
-        "ru": "Проверка измененной структуры точек данных во время запуска\nОбновление списка точек данных к версии 20240218\nИсправление, чтобы избежать предупреждений на самом первом запуске адаптера",
-        "pt": "Verifique a estrutura alterada de data points durante a inicialização\nAtualização da lista de data points para a versão 20240218\nBugfix para evitar avisos no primeiro início do adaptador",
-        "nl": "Controleren op gewijzigde structuur van datapunten tijdens opstarten\nBijwerken van de lijst van datapunten naar versie 20240218\nBugfix om waarschuwingen te voorkomen bij de eerste start van de adapter",
-        "fr": "Vérifier la modification de la structure des points de données lors du démarrage\nMise à jour de la liste des points de données de la version 20240218\nBugfix pour éviter les avertissements au tout premier début de l'adaptateur",
-        "it": "Controllare la struttura modificata dei data point durante l'avvio\nAggiornamento dell'elenco dei data point alla versione 20240218\nBugfix per evitare avvisi sul primo avvio dell'adattatore",
-        "es": "Compruebe la estructura modificada de los puntos de datos durante el inicio\nActualización de la lista de datos a la versión 20240218\nBugfix para evitar advertencias en el primer comienzo del adaptador",
-        "pl": "Sprawdź zmianę struktury punktów danych podczas uruchamiania\nAktualizacja wykazu punktów danych do wersji 20240218\nBugfix, aby uniknąć ostrzeżeń na pierwszym starcie adaptera",
-        "uk": "Перевірка змінної структури точок даних при запуску\nОновлення списку точок даних до версії 20240218\nВиправлення помилок, щоб уникнути попередження про перший запуск адаптера",
-        "zh-cn": "检查启动时数据点结构的变化\n数据点列表更新至20240218版本\n在适配器初始启动时避免警告的错误fix"
       }
     },
     "titleLang": {

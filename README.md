@@ -128,7 +128,7 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.9.2 (2024-08-09)
 * (MyHomeMyData) Update of dependencies, fixes based on issue #53
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20240808
 
