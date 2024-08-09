@@ -9,6 +9,7 @@
   "homepage": "https://github.com/MyHomeMyData/ioBroker.e3oncan",
   "license": "MIT",
   "keywords": [
+    "ioBroker",
     "Viessmann",
     "E3",
     "CAN",
@@ -24,7 +25,7 @@
     "node": ">= 18"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.1.4",
+    "@iobroker/adapter-core": "^3.1.6",
     "Buffer": "^0.0.0",
     "serialport": "^12.0.0",
     "socketcan": "^4.0.4"
@@ -58,7 +59,6 @@
     "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).{json,json5}",
     "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
     "lib/",
-    "www/",
     "io-package.json",
     "LICENSE",
     "main.js"

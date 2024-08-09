@@ -95,7 +95,6 @@
         "zh-cn": "检查启动时数据点结构的变化\n数据点列表更新至20240218版本\n在适配器初始启动时避免警告的错误fix"
       }
     },
-    "title": "Viessmann E3 CAN do",
     "titleLang": {
       "en": "Viessmann E3 CAN do",
       "de": "Viessmann E3 CAN do",
@@ -141,7 +140,7 @@
     "messagebox": true,
     "extIcon": "https://raw.githubusercontent.com/MyHomeMyData/ioBroker.e3oncan/main/admin/e3oncan.png",
     "readme": "https://github.com/MyHomeMyData/ioBroker.e3oncan/blob/main/README.md",
-    "loglevel": "debug",
+    "loglevel": "info",
     "mode": "daemon",
     "type": "iot-systems",
     "compact": true,
@@ -152,7 +151,7 @@
     },
     "dependencies": [
       {
-        "js-controller": ">=3.3.22"
+        "js-controller": ">=5.0.19"
       }
     ],
     "globalDependencies": [
