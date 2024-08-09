@@ -129,7 +129,7 @@ Yes, that is possible under certain conditions:
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (MyHomeMyData) Update of dependencies
+* (MyHomeMyData) Update of dependencies, fixes based on issue #53
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20240808
 
 ### 0.9.1 (2024-05-26)
