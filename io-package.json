@@ -132,9 +132,8 @@
       "PV",
       "Energy Meter"
     ],
-    "license": "MIT",
+    "licenseInformation": {"license": "MIT", "type": "free" },
     "platform": "Javascript/Node.js",
-    "main": "main.js",
     "icon": "e3oncan.png",
     "enabled": true,
     "messagebox": true,
@@ -143,6 +142,7 @@
     "loglevel": "info",
     "mode": "daemon",
     "type": "iot-systems",
+    "tier": 3,
     "compact": true,
     "connectionType": "local",
     "dataSource": "push",

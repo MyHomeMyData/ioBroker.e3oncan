@@ -383,7 +383,6 @@ class E3oncan extends utils.Adapter {
             // @ts-ignore
             for (const dev of Object.values(this.config.tableUdsSchedules)) {
                 if (dev.udsScheduleActive) {
-                    await this.sleep(50);     // 50 ms pause to next schedule
                     const devTxAddr = Number(dev.udsSelectDevAddr);
                     const devRxAddr = devTxAddr + 16;
                     if (!(this.E3UdsWorkers[devRxAddr])) {
@@ -415,9 +414,14 @@ class E3oncan extends utils.Adapter {
                     }
                 }
             }
+            let timeOffset = 0;
+            let timeDelta  = 50;    // Time delta (ms) between UDS schedules
             for (const worker of Object.values(this.E3UdsWorkers)) {
-                await worker.startup(this, 'normal');
-                await this.subscribeStates(this.namespace+'.'+worker.config.stateBase+'.*',this.onStateChange);
+                this.setTimeout(async function(ctx, worker) {
+                    await worker.startup(ctx, 'normal');
+                    await ctx.subscribeStates(ctx.namespace+'.'+worker.config.stateBase+'.*',ctx.onStateChange);
+                }, timeOffset, this, worker);
+                timeOffset += timeDelta;
             }
         }
     }
@@ -498,10 +502,6 @@ class E3oncan extends utils.Adapter {
                 }
             }
         }
-    }
-
-    sleep(milliseconds) {
-        return new Promise(resolve => this.setTimeout(resolve, milliseconds));
     }
 
     // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
