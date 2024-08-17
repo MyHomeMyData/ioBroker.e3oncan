@@ -129,7 +129,7 @@ Yes, that is possible under certain conditions:
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (MyHomeMyData) Fixes based on issue #55
+* (MyHomeMyData) Fixes based on issues #55,#56
 * (MyHomeMyData) Bugfix: Time delta between schedules of UDS workes was not working properly 
 
 ### 0.9.2 (2024-08-09)

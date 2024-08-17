@@ -56,6 +56,7 @@ class E3oncan extends utils.Adapter {
         this.udsWorkers          = {};
         this.udsTimeout          = 7500;   // Timeout (ms) for normal UDS communication
         this.udsDevices          = [];     // Confirmed & edited UDS devices
+        this.udsTimeoutHandles   = [];
 
         this.didsVersionTC       = '20240309';  // Change of type of numerical dids to Number at this version
         this.udsDidForScan       = 256;    // Busidentification is in this id
@@ -417,11 +418,12 @@ class E3oncan extends utils.Adapter {
             let timeOffset = 0;
             let timeDelta  = 50;    // Time delta (ms) between UDS schedules
             for (const worker of Object.values(this.E3UdsWorkers)) {
-                this.setTimeout(async function(ctx, worker) {
+                const toh = this.setTimeout(async function(ctx, worker) {
                     await worker.startup(ctx, 'normal');
                     await ctx.subscribeStates(ctx.namespace+'.'+worker.config.stateBase+'.*',ctx.onStateChange);
                 }, timeOffset, this, worker);
                 timeOffset += timeDelta;
+                this.udsTimeoutHandles.push(toh);
             }
         }
     }
@@ -436,6 +438,7 @@ class E3oncan extends utils.Adapter {
             const tStart = new Date().getTime();
             this.stoppingInstance = true;
             // Stop UDS workers:
+            for (const toh of Object.values(this.udsTimeoutHandles)) await this.clearTimeout(toh);
             for (const worker of Object.values(this.E3UdsWorkers)) await worker.stop(this);
             for (const worker of Object.values(this.udsScanWorker.workers)) await worker.stop(this);
 
