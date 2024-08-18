@@ -129,6 +129,8 @@ Yes, that is possible under certain conditions:
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (MyHomeMyData) Bugfix: Updating UDS communication statistics, even in case of persistent timeout events
+* (MyHomeMyData) Disabled sinon should interface
 * (MyHomeMyData) Fixes based on issues #55,#56
 * (MyHomeMyData) Bugfix: Time delta between schedules of UDS workes was not working properly 
 
