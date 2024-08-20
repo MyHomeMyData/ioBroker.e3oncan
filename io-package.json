@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.9.2",
+    "version": "0.9.3",
     "news": {
+      "0.9.3": {
+        "en": "Bugfix: Updating UDS communication statistics, even in case of persistent timeout events\nDisabled sinon should interface\nFixes based on issues #55,#56\nBugfix: Time delta between schedules of UDS workes was not working properly",
+        "de": "Bugfix: Aktualisierung von UDS-Kommunikationsstatistiken, auch bei anhaltenden Timeout-Ereignissen\nsinon should interface deaktiviert\nBugfixes basierend auf Issues #55,#56\nBugfix: Zeit Delta zwischen den UDS-Workern hat nicht korrekt funktioniert",
+        "ru": "Bugfix: Обновление коммуникационной статистики СОД, даже в случае непрерывных событий\nОтключенный Синон должен\n#55,#56\nBugfix: дельта времени между графиками работы СОД не работала должным образом",
+        "pt": "Bugfix: Atualizando estatísticas de comunicação UDS, mesmo em caso de eventos de timeout persistentes\nSinon desabilitado deve interface\nCorreções baseadas em questões #55, #56\nBugfix: O tempo delta entre horários de trabalho UDS não estava funcionando corretamente",
+        "nl": "Bugfix: UDS-communicatiestatistieken bijwerken, zelfs in geval van aanhoudende timeout\nUitgeschakelde sinon moet interface\nFixes gebaseerd op problemen #55,#56\nBugfix: Tijd delta tussen de schema's van UDS werken werkte niet goed",
+        "fr": "Correction : Mise à jour des statistiques de communication UDS, même en cas d'événements persistants de temps mort\nSinon désactivé devrait interfacer\nCorrections basées sur les numéros 55, 56\nCorrection : Temps delta entre les horaires des travaux UDS ne fonctionnait pas correctement",
+        "it": "Bugfix: Aggiornamento delle statistiche di comunicazione UDS, anche in caso di eventi di timeout persistenti\nDisabili sinon dovrebbe interfacciarsi\nFissi basati su numeri #55,#56\nBugfix: Il tempo delta tra gli orari dei lavori UDS non funzionava correttamente",
+        "es": "Bugfix: Actualización de las estadísticas de comunicación de los UDS, incluso en caso de eventos de timeout persistentes\nImpedido sinon debe interfaz\nArreglos basados en temas #55,#56\nBugfix: El tiempo entre los horarios de los trabajos UDS no funcionaba correctamente",
+        "pl": "Bugfix: Aktualizacja statystyk komunikacyjnych UDS, nawet w przypadku trwałych zdarzeń timeout\nWyłączony sinon powinien mieć interfejs\nFixes based on issues # 55, # 56\nBugfix: Czas delta między harmonogramami worków UDS nie działał prawidłowo",
+        "uk": "Помилки: Оновлення статистики зв'язку UDS, навіть у випадку наполегливих подій\nВимкнений синон повинен інтерфейс\nВиправлення на основі питань #55,#56\nПомилки: Час дельта між графіками роботи УДС не працює належним чином",
+        "zh-cn": "错误修正 : 更新UDS通信统计数据,即使在持续超时的情况下也是如此\n已禁用的西农应接口\n根据问题55、56\n错误修正 : UDS工作时间表之间的时间三角洲工作不当"
+      },
       "0.9.2": {
         "en": "Update of dependencies, fixes based on issue #53\nUpdate of list of data points for E3 devices to version 20240808",
         "de": "Aktualisierung von Abhängigkeiten, Korrekturen basierend auf Issue #53\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20240808",
@@ -80,19 +93,6 @@
         "pl": "Bugfix dla punktu danych 1190: Skalowanie z powrotem do 10.0\nAktualizacja wykazu punktów danych do wersji 20240314",
         "uk": "Виправлення даних 1190: Складання змінено назад до 10.0\nОновлення списку точок даних до версії 20240314",
         "zh-cn": "数据点1190的bugfix:缩放后改为10.0\n数据点列表更新至20240314版本"
-      },
-      "0.7.0": {
-        "en": "Store numbers in states of channel \"tree\" with type \"Number\" instead of \"String\"\nIMPORTANT: This may affect handling of tree states, e.g. in scripts, vis and history\nBugfix for Energy Meter E380 data point id 0x25C\nUpdate of list of data points to version 20240309\nBugfix for update of changed data point structure during start of adapter\nChanged default values for CAN adapters to can0 and can1\nIncreased value for collect timeout to 2000 ms",
-        "de": "Numerische Werte werden nun im Kanal \"tree\" mit Datentyp \"Zahl\" statt \"Zeichenkette\" gespeichert.\nWICHTIG: Dies kann die Handhabung dieser Daten beeinflussen, z.B. in Skripten, Vis und History\nBugfix für Energy Meter E380 Datenpunkt id 0x25C\nAktualisierung der Liste der Datenpunkte auf Version 20240309\nBugfix zum Update der geänderten Datenpunktstruktur beim Start des Adapters\nStandardwerte für CAN-Adapter auf can0 und can1 geändert\nWert für Timeout bei \"Collect\" auf 2000 ms erhöht",
-        "ru": "Номер магазина в состояниях канала \"деревь\" с типом \"Номер\" вместо \"Стинг\"\nВАЖНО: Это может повлиять на обработку состояния деревьев, например, в сценариях, vis и истории\nBugfix for Energy Meter E380 data point id 0x25C\nОбновление списка точек данных к версии 20240309\nИсправление для обновления измененной структуры точки данных в начале адаптера\nИзмененные значения по умолчанию для адаптеров CAN для can0 и can1\nУвеличение стоимости для сбора тайм-аута до 2000 мс",
-        "pt": "Armazenar números em estados de canal \"árvore\" com tipo \"Número\" em vez de \"String\"\nIMPORTANTE: Isso pode afetar o manuseio de estados de árvore, por exemplo, em scripts, vis e história\nBugfix para medidor de energia E380 data point id 0x25C\nAtualização da lista de data points para a versão 20240309\nBugfix para atualização da estrutura de data point alterado durante o início do adaptador\nValores padrão alterados para adaptadores CAN para can0 e can1\nMaior valor para recolha de tempo limite para 2000 ms",
-        "nl": "Bewaar nummers in de staat van kanaal \"boom\" met type \"Number\" in plaats van \"String\"\nBELANGRIJK: Dit kan van invloed zijn op de behandeling van boomtoestanden, bijvoorbeeld in scripts, vis en geschiedenis\nBugfix voor energiemeter E380 data point id 0x25C\nBijwerken van de lijst van datapunten naar versie 20240309\nBugfix voor het bijwerken van gewijzigde data point structuur tijdens het begin van de adapter\nVeranderde standaardwaarden voor CAN-adapters naar can0 en can1\nVerhoogde waarde voor de inningstijd tot 2000 ms",
-        "fr": "Stocker les numéros dans les états du canal \"tree\" avec le type \"Number\" au lieu de \"String\"\nIMPORTANT: Cela peut affecter la manipulation des états d'arbre, par exemple dans les scripts, vis et histoire\nBugfix pour compteur d'énergie E380 data point id 0x25C\nMise à jour de la liste des points de données vers la version 20240309\nBugfix pour la mise à jour de la structure du point de données modifiée au début de l'adaptateur\nValeurs par défaut modifiées pour les adaptateurs CAN en can0 et can1\nAugmentation de la valeur de la durée de collecte jusqu'à 2000 ms",
-        "it": "Numeri di deposito in stati di canale \"tree\" con tipo \"Numero\" invece di \"String\"\nIMPORTANTE: Questo può influenzare la gestione degli stati degli alberi, ad esempio in script, vis e storia\nBugfix per Energy Meter E380 data point id 0x25C\nAggiornamento dell'elenco dei data point alla versione 20240309\nBugfix per l'aggiornamento della struttura data point modificata durante l'avvio dell'adattatore\nValori di default modificati per adattatori CAN a can0 e can1\nValore aumentato per la raccolta di timeout a 2000 ms",
-        "es": "Números de tiendas en estados de canal \"tree\" con tipo \"Número\" en lugar de \"String\"\nIMPORTANTE: Esto puede afectar el manejo de los estados de árboles, por ejemplo en scripts, vis y historia\nBugfix for Energy Meter E380 data point id 0x25C\nActualización de la lista de puntos de datos a la versión 20240309\nBugfix para la actualización de la estructura de puntos de datos cambiados durante el inicio del adaptador\nModificación de valores predeterminados para adaptadores CAN a can0 y can1\nMayor valor para el tiempo de recogida hasta 2000 ms",
-        "pl": "Numery sklepu w stanach kanału \"tree\" z typem \"number\" zamiast \"String\"\nWAŻNE: Może to wpływać na obsługę stanów drzew, np. w skryptach, vis i historii\nBugfix for Energy Meter E380 data point id 0x25C\nAktualizacja wykazu punktów danych do wersji 20240309\nBugfix do aktualizacji zmiany struktury punktu danych podczas uruchamiania adaptera\nZmienione wartości domyślne dla adapterów CAN do can0 i can1\nZwiększona wartość dla zbierania czasu do 2000 ms",
-        "uk": "Номери магазинів в штатах каналу \"дерева\" з типом \"Кількість\" замість \"String\"\nВАЖЛИВО: Це може вплинути на обробку деревних станів, наприклад в сценах, в'язках і історії\nПомилки для енергоблоків E380 id 0x25C\nОновлення списку точок даних до версії 20240309\nВиправлення помилок при запуску адаптера змінного струму\nЗмінені значення за замовчуванням для адаптерів CAN до can0 і can1\nЗбільшення значення для збору часу до 2000 мс",
-        "zh-cn": "在频道状态的\"树\"中存储编号,其类型为\"数量\"而非\"String\"\n重要性:这可能影响到树状状态的处理,例如脚本、相对于历史和历史\n能源测量仪 E380 数据点 id 0x25C 的错误修正\n数据点列表更新至20240309版本\n在适配器启动时更新已改变数据点结构的臭虫\n将 CAN 适配器的默认值更改为 can0 和 can1\n收集超时到2000毫秒的值增加"
       }
     },
     "titleLang": {
@@ -132,7 +132,10 @@
       "PV",
       "Energy Meter"
     ],
-    "licenseInformation": {"license": "MIT", "type": "free" },
+    "licenseInformation": {
+      "license": "MIT",
+      "type": "free"
+    },
     "platform": "Javascript/Node.js",
     "icon": "e3oncan.png",
     "enabled": true,
