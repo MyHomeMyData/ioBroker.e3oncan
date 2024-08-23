@@ -147,9 +147,9 @@ class E3oncan extends utils.Adapter {
         // Initial setup all configured devices for UDS:
         if (this.channelExt) await this.setupUdsWorkers();
 
-        await this.log.debug('Total number of active workers: '+String(this.cntWorkersActive));
+        this.log.debug('Total number of active workers: '+String(this.cntWorkersActive));
 
-        await this.log.info('Startup of instance '+this.namespace+': Done.');
+        this.log.info('Startup of instance '+this.namespace+': Done.');
     }
 
     // Check for updates:
@@ -380,6 +380,26 @@ class E3oncan extends utils.Adapter {
     // Setup workers for collecting data and for communication via UDS
 
     async setupUdsWorkers() {
+        // Create an UDS worker for each device
+        // This is to allow writing of data points even when no schedule for reading is defined
+        for (const dev of Object.values(this.config.tableUdsDevices)) {
+            // @ts-ignore
+            const devTxAddr = Number(dev.devAddr);
+            const devRxAddr = devTxAddr + 16;
+            // @ts-ignore
+            this.log.silly('New UDS worker on '+String(dev.devStateName));
+            this.E3UdsWorkers[devRxAddr] = new uds.uds(
+                {   'canID'    : devTxAddr,
+                    // @ts-ignore
+                    'stateBase': dev.devStateName,
+                    'device'   : 'common',
+                    'delay'    : 0,
+                    'active'   : false,
+                    'channel'  : this.channelExt,
+                    'timeout'  : this.udsTimeout
+                });
+            await this.E3UdsWorkers[devRxAddr].initStates(this,'standby');
+        }
         // @ts-ignore
         if ( (this.config.tableUdsSchedules) && (this.config.tableUdsSchedules.length > 0) ) {
             // @ts-ignore
@@ -387,44 +407,15 @@ class E3oncan extends utils.Adapter {
                 if (dev.udsScheduleActive) {
                     const devTxAddr = Number(dev.udsSelectDevAddr);
                     const devRxAddr = devTxAddr + 16;
-                    if (!(this.E3UdsWorkers[devRxAddr])) {
-                        // Create new worker
-                        // @ts-ignore
-                        const devInfo = this.config.tableUdsDevices.filter(item => item.devAddr == dev.udsSelectDevAddr);
-                        if (devInfo.length > 0) {
-                            const dev_name = devInfo[0].devStateName;
-                            await this.log.silly('New UDS device on '+String(dev.udsSelectDevAddr)+' with name '+String(dev_name));
-                            this.E3UdsWorkers[devRxAddr] = new uds.uds(
-                                {   'canID'    : devTxAddr,
-                                    'stateBase': dev_name,
-                                    'device'   : 'common',
-                                    'delay'    : 0,
-                                    'active'   : dev.udsScheduleActive,
-                                    'channel'  : this.channelExt,
-                                    'timeout'  : this.udsTimeout
-                                });
-                            await this.E3UdsWorkers[devRxAddr].initStates(this,'standby');
-                            await this.E3UdsWorkers[devRxAddr].addSchedule(this, dev.udsSchedule, dev.udsScheduleDids);
-                            await this.log.silly('New Schedule ('+String(dev.udsSchedule)+'s) UDS device on '+String(dev.udsSelectDevAddr));
-                        } else {
-                            await this.log.error('Could not setup UDS device on address '+String(dev.udsSelectDevAddr)+' due to missing device name.');
-                            break;
-                        }
-                    } else {
-                        await this.E3UdsWorkers[devRxAddr].addSchedule(this, dev.udsSchedule, dev.udsScheduleDids);
-                        await this.log.silly('New Schedule ('+String(dev.udsSchedule)+'s) UDS device on '+String(dev.udsSelectDevAddr));
-                    }
+                    await this.E3UdsWorkers[devRxAddr].addSchedule(this, dev.udsSchedule, dev.udsScheduleDids);
+                    this.log.silly('New Schedule ('+String(dev.udsSchedule)+'s) UDS device on '+String(dev.udsSelectDevAddr));
                 }
             }
-            let timeOffset = 0;
-            for (const worker of Object.values(this.E3UdsWorkers)) {
-                const toh = this.setTimeout(async function(ctx, worker) {
-                    await worker.startup(ctx, 'normal');
-                    await ctx.subscribeStates(ctx.namespace+'.'+worker.config.stateBase+'.*',ctx.onStateChange);
-                }, timeOffset, this, worker);
-                timeOffset += this.udsTimeDelta;
-                this.udsTimeoutHandles.push(toh);
-            }
+        }
+        for (const worker of Object.values(this.E3UdsWorkers)) {
+            await worker.startup(this,'normal');
+            this.subscribeStates(this.namespace+'.'+worker.config.stateBase+'.*',this.onStateChange);
+            await this.udsScanWorker.sleep(this, this.udsTimeDelta);
         }
     }
 
