@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.9.3",
+    "version": "0.9.4",
     "news": {
+      "0.9.4": {
+        "en": "Start up an UDS worker for each device to allow writing of data points even when no schedule for reading is defined on this device\nUpdate of npm dependencies",
+        "de": "UDS-Worker für jedes Device starten, um das Schreiben von Datenpunkten zu ermöglichen, auch wenn auf einem Device keine Datenpunkte zum Lesen definiert sind\nAktualisierung von npm Abhängigkeiten",
+        "ru": "Запустите работника UDS для каждого устройства, чтобы разрешить написание точек данных, даже если на этом устройстве не определяется график чтения\nОбновление зависимостей npm",
+        "pt": "Inicie um trabalhador UDS para cada dispositivo para permitir a escrita de pontos de dados mesmo quando nenhum cronograma para leitura é definido neste dispositivo\nAtualização de dependências npm",
+        "nl": "Opstarten van een UDS-werknemer voor elk apparaat om het schrijven van gegevenspunten mogelijk te maken, zelfs wanneer geen schema voor het lezen is gedefinieerd op dit apparaat\nBijwerken van npm afhankelijkheden",
+        "fr": "Démarrer un travailleur UDS pour chaque appareil pour permettre l'écriture de points de données même si aucun calendrier de lecture n'est défini sur cet appareil\nMise à jour des dépendances de npm",
+        "it": "Avviare un lavoratore UDS per ogni dispositivo per consentire la scrittura di punti di dati anche quando nessun programma di lettura è definito su questo dispositivo\nAggiornamento delle dipendenze npm",
+        "es": "Inicie un trabajador UDS para cada dispositivo para permitir la escritura de puntos de datos incluso cuando no se define ningún horario de lectura en este dispositivo\nActualización de las dependencias npm",
+        "pl": "Uruchom pracownika UDS dla każdego urządzenia, aby umożliwić zapisywanie punktów danych, nawet jeśli na tym urządzeniu nie określono harmonogramu odczytu\nAktualizacja zależności npm",
+        "uk": "Почати роботу UDS для кожного пристрою, щоб дозволити написання точок даних навіть при відсутності розкладу для читання на цьому пристрої\nОновлення залежності npm",
+        "zh-cn": "为每个设备启动一个 UDS 工作程序, 允许写入数据点, 即使没有定义此设备上的读取时间表\nNpm 依赖关系的更新"
+      },
       "0.9.3": {
         "en": "Bugfix: Updating UDS communication statistics, even in case of persistent timeout events\nDisabled sinon should interface\nFixes based on issues #55,#56\nBugfix: Time delta between schedules of UDS workes was not working properly",
         "de": "Bugfix: Aktualisierung von UDS-Kommunikationsstatistiken, auch bei anhaltenden Timeout-Ereignissen\nsinon should interface deaktiviert\nBugfixes basierend auf Issues #55,#56\nBugfix: Zeit Delta zwischen den UDS-Workern hat nicht korrekt funktioniert",
@@ -80,19 +93,6 @@
         "pl": "Aktualizacja typu danych i dodanej roli dla poszczególnych punktów danych urządzenia\nAktualizacja listy zapisywalnych punktów danych podczas aktualizacji danych do nowszej wersji\nLepsza obsługa nieudanej komunikacji CAN podczas skanowania punktów danych\nAktualizacja wykazu punktów danych do wersji 20240319",
         "uk": "Оновлення типу даних та ролі, що додано для конкретних точок даних\nОновити список можливих точок даних при оновленні точок даних до нової версії\nПоліпшення обробки не вдалося зв'язку CAN під час сканування для точок даних\nОновлення списку точок даних до версії 20240319",
         "zh-cn": "为设备特定数据点添加的数据类型和角色更新\n更新数据点到更新版本时更新可写数据点列表\n在扫描数据点时改进对CAN故障通信的处理\n数据点列表更新至20240319版本"
-      },
-      "0.7.1": {
-        "en": "Bugfix for data point 1190: Scaling changed back to 10.0\nUpdate of list of data points to version 20240314",
-        "de": "Bugfix für Datenpunkt 1190: Skalierung zurückgeändert auf 10.0\nAktualisierung der Liste der Datenpunkte auf Version 20240314",
-        "ru": "Bugfix for data point 1190: Scaling изменился на 10.0\nОбновление списка точек данных к версии 20240314",
-        "pt": "Bugfix para data point 1190: Scaling mudou de volta para 10.0\nAtualização da lista de data points para a versão 20240314",
-        "nl": "Bugfix voor datapunt 1190: Schalen is teruggedraaid naar 10.0\nBijwerken van de lijst van datapunten naar versie 20240314",
-        "fr": "Bugfix pour le point de données 1190 : l'échelle est revenue à 10.0\nMise à jour de la liste des points de données vers la version 20240314",
-        "it": "Bugfix per data point 1190: La scala è cambiata a 10,0\nAggiornamento dell'elenco dei data point alla versione 20240314",
-        "es": "Bugfix para data point 1190: El escalado cambió de nuevo a 10.0\nActualización de la lista de puntos de datos a la versión 20240314",
-        "pl": "Bugfix dla punktu danych 1190: Skalowanie z powrotem do 10.0\nAktualizacja wykazu punktów danych do wersji 20240314",
-        "uk": "Виправлення даних 1190: Складання змінено назад до 10.0\nОновлення списку точок даних до версії 20240314",
-        "zh-cn": "数据点1190的bugfix:缩放后改为10.0\n数据点列表更新至20240314版本"
       }
     },
     "titleLang": {
