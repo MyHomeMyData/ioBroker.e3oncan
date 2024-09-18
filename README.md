@@ -132,7 +132,6 @@ Yes, that is possible under certain conditions:
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20240916
-* (MyHomeMyData) Updated testing for node.js 22, see issue #65
 
 ### 0.9.4 (2024-08-26)
 * (MyHomeMyData) Start up an UDS worker for each device to allow writing of data points even when no schedule for reading is defined on this device
