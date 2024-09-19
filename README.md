@@ -34,7 +34,7 @@ Important parts of this adpater are based on the project [open3e](https://github
 
 A python based implementation of a pure listening approach (Collect only) using MQTT messaging is also availabe, see [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
 
-Note: Adapter presently is **not working** with **Node.js 22**!
+Note: Support for **Node.js 22** not fully tested yet!
 
 # Getting started
 
