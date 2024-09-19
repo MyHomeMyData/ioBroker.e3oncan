@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.9.4",
+    "version": "0.9.5",
     "news": {
+      "0.9.5": {
+        "en": "Update of list of data points for E3 devices to version 20240916",
+        "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20240916",
+        "ru": "Обновление списка точек данных для устройств E3 к версии 20240916",
+        "pt": "Atualização da lista de pontos de dados para dispositivos E3 para a versão 20240916",
+        "nl": "Update van de lijst van gegevenspunten voor E3-apparaten naar versie 20240916",
+        "fr": "Mise à jour de la liste des points de données pour les appareils E3 vers la version 20240916",
+        "it": "Aggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20240916",
+        "es": "Actualización de la lista de puntos de datos para dispositivos E3 a la versión 20240916",
+        "pl": "Aktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20240916",
+        "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20240916",
+        "zh-cn": "E3设备数据点列表更新至20240916版本"
+      },
       "0.9.4": {
         "en": "Start up an UDS worker for each device to allow writing of data points even when no schedule for reading is defined on this device\nUpdate of npm dependencies",
         "de": "UDS-Worker für jedes Device starten, um das Schreiben von Datenpunkten zu ermöglichen, auch wenn auf einem Device keine Datenpunkte zum Lesen definiert sind\nAktualisierung von npm Abhängigkeiten",
@@ -80,19 +93,6 @@
         "pl": "Dodano wsparcie dla licznika energii E380 z adresem CAN = 98\nAktualizacja wykazu punktów danych dla E380 do wersji 20240320",
         "uk": "Додано підтримку лічильника енергії E380 з CAN-address=98\nОновлення списку точок даних для E380 до версії 20240320",
         "zh-cn": "对能量计 E380 加上 CAN-address=98 的支持\nE380至20240320版本数据点列表更新"
-      },
-      "0.7.2": {
-        "en": "Update of data type and role added for device specific data points\nUpdate list of writable data points when updating data points to newer version\nImproved handling of failed CAN communication during scan for data points\nUpdate of list of data points to version 20240319",
-        "de": "Aktualisierung des Datentyps auch für gerätespezifische Datenpunkte\nAktualisierung der Liste der schreibbaren Datenpunkte bei der Aktualisierung von Datenpunkten auf neuere Version\nVerbesserte Handhabung fehlerhafter CAN-Kommunikation beim Scannen von Datenpunkten\nAktualisierung der Liste der Datenpunkte auf Version 20240319",
-        "ru": "Обновление типа данных и добавленной роли для конкретных точек данных устройства\nОбновление списка реальных точек данных при обновлении точек данных на более новую версию\nУлучшена обработка неудавшейся связи CAN во время сканирования для точек данных\nОбновление списка точек данных к версии 20240319",
-        "pt": "Atualização do tipo de dados e função adicionada para data points específicos do dispositivo\nLista de atualizações de data points variáveis ao atualizar data points para versão mais recente\nManuseio melhorado da comunicação CAN falha durante a verificação de pontos de dados\nAtualização da lista de data points para a versão 20240319",
-        "nl": "Bijwerken van gegevenstype en rol toegevoegd voor apparaatspecifieke datapunten\nLijst van schrijfbare datapunten bijwerken bij het bijwerken van datapunten naar nieuwere versie\nVerbeterde behandeling van mislukte CAN communicatie tijdens het scannen op datapunten\nBijwerken van de lijst van datapunten naar versie 20240319",
-        "fr": "Mise à jour du type de données et du rôle ajouté pour les points de données spécifiques aux appareils\nMettre à jour la liste des points de données en écriture lors de la mise à jour des points de données vers une version plus récente\nAmélioration de la gestion de la communication CAN défaillante lors de l'analyse des points de données\nMise à jour de la liste des points de données vers la version 20240319",
-        "it": "Aggiornamento del tipo di dati e del ruolo aggiunto per i data point specifici del dispositivo\nAggiorna l'elenco dei data point scrivibili durante l'aggiornamento dei data point alla versione più recente\nGestione migliorata della comunicazione CAN non riuscita durante la scansione per data point\nAggiornamento dell'elenco dei data point alla versione 20240319",
-        "es": "Actualización del tipo de datos y el papel añadido para los puntos de datos específicos del dispositivo\nActualizar lista de puntos de datos útiles al actualizar los puntos de datos a la versión más reciente\nMejor manejo de comunicación CAN fallida durante el escaneo para puntos de datos\nActualización de la lista de puntos de datos a la versión 20240319",
-        "pl": "Aktualizacja typu danych i dodanej roli dla poszczególnych punktów danych urządzenia\nAktualizacja listy zapisywalnych punktów danych podczas aktualizacji danych do nowszej wersji\nLepsza obsługa nieudanej komunikacji CAN podczas skanowania punktów danych\nAktualizacja wykazu punktów danych do wersji 20240319",
-        "uk": "Оновлення типу даних та ролі, що додано для конкретних точок даних\nОновити список можливих точок даних при оновленні точок даних до нової версії\nПоліпшення обробки не вдалося зв'язку CAN під час сканування для точок даних\nОновлення списку точок даних до версії 20240319",
-        "zh-cn": "为设备特定数据点添加的数据类型和角色更新\n更新数据点到更新版本时更新可写数据点列表\n在扫描数据点时改进对CAN故障通信的处理\n数据点列表更新至20240319版本"
       }
     },
     "titleLang": {
