@@ -1,0 +1,39 @@
+{
+    "0x77": {
+        "SID": 119,
+        "offset": 2,
+        "dids": {
+            "497": "DomesticHotWaterCirculationPumpMode",
+            "503": "ScaldProtection",
+            "504": "DomesticHotWaterSetpointMetaData",
+            "873": "LegionellaProtectionActivation",
+            "874": "LegionellaProtectionTargetTemperatureSetpoint",
+            "875": "LegionellaProtectionStartTime",
+            "876": "LegionellaProtectionWeekday",
+            "896": "OutsideTemperatureOffset",
+            "919": "OutsideTemperatureDampingFactor",
+            "933": "MixerOneCircuitProperty",
+            "1085": "DomesticHotWaterHysteresis",
+            "1087": "MaximumDomesticHotWaterLoadingTime",
+            "1100": "CentralHeatingPumpMinimumMaximumLimit",
+            "1101": "DomesticHotWaterPumpMinimumMaximumLimit",
+            "1102": "MixerOneCircuitPumpMinimumMaximumLimit",
+            "1192": "MixerOneCircuitFlowTemperatureMinimumMaximumLimit",
+            "1240": "CentralHeatingPumpMode",
+            "1395": "MixerOneCircuitSummerSavingTemperatureThreshold",
+            "1627": "ExternalMixerOneCircuitFixedValueTargetTemperatureSetpoint",
+            "2257": "DomesticHotWaterTemperatureSetpointOffset",
+            "2405": "MixerOneCircuitConstantFlowSetTemperatureCooling",
+            "2421": "MixerOneCircuitTemperatureOffsetCooling",
+            "2452": "MixerOneCircuitRoomTemperatureThresholdCooling",
+            "2498": "CentralHeatingPumpType",
+            "2499": "MixerOneCircuitPumpType",
+            "2626": "MaximumPowerElectricalHeater",
+            "3029": "DomesticHotWaterEfficiencyMode",
+            "3066": "DomesticHotWaterHighDemandDetection",
+            "3068": "DomesticHotWaterTemperatureSetpointComfort",
+            "3069": "DomesticHotWaterSensorForDemand"
+        }
+    },
+    "Version": "20241001"
+}
