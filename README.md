@@ -130,6 +130,9 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Added extended support for writing of data points.
+
 ### 0.9.5 (2024-09-19)
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20240916
 
