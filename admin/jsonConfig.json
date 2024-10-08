@@ -26,13 +26,13 @@
                 },
                 "canExtHeader": {
                     "type": "header",
-                    "text": "External CAN Adapter",
+                    "text": "UDS CAN Adapter",
                     "size": 2,
                     "newLine": true
                 },
                 "canExtName": {
                     "type": "text",
-                    "tooltip": "Device mame of CAN adapter connected to external bus, e.g. can0",
+                    "tooltip": "Device mame of CAN adapter connected to UDS-capable bus, e.g. can0",
                     "default" : "can0",
                     "newLine": false
                 },
@@ -45,13 +45,13 @@
                 },        
                 "canIntHeader": {
                     "type": "header",
-                    "text": "Internal CAN Adapter",
+                    "text": "Second CAN Adapter",
                     "size": 2,
                     "newLine": true
                 },
                 "canIntName": {
                     "type": "text",
-                    "tooltip": "Device mame of CAN adapter connected to internal bus, e.g. can1",
+                    "tooltip": "Device mame of CAN adapter connected to second bus, e.g. can1",
                     "default" : "can1",
                     "newLine": false
                 },
@@ -313,7 +313,7 @@
         },
         "tabCanAdapterExt": {
             "type": "panel",
-            "label": "Assignments to External CAN Adapter",
+            "label": "Assignments to UDS CAN Adapter",
             "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length == 0)) { return true; } else {return false; }",
             "items": {
                 "tableCanAdapterExtWarning": {
@@ -386,7 +386,7 @@
                 },
                 "tableHdrCol": {
                     "type": "header",
-                    "text": "Collecting Data on External CAN Adapter",
+                    "text": "Collecting Data on UDS CAN Adapter",
                     "size": 2
                 },
 
@@ -462,7 +462,7 @@
                 },
                 "tableHdrUds": {
                     "type": "header",
-                    "text": "Requesting data on external CAN Adapter via UDSonCAN",
+                    "text": "Requesting data on UDS CAN Adapter via UDSonCAN",
                     "size": 2
                 },
 
@@ -541,12 +541,12 @@
         },
         "tabCanAdapterInt": {
             "type": "panel",
-            "label": "Assignments to Internal CAN Adapter",
+            "label": "Assignments to second CAN Adapter",
             "hidden": "return !data.canIntActivated;",
             "items": {
                 "tableHdr": {
                     "type": "header",
-                    "text": "Collecting Data on Internal CAN Adapter",
+                    "text": "Collecting Data on second CAN Adapter",
                     "size": 2
                 },
 

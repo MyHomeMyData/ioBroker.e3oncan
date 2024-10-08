@@ -62,5 +62,14 @@
     "Start scan to update list of devices": "Запустите сканирование, чтобы обновить список устройств.",
     "Description": "Описание",
     "Optional description of this schedule.": "Необязательное описание этого расписания.",
-    "Energy Meters": "Счетчики энергии"
+    "Energy Meters": "Счетчики энергии",
+    "UDS CAN Adapter": "UDS-CAN-адаптер",
+    "Device mame of CAN adapter connected to UDS-capable bus, e.g. can0": "Имя устройства адаптера CAN, подключенного к шине с поддержкой UDS, например. может0",
+    "Assignments to UDS CAN Adapter": "Назначение адаптера UDS CAN",
+    "Collecting Data on UDS CAN Adapter": "Сбор данных об адаптере UDS CAN",
+    "Requesting data on UDS CAN Adapter via UDSonCAN": "Запрос данных об адаптере UDS CAN через UDSonCAN",
+    "Second CAN Adapter": "Второй CAN-адаптер",
+    "Device mame of CAN adapter connected to second bus, e.g. can1": "Имя устройства адаптера CAN, подключенного ко второй шине, например. может1",
+    "Assignments to second CAN Adapter": "Назначение второго CAN-адаптера",
+    "Collecting Data on second CAN Adapter": "Сбор данных о втором CAN-адаптере"
 }

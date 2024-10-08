@@ -62,5 +62,14 @@
     "Start scan to update list of devices": "Start de scan om de lijst met apparaten bij te werken",
     "Description": "Beschrijving",
     "Optional description of this schedule.": "Optionele beschrijving van dit schema.",
-    "Energy Meters": "Energiemeters"
+    "Energy Meters": "Energiemeters",
+    "UDS CAN Adapter": "UDS CAN-adapter",
+    "Device mame of CAN adapter connected to UDS-capable bus, e.g. can0": "Apparaatdeel van CAN-adapter aangesloten op UDS-compatibele bus, b.v. kan0",
+    "Assignments to UDS CAN Adapter": "Toewijzingen aan UDS CAN-adapter",
+    "Collecting Data on UDS CAN Adapter": "Gegevens verzamelen op de UDS CAN-adapter",
+    "Requesting data on UDS CAN Adapter via UDSonCAN": "Gegevens opvragen over de UDS CAN Adapter via UDSonCAN",
+    "Second CAN Adapter": "Tweede CAN-adapter",
+    "Device mame of CAN adapter connected to second bus, e.g. can1": "Apparaatdeel van CAN-adapter aangesloten op tweede bus, b.v. kan1",
+    "Assignments to second CAN Adapter": "Toewijzingen aan tweede CAN-adapter",
+    "Collecting Data on second CAN Adapter": "Gegevens verzamelen op de tweede CAN-adapter"
 }
