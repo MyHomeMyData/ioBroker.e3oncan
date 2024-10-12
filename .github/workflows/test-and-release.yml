@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - "main"
+      - "develop"
+      - "service77"
     tags:
       # normal versions
       - "v[0-9]+.[0-9]+.[0-9]+"
