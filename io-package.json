@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.9.5",
+    "version": "0.10.0",
     "news": {
+      "0.10.0": {
+        "en": "Added extended support for writing of data points.\nChanged naming for CAN adapter.",
+        "de": "Erweiterte Unterstützung für das Schreiben von Datenpunkten.\nNamensgebung für CAN-Adapter angepasst.",
+        "ru": "Добавлена расширенная поддержка для написания точек данных.\nИзменение названия для адаптера CAN.",
+        "pt": "Adicionado suporte estendido para a escrita de pontos de dados.\nNomeação alterada para adaptador CAN.",
+        "nl": "Toegevoegd uitgebreide ondersteuning voor het schrijven van datapunten.\nVeranderde naamgeving voor CAN-adapter.",
+        "fr": "Ajout d'un support étendu pour la rédaction de points de données.\nChangement de nom pour l'adaptateur CAN.",
+        "it": "Aggiunto il supporto esteso per la scrittura di punti di dati.\nCambiato nome per l'adattatore CAN.",
+        "es": "Se agregó soporte extendido para la escritura de puntos de datos.\nCambio de nombre para adaptador CAN.",
+        "pl": "Dodano rozszerzone wsparcie dla zapisu punktów danych.\nZmieniono nazwę adaptera CAN.",
+        "uk": "Додано розширену підтримку для написання точок даних.\nЗмінений намін для адаптера CAN.",
+        "zh-cn": "添加对写入数据点的扩展支持 .\nCAN适配器更改命名."
+      },
       "0.9.5": {
         "en": "Update of list of data points for E3 devices to version 20240916",
         "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20240916",
@@ -80,19 +93,6 @@
         "pl": "Struktura punktu danych 1690 (ElectricalEnergySystemPhotovoltaicStatus) zmieniła się w oparciu o wydanie https: / / github.com / MyHomeMyData / E3onCAN / issues / 6. Ręczne dostosowania mogą być potrzebne, proszę sprawdzić!\nAktualizacja listy punktów danych dla urządzeń E3 do wersji 20240420\nDodano wsparcie dla licznika energii E3100CB\nAktualizacja wykazu punktów danych dla E380 do wersji 20240418\nGłówna zmiana dla E380 id 600 / 601 (GridEnergy): Teraz używam poprawnego formatu danych. Wielkie podziękowania dla @ M4n197 za odsłonięcie odpowiedniego formatu danych. Ręczne dostosowania mogą być potrzebne, proszę sprawdzić!",
         "uk": "Структура точки даних 1690 (ElectricalEnergySystemPhotovoltaicStatus) змінено на основі випуску https://github.com/MyHomeMyData/E3onCAN/products/6. Пристосування може знадобитися, будь ласка, перевірте!\nОновлення списку точок даних для пристроїв E3 до версії 20240420\nДодано підтримку енергоблоку E3100CB\nОновлення списку точок даних для E380 до версії 20240418\nОсновні зміни для E380 id 600/601 (GridEnergy): Тепер, використовуючи правильний формат даних. Багато завдяки @M4n197 для розміщення формату правих даних. Пристосування може знадобитися, будь ласка, перевірте!",
         "zh-cn": "根据https://github.com/MyHomeMyData/E3onCAN/issues/6. 数据点1690的结构(电能系统系统)发生了变化。 可能需要手工改造,请检查!\nE3设备数据点列表更新至20240420版本\n添加对 E3100CB 能量表的支持\nE380至20240418版本数据点列表更新\nE380 id 600/601(Grid Energy)的主要变化: 现在使用正确的数据格式。 多亏了@M4n197 揭开正确的数据格式. 可能需要手工改造,请检查!"
-      },
-      "0.8.0": {
-        "en": "Added support for energy meter E380 with CAN-address=98\nUpdate of list of data points for E380 to version 20240320",
-        "de": "Unterstützung für Energiezähler E380 mit CAN-Adresse=98 ergänzt\nAktualisierung der Liste der Datenpunkte für E380 auf Version 20240320",
-        "ru": "Добавлена поддержка энергометра Е380 с CAN-адресом=98\nОбновление списка точек данных для E380 до версии 20240320",
-        "pt": "Adicionado suporte para medidor de energia E380 com CAN-endereço=98\nAtualização da lista de pontos de dados para E380 para a versão 20240320",
-        "nl": "Toegevoegde ondersteuning voor energiemeter E380 met CAN-adres=98\nBijwerken van de lijst van datapunten voor E380 naar versie 20240320",
-        "fr": "Ajout du support pour le compteur d'énergie E380 avec adresse CAN=98\nMise à jour de la liste des points de données pour E380 à la version 20240320",
-        "it": "Aggiunto il supporto per il contatore di energia E380 con CAN-address=98\nAggiornamento dell'elenco dei punti di dati per E380 alla versione 20240320",
-        "es": "Soporte añadido para medidor de energía E380 con dirección CAN=98\nActualización de la lista de puntos de datos para E380 a la versión 20240320",
-        "pl": "Dodano wsparcie dla licznika energii E380 z adresem CAN = 98\nAktualizacja wykazu punktów danych dla E380 do wersji 20240320",
-        "uk": "Додано підтримку лічильника енергії E380 з CAN-address=98\nОновлення списку точок даних для E380 до версії 20240320",
-        "zh-cn": "对能量计 E380 加上 CAN-address=98 的支持\nE380至20240320版本数据点列表更新"
       }
     },
     "titleLang": {
