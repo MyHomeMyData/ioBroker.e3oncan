@@ -43,7 +43,8 @@ class E3oncan extends utils.Adapter {
         this.E3CollectInt        = {};    // Dict of collect devices on internal bus
         this.E3CollectExt        = {};    // Dict of collect devices on external bus
         this.collectTimeout      = 2000;  // Timeout (ms) for collecting data
-        this.E3UdsWorkers        = {};    // Dict of uds devices on external bus
+        this.E3UdsWorkers        = {};    // Dict of standard uds workers
+        this.E3UdsSID77Workers   = {};    // Dict of uds workers for service 77
         this.cntWorkersActive    = 0;     // Total number of active workers (collect + UDS)
 
         this.channelExt          = null;
@@ -431,6 +432,7 @@ class E3oncan extends utils.Adapter {
             // Stop UDS workers:
             for (const toh of Object.values(this.udsTimeoutHandles)) await this.clearTimeout(toh);
             for (const worker of Object.values(this.E3UdsWorkers)) await worker.stop(this);
+            for (const worker of Object.values(this.E3UdsSID77Workers)) await worker.stop(this);
             for (const worker of Object.values(this.udsScanWorker.workers)) await worker.stop(this);
 
             // Stop Collect workers:
@@ -665,6 +667,7 @@ class E3oncan extends utils.Adapter {
         if ( (this.e3100cbCollect) && (this.e3100cbCollect.config.canID.includes(msg.id)) ) { this.e3100cbCollect.msgCollect(this, msg); }
         if (this.E3CollectExt[msg.id]) this.E3CollectExt[msg.id].msgCollect(this, msg);
         if (this.E3UdsWorkers[msg.id]) this.E3UdsWorkers[msg.id].msgUds(this, msg);
+        if (this.E3UdsSID77Workers[msg.id]) this.E3UdsSID77Workers[msg.id].msgUds(this, msg);
         if (this.udsScanWorker.workers[msg.id]) this.udsScanWorker.workers[msg.id].msgUds(this, msg);
     }
 
