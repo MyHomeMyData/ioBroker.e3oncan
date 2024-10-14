@@ -62,5 +62,14 @@
     "Start scan to update list of devices": "Iniciar escaneo para actualizar la lista de dispositivos",
     "Description": "Descripción",
     "Optional description of this schedule.": "Descripción opcional de este horario.",
-    "Energy Meters": "Medidores de energía"
+    "Energy Meters": "Medidores de energía",
+    "UDS CAN Adapter": "Adaptador UDS CAN",
+    "Device mame of CAN adapter connected to UDS-capable bus, e.g. can0": "Nombre del dispositivo del adaptador CAN conectado a un bus compatible con UDS, p. can0",
+    "Assignments to UDS CAN Adapter": "Asignaciones al Adaptador UDS CAN",
+    "Collecting Data on UDS CAN Adapter": "Recopilación de datos en el adaptador UDS CAN",
+    "Requesting data on UDS CAN Adapter via UDSonCAN": "Solicitud de datos del Adaptador UDS CAN mediante UDSonCAN",
+    "Second CAN Adapter": "Segundo adaptador CAN",
+    "Device mame of CAN adapter connected to second bus, e.g. can1": "Nombre del dispositivo del adaptador CAN conectado al segundo bus, p. can1",
+    "Assignments to second CAN Adapter": "Asignaciones al segundo adaptador CAN",
+    "Collecting Data on second CAN Adapter": "Recopilación de datos en el segundo adaptador CAN"
 }

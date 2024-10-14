@@ -62,5 +62,14 @@
     "Start scan to update list of devices": "开始扫描以更新设备列表",
     "Description": "描述",
     "Optional description of this schedule.": "此时间表的可选描述。",
-    "Energy Meters": "电能表"
+    "Energy Meters": "电能表",
+    "UDS CAN Adapter": "UDS CAN 适配器",
+    "Device mame of CAN adapter connected to UDS-capable bus, e.g. can0": "连接到支持 UDS 的总线的 CAN 适配器的设备名称，例如可以0",
+    "Assignments to UDS CAN Adapter": "分配给 UDS CAN 适配器",
+    "Collecting Data on UDS CAN Adapter": "在 UDS CAN 适配器上收集数据",
+    "Requesting data on UDS CAN Adapter via UDSonCAN": "通过 UDSonCAN 请求 UDS CAN 适配器上的数据",
+    "Second CAN Adapter": "第二个 CAN 适配器",
+    "Device mame of CAN adapter connected to second bus, e.g. can1": "连接到第二条总线的 CAN 适配器的设备名称，例如可以1",
+    "Assignments to second CAN Adapter": "分配给第二个 CAN 适配器",
+    "Collecting Data on second CAN Adapter": "收集第二个 CAN 适配器上的数据"
 }
