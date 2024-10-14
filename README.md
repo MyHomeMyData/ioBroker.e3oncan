@@ -129,7 +129,7 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.10.0 (2024-10-14)
 * (MyHomeMyData) Added extended support for writing of data points.
 * (MyHomeMyData) Changed naming for CAN adapter.
 
