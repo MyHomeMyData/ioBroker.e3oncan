@@ -1,9 +1,17 @@
 {
     "i18n": true,
     "type": "tabs",
+    "tabsStyle": {
+        "width": "calc(100% - 100px)"
+        },
     "items": {
         "tabCanAdapter": {
             "type": "panel",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
             "label": "CAN Adapter",
             "items": {
                 "introTabCanInstanceNotActiveTxt": {
@@ -66,6 +74,11 @@
         },
         "tabUdsDevices": {
             "type": "panel",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
             "label": "List of UDS devices",
             "hidden": "if (!data.canExtActivated) { return true; } else {return false; }",
             "items": {
@@ -127,18 +140,18 @@
                     "useNative": true,
                     "hidden": "!_alive",
                     "newLine": true,
-                    "sm": 12,
                     "md": 12,
-                    "lg": 12
+                    "lg": 12,
+                    "xl": 12
                 },
 
                 "tableUdsDevices": {
                     "type": "table",
                     "uniqueColumns": ["devStateName"],
                     "newLine": true,
-                    "sm": 12,
                     "md": 12,
                     "lg": 12,
+                    "xl": 12,
                     "label": "List of available devices",
                     "hidden": "!_alive",
                     "noDelete": true,
@@ -192,6 +205,11 @@
         },
         "tabUdsDids": {
             "type": "panel",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
             "label": "List of datapoints",
             "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length == 0)) { return true; } else {return false; }",
             "items": {
@@ -220,18 +238,15 @@
                     },
                     "hidden": "!_alive",
                     "newLine": true,
-                    "sm": 12,
                     "md": 12,
-                    "lg": 12
+                    "lg": 12,
+                    "xl": 12
                 },
                 "tableUdsDidsSelDev": {
                     "type": "selectSendTo",
                     "label": "Select device",
                     "jsonData": "{}",
                     "command": "getUdsDidsDevSelect",
-                    "sm": 8,
-                    "md": 6,
-                    "lg": 4,
                     "default": "Select device",
                     "hidden": "!_alive",
                     "alsoDependsOn": ["udsSchedule","tableUdsDevices"],
@@ -248,17 +263,17 @@
                     "useNative": true,
                     "showProcess": true,
                     "newLine": true,
-                    "sm": 12,
                     "md": 12,
-                    "lg": 12
+                    "lg": 12,
+                    "xl": 12
                 },
 
                 "tableUdsDids": {
                     "type": "table",
                     "newLine": true,
-                    "sm": 12,
                     "md": 12,
                     "lg": 12,
+                    "xl": 12,
                     "label": "List of device specific datapoints",
                     "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) ) { return false; }; return true;",
                     "noDelete": true,
@@ -313,6 +328,11 @@
         },
         "tabCanAdapterExt": {
             "type": "panel",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
             "label": "Assignments to UDS CAN Adapter",
             "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length == 0)) { return true; } else {return false; }",
             "items": {
@@ -417,9 +437,9 @@
                 "tableCollectCanExt": {
                     "type": "table",
                     "newLine": true,
-                    "sm": 12,
                     "md": 12,
                     "lg": 12,
+                    "xl": 12,
                     "label": "",
                     "hidden": "if (data.tableUdsDevices) {for(let i=0; i<data.tableUdsDevices.length; i++){if (data.tableUdsDevices[i].collectCanId != '') return false;}; return true;} else {return true;}",
                     "showSecondAddAt": 5,
@@ -474,9 +494,9 @@
                 "tableUdsSchedules": {
                     "type": "table",
                     "newLine": true,
-                    "sm": 12,
                     "md": 12,
                     "lg": 12,
+                    "xl": 12,
                     "label": "",
                     "showSecondAddAt": 5,
                     "items": [
@@ -541,6 +561,11 @@
         },
         "tabCanAdapterInt": {
             "type": "panel",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
             "label": "Assignments to second CAN Adapter",
             "hidden": "return !data.canIntActivated;",
             "items": {
@@ -577,9 +602,9 @@
                 "tableCollectCanInt": {
                     "type": "table",
                     "newLine": true,
-                    "sm": 12,
                     "md": 12,
                     "lg": 12,
+                    "xl": 12,
                     "label": "",
                     "showSecondAddAt": 5,
 
