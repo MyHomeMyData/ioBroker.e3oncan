@@ -129,7 +129,7 @@ Yes, that is possible under certain conditions:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.10.1 (2024-10-20)
 * (MyHomeMyData) Fixes for issue #79 (improvements for usability on mobile devices)
 
 ### 0.10.0 (2024-10-14)
