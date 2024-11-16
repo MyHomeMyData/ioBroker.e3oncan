@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.10.1",
+    "version": "0.10.2",
     "news": {
+      "0.10.2": {
+        "en": "Update of list of data points for E3 devices to version 20241115\nFixes for issue #81 (added missing size attributes)",
+        "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20241115\nFixes für Issue #81 (fehlende Größenattribute ergänzt)",
+        "ru": "Обновление списка точек данных для устройств E3 к версии 20241115\nИсправления для выпуска #81",
+        "pt": "Atualização da lista de pontos de dados para dispositivos E3 para a versão 20241115\nCorrige o problema #81 (acrescido de atributos de tamanho ausente)",
+        "nl": "Update van de lijst van gegevenspunten voor E3-apparaten naar versie 20241115\nFixes voor probleem #81 (toegevoegd ontbrekende grootte attributen)",
+        "fr": "Mise à jour de la liste des points de données pour les appareils E3 vers la version 20241115\nCorrections pour l'émission #81 (attributs de taille manquants ajoutés)",
+        "it": "Aggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20241115\nFissi per numero #81 (attributi di dimensione mancante aggiunti)",
+        "es": "Actualización de la lista de puntos de datos para dispositivos E3 a la versión 20241115\nArreglos para el número #81 (atributos de tamaño perdido agregado)",
+        "pl": "Aktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20241115\nFixes for issue # 81 (added brakujący rozmiar atrybutów)",
+        "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20241115\nВиправлення для випуску #81 (відсутні атрибути розмірів відсутні)",
+        "zh-cn": "E3设备数据点列表更新至20241115版本\n解决第81期( 添加缺失大小属性)"
+      },
       "0.10.1": {
         "en": "Fixes for issue #79 (improvements for usability on mobile devices)",
         "de": "Fixes für Issue #79 (Verbesserungen der Usability auf mobilen Geräten)",
@@ -80,19 +93,6 @@
         "pl": "Aktualizacja zależności, poprawki oparte na numerze # 53\nAktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20240808",
         "uk": "Оновлення залежностей, виправлень на основі випуску #53\nОновлення списку точок даних для пристроїв E3 до версії 202408",
         "zh-cn": "更新依附关系,根据问题53进行修正\nE3设备数据点列表更新至20240808版本"
-      },
-      "0.9.1": {
-        "en": "Updated README, added links for description of device topology and to uses cases\nAdded info for data points 2404_BivalenceControlMode and 2831_BivalenceControlAlternativeTemperature\nUpdate of list of data points for E3 devices to version 20240505",
-        "de": "README aktualisiert, Links zur Beschreibung der Gerätetopologie und zu Anwendungsbeispielen ergänzt\nStruktur zu den Datenpunkten 2404_BivalenceControlMode und 2831_BivalenceControlAlternativeTemperature ergänzt\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20240505",
-        "ru": "Обновленный README, добавленные ссылки для описания топологии устройств и для использования случаев\nДобавлена информация для точек данных 2404_BivalenceControlMode и 2831_BivalenceControlAlternativeTemperature\nОбновление списка точек данных для устройств E3 к версии 20240505",
-        "pt": "README atualizado, links adicionados para descrição da topologia do dispositivo e para usar casos\nAdicionado info para pontos de dados 2404_BivalenceControlMode e 2831_BivalenceControlAlternativeTemperature\nAtualização da lista de pontos de dados para dispositivos E3 para a versão 20240505",
-        "nl": "Bijgewerkt README, toegevoegde links voor de beschrijving van apparaat topologie en te gebruiken gevallen\nToegevoegde info voor datapunten 2404_BivalenceControlMode en 2831_BivalenceControlAlternativeTemperature\nUpdate van de lijst van gegevenspunten voor E3-apparaten naar versie 20240505",
-        "fr": "Mise à jour du README, ajout de liens pour la description de la topologie des appareils et pour les cas d'utilisation\nAjouté info pour les points de données 2404_BivalenceControlMode et 2831_BivalenceControlAlternativeTemperature\nMise à jour de la liste des points de données pour les appareils E3 vers la version 20240505",
-        "it": "README aggiornato, link aggiunti per la descrizione della topologia del dispositivo e per usi casi\nInformazioni aggiuntive per i punti dati 2404_BivalenceControlMode e 2831_BivalenceControlAlternativeTemperature\nAggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 202405",
-        "es": "Actualizado README, añadido enlaces para descripción de la topología del dispositivo y para uso de casos\nInformación adicional para los puntos de datos 2404_BivalenceControlMode y 2831_BivalenceControlAlternativeTemperature\nActualización de la lista de puntos de datos para dispositivos E3 a la versión 20240505",
-        "pl": "Aktualizacja README, dodane linki do opisu topologii urządzenia i do zastosowań przypadków\nDodano informacje dla punktów danych 2404 _ BivaleceControlMode i 2831 _ BivaleceControlAltertiveTemperatura\nAktualizacja listy punktów danych dla urządzeń E3 do wersji 20240505",
-        "uk": "Оновлено README, додані посилання для опису топології пристрою і для використання випадків\nДодано інформацію для точок даних 2404_BivalenceControlMode та 2831_BivalenceControlAlternativeTemperature\nОновлення списку точок даних для пристроїв E3 до версії 20240505",
-        "zh-cn": "更新了 README, 添加了描述设备地形的链接并使用了大小写\n数据点2404_Bivalence Control Mode 和 2831_Bivalence Control AlternativeTemperature 添加信息\nE3设备数据点列表更新至20240505版本"
       }
     },
     "titleLang": {
