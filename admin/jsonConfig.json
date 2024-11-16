@@ -49,7 +49,7 @@
                     "newLine": true
                 },
                 "canExtName": {
-                    "xs": 2,
+                    "xs": 12,
                     "sm": 2,
                     "md": 2,
                     "lg": 2,
@@ -60,7 +60,7 @@
                     "newLine": false
                 },
                 "canExtActivated": {
-                    "xs": 4,
+                    "xs": 12,
                     "sm": 4,
                     "md": 4,
                     "lg": 4,
@@ -78,7 +78,7 @@
                     "newLine": true
                 },
                 "canIntName": {
-                    "xs": 2,
+                    "xs": 12,
                     "sm": 2,
                     "md": 2,
                     "lg": 2,
@@ -89,7 +89,7 @@
                     "newLine": false
                 },
                "canIntActivated": {
-                    "xs": 4,
+                    "xs": 12,
                     "sm": 4,
                     "md": 4,
                     "lg": 4,
@@ -195,6 +195,8 @@
                     "useNative": true,
                     "hidden": "!_alive",
                     "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
                     "md": 12,
                     "lg": 12,
                     "xl": 12
@@ -204,6 +206,8 @@
                     "type": "table",
                     "uniqueColumns": ["devStateName"],
                     "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
                     "md": 12,
                     "lg": 12,
                     "xl": 12,
@@ -298,11 +302,18 @@
                     },
                     "hidden": "!_alive",
                     "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
                     "md": 12,
                     "lg": 12,
                     "xl": 12
                 },
                 "tableUdsDidsSelDev": {
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "type": "selectSendTo",
                     "label": "Select device",
                     "jsonData": "{}",
@@ -323,6 +334,8 @@
                     "useNative": true,
                     "showProcess": true,
                     "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
                     "md": 12,
                     "lg": 12,
                     "xl": 12
@@ -331,6 +344,8 @@
                 "tableUdsDids": {
                     "type": "table",
                     "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
                     "md": 12,
                     "lg": 12,
                     "xl": 12,
@@ -443,7 +458,7 @@
                     "newLine": true
                 },
                 "e380Name": {
-                    "xs": 2,
+                    "xs": 12,
                     "sm": 2,
                     "md": 2,
                     "lg": 2,
@@ -455,7 +470,7 @@
                     "newLine": false
                 },
                 "e380Delay": {
-                    "xs": 2,
+                    "xs": 12,
                     "sm": 2,
                     "md": 2,
                     "lg": 2,
@@ -468,7 +483,7 @@
                     "newLine": false
                 },
                 "e3100cbActive": {
-                    "xs": 2,
+                    "xs": 12,
                     "sm": 2,
                     "md": 2,
                     "lg": 2,
@@ -480,7 +495,7 @@
                     "newLine": true
                 },
                 "e3100cbName": {
-                    "xs": 2,
+                    "xs": 12,
                     "sm": 2,
                     "md": 2,
                     "lg": 2,
@@ -492,7 +507,7 @@
                     "newLine": false
                 },
                 "e3100cbDelay": {
-                    "xs": 2,
+                    "xs": 12,
                     "sm": 2,
                     "md": 2,
                     "lg": 2,
@@ -552,6 +567,8 @@
                 "tableCollectCanExt": {
                     "type": "table",
                     "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
                     "md": 12,
                     "lg": 12,
                     "xl": 12,
@@ -609,6 +626,8 @@
                 "tableUdsSchedules": {
                     "type": "table",
                     "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
                     "md": 12,
                     "lg": 12,
                     "xl": 12,
@@ -727,6 +746,8 @@
                 "tableCollectCanInt": {
                     "type": "table",
                     "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
                     "md": 12,
                     "lg": 12,
                     "xl": 12,
