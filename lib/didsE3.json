@@ -8420,10 +8420,29 @@
     }
   },
   "873": {
-    "codec": "RawCodec",
+    "codec": "O3EComplexType",
     "len": 2,
     "id": "LegionellaProtectionActivation",
-    "args": {}
+    "args": {
+      "subTypes": [
+        {
+          "codec": "O3EByteVal",
+          "len": 1,
+          "id": "Mode",
+          "args": {
+            "offset": 0
+          }
+        },
+        {
+          "codec": "O3EByteVal",
+          "len": 1,
+          "id": "State",
+          "args": {
+            "offset": 0
+          }
+        }
+      ]
+    }
   },
   "874": {
     "codec": "O3EInt16",
@@ -22894,10 +22913,14 @@
     "args": {}
   },
   "1799": {
-    "codec": "RawCodec",
+    "codec": "O3EInt16",
     "len": 2,
     "id": "PrimaryCircuitCurrentTemperatureSetpoint",
-    "args": {}
+    "args": {
+      "scale": 10,
+      "signed": true,
+      "offset": 0
+    }
   },
   "1800": {
     "codec": "RawCodec",
@@ -28756,7 +28779,7 @@
         {
           "codec": "O3EInt32",
           "len": 4,
-          "id": "Week",
+          "id": "Past7Days",
           "args": {
             "scale": 10,
             "signed": false,
@@ -29739,7 +29762,7 @@
         {
           "codec": "O3EInt32",
           "len": 4,
-          "id": "Week",
+          "id": "Past7Days",
           "args": {
             "scale": 10,
             "signed": false,
@@ -30722,7 +30745,7 @@
         {
           "codec": "O3EInt32",
           "len": 4,
-          "id": "Week",
+          "id": "Past7Days",
           "args": {
             "scale": 10,
             "signed": false,
@@ -31575,16 +31598,98 @@
     "args": {}
   },
   "2612": {
-    "codec": "RawCodec",
+    "codec": "O3EComplexType",
     "len": 7,
     "id": "PrimarySourceCommonSettingsHeating",
-    "args": {}
+    "args": {
+      "subTypes": [
+        {
+          "codec": "O3EByteVal",
+          "len": 1,
+          "id": "Mode",
+          "args": {
+            "offset": 0
+          }
+        },
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "MaxFanSpeed",
+          "args": {
+            "scale": 10.0,
+            "signed": false,
+            "offset": 0
+          }
+        },
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "DefaultFanSpeed",
+          "args": {
+            "scale": 10.0,
+            "signed": false,
+            "offset": 0
+          }
+        },
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "MinFanSpeed",
+          "args": {
+            "scale": 10.0,
+            "signed": false,
+            "offset": 0
+          }
+        }
+      ]
+    }
   },
   "2613": {
-    "codec": "RawCodec",
+    "codec": "O3EComplexType",
     "len": 7,
     "id": "PrimarySourceCommonSettingsCooling",
-    "args": {}
+    "args": {
+      "subTypes": [
+        {
+          "codec": "O3EByteVal",
+          "len": 1,
+          "id": "Mode",
+          "args": {
+            "offset": 0
+          }
+        },
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "MaxFanSpeed",
+          "args": {
+            "scale": 10.0,
+            "signed": false,
+            "offset": 0
+          }
+        },
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "DefaultFanSpeed",
+          "args": {
+            "scale": 10.0,
+            "signed": false,
+            "offset": 0
+          }
+        },
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "MinFanSpeed",
+          "args": {
+            "scale": 10.0,
+            "signed": false,
+            "offset": 0
+          }
+        }
+      ]
+    }
   },
   "2621": {
     "codec": "O3EInt16",
@@ -32429,10 +32534,14 @@
     }
   },
   "2853": {
-    "codec": "RawCodec",
+    "codec": "O3EInt16",
     "len": 2,
     "id": "ExternalHeaterTimeIntegralThershold",
-    "args": {}
+    "args": {
+      "scale": 10,
+      "signed": false,
+      "offset": 0
+    }
   },
   "2855": {
     "codec": "O3EComplexType",
@@ -34199,5 +34308,5 @@
       ]
     }
   },
-  "Version": "20240916"
+  "Version": "20241115"
 }
