@@ -619,6 +619,11 @@
                 },
 
                 "introTableUds": {
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "type": "staticText",
                     "text": "Specify schedules for devices, press '+' to begin.",
                     "newLine": true
@@ -710,6 +715,11 @@
                 },
 
                 "introTableColInt": {
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "type": "staticText",
                     "text": "Devices for collecting data. No writing to CAN bus. Press '+' to add device.",
                     "newLine": true
