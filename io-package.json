@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.10.2",
+    "version": "0.10.3",
     "news": {
+      "0.10.3": {
+        "en": "Update of list of data points for E3 devices to version 20241125",
+        "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20241125",
+        "ru": "Обновление списка точек данных для устройств E3 к версии 20241125",
+        "pt": "Atualização da lista de pontos de dados para dispositivos E3 para a versão 20241125",
+        "nl": "Update van de lijst van gegevenspunten voor E3-apparaten naar versie 20241125",
+        "fr": "Mise à jour de la liste des points de données pour les appareils E3 vers la version 20241125",
+        "it": "Aggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20241125",
+        "es": "Actualización de la lista de puntos de datos para dispositivos E3 a la versión 20241125",
+        "pl": "Aktualizacja listy punktów danych dla urządzeń E3 do wersji 20241125",
+        "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20241125",
+        "zh-cn": "E3设备数据点列表更新为20241125版本"
+      },
       "0.10.2": {
         "en": "Update of list of data points for E3 devices to version 20241115\nFixes for issue #81 (added missing size attributes)",
         "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20241115\nFixes für Issue #81 (fehlende Größenattribute ergänzt)",
@@ -80,19 +93,6 @@
         "pl": "Bugfix: Aktualizacja statystyk komunikacyjnych UDS, nawet w przypadku trwałych zdarzeń timeout\nWyłączony sinon powinien mieć interfejs\nFixes based on issues # 55, # 56\nBugfix: Czas delta między harmonogramami worków UDS nie działał prawidłowo",
         "uk": "Помилки: Оновлення статистики зв'язку UDS, навіть у випадку наполегливих подій\nВимкнений синон повинен інтерфейс\nВиправлення на основі питань #55,#56\nПомилки: Час дельта між графіками роботи УДС не працює належним чином",
         "zh-cn": "错误修正 : 更新UDS通信统计数据,即使在持续超时的情况下也是如此\n已禁用的西农应接口\n根据问题55、56\n错误修正 : UDS工作时间表之间的时间三角洲工作不当"
-      },
-      "0.9.2": {
-        "en": "Update of dependencies, fixes based on issue #53\nUpdate of list of data points for E3 devices to version 20240808",
-        "de": "Aktualisierung von Abhängigkeiten, Korrekturen basierend auf Issue #53\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20240808",
-        "ru": "Обновление зависимостей, исправлений на основе вопроса #53\nОбновление списка точек данных для устройств E3 к версии 20240808",
-        "pt": "Atualização de dependências, correções com base no problema #53\nAtualização da lista de pontos de dados para dispositivos E3 para a versão 20240808",
-        "nl": "Update van afhankelijkheden, fixes op basis van probleem #53\nUpdate van de lijst van gegevenspunten voor E3-apparaten naar versie 20240808",
-        "fr": "Mise à jour des dépendances, corrections basées sur le numéro 53\nMise à jour de la liste des points de données pour les appareils E3 vers la version 20240808",
-        "it": "Aggiornamento delle dipendenze, correzioni in base al numero #53\nAggiornamento dell'elenco dei punti dati per i dispositivi E3 alla versione 20240808",
-        "es": "Actualización de dependencias, correcciones basadas en el número #53\nActualización de la lista de puntos de datos para dispositivos E3 a la versión 202408",
-        "pl": "Aktualizacja zależności, poprawki oparte na numerze # 53\nAktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20240808",
-        "uk": "Оновлення залежностей, виправлень на основі випуску #53\nОновлення списку точок даних для пристроїв E3 до версії 202408",
-        "zh-cn": "更新依附关系,根据问题53进行修正\nE3设备数据点列表更新至20240808版本"
       }
     },
     "titleLang": {
