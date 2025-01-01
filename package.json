@@ -27,7 +27,7 @@
   "dependencies": {
     "@iobroker/adapter-core": "^3.2.2",
     "Buffer": "^0.0.0",
-    "serialport": "^12.0.0",
+    "serialport": "^13.0.0",
     "socketcan": "^4.0.5"
   },
   "devDependencies": {
