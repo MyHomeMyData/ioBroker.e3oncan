@@ -134,7 +134,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.10.5 (2025-02-18)
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20250217
 * (MyHomeMyData) Updated dependencies according to issues #101 and #108
 
