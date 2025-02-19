@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.10.5",
+    "version": "0.10.6",
     "news": {
+      "0.10.6": {
+        "en": "Added missing enum info for data point 2850",
+        "de": "Fehlende enum info für Datenpunkt 2850 ergänzt",
+        "ru": "Добавить недостающую информацию о энуме для точки данных 2850",
+        "pt": "Adicionado falta enum info para data point 2850",
+        "nl": "Toegevoegd ontbrekende enum info voor datapunt 2850",
+        "fr": "Ajout d'informations manquantes pour le point de données 2850",
+        "it": "Aggiunto mancante enum info per data point 2850",
+        "es": "Información adicional faltante enum para el punto de datos 2850",
+        "pl": "Dodano brak enum info dla danych pkt 2850",
+        "uk": "Додано інформацію про відсутність енму для точки даних 2850",
+        "zh-cn": "数据点 2850 添加缺失的 enum 信息"
+      },
       "0.10.5": {
         "en": "Update of list of data points for E3 devices to version 20250217\nUpdated dependencies according to issues #101 and #108",
         "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20250217\nAktualisierte Abhängigkeiten gemäß den Ausgaben #101 und #108",
@@ -80,19 +93,6 @@
         "pl": "Dodano rozszerzone wsparcie dla zapisu punktów danych.\nZmieniono nazwę adaptera CAN.",
         "uk": "Додано розширену підтримку для написання точок даних.\nЗмінений намін для адаптера CAN.",
         "zh-cn": "添加对写入数据点的扩展支持 .\nCAN适配器更改命名."
-      },
-      "0.9.5": {
-        "en": "Update of list of data points for E3 devices to version 20240916",
-        "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20240916",
-        "ru": "Обновление списка точек данных для устройств E3 к версии 20240916",
-        "pt": "Atualização da lista de pontos de dados para dispositivos E3 para a versão 20240916",
-        "nl": "Update van de lijst van gegevenspunten voor E3-apparaten naar versie 20240916",
-        "fr": "Mise à jour de la liste des points de données pour les appareils E3 vers la version 20240916",
-        "it": "Aggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20240916",
-        "es": "Actualización de la lista de puntos de datos para dispositivos E3 a la versión 20240916",
-        "pl": "Aktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20240916",
-        "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20240916",
-        "zh-cn": "E3设备数据点列表更新至20240916版本"
       }
     },
     "titleLang": {
