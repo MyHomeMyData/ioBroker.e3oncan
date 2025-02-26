@@ -134,7 +134,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.10.7 (2025-02-26)
 * (MyHomeMyData) Updated dependencies according to issue #111
 
 ### 0.10.6 (2025-02-19)

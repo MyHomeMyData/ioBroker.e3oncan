@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.10.6",
+    "version": "0.10.7",
     "news": {
+      "0.10.7": {
+        "en": "Updated dependencies according to issue #111",
+        "de": "Abhängigkeiten aktualisiert gemäß Issue #111",
+        "ru": "Обновленные зависимости по номеру #111",
+        "pt": "Dependências atualizadas de acordo com a edição #111",
+        "nl": "Bijgewerkt afhankelijkheden volgens probleem #111",
+        "fr": "Dépendances actualisées selon le numéro 11",
+        "it": "Dipendenze aggiornate secondo il numero #111",
+        "es": "Dependencias actualizadas según el número #111",
+        "pl": "Aktualizacja zależności według wydania # 111",
+        "uk": "Оновлені залежності за випуском #111",
+        "zh-cn": "根据问题111更新的依赖关系"
+      },
       "0.10.6": {
         "en": "Added missing enum info for data point 2850",
         "de": "Fehlende enum info für Datenpunkt 2850 ergänzt",
@@ -80,19 +93,6 @@
         "pl": "Fixes for issue # 79 (upgrade for usability on mobile devices)",
         "uk": "Виправлення задачі #79 (покращення відповідальності на мобільних пристроях)",
         "zh-cn": "第79期(改进移动设备的可用性)"
-      },
-      "0.10.0": {
-        "en": "Added extended support for writing of data points.\nChanged naming for CAN adapter.",
-        "de": "Erweiterte Unterstützung für das Schreiben von Datenpunkten.\nNamensgebung für CAN-Adapter angepasst.",
-        "ru": "Добавлена расширенная поддержка для написания точек данных.\nИзменение названия для адаптера CAN.",
-        "pt": "Adicionado suporte estendido para a escrita de pontos de dados.\nNomeação alterada para adaptador CAN.",
-        "nl": "Toegevoegd uitgebreide ondersteuning voor het schrijven van datapunten.\nVeranderde naamgeving voor CAN-adapter.",
-        "fr": "Ajout d'un support étendu pour la rédaction de points de données.\nChangement de nom pour l'adaptateur CAN.",
-        "it": "Aggiunto il supporto esteso per la scrittura di punti di dati.\nCambiato nome per l'adattatore CAN.",
-        "es": "Se agregó soporte extendido para la escritura de puntos de datos.\nCambio de nombre para adaptador CAN.",
-        "pl": "Dodano rozszerzone wsparcie dla zapisu punktów danych.\nZmieniono nazwę adaptera CAN.",
-        "uk": "Додано розширену підтримку для написання точок даних.\nЗмінений намін для адаптера CAN.",
-        "zh-cn": "添加对写入数据点的扩展支持 .\nCAN适配器更改命名."
       }
     },
     "titleLang": {
