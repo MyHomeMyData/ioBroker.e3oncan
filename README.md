@@ -134,6 +134,9 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Updated data point 381, refer to discussion https://github.com/open3e/open3e/discussions/212
+
 ### 0.10.7 (2025-02-26)
 * (MyHomeMyData) Updated dependencies according to issue #111
 
