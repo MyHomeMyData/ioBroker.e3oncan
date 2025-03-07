@@ -135,7 +135,9 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (MyHomeMyData) Bugfix for issue #117
 * (MyHomeMyData) Updated data point 381, refer to discussion https://github.com/open3e/open3e/discussions/212
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20250307
 
 ### 0.10.7 (2025-02-26)
 * (MyHomeMyData) Updated dependencies according to issue #111
