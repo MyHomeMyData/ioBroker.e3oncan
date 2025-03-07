@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.10.7",
+    "version": "0.10.8",
     "news": {
+      "0.10.8": {
+        "en": "Bugfix for issue #117\nUpdated data point 381, refer to discussion https://github.com/open3e/open3e/discussions/212\nUpdate of list of data points for E3 devices to version 20250307",
+        "de": "Bugfix für Issue #117\nDatenpunkt 381 aktualisiert, siehe Diskussion https://github.com/open3e/open3e/discussions/212\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20250307",
+        "ru": "Bugfix для #117\nОбновленный пункт 381 данных, ссылка на обсуждение https://github.com/open3e/open3e/discussions/212\nОбновление списка точек данных для устройств E3 до версии 20250307",
+        "pt": "Bugfix para a edição #117\nPonto de dados atualizado 381, consulte a discussão https://github.com/open3e/open3e/discussions/212\nAtualização da lista de pontos de dados para dispositivos E3 para a versão 20250307",
+        "nl": "Bugfix voor probleem #117\nBijgewerkte gegevens: par. 381. https://github.com/open3e/open3e/discussions/212\nBijwerken van de lijst van gegevenspunten voor E3-apparaten naar versie 20250307",
+        "fr": "Correction pour le numéro #117\nPoint 381 des données actualisées, voir discussion https://github.com/open3e/open3e/discussions/212\nMise à jour de la liste des points de données pour les appareils E3 vers la version 20250307",
+        "it": "Bugfix per numero #117\nData point 381 aggiornato, fare riferimento alla discussione https://github.com/open3e/open3e/discussions/212\nAggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20250307",
+        "es": "Bugfix para el número #117\nPunto de datos actualizado 381, consulte el debate https://github.com/open3e/open3e/discussions/212\nActualización de la lista de puntos de datos para dispositivos E3 a la versión 20250307",
+        "pl": "Bugfix dla wydania # 117\nZaktualizowany punkt danych 381, proszę odnieść się do dyskusji https: / / github.com / open3e / open3e / dyskussions / 212\nAktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20250307",
+        "uk": "Помилки No117\nОновлено точку даних 381, див. на обговорення https://github.com/open3e/open3e/discussions/212\nОновлення списку точок даних для пристроїв E3 до версії 20250307",
+        "zh-cn": "第117期错误修正\n更新数据点381,参见讨论. https://github.com/open3e/open3e/讨论/212\nE3设备数据点列表更新至20250307版本"
+      },
       "0.10.7": {
         "en": "Updated dependencies according to issue #111",
         "de": "Abhängigkeiten aktualisiert gemäß Issue #111",
@@ -80,19 +93,6 @@
         "pl": "Aktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20241115\nFixes for issue # 81 (added brakujący rozmiar atrybutów)",
         "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20241115\nВиправлення для випуску #81 (відсутні атрибути розмірів відсутні)",
         "zh-cn": "E3设备数据点列表更新至20241115版本\n解决第81期( 添加缺失大小属性)"
-      },
-      "0.10.1": {
-        "en": "Fixes for issue #79 (improvements for usability on mobile devices)",
-        "de": "Fixes für Issue #79 (Verbesserungen der Usability auf mobilen Geräten)",
-        "ru": "Исправления для выпуска #79 (улучшения для удобства использования на мобильных устройствах)",
-        "pt": "Correções para a edição #79 (melhores para a usabilidade em dispositivos móveis)",
-        "nl": "Fixes voor nummer #79 (verbeteringen voor bruikbaarheid op mobiele apparaten)",
-        "fr": "Corrections pour le numéro 79 (amélioration de la convivialité sur les appareils mobiles)",
-        "it": "Fissi per numero #79 (improvimenti per usabilità su dispositivi mobili)",
-        "es": "Arreglos para el número #79 (mejores para la usabilidad en dispositivos móviles)",
-        "pl": "Fixes for issue # 79 (upgrade for usability on mobile devices)",
-        "uk": "Виправлення задачі #79 (покращення відповідальності на мобільних пристроях)",
-        "zh-cn": "第79期(改进移动设备的可用性)"
       }
     },
     "titleLang": {
