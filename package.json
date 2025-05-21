@@ -22,7 +22,7 @@
     "url": "https://github.com/MyHomeMyData/ioBroker.e3oncan.git"
   },
   "engines": {
-    "node": ">= 18"
+    "node": ">= 20"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.2.3",
@@ -36,7 +36,6 @@
     "@alcalzone/release-script-plugin-manual-review": "^3.7.0",
     "@iobroker/adapter-dev": "^1.4.0",
     "@iobroker/testing": "^5.0.4",
-    "@tsconfig/node18": "^18.0.2",
     "@types/chai": "^5.2.1",
     "@types/chai-as-promised": "^8.0.2",
     "@types/mocha": "^10.0.10",
