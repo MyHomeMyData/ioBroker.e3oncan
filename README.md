@@ -135,6 +135,8 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20250422
+* (MyHomeMyData) Fixed version number of enum info
 * (MyHomeMyData) Fix for issue #125 (findings of repository checker)
 
 ### 0.10.8 (2025-03-07)
