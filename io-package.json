@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.10.8",
+    "version": "0.10.9",
     "news": {
+      "0.10.9": {
+        "en": "Update of list of data points for E3 devices to version 20250422\nFixed version number of enum info\nFix for issue #125 (findings of repository checker)",
+        "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20250422\nVersionsnummer der enum info korrigiert\nFix für Issue #125 (Ergebnisse des Repository-Checkers)",
+        "ru": "Обновление списка точек данных для устройств E3 до версии 20250422\nФиксированный номер версии enum info\nИсправление для выпуска #125 (находки проверки хранилища)",
+        "pt": "Atualização da lista de pontos de dados para dispositivos E3 para a versão 20250422\nNúmero de versão fixa de enum info\nCorrigir para o número #125 (conjuntos de verificador de repositório)",
+        "nl": "Update van de lijst van gegevenspunten voor E3-apparaten naar versie 20250422\nFixed version number of enum info\nFix voor uitgave #125 (bevindingen van repository checker)",
+        "fr": "Mise à jour de la liste des points de données pour les appareils E3 vers la version 20250422\nNuméro de version fixe d'enum info\nCorrection pour le numéro #125 (recherches du vérificateur du dépôt)",
+        "it": "Aggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20250422\nNumero di versione fisso di enum info\nRisolvere per numero #125 (finanze di repository checker)",
+        "es": "Actualización de la lista de puntos de datos para dispositivos E3 a la versión 20250422\nNúmero de versión fija de enum info\nFijación para el número #125 (definiciones de repositorio)",
+        "pl": "Aktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20250422\nPoprawiony numer wersji enum info\nFix for issue # 125 (wyniki weryfikacji repozytorium)",
+        "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20250422\nФіксована версія номеру енму\nВиправлення для випуску #125 (фінінги репозиторійного чекера)",
+        "zh-cn": "E3设备数据点列表更新至20250422版本\nEnum信息的固定版本编号\n修复第125期(查找仓库检查器)"
+      },
       "0.10.8": {
         "en": "Bugfix for issue #117\nUpdated data point 381, refer to discussion https://github.com/open3e/open3e/discussions/212\nUpdate of list of data points for E3 devices to version 20250307",
         "de": "Bugfix für Issue #117\nDatenpunkt 381 aktualisiert, siehe Diskussion https://github.com/open3e/open3e/discussions/212\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20250307",
@@ -80,19 +93,6 @@
         "pl": "Aktualizacja listy punktów danych dla urządzeń E3 do wersji 20241125",
         "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20241125",
         "zh-cn": "E3设备数据点列表更新为20241125版本"
-      },
-      "0.10.2": {
-        "en": "Update of list of data points for E3 devices to version 20241115\nFixes for issue #81 (added missing size attributes)",
-        "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20241115\nFixes für Issue #81 (fehlende Größenattribute ergänzt)",
-        "ru": "Обновление списка точек данных для устройств E3 к версии 20241115\nИсправления для выпуска #81",
-        "pt": "Atualização da lista de pontos de dados para dispositivos E3 para a versão 20241115\nCorrige o problema #81 (acrescido de atributos de tamanho ausente)",
-        "nl": "Update van de lijst van gegevenspunten voor E3-apparaten naar versie 20241115\nFixes voor probleem #81 (toegevoegd ontbrekende grootte attributen)",
-        "fr": "Mise à jour de la liste des points de données pour les appareils E3 vers la version 20241115\nCorrections pour l'émission #81 (attributs de taille manquants ajoutés)",
-        "it": "Aggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20241115\nFissi per numero #81 (attributi di dimensione mancante aggiunti)",
-        "es": "Actualización de la lista de puntos de datos para dispositivos E3 a la versión 20241115\nArreglos para el número #81 (atributos de tamaño perdido agregado)",
-        "pl": "Aktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20241115\nFixes for issue # 81 (added brakujący rozmiar atrybutów)",
-        "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20241115\nВиправлення для випуску #81 (відсутні атрибути розмірів відсутні)",
-        "zh-cn": "E3设备数据点列表更新至20241115版本\n解决第81期( 添加缺失大小属性)"
       }
     },
     "titleLang": {
