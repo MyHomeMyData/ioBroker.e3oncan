@@ -134,6 +134,10 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Fix for issue #142 (WriteByDid not working in case of specific UDS control frame)
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20250729
+
 ### 0.10.9 (2025-05-22)
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20250422
 * (MyHomeMyData) Fixed version number of enum info
