@@ -118,7 +118,7 @@ CAN-address=98: data points with odd IDs
 * In addition to open3e real time collecting of data via listening is supported.
 * Writing of data is much simpler. Just change the data in corresponding state and press Save button.
 * Exchanging data via MQTT is not neccessary. However it's of course available via configuration of data states.
-* Encoding of 64 bit integers (for writing of data) is limited to values < 2^53 (9.007.199.254.740.992). Decoding (for reading of data) is working correctly in full 64 bit range.
+* Encoding of 64 bit integers (for writing of data) is limited to values < 2^52 (4.503.599.627.370.496). Decoding (for reading of data) is working correctly in full 64 bit range.
 
 ## May open3e be used in parallel?
 Yes, that is possible under certain conditions:
@@ -138,7 +138,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Fix for issue #142 (WriteByDid not working in case of specific UDS control frame)
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20250729
-* (MyHomeMyData) Added codec for 64-bit integers. Remark: Encoding (for writing of data) is limited to values < 2^53 (9.007.199.254.740.992).
+* (MyHomeMyData) Added codec for 64-bit integers. Remark: Encoding (for writing of data) is limited to values < 2^52 (4.503.599.627.370.496).
 
 ### 0.10.9 (2025-05-22)
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20250422
