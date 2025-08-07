@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.10.9",
+    "version": "0.10.10",
     "news": {
+      "0.10.10": {
+        "en": "Fix for issue #142 (WriteByDid not working in case of specific UDS control frame)\nUpdate of list of data points for E3 devices to version 20250729\nAdded codec for 64-bit integers. Remark: Encoding (for writing of data) is limited to values < 2^52 (4.503.599.627.370.496).",
+        "de": "Fix für Issue #142 (WriteByDid funktioniert nicht bei bestimmten UDS-Frames)\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20250729\nCodec für 64-Bit-Integer hinzugefügt. Anmerkung: Die Enkodierung (zum Schreiben von Daten) ist auf Werte < 2^52 (4.503.599.627.370.496) beschränkt.",
+        "ru": "Исправление проблемы #142 (WriteByDid не работает в случае конкретной системы управления UDS)\nОбновление списка точек данных для устройств E3 до версии 20250729\nДобавлен кодек для 64-битных целых чисел. Замечание: Кодирование (для записи данных) ограничено значениями < 2^52 (4.503.599.627.370.496).",
+        "pt": "Corrigir para o problema #142 (WriteByNão funcionou no caso de um quadro de controle UDS específico)\nActualização da lista de pontos de dados para os dispositivos E3 na versão 20250729\nAdicionado codec para números inteiros de 64 bits. Observação: A codificação (para escrita de dados) é limitada a valores < 2^52 (4.503.599.627.370.496).",
+        "nl": "Fix voor probleem #142 (WriteByHeb niet gewerkt in het geval van specifieke UDS control frame)\nUpdate van de lijst van gegevenspunten voor E3-apparaten naar versie 20250729\nToegevoegd codec voor 64-bit gehele getallen. Opmerking: Codering (voor het schrijven van gegevens) is beperkt tot waarden < 2^52 (4503,599.627.370,496).",
+        "fr": "Correction pour le numéro #142 (WriteByNe fonctionne pas dans le cas d'un cadre de contrôle UDS spécifique)\nMise à jour de la liste des points de données pour les appareils E3 vers la version 20250729\nAjout du codec pour les entiers 64 bits. Remarque: Le codage (pour l'écriture des données) est limité à des valeurs < 2^52 (4.503.599.627.370.496).",
+        "it": "Risolvere per numero #142 (WriteByDid non funziona in caso di specifiche strutture di controllo UDS)\nAggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20250729\nAggiunto codec per i interi a 64 bit. Nota: La codifica (per la scrittura dei dati) è limitata ai valori < 2^52 (4.503.599.627.370.496).",
+        "es": "Fijación para el número #142 (WriteByDid no funciona en caso de marco de control UDS específico)\nActualización de la lista de puntos de datos para dispositivos E3 a la versión 20250729\nSe agregó codec para enteros de 64 bits. Observación: La codificación (para la escritura de los datos) se limita a los valores . 2^52 (4.503.599.627.370.496).",
+        "pl": "Fix for issue # 142 (WriteByDid not working in case of specific UDS control frame)\nAktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20250729\nDodano kodek dla 64- bitowych liczb całkowitych. Uwaga: Kodowanie (do zapisu danych) jest ograniczone do wartości < 2 ^ 52 (4.503.599.627.370.496).",
+        "uk": "Виправлення проблеми #142 (WriteByDid не працює в разі конкретної рамки керування UDS)\nОновлення списку точок даних для пристроїв E3 до версії 20250729\nДодано кодеку для 64-бітних цілих чисел. Примітка: Конкодування (для написання даних) обмежується значеннями < 2^52 (4.503.599.627.370.496).",
+        "zh-cn": "修复第142期( WriteBy 在特定UDS 控制框架情况下没有工作)\nE3设备数据点列表更新至20250729版本\n为64位整数添加编码器. 注:编码(用于写入数据)仅限于 < 2^52(4.503.599.627.370.496)的值."
+      },
       "0.10.9": {
         "en": "Update of list of data points for E3 devices to version 20250422\nFixed version number of enum info\nFix for issue #125 (findings of repository checker)",
         "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20250422\nVersionsnummer der enum info korrigiert\nFix für Issue #125 (Ergebnisse des Repository-Checkers)",
@@ -80,19 +93,6 @@
         "pl": "Aktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20250114",
         "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20250114",
         "zh-cn": "E3设备数据点列表更新至20250114版本"
-      },
-      "0.10.3": {
-        "en": "Update of list of data points for E3 devices to version 20241125",
-        "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20241125",
-        "ru": "Обновление списка точек данных для устройств E3 к версии 20241125",
-        "pt": "Atualização da lista de pontos de dados para dispositivos E3 para a versão 20241125",
-        "nl": "Update van de lijst van gegevenspunten voor E3-apparaten naar versie 20241125",
-        "fr": "Mise à jour de la liste des points de données pour les appareils E3 vers la version 20241125",
-        "it": "Aggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20241125",
-        "es": "Actualización de la lista de puntos de datos para dispositivos E3 a la versión 20241125",
-        "pl": "Aktualizacja listy punktów danych dla urządzeń E3 do wersji 20241125",
-        "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20241125",
-        "zh-cn": "E3设备数据点列表更新为20241125版本"
       }
     },
     "titleLang": {

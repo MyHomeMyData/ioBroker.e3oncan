@@ -135,7 +135,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.10.10 (2025-08-07)
 * (MyHomeMyData) Fix for issue #142 (WriteByDid not working in case of specific UDS control frame)
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20250729
 * (MyHomeMyData) Added codec for 64-bit integers. Remark: Encoding (for writing of data) is limited to values < 2^52 (4.503.599.627.370.496).
