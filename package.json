@@ -26,7 +26,9 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.2.3",
-    "nan": "^2.23.0",
+    "nan": ">=2.23.0",
+    "node-gyp": ">=11.4.1",
+    "xml2js": ">=0.6.2",
     "Buffer": "^0.0.0",
     "socketcan": "^4.0.6"
   },
