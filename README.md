@@ -35,7 +35,7 @@ Important parts of this adpater are based on the project [open3e](https://github
 
 A python based implementation of a pure listening approach (Collect only) using MQTT messaging is also availabe, see [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
 
-**Important hint:** Adapter is tested and working with node.js 20 and 22. node.js **24** presently is **not** supported. Furthermore, if you did an upgrade from node.js 20 to 22, most likely the adapter will fail during start up. In this case please do an `iob rebuild` on the command line. This should fix the problem. If the problem persists, pls. raise an issue.
+**Important hint:** Adapter is tested and working with node.js 20 and 22. node.js **24** presently is **not** supported. Furthermore, if you did an upgrade from node.js 20 to 22, most likely the adapter will fail during start up. In this case please stop the adapter, do an `iob rebuild` on the command line, then start the adapter. This should fix the problem. If the problem persists, pls. raise an issue.
 
 # Getting started
 
