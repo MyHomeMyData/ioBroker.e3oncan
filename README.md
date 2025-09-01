@@ -35,7 +35,7 @@ Important parts of this adpater are based on the project [open3e](https://github
 
 A python based implementation of a pure listening approach (Collect only) using MQTT messaging is also availabe, see [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
 
-**Important hint:** Adapter is tested and working with node.js 20 and 22. node.js **24** presently is **not** supported. Furthermore, if you did an upgrade from node.js 20 to 22, most likely the adapter will fail during start up. In this case please stop the adapter, do an `iob rebuild` on the command line, then start the adapter. This should fix the problem. If the problem persists, pls. raise an issue.
+**Important hint on updating of node.js:** Adapter uses so called native modules which need a rebuild when version of node.js changes. Therefore, after you did an upgrade of node.js, most likely the adapter will fail during next start up. In this case please stop the adapter, do an `iob rebuild` on the command line, then start the adapter. This should fix the problem. If the problem persists, pls. raise an issue.
 
 # Getting started
 
@@ -137,6 +137,10 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Fix for issue #152 (repository checker) and #126 (node.js 24)
+* (MyHomeMyData) Added hint to readme regarding user action after upgrading version of node.js
+
 ### 0.10.10 (2025-08-07)
 * (MyHomeMyData) Fix for issue #142 (WriteByDid not working in case of specific UDS control frame)
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20250729
