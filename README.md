@@ -140,6 +140,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Fix for issue #152 (repository checker) and #126 (node.js 24)
 * (MyHomeMyData) Added hint to readme regarding user action after upgrading version of node.js
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20250903
 
 ### 0.10.10 (2025-08-07)
 * (MyHomeMyData) Fix for issue #142 (WriteByDid not working in case of specific UDS control frame)
