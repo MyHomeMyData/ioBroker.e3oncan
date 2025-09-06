@@ -137,7 +137,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.10.11 (2025-09-06)
 * (MyHomeMyData) Fix for issue #152 (repository checker) and #126 (node.js 24)
 * (MyHomeMyData) Added hint to readme regarding user action after upgrading version of node.js
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20250903

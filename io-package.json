@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.10.10",
+    "version": "0.10.11",
     "news": {
+      "0.10.11": {
+        "en": "Fix for issue #152 (repository checker) and #126 (node.js 24)\nAdded hint to readme regarding user action after upgrading version of node.js\nUpdate of list of data points for E3 devices to version 20250903",
+        "de": "Fix für Issues #152 (Repository Checker) und #126 (node.js 24)\nHinweis im Readme ergänzt: Benutzer-Aktion notwendig nach einem Upgrade von node.js\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20250903",
+        "ru": "Исправление для выпуска #152 (проверка хранилища) и #126 (node.js 24)\nДобавлен намек на readme относительно действий пользователя после обновления версии узла. js\nОбновление списка точек данных для устройств E3 до версии 20250903",
+        "pt": "Corrigir para o número 152 (verificador de repositório) e # 126 (node.js 24)\nFoi adicionada uma dica para me ler sobre a ação do usuário após atualizar a versão do nó. js\nAtualização da lista de pontos de dados para dispositivos E3 para a versão 20250903",
+        "nl": "Fix voor probleem #152 (repository checker) en #126 (node.js 24)\nHint toegevoegd om te lezen over de actie van de gebruiker na het upgraden van de versie van node. js\nUpdate van de lijst van gegevenspunten voor E3-apparaten naar versie 20250903",
+        "fr": "Correction pour l'émission #152 (vérificateur de dépôt) et #126 (node.js 24)\nAjout d'un indice pour lire l'action de l'utilisateur après la mise à jour de la version du nœud. js\nMise à jour de la liste des points de données pour les appareils E3 vers la version 20250903",
+        "it": "Fissa per numero #152 (repository checker) e #126 (node.js 24)\nAggiunto suggerimento di lettura per quanto riguarda l'azione dell'utente dopo l'aggiornamento versione di nodo. j\nAggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20250903",
+        "es": "Corrección para el número #152 (repositorio) y #126 (node.js 24)\nSe agregó un toque para leerme respecto a la acción del usuario después de actualizar la versión del nodo. js\nActualización de la lista de puntos de datos para dispositivos E3 a la versión 20250903",
+        "pl": "Poprawiono dla wydania # 152 (sprawdzacz repozytorium) i # 126 (node.js 24)\nDodano podpowiedź do odczytu działania użytkownika po aktualizacji wersji węzła. js\nAktualizacja listy punktów danych dla urządzeń E3 do wersji 20250903",
+        "uk": "Виправлення для випуску #152 (репозиторійний чекер) та #126 (node.js 24)\nДодана підказка для читання про дію користувача після оновлення версії вузла. свінгери\nОновлення списку точок даних для пристроїв E3 до версії 20250903",
+        "zh-cn": "修复第152期(仓库检查器)和第126期(节点24)\n在节点升级版本后添加了读取关于用户动作的提示 。 页:1\nE3设备数据点列表更新至版本20250903"
+      },
       "0.10.10": {
         "en": "Fix for issue #142 (WriteByDid not working in case of specific UDS control frame)\nUpdate of list of data points for E3 devices to version 20250729\nAdded codec for 64-bit integers. Remark: Encoding (for writing of data) is limited to values < 2^52 (4.503.599.627.370.496).",
         "de": "Fix für Issue #142 (WriteByDid funktioniert nicht bei bestimmten UDS-Frames)\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20250729\nCodec für 64-Bit-Integer hinzugefügt. Anmerkung: Die Enkodierung (zum Schreiben von Daten) ist auf Werte < 2^52 (4.503.599.627.370.496) beschränkt.",
@@ -80,19 +93,6 @@
         "pl": "Aktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20250217\nAktualizacja zależności w zależności od problemów # 101 i # 108",
         "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20250217\nОновлені залежності за проблемами #101 і #108",
         "zh-cn": "E3设备数据点列表更新至20250217版本\n根据问题101和108更新的依赖关系"
-      },
-      "0.10.4": {
-        "en": "Update of list of data points for E3 devices to version 20250114",
-        "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20250114",
-        "ru": "Обновление списка точек данных для устройств E3 к версии 20250114",
-        "pt": "Atualização da lista de pontos de dados para dispositivos E3 para a versão 20250114",
-        "nl": "Update van de lijst van gegevenspunten voor E3-apparaten naar versie 20250114",
-        "fr": "Mise à jour de la liste des points de données pour les appareils E3 vers la version 20250114",
-        "it": "Aggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20250114",
-        "es": "Actualización de la lista de puntos de datos para dispositivos E3 a la versión 20250114",
-        "pl": "Aktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20250114",
-        "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20250114",
-        "zh-cn": "E3设备数据点列表更新至20250114版本"
       }
     },
     "titleLang": {
