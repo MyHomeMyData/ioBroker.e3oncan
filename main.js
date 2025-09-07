@@ -91,9 +91,9 @@ class E3oncan extends utils.Adapter {
 
         // Collect known devices adresses:
         for (const dev of Object.values(this.config.tableUdsDevices)) {
-            // @ts-ignore
+            // @ts-expect-error AdapterConfig
             this.udsDevAddrs.push(dev.devAddr);
-            // @ts-ignore
+            // @ts-expect-error AdapterConfig
             this.udsDevStateNames.push(dev.devStateName);
         }
 
@@ -110,12 +110,12 @@ class E3oncan extends utils.Adapter {
         // Setup external CAN bus if required
         // ==================================
 
-        // @ts-ignore
+        // @ts-expect-error AdapterConfig
         if (this.config.canExtActivated) {
             this.cntCanConnDesired++;
-            // @ts-ignore
             [this.channelExt, this.channelExtName] = await this.connectToCan(
                 this.channelExt,
+                // @ts-expect-error AdapterConfig
                 this.config.canExtName,
                 this.onCanMsgExt,
                 this.onCanExtStopped,
@@ -125,12 +125,12 @@ class E3oncan extends utils.Adapter {
         // Setup internal CAN bus if required
         // ==================================
 
-        // @ts-ignore
+        // @ts-expect-error AdapterConfig
         if (this.config.canIntActivated) {
             this.cntCanConnDesired++;
-            // @ts-ignore
             [this.channelInt, this.channelIntName] = await this.connectToCan(
                 this.channelInt,
+                // @ts-expect-error AdapterConfig
                 this.config.canIntName,
                 this.onCanMsgInt,
                 this.onCanIntStopped,
@@ -153,12 +153,12 @@ class E3oncan extends utils.Adapter {
         }
 
         // Setup all configured devices for collect:
-        // @ts-ignore
         if (this.channelExt) {
+            // @ts-expect-error AdapterConfig
             await this.setupE3CollectWorkers(this.config.tableCollectCanExt, this.E3CollectExt, this.channelExt);
         }
-        // @ts-ignore
         if (this.channelInt) {
+            // @ts-expect-error AdapterConfig
             await this.setupE3CollectWorkers(this.config.tableCollectCanInt, this.E3CollectInt, this.channelInt);
         }
 
@@ -451,8 +451,8 @@ class E3oncan extends utils.Adapter {
         if (conf && conf.length > 0) {
             for (const workerConf of Object.values(conf)) {
                 if (workerConf.collectActive) {
-                    // @ts-ignore
                     const devInfo = this.config.tableUdsDevices.filter(
+                        // @ts-expect-error AdapterConfig
                         item => item.collectCanId == workerConf.collectCanId,
                     );
                     if (devInfo.length > 0) {
@@ -480,14 +480,14 @@ class E3oncan extends utils.Adapter {
         // Create an UDS worker for each device
         // This is to allow writing of data points even when no schedule for reading is defined
         for (const dev of Object.values(this.config.tableUdsDevices)) {
-            // @ts-ignore
+            // @ts-expect-error AdapterConfig
             const devTxAddr = Number(dev.devAddr);
             const devRxAddr = devTxAddr + 16;
-            // @ts-ignore
+            // @ts-expect-error AdapterConfig
             this.log.silly(`New UDS worker on ${String(dev.devStateName)}`);
             this.E3UdsWorkers[devRxAddr] = new uds.uds({
                 canID: devTxAddr,
-                // @ts-ignore
+                // @ts-expect-error AdapterConfig
                 stateBase: dev.devStateName,
                 device: 'common',
                 delay: 0,
@@ -497,9 +497,9 @@ class E3oncan extends utils.Adapter {
             });
             await this.E3UdsWorkers[devRxAddr].initStates(this, 'standby');
         }
-        // @ts-ignore
+        // @ts-expect-error AdapterConfig
         if (this.config.tableUdsSchedules && this.config.tableUdsSchedules.length > 0) {
-            // @ts-ignore
+            // @ts-expect-error AdapterConfig
             for (const dev of Object.values(this.config.tableUdsSchedules)) {
                 if (dev.udsScheduleActive) {
                     const devTxAddr = Number(dev.udsSelectDevAddr);
@@ -565,9 +565,9 @@ class E3oncan extends utils.Adapter {
             }
 
             // Stop CAN communication:
-            // @ts-ignore
+            // @ts-expect-error AdapterConfig
             this.disconnectFromCan(this.channelExt, this.config.canExtName);
-            // @ts-ignore
+            // @ts-expect-error AdapterConfig
             this.disconnectFromCan(this.channelInt, this.config.canIntName);
             this.setState('info.connection', false, true);
 
@@ -587,7 +587,6 @@ class E3oncan extends utils.Adapter {
     //  * @param {string} id
     //  * @param {ioBroker.Object | null | undefined} obj
     //  */
-    // @ts-ignore
     /*
     onObjectChange(id, obj) {
         if (obj) {
@@ -777,9 +776,10 @@ class E3oncan extends utils.Adapter {
             if (obj.command === 'getUdsDidsDevSelect') {
                 if (obj.callback) {
                     this.log.silly(`Received data - ${JSON.stringify(obj)}`);
-                    // @ts-ignore
                     const selUdsDevices = this.config.tableUdsDevices.map(item => ({
+                        // @ts-expect-error AdapterConfig
                         label: item.devStateName,
+                        // @ts-expect-error AdapterConfig
                         value: item.devStateName,
                     }));
                     await this.log.silly(`Data to send - ${JSON.stringify(selUdsDevices)}`);
