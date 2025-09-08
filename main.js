@@ -28,7 +28,7 @@ const udsScan = require('./lib/udsScan');
 
 class E3oncan extends utils.Adapter {
     /**
-     * @param {Partial<utils.AdapterOptions>} [options]
+     * @param {object} options  Adapter options
      */
     constructor(options) {
         super({
@@ -521,7 +521,7 @@ class E3oncan extends utils.Adapter {
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
      *
-     * @param {() => void} callback
+     * @param {object} callback Callback
      */
     async onUnload(callback) {
         try {
@@ -602,8 +602,8 @@ class E3oncan extends utils.Adapter {
     /**
      * Is called if a subscribed state changes
      *
-     * @param {string} id
-     * @param {ioBroker.State | null | undefined} state
+     * @param {string} id   State id
+     * @param {ioBroker.State | null | undefined} state State
      */
     onStateChange(id, state) {
         if (state && !state.ack) {
@@ -741,7 +741,7 @@ class E3oncan extends utils.Adapter {
                     this.log.silly(`Received data - ${JSON.stringify(obj)}`);
                     if (obj.message && this.udsDevStateNames.includes(obj.message)) {
                         const udsDids = new storage.storageDids({ stateBase: obj.message, device: obj.message });
-                        await udsDids.readKnownDids(this);
+                        await udsDids.readKnownDids(this, 'udsDidScan');
                         const udsDidsTable = [];
                         if (udsDids.didsDevSpecAvail) {
                             for (const [did, item] of Object.entries(udsDids.didsDictDevCom)) {
@@ -842,10 +842,10 @@ class E3oncan extends utils.Adapter {
 if (require.main !== module) {
     // Export the constructor in compact mode
     /**
-     * @param {Partial<utils.AdapterOptions>} [options]
+     * @param {object} options  Adapter options
      */
     module.exports = options => new E3oncan(options);
 } else {
     // otherwise start the instance directly
-    new E3oncan();
+    new E3oncan({});
 }
