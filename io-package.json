@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.10.11",
+    "version": "0.10.12",
     "news": {
+      "0.10.12": {
+        "en": "Migration to ESLint 9, refer to issues #141 and #152",
+        "de": "Migration nach ESLint 9, siehe Issues #141 und #152.",
+        "ru": "Миграция на ESLint 9, см. проблемы #141 и #152",
+        "pt": "Migração para o ESLint 9, consulte as issues #141 e #152.",
+        "nl": "Migratie naar ESLint 9, zie issues #141 en #152",
+        "fr": "Migration vers ESLint 9, se référer aux problèmes #141 et #152",
+        "it": "Migrazione a ESLint 9, fare riferimento alle issue #141 e #152",
+        "es": "Migración a ESLint 9, consultar los problemas #141 y #152",
+        "pl": "Migracja do ESLint 9, odniesienie do problemów #141 i #152",
+        "uk": "Міграція до ESLint 9, дивіться завдання #141 та #152",
+        "zh-cn": "迁移至 ESLint 9，请参考问题＃141和＃152."
+      },
       "0.10.11": {
         "en": "Fix for issue #152 (repository checker) and #126 (node.js 24)\nAdded hint to readme regarding user action after upgrading version of node.js\nUpdate of list of data points for E3 devices to version 20250903",
         "de": "Fix für Issues #152 (Repository Checker) und #126 (node.js 24)\nHinweis im Readme ergänzt: Benutzer-Aktion notwendig nach einem Upgrade von node.js\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20250903",
@@ -80,19 +93,6 @@
         "pl": "Dodano brak enum info dla danych pkt 2850",
         "uk": "Додано інформацію про відсутність енму для точки даних 2850",
         "zh-cn": "数据点 2850 添加缺失的 enum 信息"
-      },
-      "0.10.5": {
-        "en": "Update of list of data points for E3 devices to version 20250217\nUpdated dependencies according to issues #101 and #108",
-        "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20250217\nAktualisierte Abhängigkeiten gemäß den Ausgaben #101 und #108",
-        "ru": "Обновление списка точек данных для устройств E3 к версии 20250217\nОбновленные зависимости согласно вопросам #101 и #108",
-        "pt": "Atualização da lista de pontos de dados para dispositivos E3 para a versão 20250217\nDependências atualizadas de acordo com as questões #101 e #108",
-        "nl": "Update van de lijst van gegevenspunten voor E3-apparaten naar versie 20250217\nBijgewerkt afhankelijkheden volgens problemen #101 en #108",
-        "fr": "Mise à jour de la liste des points de données pour les appareils E3 vers la version 20250217\nDépendances actualisées selon les numéros 011 et 108",
-        "it": "Aggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20250217\nDipendenze aggiornate secondo i numeri #101 e #108",
-        "es": "Actualización de la lista de puntos de datos para dispositivos E3 a la versión 20250217\nDependencias actualizadas según los problemas #101 y #108",
-        "pl": "Aktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20250217\nAktualizacja zależności w zależności od problemów # 101 i # 108",
-        "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20250217\nОновлені залежності за проблемами #101 і #108",
-        "zh-cn": "E3设备数据点列表更新至20250217版本\n根据问题101和108更新的依赖关系"
       }
     },
     "titleLang": {

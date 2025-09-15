@@ -1,6 +1,6 @@
 {
   "name": "iobroker.e3oncan",
-  "version": "0.10.11",
+  "version": "0.10.12",
   "description": "Collect data on CAN bus for Viessmann E3 devices, e.g. Vitocal, Vitocharge, Energy Meters E380CA and E3100CB",
   "author": {
     "name": "Juergen",
