@@ -10,6 +10,9 @@ nbproject
 # npm package files
 iobroker.*.tgz
 
+# npm related data files
+check_ctrl_infect.all
+
 Thumbs.db
 
 # i18n intermediate files
