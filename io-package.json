@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.10.12",
+    "version": "0.10.13",
     "news": {
+      "0.10.13": {
+        "en": "Fix for issue #162",
+        "de": "Fix für Issue #162",
+        "ru": "Исправление проблемы #162",
+        "pt": "Corrigir para a edição #162",
+        "nl": "Fix voor probleem #162",
+        "fr": "Correction pour le numéro #162",
+        "it": "Risolvere il numero #162",
+        "es": "Corrección para el número #162",
+        "pl": "Napraw dla wydania # 162",
+        "uk": "Виправлення для випуску #162",
+        "zh-cn": "修复第162期"
+      },
       "0.10.12": {
         "en": "Migration to ESLint 9, refer to issues #141 and #152",
         "de": "Migration nach ESLint 9, siehe Issues #141 und #152.",
@@ -80,19 +93,6 @@
         "pl": "Aktualizacja zależności według wydania # 111",
         "uk": "Оновлені залежності за випуском #111",
         "zh-cn": "根据问题111更新的依赖关系"
-      },
-      "0.10.6": {
-        "en": "Added missing enum info for data point 2850",
-        "de": "Fehlende enum info für Datenpunkt 2850 ergänzt",
-        "ru": "Добавить недостающую информацию о энуме для точки данных 2850",
-        "pt": "Adicionado falta enum info para data point 2850",
-        "nl": "Toegevoegd ontbrekende enum info voor datapunt 2850",
-        "fr": "Ajout d'informations manquantes pour le point de données 2850",
-        "it": "Aggiunto mancante enum info per data point 2850",
-        "es": "Información adicional faltante enum para el punto de datos 2850",
-        "pl": "Dodano brak enum info dla danych pkt 2850",
-        "uk": "Додано інформацію про відсутність енму для точки даних 2850",
-        "zh-cn": "数据点 2850 添加缺失的 enum 信息"
       }
     },
     "titleLang": {
