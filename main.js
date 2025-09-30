@@ -741,16 +741,18 @@ class E3oncan extends utils.Adapter {
                     this.log.silly(`Received data - ${JSON.stringify(obj)}`);
                     if (obj.message && this.udsDevStateNames.includes(obj.message)) {
                         const udsDids = new storage.storageDids({ stateBase: obj.message, device: obj.message });
-                        await udsDids.readKnownDids(this, 'udsDidScan');
+                        await udsDids.readKnownDids(this, 'standby');
                         const udsDidsTable = [];
                         if (udsDids.didsDevSpecAvail) {
                             for (const [did, item] of Object.entries(udsDids.didsDictDevCom)) {
-                                udsDidsTable.push({
-                                    didId: Number(did),
-                                    didLen: Number(item.len),
-                                    didName: item.id,
-                                    didCodec: item.codec,
-                                });
+                                if (did != 'Version') {
+                                    udsDidsTable.push({
+                                        didId: Number(did),
+                                        didLen: Number(item.len),
+                                        didName: item.id,
+                                        didCodec: item.codec,
+                                    });
+                                }
                                 //if (udsDidsTable.length >= 50) break;
                             }
                             for (const [did, item] of Object.entries(udsDids.didsDictDevSpec)) {

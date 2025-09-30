@@ -138,6 +138,9 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Fix for issue #162
+
 ### 0.10.12 (2025-09-15)
 * (MyHomeMyData) Migration to ESLint 9, refer to issues #141 and #152
 
