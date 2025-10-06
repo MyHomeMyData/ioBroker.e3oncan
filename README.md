@@ -140,6 +140,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Added elements to enums.js based of PR no. 182 of open3e
+* (MyHomeMyData) Simplified configuration of dids scan limits in source code
 
 ### 0.10.13 (2025-09-30)
 * (MyHomeMyData) Fix for issue #162
