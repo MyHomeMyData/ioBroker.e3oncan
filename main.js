@@ -66,7 +66,7 @@ class E3oncan extends utils.Adapter {
         this.udsScanDevices = []; // UDS devices found during scan
         this.udsDevAddrs = [];
         this.udsDevStateNames = [];
-        this.udsDidsLimits = { min: 256, max: 3255 }; // Min. and max. numerical value of dids for scan of data points
+        this.udsDidsLimits = { min: 256, max: 3338 }; // Min. and max. numerical value of dids for scan of data points. Should meet range defined in didsE3,json
 
         //this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
