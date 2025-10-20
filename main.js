@@ -66,7 +66,7 @@ class E3oncan extends utils.Adapter {
         this.udsScanDevices = []; // UDS devices found during scan
         this.udsDevAddrs = [];
         this.udsDevStateNames = [];
-        this.udsDidsMaxNmbr = 3000; // Max. number of dids per device for scan
+        this.udsDidsLimits = { min: 256, max: 3338 }; // Min. and max. numerical value of dids for scan of data points. Should meet range defined in didsE3,json
 
         //this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
@@ -723,7 +723,7 @@ class E3oncan extends utils.Adapter {
                     if (!this.udsDidScanIsRunning) {
                         this.udsDidScanIsRunning = true;
                         this.log.silly(`Received data - ${JSON.stringify(obj)}`);
-                        await this.udsScanWorker.scanUdsDids(this, this.udsDevAddrs, this.udsDidsMaxNmbr);
+                        await this.udsScanWorker.scanUdsDids(this, this.udsDevAddrs, this.udsDidsLimits);
                         //await this.udsScanWorker.scanUdsDids(this,this.udsDevAddrs,300);
                         this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
                         this.udsDidScanIsRunning = false;
