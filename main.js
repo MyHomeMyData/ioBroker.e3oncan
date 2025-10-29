@@ -609,9 +609,24 @@ class E3oncan extends utils.Adapter {
         if (state && !state.ack) {
             // The state was changed and ack == false
             this.log.silly(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+            // Check for necessary measures for all UDS workers
             for (const worker of Object.values(this.E3UdsWorkers)) {
                 if (id.includes(`${this.namespace}.${worker.config.stateBase}`)) {
-                    this.log.silly(`Call worker for ${worker.config.stateBase}`);
+                    this.log.silly(`Call UDS worker for ${worker.config.stateBase}`);
+                    worker.onUdsStateChange(this, worker, id, state);
+                }
+            }
+            // Check for necessary measures for all collect workers on external CAN
+            for (const worker of Object.values(this.E3CollectExt)) {
+                if (id.includes(`${this.namespace}.${worker.config.stateBase}`)) {
+                    this.log.silly(`Call internal collect worker for ${worker.config.stateBase}`);
+                    worker.onUdsStateChange(this, worker, id, state);
+                }
+            }
+            // Check for necessary measures for all collect workers on internal CAN
+            for (const worker of Object.values(this.E3CollectInt)) {
+                if (id.includes(`${this.namespace}.${worker.config.stateBase}`)) {
+                    this.log.silly(`Call internal collect worker for ${worker.config.stateBase}`);
                     worker.onUdsStateChange(this, worker, id, state);
                 }
             }
