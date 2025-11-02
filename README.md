@@ -149,6 +149,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 * (MyHomeMyData) Added hint regarding scan range in Readme
 * (MyHomeMyData) Fixes for issue #169 (repository checker)
 * (MyHomeMyData) Bugfix: Manual change of device specific dids was not evaluated for collect workers
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20251102
 
 ### 0.10.13 (2025-09-30)
 * (MyHomeMyData) Fix for issue #162
