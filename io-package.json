@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.10.13",
+    "version": "0.10.14",
     "news": {
+      "0.10.14": {
+        "en": "Added elements to enums.js based of PR no. 182 of open3e\nSimplified configuration of dids scan limits in source code\nExtended scan up to did 3338\nAdded hint regarding scan range in Readme\nFixes for issue #169 (repository checker)\nBugfix: Manual change of device specific dids was not evaluated for collect workers\nUpdate of list of data points for E3 devices to version 20251102",
+        "de": "Elemente zu enums.js hinzugefügt, basierend auf PR-Nr. 182 von open3e\nVereinfachte Konfiguration der Grenzen des Datenpunt-Scans im Quellcode\nErweiterter Scan bis Datenpunkt 3338\nHinweis auf Scan-Bereich in Readme hinzugefügt\nFixes für Issue #169 (Repository Checker)\nBugfix: Manuelle Änderung der gerätespezifischen Datenpunkte wurde nicht für Collect-Worker aktualisiert\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20251102",
+        "ru": "Добавлены элементы в enums.js на основе PR No 182 open3e\nУпрощенная конфигурация ограничений сканирования в исходном коде\nРасширенное сканирование до 3338\nДобавлен намек на диапазон сканирования в Readme\nИсправления для выпуска #169 (проверка хранилища)\nBugfix: ручная смена устройств не оценивалась для коллекционных работников\nОбновление списка точек данных для устройств E3 до версии 20251102",
+        "pt": "Elementos adicionados a enums.js baseados em PR n.o 182 de open3e\nConfiguração simplificada dos limites de digitalização do dids no código fonte\nEscaneamento estendido até 3338\nAdicionada dica sobre o intervalo de varredura no Readme\nCorrecções para o número 169 (verificador de repositório)\nBugfix: Não foi avaliada a mudança manual de dids específicos do dispositivo para trabalhadores de coleta\nActualização da lista de pontos de dados para os dispositivos E3 na versão 20251102",
+        "nl": "Toegevoegd elementen aan enums.js op basis van PR nr. 182 van open3e\nVereenvoudigde configuratie van dids-scanlimieten in broncode\nUitgebreide scan tot 3338\nTips toegevoegd met betrekking tot scanbereik in Readme\nFixes voor nummer #169 (repository checker)\nBugfix: Handmatige verandering van apparaat specifieke dids werd niet geëvalueerd voor collect werknemers\nUpdate van de lijst van gegevenspunten voor E3-apparaten naar versie 20251102",
+        "fr": "Ajout d'éléments à enums.js basés sur le PR n° 182 de open3e\nConfiguration simplifiée des limites de dids scan dans le code source\nScannage étendu jusqu'à 3338\nAjout d'un indice concernant la plage de balayage dans Readme\nCorrections pour l'émission #169 (vérificateur de dépôt)\nBugfix: La modification manuelle des dids spécifiques de l'appareil n'a pas été évaluée pour les travailleurs de collecte\nMise à jour de la liste des points de données pour les appareils E3 vers la version 20251102",
+        "it": "Aggiunto elementi a enums.js basato di PR n. 182 di open3e\nConfigurazione semplificata dei limiti di scansione dei fatti nel codice sorgente\nControllo esteso fino a 3338\nAggiunto suggerimento per quanto riguarda la gamma di scansione in Readme\nCorrezioni per numero #169 (repository checker)\nBugfix: Il cambio manuale dei dispositivi specifici non è stato valutato per i lavoratori collettivi\nAggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20251102",
+        "es": "Elementos añadidos a enums.js basado en PR No 182 de open3e\nConfiguración simplificada de los límites de escaneado en código fuente\nEscaneo extendido hasta 3338\nInsinuación agregada con respecto al rango de exploración en Readme\nArreglos para el número #169 (repositorio)\nBugfix: No se evaluó el cambio manual de piezas específicas del dispositivo para los trabajadores coleccionistas\nActualización de la lista de puntos de datos para dispositivos E3 a la versión 20251102",
+        "pl": "Dodano elementy enums.js oparte na PR nr 182 open3e\nUproszczona konfiguracja didów w kodzie źródłowym\nRozszerzone skanowanie do 3338\nDodano podpowiedź odnośnie zakresu skanowania w Readme\nFixes for issue # 169 (repository checker)\nBugfix: Ręczna zmiana dysków specyficznych dla urządzenia nie była oceniana dla pracowników zbierających\nAktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20251102",
+        "uk": "Додано елементи для enums.js на основі PR No 182 відкрито3e\nСпрощена конфігурація лімітів сканування даних у вихідному коді\nРозширене сканування до 3338\nДодано підказок про діапазон сканування в Readme\nВиправлення для випуску #169 (репозиторійний чекер)\nВиправлення помилок: Ручна зміна параметрів пристрою не оцінювалася для збору робітників\nОновлення списку точок даних для пристроїв E3 до версії 20251102",
+        "zh-cn": "在基于open3e第182号公关规则的enums.js中添加元素\n简化源代码中 dos 扫描限制的配置\n扩展扫描至完成 3338\n关于Readme 扫描范围的添加提示\n修复第169期(仓库检查器)\nBugfix:没有评估收集工人手动更改设备特定操作\nE3设备数据点列表更新至20251102版本"
+      },
       "0.10.13": {
         "en": "Fix for issue #162",
         "de": "Fix für Issue #162",
@@ -80,19 +93,6 @@
         "pl": "Bugfix dla wydania # 117\nZaktualizowany punkt danych 381, proszę odnieść się do dyskusji https: / / github.com / open3e / open3e / dyskussions / 212\nAktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20250307",
         "uk": "Помилки No117\nОновлено точку даних 381, див. на обговорення https://github.com/open3e/open3e/discussions/212\nОновлення списку точок даних для пристроїв E3 до версії 20250307",
         "zh-cn": "第117期错误修正\n更新数据点381,参见讨论. https://github.com/open3e/open3e/讨论/212\nE3设备数据点列表更新至20250307版本"
-      },
-      "0.10.7": {
-        "en": "Updated dependencies according to issue #111",
-        "de": "Abhängigkeiten aktualisiert gemäß Issue #111",
-        "ru": "Обновленные зависимости по номеру #111",
-        "pt": "Dependências atualizadas de acordo com a edição #111",
-        "nl": "Bijgewerkt afhankelijkheden volgens probleem #111",
-        "fr": "Dépendances actualisées selon le numéro 11",
-        "it": "Dipendenze aggiornate secondo il numero #111",
-        "es": "Dependencias actualizadas según el número #111",
-        "pl": "Aktualizacja zależności według wydania # 111",
-        "uk": "Оновлені залежності за випуском #111",
-        "zh-cn": "根据问题111更新的依赖关系"
       }
     },
     "titleLang": {

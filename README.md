@@ -142,7 +142,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.10.14 (2025-11-03)
 * (MyHomeMyData) Added elements to enums.js based of PR no. 182 of open3e
 * (MyHomeMyData) Simplified configuration of dids scan limits in source code
 * (MyHomeMyData) Extended scan up to did 3338
