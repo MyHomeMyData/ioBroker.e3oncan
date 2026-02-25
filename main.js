@@ -19,6 +19,7 @@ const utils = require('@iobroker/adapter-core');
 const can = require('socketcan');
 const storage = require('./lib/storage');
 const E3DidsDict = require('./lib/didsE3.json');
+const E3DidsVarDict = require('./lib/didsE3var.json');
 const E380DidsDict = require('./lib/didsE380.json');
 const E3100CBDidsDict = require('./lib/didsE3100CB.json');
 const E3DidsWritable = require('./lib/didsE3Writables.json');
@@ -61,7 +62,7 @@ class E3oncan extends utils.Adapter {
 
         this.didsVersionTC = '20240309'; // Change of type of numerical dids to Number at this version
         this.udsDidForScan = 256; // Busidentification is in this id
-        this.udsDidsVarLength = [257, 258, 259, 260, 261, 262, 263, 264, 265, 266]; // Dids have variable length
+        this.udsDidsVarLength = [257, 258, 259, 260, 261, 262, 263, 264, 265, 266]; // Dids have content of variable length dependend of number of list elements
         this.udsScanWorker = new udsScan.udsScan();
         this.udsScanDevices = []; // UDS devices found during scan
         this.udsDevAddrs = [];
@@ -98,7 +99,8 @@ class E3oncan extends utils.Adapter {
         }
 
         // Check for updates of list of datapoints and perform update if needed:
-        await this.updateDatapointsSpecific(this.config.tableUdsDevices); // UDS devices, specific dids
+        await this.updateDatapointsSpecificNumTypeChange(this.config.tableUdsDevices); // UDS devices, specific dids, possible change of type of numerical values
+        await this.updateDatapointsSpecificVariants(this.config.tableUdsDevices); // UDS devices, specific dids, update for dids having variant length of structure
         await this.updateDatapointsCommon(this.config.tableUdsDevices); // UDS devices, common dids
         if ('e380Name' in this.config) {
             await this.updateDatapointsCommon([{ devStateName: this.config.e380Name, device: 'e380' }]); // E380 Energy Meter
@@ -302,8 +304,9 @@ class E3oncan extends utils.Adapter {
         }
     }
 
-    async updateDatapointsSpecific(devices) {
+    async updateDatapointsSpecificNumTypeChange(devices) {
         // Update list of device-specific datapoints of all devices during startup of adapter
+        // Take care about possible change of type of numerical values
         for (const dev of Object.values(devices)) {
             const didsDictNew = E3DidsDict;
             const devDids = new storage.storageDids({ stateBase: dev.devStateName, device: dev.device });
@@ -316,7 +319,7 @@ class E3oncan extends utils.Adapter {
                         Number(devDids.didsDictDevCom.Version) < Number(this.didsVersionTC))
                 ) {
                     this.log.info(
-                        `Updating device specific datapoints to version ${didsDictNew.Version} for device ${
+                        `Fixing numerical type handling for device specific datapoints to version ${didsDictNew.Version} for device ${
                             dev.devStateName
                         }`,
                     );
@@ -328,7 +331,7 @@ class E3oncan extends utils.Adapter {
                                 // Force update of .tree state(s) based on raw data of did
                                 const didStateName = `${await devDids.getDidStr(did)}_${await devDids.didsDictDevSpec[did].id}`;
                                 if (this.udsDidsVarLength.includes(didNo)) {
-                                    // Did with variable length has to be deleted to avoid type confilct, when length gets larger in future
+                                    // Did with variable length of content has to be deleted to avoid type confilct, when length gets larger in future
                                     this.log.silly(
                                         `  > Delete datapoint ${didStateName} to secure change of data type`,
                                     );
@@ -368,6 +371,83 @@ class E3oncan extends utils.Adapter {
                     }
                 }
             }
+        }
+    }
+
+    async updateDatapointsSpecificVariants(devices) {
+        // Update list of device-specific datapoints of all devices during startup of adapter
+        // Take care about dids having variant length of structure (introduced with open3e 0.6.0)
+        for (const dev of Object.values(devices)) {
+            const didsDictVar = E3DidsVarDict;
+            const devDids = new storage.storageDids({ stateBase: dev.devStateName, device: dev.device });
+            await devDids.initStates(this, 'standby');
+            await devDids.readKnownDids(this, 'standby');
+            if (devDids.didsDevSpecAvail) {
+                if (
+                    devDids.didsDictDevSpec.Version === undefined ||
+                    Number(didsDictVar.Version) > Number(devDids.didsDictDevSpec.Version)
+                ) {
+                    this.log.info(
+                        `Updating device specific datapoints to version ${didsDictVar.Version} for device ${
+                            dev.devStateName
+                        }`,
+                    );
+                    for (const did of Object.keys(devDids.didsDictDevSpec)) {
+                        if (did != 'Version' && did in didsDictVar) {
+                            // Check if matching did is available in list of variant dids
+                            const didLen = devDids.didsDictDevSpec[did].len;
+                            if (
+                                devDids.didsDictDevSpec[did].codec == 'RawCodec' && // Only apply changes to RawCodec
+                                didLen in didsDictVar[did] // Check, if new definition for this length of did is available
+                            ) {
+                                // Up to now, only RawCodec was known for this did => Use newly defined variant did
+                                // Replace .json and .tree state(s) based on raw data of did
+                                const didStateName = `${await devDids.getDidStr(did)}_${await didsDictVar[did][didLen].id}`;
+                                this.log.info(
+                                    `  > New defintion of variant datapoint ${didStateName} is available. Updating.`,
+                                );
+                                // Delete tree states based on old structure:
+                                await this.delObjectAsync(
+                                    `${this.namespace}.${dev.devStateName}.tree.${didStateName}`,
+                                    { recursive: true },
+                                );
+                                const raw = await devDids.getObjectVal(this, `${dev.devStateName}.raw.${didStateName}`);
+                                if (raw != null) {
+                                    // Create states based on new structure if raw data is available:
+                                    const cdi = await didsDictVar[did][didLen];
+                                    const res = await devDids.decodeDid(
+                                        this,
+                                        dev.devStateName,
+                                        did,
+                                        cdi,
+                                        devDids.toByteArray(raw),
+                                    );
+                                    await devDids.storeObjectJson(
+                                        this,
+                                        did,
+                                        res.idStr,
+                                        `${this.namespace}.${dev.devStateName}.json.${didStateName}`,
+                                        res.val,
+                                    );
+                                    await devDids.storeObjectTree(
+                                        this,
+                                        did,
+                                        res.idStr,
+                                        `${this.namespace}.${dev.devStateName}.tree.${didStateName}`,
+                                        res.val,
+                                    );
+                                }
+                                // Update datapoint description:
+                                await (devDids.didsDictDevSpec[did] = await didsDictVar[did][didLen]);
+                                // Remember version of source:
+                                devDids.didsDictDevSpec[did]['ver'] = didsDictVar.Version;
+                            }
+                        }
+                    }
+                    devDids.didsDictDevSpec['Version'] = didsDictVar.Version;
+                }
+            }
+            await devDids.storeKnownDids(this);
         }
     }
 
