@@ -392,17 +392,20 @@ class E3oncan extends utils.Adapter {
                             dev.devStateName
                         }`,
                     );
+                    if (!('Backup' in devDids.didsDictDevSpec)) {
+                        devDids.didsDictDevSpec['Backup'] = {};
+                    }
                     for (const did of Object.keys(devDids.didsDictDevSpec)) {
                         if (did != 'Version' && did in didsDictVar) {
                             // Check if matching did is available in list of variant dids
                             const didLen = devDids.didsDictDevSpec[did].len;
-                            if (
-                                devDids.didsDictDevSpec[did].codec == 'RawCodec' && // Only apply changes to RawCodec
-                                didLen in didsDictVar[did] // Check, if new definition for this length of did is available
-                            ) {
-                                // Up to now, only RawCodec was known for this did => Use newly defined variant did
-                                // Replace .json and .tree state(s) based on raw data of did
-                                const didStateName = `${await devDids.getDidStr(did)}_${await didsDictVar[did][didLen].id}`;
+                            // Up to now, only RawCodec was known for this did or an user defined version or an older version of variant did => Use newly defined variant did
+                            // Replace .json and .tree state(s) based on raw data of did
+                            const didStateName = `${await devDids.getDidStr(did)}_${await didsDictVar[did][didLen].id}`;
+                            // Check for changes in datapoint structure
+                            const devStruct = await devDids.getDidStruct(this, [], devDids.didsDictDevSpec[did]);
+                            const E3Struct = await devDids.getDidStruct(this, [], didsDictVar[did][didLen]);
+                            if (JSON.stringify(devStruct) != JSON.stringify(E3Struct)) {
                                 this.log.info(
                                     `  > New defintion of variant datapoint ${didStateName} is available. Updating.`,
                                 );
@@ -437,10 +440,22 @@ class E3oncan extends utils.Adapter {
                                         res.val,
                                     );
                                 }
+                                // Create Backup of user defined data point definition:
+                                if (
+                                    (devDids.didsDictDevSpec[did].codec != 'RawCodec' &&
+                                        !('source' in devDids.didsDictDevSpec[did])) ||
+                                    ('source' in devDids.didsDictDevSpec[did] &&
+                                        !devDids.didsDictDevSpec[did].source.includes('didsE3var_')) // Only apply changes to RawCodec or older version of variant codec
+                                ) {
+                                    this.log.info(
+                                        `  > Creating backup of actual definition of data point ${didStateName} - see section "Backup"`,
+                                    );
+                                    await (devDids.didsDictDevSpec['Backup'][did] = await devDids.didsDictDevSpec[did]);
+                                }
                                 // Update datapoint description:
                                 await (devDids.didsDictDevSpec[did] = await didsDictVar[did][didLen]);
                                 // Remember version of source:
-                                devDids.didsDictDevSpec[did]['ver'] = didsDictVar.Version;
+                                devDids.didsDictDevSpec[did]['source'] = `didsE3var_${didsDictVar.Version}`;
                             }
                         }
                     }
