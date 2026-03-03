@@ -4123,7 +4123,7 @@
       "scale": 10.0,
       "signed": false,
       "unit": "\u00b0C",
-      "desc": "Teperature setpoint central heating",
+      "desc": "Temperature setpoint central heating",
       "info": "",
       "acc": "rw"
     }
@@ -4136,7 +4136,7 @@
       "scale": 10.0,
       "signed": true,
       "unit": "\u00b0C",
-      "desc": "Teperature setpoint domestic hot water",
+      "desc": "Temperature setpoint domestic hot water",
       "info": "",
       "acc": "rw"
     }
@@ -51733,10 +51733,15 @@
     }
   },
   "3068": {
-    "codec": "RawCodec",
+    "codec": "O3EInt16",
     "len": 2,
     "id": "DomesticHotWaterTemperatureSetpointComfort",
     "args": {
+      "scale": 10.0,
+      "signed": true,
+      "unit": "\u00b0C",
+      "desc": "Temperature setpoint domestic hot water comfort",
+      "info": "",
       "acc": "rw"
     }
   },
@@ -53242,10 +53247,10 @@
       "acc": "ro"
     }
   },
-  "3234": {
+  "3232": {
     "codec": "O3EComplexType",
     "len": 9,
-    "id": "DomesticHotWaterBufferTopTemperatureSensor",
+    "id": "DomesticHotWaterBufferBottomTemperatureSensor",
     "args": {
       "subTypes": [
         {
@@ -53255,7 +53260,7 @@
           "args": {
             "scale": 10.0,
             "signed": true,
-            "unit": "",
+            "unit": "\u00b0C",
             "desc": "",
             "info": "",
             "acc": ""
@@ -53315,6 +53320,182 @@
       "desc": "",
       "info": "",
       "acc": "ro"
+    }
+  },
+  "3233": {
+    "codec": "O3EComplexType",
+    "len": 9,
+    "id": "DomesticHotWaterBufferMidTemperatureSensor",
+    "args": {
+      "subTypes": [
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "Actual",
+          "args": {
+            "scale": 10.0,
+            "signed": true,
+            "unit": "\u00b0C",
+            "desc": "",
+            "info": "",
+            "acc": ""
+          }
+        },
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "Minimum",
+          "args": {
+            "scale": 10.0,
+            "signed": true,
+            "unit": "",
+            "desc": "",
+            "info": "",
+            "acc": ""
+          }
+        },
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "Maximum",
+          "args": {
+            "scale": 10.0,
+            "signed": true,
+            "unit": "",
+            "desc": "",
+            "info": "",
+            "acc": ""
+          }
+        },
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "Average",
+          "args": {
+            "scale": 10.0,
+            "signed": true,
+            "unit": "",
+            "desc": "",
+            "info": "",
+            "acc": ""
+          }
+        },
+        {
+          "codec": "O3EEnum",
+          "len": 1,
+          "id": "SensorStatus",
+          "args": {
+            "listStr": "SensorStates",
+            "desc": "",
+            "info": "",
+            "acc": ""
+          }
+        }
+      ],
+      "desc": "",
+      "info": "",
+      "acc": "ro"
+    }
+  },
+  "3234": {
+    "codec": "O3EComplexType",
+    "len": 9,
+    "id": "DomesticHotWaterBufferTopTemperatureSensor",
+    "args": {
+      "subTypes": [
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "Actual",
+          "args": {
+            "scale": 10.0,
+            "signed": true,
+            "unit": "\u00b0C",
+            "desc": "",
+            "info": "",
+            "acc": ""
+          }
+        },
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "Minimum",
+          "args": {
+            "scale": 10.0,
+            "signed": true,
+            "unit": "",
+            "desc": "",
+            "info": "",
+            "acc": ""
+          }
+        },
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "Maximum",
+          "args": {
+            "scale": 10.0,
+            "signed": true,
+            "unit": "",
+            "desc": "",
+            "info": "",
+            "acc": ""
+          }
+        },
+        {
+          "codec": "O3EInt16",
+          "len": 2,
+          "id": "Average",
+          "args": {
+            "scale": 10.0,
+            "signed": true,
+            "unit": "",
+            "desc": "",
+            "info": "",
+            "acc": ""
+          }
+        },
+        {
+          "codec": "O3EEnum",
+          "len": 1,
+          "id": "SensorStatus",
+          "args": {
+            "listStr": "SensorStates",
+            "desc": "",
+            "info": "",
+            "acc": ""
+          }
+        }
+      ],
+      "desc": "",
+      "info": "",
+      "acc": "ro"
+    }
+  },
+  "3235": {
+    "codec": "O3EInt16",
+    "len": 2,
+    "id": "BufferLoadingTimeLimit",
+    "args": {
+      "scale": 10.0,
+      "signed": false,
+      "unit": "",
+      "desc": "",
+      "info": "",
+      "acc": "rw"
+    }
+  },
+  "3282": {
+    "codec": "O3EInt16",
+    "len": 2,
+    "id": "DomesticHotWaterMinimumComfortTemperatureSetpoint",
+    "args": {
+      "scale": 10.0,
+      "signed": false,
+      "unit": "\u00b0C",
+      "desc": "",
+      "info": "",
+      "acc": "rw"
     }
   },
   "3335": {
@@ -53675,5 +53856,5 @@
       "acc": "ro"
     }
   },
-  "Version": "20260224"
+  "Version": "20260227"
 }
