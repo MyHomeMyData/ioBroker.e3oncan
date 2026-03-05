@@ -62,11 +62,13 @@ class E3oncan extends utils.Adapter {
 
         this.didsVersionTC = '20240309'; // Change of type of numerical dids to Number at this version
         this.udsDidForScan = 256; // Busidentification is in this id
+        this.udsDidForUnits = 382; // UnitsAndFormats
         this.udsDidsVarLength = [257, 258, 259, 260, 261, 262, 263, 264, 265, 266]; // Dids have content of variable length dependend of number of list elements
         this.udsScanWorker = new udsScan.udsScan();
         this.udsScanDevices = []; // UDS devices found during scan
         this.udsDevAddrs = [];
         this.udsDevStateNames = [];
+        //this.udsDidsLimits = { min: 268, max: 268 }; // Min. and max. numerical value of dids for scan of data points. Should meet range defined in didsE3,json
         this.udsDidsLimits = { min: 256, max: 3338 }; // Min. and max. numerical value of dids for scan of data points. Should meet range defined in didsE3,json
 
         //this.on('install', this.onInstall.bind(this));
@@ -396,8 +398,9 @@ class E3oncan extends utils.Adapter {
                         devDids.didsDictDevSpec['Backup'] = {};
                     }
                     for (const did of Object.keys(devDids.didsDictDevSpec)) {
-                        if (did != 'Version' && did in didsDictVar) {
+                        if (did.length <= 4 && did in didsDictVar) {
                             // Check if matching did is available in list of variant dids
+                            // Skip entries for 'Version' and 'Backup'
                             const didLen = devDids.didsDictDevSpec[did].len;
                             // Up to now, only RawCodec was known for this did or an user defined version or an older version of variant did => Use newly defined variant did
                             // Replace .json and .tree state(s) based on raw data of did
@@ -584,6 +587,7 @@ class E3oncan extends utils.Adapter {
                 canID: devTxAddr,
                 // @ts-expect-error AdapterConfig
                 stateBase: dev.devStateName,
+                devUnits: dev.devUnits,
                 device: 'common',
                 delay: 0,
                 active: false,
@@ -860,19 +864,23 @@ class E3oncan extends utils.Adapter {
                                         didId: Number(did),
                                         didLen: Number(item.len),
                                         didName: item.id,
+                                        didDesc: item.args.desc ? item.args.desc : '',
                                         didCodec: item.codec,
                                     });
                                 }
                                 //if (udsDidsTable.length >= 50) break;
                             }
                             for (const [did, item] of Object.entries(udsDids.didsDictDevSpec)) {
-                                udsDidsTable.push({
-                                    didId: Number(did),
-                                    didLen: Number(item.len),
-                                    didName: item.id,
-                                    didCodec: item.codec,
-                                });
-                                //if (udsDidsTable.length >= 60) break;
+                                if (did.length <= 4) {
+                                    udsDidsTable.push({
+                                        didId: Number(did),
+                                        didLen: Number(item.len),
+                                        didName: item.id,
+                                        didDesc: item.args.desc ? item.args.desc : '',
+                                        didCodec: item.codec,
+                                    });
+                                    //if (udsDidsTable.length >= 60) break;
+                                }
                             }
                             udsDidsTable.sort((a, b) => a.didId - b.didId);
                         }
