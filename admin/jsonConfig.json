@@ -416,7 +416,7 @@
                             "width": "45% ",
                             "title": "Description",
                             "tooltip": "Description of datapoint",
-                            "filter": false,
+                            "filter": true,
                             "sort": false,
                             "readOnly": true
                         },
