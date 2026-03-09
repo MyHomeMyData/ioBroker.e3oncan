@@ -59,6 +59,8 @@ class E3oncan extends utils.Adapter {
         this.udsDevices = []; // Confirmed & edited UDS devices
         this.udsTimeDelta = 50; // Time delta (ms) between UDS schedules
         this.udsTimeoutHandles = [];
+        this.udsMasterDevAddr = 0x680; // Address of master device
+        this.udsMasterDevUnits = 'n/a'; // Units and Formats of master device (0x680)
 
         this.didsVersionTC = '20240309'; // Change of type of numerical dids to Number at this version
         this.udsDidForScan = 256; // Busidentification is in this id
