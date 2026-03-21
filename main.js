@@ -412,7 +412,7 @@ class E3oncan extends utils.Adapter {
                             const E3Struct = await devDids.getDidStruct(this, [], didsDictVar[did][didLen]);
                             if (JSON.stringify(devStruct) != JSON.stringify(E3Struct)) {
                                 this.log.info(
-                                    `  > New defintion of variant datapoint ${didStateName} is available. Updating.`,
+                                    `  > New or updated defintion of variant datapoint ${didStateName} is available. Updating.`,
                                 );
                                 // Delete tree states based on old structure:
                                 await this.delObjectAsync(
@@ -447,10 +447,10 @@ class E3oncan extends utils.Adapter {
                                 }
                                 // Create Backup of user defined data point definition:
                                 if (
-                                    (devDids.didsDictDevSpec[did].codec != 'RawCodec' &&
-                                        !('source' in devDids.didsDictDevSpec[did])) ||
-                                    ('source' in devDids.didsDictDevSpec[did] &&
-                                        !devDids.didsDictDevSpec[did].source.includes('didsE3var_')) // Only apply changes to RawCodec or older version of variant codec
+                                    (devDids.didsDictDevSpec[did].codec != 'RawCodec' && // It's not a RawCodec
+                                        !('source' in devDids.didsDictDevSpec[did])) || // and info about source of definition is missing OR
+                                    ('source' in devDids.didsDictDevSpec[did] && // the source of definition is known
+                                        !devDids.didsDictDevSpec[did].source.includes('didsE3var_')) // and the source is NOT the list of variant codecs
                                 ) {
                                     this.log.info(
                                         `  > Creating backup of actual definition of data point ${didStateName} - see section "Backup"`,
