@@ -228,7 +228,13 @@ class E3oncan extends utils.Adapter {
                                 if (raw != null) {
                                     // Create states based on new structure if raw data is available:
                                     const cdi = await didsDictNew[did];
-                                    const res = await devDids.decodeDid(this, dev, did, cdi, devDids.toByteArray(raw));
+                                    const res = await devDids.decodeDid(
+                                        this,
+                                        { config: { stateBase: dev.devStateName, devUnits: dev.devUnits } },
+                                        did,
+                                        cdi,
+                                        devDids.toByteArray(raw),
+                                    );
                                     await devDids.storeObjectJson(
                                         this,
                                         did,
@@ -270,7 +276,7 @@ class E3oncan extends utils.Adapter {
                                         const cdi = await didsDictNew[did];
                                         const res = await devDids.decodeDid(
                                             this,
-                                            dev,
+                                            { config: { stateBase: dev.devStateName, devUnits: dev.devUnits } },
                                             did,
                                             cdi,
                                             devDids.toByteArray(raw),
@@ -343,7 +349,13 @@ class E3oncan extends utils.Adapter {
                                     // Update .tree states:
                                     this.log.silly(`  > Update type and role of datapoint ${didStateName}`);
                                     const cdi = await devDids.didsDictDevSpec[did];
-                                    const res = await devDids.decodeDid(this, dev, did, cdi, devDids.toByteArray(raw));
+                                    const res = await devDids.decodeDid(
+                                        this,
+                                        { config: { stateBase: dev.devStateName, devUnits: dev.devUnits } },
+                                        did,
+                                        cdi,
+                                        devDids.toByteArray(raw),
+                                    );
                                     await devDids.storeObjectTree(
                                         this,
                                         did,
@@ -411,7 +423,13 @@ class E3oncan extends utils.Adapter {
                                 if (raw != null) {
                                     // Create states based on new structure if raw data is available:
                                     const cdi = await didsDictVar[did][didLen];
-                                    const res = await devDids.decodeDid(this, dev, did, cdi, devDids.toByteArray(raw));
+                                    const res = await devDids.decodeDid(
+                                        this,
+                                        { config: { stateBase: dev.devStateName, devUnits: dev.devUnits } },
+                                        did,
+                                        cdi,
+                                        devDids.toByteArray(raw),
+                                    );
                                     await devDids.storeObjectJson(
                                         this,
                                         did,
