@@ -44,7 +44,7 @@ If a data point scan is performed (again), all found data points are saved, and 
 
 Before starting the adapter for the first time after an update and before performing a device or data point scan, it is recommended to back up all objects of the instance, e.g., `e3oncan.0` or individual devices.
 
-### Data Point Scan ### Data Point Metadata
+### Data Point Metadata
 
 Starting with open3e version 0.6.1 and the adapter version 0.11.0, additional metadata is provided for many data points:
 
@@ -56,3 +56,7 @@ Starting with open3e version 0.6.1 and the adapter version 0.11.0, additional me
 For modified data point structures, this information is added to the object trees upon first launch of the new adapter version. To add the information for all data points, a new data point scan must be performed.
 
 The unit of the temperature values ​​is derived from the configuration of the Viessmann device (data point 382). If data point 382 is missing for a device, the configuration of the master device (CAN address 0x680) is used.
+
+### Writability of Data Points
+
+A data point is treated as writable if its ID is included in the whitelist `e3oncan.0.<DEVICE>.info.udsDidsWritable`, or if it is marked as read-and-write in the metadata.

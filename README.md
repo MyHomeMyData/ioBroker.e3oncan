@@ -35,6 +35,8 @@ Important parts of this adpater are based on the project [open3e](https://github
 
 A python based implementation of a pure listening approach (Collect only) using MQTT messaging is also availabe, see [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
 
+Starting with open3e version 0.6.1 and the version 0.11.0 of this adapter, a concept for variant data points and metadata for many data point were introduced. Please see [here](https://github.com/MyHomeMyData/ioBroker.e3oncan/data-points.md) for detailed informations about handling of data points and new features.
+
 # Getting started
 
 **Preconditions:**
@@ -144,10 +146,10 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 -->
 
 ### **WORK IN PROGRESS**
-* (MyHomeMyData) Added handling for variant data points
-* (MyHomeMyData) Added meta data to several data points, e.g. description, unit, link to further info
-* (MyHomeMyData) During scan of data points now meta data are added to data point objects
-* (MyHomeMyData) Changed handling of writable data points; this info now is available within definition of data point
+* (MyHomeMyData) Added handling for variant data points, refer to https://github.com/MyHomeMyData/ioBroker.e3oncan/data-points.md for details
+* (MyHomeMyData) Added metadata to several data points, e.g. description, unit, link to further info
+* (MyHomeMyData) During scan of data points now metadata are added to data point objects
+* (MyHomeMyData) Changed handling of writable data points; this info now also is available within definition of data point; however, there is no change to handling of the whitelist of writables
 * (MyHomeMyData) Updated structure of the following data points: 268,269,271,274,279,282,284,285,286,287,288,289,290,291,318,320,321,324,531,1659,1684,1768,1769,1770,1771,1772,2084,2085,2087,2088,2090,2091,2093,2094,2096,2097,2099,2100,2102,2103,2105,2106,2108,2109,2111,2112,2114,2115,2117,2118,2120,2121,2123,2124,2126,2127,2129,2130,2132,2133,2135,2136,2138,2139,2141,2142,2240,2260,2261,2263,2264,2266,2267,2269,2270,2272,2273,2275,2276,2278,2279,2281,2282,2284,2285,2287,2288,2290,2291,2293,2294,2296,2297,2299,2300,2302,2303,2305,2306,2308,2309,2311,2312,2314,2315,2317,2318,2320,2333,2334,2351,2352,2593,2735,2806,3014,3015,3016,3017,3018,3032,3034,3035,3036
 
 ### 0.10.14 (2025-11-03)
