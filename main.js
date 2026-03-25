@@ -559,6 +559,7 @@ class E3oncan extends utils.Adapter {
                         const worker = new collect.collect({
                             canID: [Number(workerConf.collectCanId)],
                             stateBase: devInfo[0].devStateName,
+                            devUnits: devInfo[0].devUnits ? devInfo[0].devUnits : 'n/a',
                             device: 'common',
                             timeout: this.collectTimeout,
                             delay: workerConf.collectDelayTime,
@@ -590,7 +591,7 @@ class E3oncan extends utils.Adapter {
                 // @ts-expect-error AdapterConfig
                 stateBase: dev.devStateName,
                 // @ts-expect-error AdapterConfig
-                devUnits: dev.devUnits,
+                devUnits: dev.devUnits ? dev.devUnits : 'n/a',
                 device: 'common',
                 delay: 0,
                 active: false,

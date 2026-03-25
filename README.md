@@ -146,6 +146,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 -->
 
 ### **WORK IN PROGRESS**
+* (MyHomeMyData) To take full advantage of the variant data points and metadata, please perform a device scan followed by a data point scan
 * (MyHomeMyData) Added handling for variant data points, refer to https://github.com/MyHomeMyData/ioBroker.e3oncan/data-points.md for details
 * (MyHomeMyData) Added metadata to several data points, e.g. description, unit, link to further info
 * (MyHomeMyData) During scan of data points now metadata are added to data point objects
