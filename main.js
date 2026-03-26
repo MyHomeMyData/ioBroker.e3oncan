@@ -601,7 +601,7 @@ class E3oncan extends utils.Adapter {
             await this.E3UdsWorkers[devRxAddr].initStates(this, 'standby');
             if (devTxAddr == this.udsMasterDevAddr) {
                 // Initialize units of master device
-                this.udsMasterDevUnits = this.E3UdsWorkers[devRxAddr].config.devUnits;
+                this.udsMasterDevUnits = await this.E3UdsWorkers[devRxAddr].config.devUnits;
             }
         }
         // @ts-expect-error AdapterConfig
