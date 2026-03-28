@@ -57,6 +57,19 @@ For modified data point structures, this information is added to the object tree
 
 The unit of the temperature values ​​is derived from the configuration of the Viessmann device (data point 382). If data point 382 is missing for a device, the configuration of the master device (CAN address 0x680) is used.
 
+### Data Formats for Temperature, Date, and Time
+
+Data point 382 contains information about the device's data format configuration. This includes physical formats as well as date and time formats.
+
+Starting with adapter version 0.11.0, this information is evaluated and stored during the device scan. The configurations are displayed in the device list after the scan is complete. The default configuration is: Metric / DayMonthYear / TwentyFourHours
+
+If this information is available, it is used as follows:
+* During a data point scan, the units of temperature values ​​are set to °C (Metric) or °F (Imperial). No conversion of numerical values ​​is performed.
+* When reading and writing data points, date and time values ​​are processed based on the stored configuration. For example, a date will be year-month-day instead of day-month-year. **For configurations that deviate from the default configuration, these processing steps are experimental!**
+* If no configuration exists for a device (data point 382 not present), the configuration of the main device (address 0x680) is used.
+
+If the information is not available or the default configuration is detected, processing is carried out in the same way as with versions prior to 0.11.0.
+
 ### Writability of Data Points
 
 A data point is treated as writable if its ID is included in the whitelist `e3oncan.0.<DEVICE>.info.udsDidsWritable`, or if it is marked as read-and-write in the metadata.
