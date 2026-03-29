@@ -35,9 +35,9 @@ Important parts of this adpater are based on the project [open3e](https://github
 
 A python based implementation of a pure listening approach (Collect only) using MQTT messaging is also availabe, see [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
 
-Starting with open3e version 0.6.1 and the version 0.11.0 of this adapter, a **concept for variant data points and metadata** for many data point were introduced. Please see [here](https://github.com/MyHomeMyData/ioBroker.e3oncan/data-points.md) for detailed informations about handling of data points and new features.
+Starting with open3e version 0.6.1 and the version 0.11.0 of this adapter, a **concept for variant data points and metadata** for many data point were introduced. Please see [here](data-points.md) for detailed informations about handling of data points and new features.
 
-Starting with adapter version 0.11.0, **device's data format configuration** is evaluated and stored during the device scan. Please see [here](https://github.com/MyHomeMyData/ioBroker.e3oncan/data-points.md#data-formats-for-temperature-date-and-time) for detailed informations.
+Starting with adapter version 0.11.0, **device's data format configuration** is evaluated and stored during the device scan. Please see [here](data-points.md#data-formats-for-temperature-date-and-time) for detailed informations.
 
 # Getting started
 
