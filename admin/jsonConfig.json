@@ -356,13 +356,23 @@
                     "type": "staticLink",
                     "label": "For a list of frequently used data points see here.",
                     "href": "https://github.com/open3e/open3e/wiki/036-DoI-%E2%80%90-Data-points-of-Interest",
-                    "newLine": true
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "linkToOpen3EListOfAllDida": {
                     "type": "staticLink",
                     "label": "For a list of all available data points see here.",
                     "href": "https://github.com/open3e/open3e/blob/develop/src/open3e/Open3Edatapoints.md",
-                    "newLine": true
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "tableUdsDids": {
                     "type": "table",
