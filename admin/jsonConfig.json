@@ -220,7 +220,7 @@
                         {
                             "type": "text",
                             "attr": "devName",
-                            "width": "15% ",
+                            "width": "10% ",
                             "title": "Device name (Viessmann)",
                             "tooltip": "Device ECU name (fixed)",
                             "filter": false,
@@ -237,6 +237,17 @@
                             "sort": false,
                             "validator": "if ( (data.devStateName === '') || (data.devStateName.includes('.')) ) { return false; } else { return true; }",
                             "validatorNoSaveOnError": true
+                        },
+                        {
+                            "type": "text",
+                            "attr": "devUnits",
+                            "width": "15% ",
+                            "title": "Data formats used by the device",
+                            "tooltip": "Device is using these formats for numbers, date and time",
+                            "default": "",
+                            "filter": false,
+                            "sort": false,
+                            "readOnly": true
                         },
                         {
                             "type": "text",
@@ -341,6 +352,18 @@
                     "xl": 12
                 },
 
+                "linkToOpen3EListOfDoIs": {
+                    "type": "staticLink",
+                    "label": "For a list of frequently used data points see here.",
+                    "href": "https://github.com/open3e/open3e/wiki/036-DoI-%E2%80%90-Data-points-of-Interest",
+                    "newLine": true
+                },
+                "linkToOpen3EListOfAllDida": {
+                    "type": "staticLink",
+                    "label": "For a list of all available data points see here.",
+                    "href": "https://github.com/open3e/open3e/blob/develop/src/open3e/Open3Edatapoints.md",
+                    "newLine": true
+                },
                 "tableUdsDids": {
                     "type": "table",
                     "newLine": true,
@@ -359,7 +382,7 @@
                             "type": "number",
                             "attr": "didId",
                             "doNotSave": true,
-                            "width": "10% ",
+                            "width": "5% ",
                             "title": "ID",
                             "tooltip": "Id of datapoint",
                             "filter": false,
@@ -369,7 +392,7 @@
                             "type": "number",
                             "attr": "didLen",
                             "doNotSave": true,
-                            "width": "10% ",
+                            "width": "5% ",
                             "title": "Length",
                             "tooltip": "Length of datapoint",
                             "filter": false,
@@ -379,7 +402,7 @@
                             "type": "text",
                             "attr": "didName",
                             "doNotSave": true,
-                            "width": "55% ",
+                            "width": "30% ",
                             "title": "Name",
                             "tooltip": "Name of datapoint",
                             "filter": true,
@@ -388,9 +411,20 @@
                         },
                         {
                             "type": "text",
+                            "attr": "didDesc",
+                            "doNotSave": true,
+                            "width": "45% ",
+                            "title": "Description",
+                            "tooltip": "Description of datapoint",
+                            "filter": true,
+                            "sort": false,
+                            "readOnly": true
+                        },
+                        {
+                            "type": "text",
                             "attr": "didCodec",
                             "doNotSave": true,
-                            "width": "25% ",
+                            "width": "15% ",
                             "title": "Codec",
                             "tooltip": "Codec used for datapoint",
                             "filter": true,
