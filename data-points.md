@@ -119,7 +119,7 @@ A data point scan discovers all available data points on each device and creates
 
 - During initial setup (strongly recommended, required for writing).
 - After an adapter update that introduces new data point definitions.
-- After adding a new device.
+- After a software update of Viessmann devices.
 
 > **Recommendation:** Perform a device scan first (go to the **List of UDS Devices** tab, press **Start scan …**).
 
