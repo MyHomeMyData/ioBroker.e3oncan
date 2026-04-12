@@ -404,6 +404,13 @@ class E3oncan extends utils.Adapter {
                             // Check if matching did is available in list of variant dids
                             // Skip entries for 'Version' and 'Backup'
                             const didLen = devDids.didsDictDevSpec[did].len;
+                            if (!(didLen in didsDictVar[did])) {
+                                // No variant definition for stored length available, skip this did
+                                this.log.warn(
+                                    `  > Variant did ${did}: no definition for length ${String(didLen)} found in didsE3var. Skipping.`,
+                                );
+                                continue;
+                            }
                             // Up to now, only RawCodec was known for this did or an user defined version or an older version of variant did => Use newly defined variant did
                             // Replace .json and .tree state(s) based on raw data of did
                             const didStateName = `${await devDids.getDidStr(did)}_${await didsDictVar[did][didLen].id}`;
