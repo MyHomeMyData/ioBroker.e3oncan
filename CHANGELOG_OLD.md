@@ -1,5 +1,47 @@
 # Older Changelog Entries
 
+## 0.10.10 (2025-08-07)
+* (MyHomeMyData) Fix for issue #142 (WriteByDid not working in case of specific UDS control frame)
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20250729
+* (MyHomeMyData) Added codec for 64-bit integers. Remark: Encoding (for writing of data) is limited to values < 2^52 (4.503.599.627.370.496).
+
+## 0.10.9 (2025-05-22)
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20250422
+* (MyHomeMyData) Fixed version number of enum info
+* (MyHomeMyData) Fix for issue #125 (findings of repository checker)
+
+## 0.10.8 (2025-03-07)
+* (MyHomeMyData) Bugfix for issue #117
+* (MyHomeMyData) Updated data point 381, refer to discussion https://github.com/open3e/open3e/discussions/212
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20250307
+
+## 0.10.7 (2025-02-26)
+* (MyHomeMyData) Updated dependencies according to issue #111
+
+## 0.10.6 (2025-02-19)
+* (MyHomeMyData) Added missing enum info for data point 2850
+
+## 0.10.5 (2025-02-18)
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20250217
+* (MyHomeMyData) Updated dependencies according to issues #101 and #108
+
+## 0.10.4 (2025-01-15)
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20250114
+
+## 0.10.3 (2024-11-26)
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20241125
+
+## 0.10.2 (2024-11-16)
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20241115
+* (MyHomeMyData) Fixes for issue #81 (added missing size attributes)
+
+## 0.10.1 (2024-10-20)
+* (MyHomeMyData) Fixes for issue #79 (improvements for usability on mobile devices)
+
+## 0.10.0 (2024-10-14)
+* (MyHomeMyData) Added extended support for writing of data points.
+* (MyHomeMyData) Changed naming for CAN adapter.
+
 ### 0.9.5 (2024-09-19)
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20240916
 
