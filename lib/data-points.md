@@ -12,6 +12,7 @@
 - [Writability of data points](#writability-of-data-points)
 - [What happens on adapter start and after updates](#what-happens-on-adapter-start-and-after-updates)
 - [Running a data point scan](#running-a-data-point-scan)
+- [Changelog of data point definitions](#changelog-of-data-point-definitions)
 
 ---
 
@@ -126,3 +127,21 @@ A data point scan discovers all available data points on each device and creates
 **How to start a scan:**
 
 Open the adapter configuration dialog, go to the **List of Data Points** tab, press **Start scan …** and confirm with **OK**. The scan may take up to 5 minutes. Progress is visible in the adapter log (open a second browser tab).
+
+---
+
+## Changelog of Data Point Definitions
+
+### v0.11.0 (2026-04-14)
+
+Updated structure of the following data points:
+268, 269, 271, 274, 279, 282, 284, 285, 286, 287, 288, 289, 290, 291, 318, 320, 321, 324, 531, 1659, 1684, 1768, 1769, 1770, 1771, 1772, 2084, 2085, 2087, 2088, 2090, 2091, 2093, 2094, 2096, 2097, 2099, 2100, 2102, 2103, 2105, 2106, 2108, 2109, 2111, 2112, 2114, 2115, 2117, 2118, 2120, 2121, 2123, 2124, 2126, 2127, 2129, 2130, 2132, 2133, 2135, 2136, 2138, 2139, 2141, 2142, 2240, 2260, 2261, 2263, 2264, 2266, 2267, 2269, 2270, 2272, 2273, 2275, 2276, 2278, 2279, 2281, 2282, 2284, 2285, 2287, 2288, 2290, 2291, 2293, 2294, 2296, 2297, 2299, 2300, 2302, 2303, 2305, 2306, 2308, 2309, 2311, 2312, 2314, 2315, 2317, 2318, 2320, 2333, 2334, 2351, 2352, 2593, 2735, 2806, 3014, 3015, 3016, 3017, 3018, 3032, 3034, 3035, 3036
+
+**Notes:**
+- For all sensor data points the last entry `Unknown` was renamed to `SensorStatus`. This is the reason for the large number of changed data points.
+- For the frequently used data points 531, 1415–1418, 2351, 2532 and 2735 the numerical value has been moved to a sub-state `ID`:
+  - `0531_DomesticHotWaterOperationState.ID`
+  - `1415_MixerOneCircuitOperationState.State.ID`
+  - `2351_HeatPumpCompressor.PowerState.ID`
+  - `2352_AdditionalElectricHeater.PowerState.ID`
+  - `2735_FourThreeWayValveValveCurrentPosition.ID`
