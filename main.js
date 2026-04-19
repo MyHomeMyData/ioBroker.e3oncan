@@ -867,33 +867,52 @@ class E3oncan extends utils.Adapter {
 
             if (obj.command === 'getUdsDidsAll') {
                 if (obj.callback) {
+                    const filter = obj.message && obj.message.filter ? obj.message.filter.toLowerCase() : '';
                     const udsDidsTable = [];
                     for (const devName of this.udsDevStateNames) {
                         const udsDids = new storage.storageDids({ stateBase: devName, device: devName });
                         await udsDids.readKnownDids(this, 'standby');
                         if (udsDids.didsDevSpecAvail) {
                             for (const [did, item] of Object.entries(udsDids.didsDictDevCom)) {
-                                if (did != 'Version') {
-                                    udsDidsTable.push({
-                                        didDev: devName,
-                                        didId: Number(did),
-                                        didLen: Number(item.len),
-                                        didName: item.id,
-                                        didDesc: item.args.desc ? item.args.desc : '',
-                                        didCodec: item.codec,
-                                    });
+                                if (did === 'Version') {
+                                    continue;
+                                }
+                                const row = {
+                                    didDev: devName,
+                                    didId: Number(did),
+                                    didLen: Number(item.len),
+                                    didName: item.id,
+                                    didDesc: item.args.desc ? item.args.desc : '',
+                                    didCodec: item.codec,
+                                };
+                                if (
+                                    !filter ||
+                                    row.didDev.toLowerCase().includes(filter) ||
+                                    row.didName.toLowerCase().includes(filter) ||
+                                    row.didDesc.toLowerCase().includes(filter)
+                                ) {
+                                    udsDidsTable.push(row);
                                 }
                             }
                             for (const [did, item] of Object.entries(udsDids.didsDictDevSpec)) {
-                                if (did.length <= 4) {
-                                    udsDidsTable.push({
-                                        didDev: devName,
-                                        didId: Number(did),
-                                        didLen: Number(item.len),
-                                        didName: item.id,
-                                        didDesc: item.args.desc ? item.args.desc : '',
-                                        didCodec: item.codec,
-                                    });
+                                if (did.length > 4) {
+                                    continue;
+                                }
+                                const row = {
+                                    didDev: devName,
+                                    didId: Number(did),
+                                    didLen: Number(item.len),
+                                    didName: item.id,
+                                    didDesc: item.args.desc ? item.args.desc : '',
+                                    didCodec: item.codec,
+                                };
+                                if (
+                                    !filter ||
+                                    row.didDev.toLowerCase().includes(filter) ||
+                                    row.didName.toLowerCase().includes(filter) ||
+                                    row.didDesc.toLowerCase().includes(filter)
+                                ) {
+                                    udsDidsTable.push(row);
                                 }
                             }
                         }

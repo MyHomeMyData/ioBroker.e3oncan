@@ -319,10 +319,22 @@
                     "lg": 12,
                     "xl": 12
                 },
+                "tableUdsDidsFilter": {
+                    "type": "text",
+                    "label": "Filter (device, name or description)",
+                    "default": "",
+                    "hidden": "!_alive",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "tableUdsDidsButton": {
                     "type": "sendTo",
                     "command": "getUdsDidsAll",
-                    "jsonData": "{}",
+                    "jsonData": "${JSON.stringify({filter: data.tableUdsDidsFilter || ''})}",
                     "label": "Update list of datapoints",
                     "variant": "outlined",
                     "hidden": "!_alive",
