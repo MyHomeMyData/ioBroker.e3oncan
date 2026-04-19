@@ -865,6 +865,44 @@ class E3oncan extends utils.Adapter {
                 }
             }
 
+            if (obj.command === 'getUdsDidsAll') {
+                if (obj.callback) {
+                    const udsDidsTable = [];
+                    for (const devName of this.udsDevStateNames) {
+                        const udsDids = new storage.storageDids({ stateBase: devName, device: devName });
+                        await udsDids.readKnownDids(this, 'standby');
+                        if (udsDids.didsDevSpecAvail) {
+                            for (const [did, item] of Object.entries(udsDids.didsDictDevCom)) {
+                                if (did != 'Version') {
+                                    udsDidsTable.push({
+                                        didDev: devName,
+                                        didId: Number(did),
+                                        didLen: Number(item.len),
+                                        didName: item.id,
+                                        didDesc: item.args.desc ? item.args.desc : '',
+                                        didCodec: item.codec,
+                                    });
+                                }
+                            }
+                            for (const [did, item] of Object.entries(udsDids.didsDictDevSpec)) {
+                                if (did.length <= 4) {
+                                    udsDidsTable.push({
+                                        didDev: devName,
+                                        didId: Number(did),
+                                        didLen: Number(item.len),
+                                        didName: item.id,
+                                        didDesc: item.args.desc ? item.args.desc : '',
+                                        didCodec: item.codec,
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    udsDidsTable.sort((a, b) => a.didDev.localeCompare(b.didDev) || a.didId - b.didId);
+                    this.sendTo(obj.from, obj.command, { native: { tableUdsDids: udsDidsTable } }, obj.callback);
+                }
+            }
+
             if (obj.command === 'getUdsDids') {
                 if (obj.callback) {
                     this.log.silly(`Received data - ${JSON.stringify(obj)}`);
