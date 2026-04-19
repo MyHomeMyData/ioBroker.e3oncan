@@ -868,33 +868,49 @@ class E3oncan extends utils.Adapter {
             if (obj.command === 'getUdsDids') {
                 if (obj.callback) {
                     this.log.silly(`Received data - ${JSON.stringify(obj)}`);
-                    if (obj.message && this.udsDevStateNames.includes(obj.message)) {
-                        const udsDids = new storage.storageDids({ stateBase: obj.message, device: obj.message });
+                    const devName = obj.message && obj.message.device ? obj.message.device : obj.message;
+                    const filter = obj.message && obj.message.filter ? obj.message.filter.toLowerCase() : '';
+                    if (devName && this.udsDevStateNames.includes(devName)) {
+                        const udsDids = new storage.storageDids({ stateBase: devName, device: devName });
                         await udsDids.readKnownDids(this, 'standby');
                         const udsDidsTable = [];
                         if (udsDids.didsDevSpecAvail) {
                             for (const [did, item] of Object.entries(udsDids.didsDictDevCom)) {
-                                if (did != 'Version') {
-                                    udsDidsTable.push({
-                                        didId: Number(did),
-                                        didLen: Number(item.len),
-                                        didName: item.id,
-                                        didDesc: await (item.args.desc ? item.args.desc : ''),
-                                        didCodec: item.codec,
-                                    });
+                                if (did === 'Version') {
+                                    continue;
                                 }
-                                //if (udsDidsTable.length >= 50) break;
+                                const row = {
+                                    didId: Number(did),
+                                    didLen: Number(item.len),
+                                    didName: item.id,
+                                    didDesc: item.args.desc ? item.args.desc : '',
+                                    didCodec: item.codec,
+                                };
+                                if (
+                                    !filter ||
+                                    row.didName.toLowerCase().includes(filter) ||
+                                    row.didDesc.toLowerCase().includes(filter)
+                                ) {
+                                    udsDidsTable.push(row);
+                                }
                             }
                             for (const [did, item] of Object.entries(udsDids.didsDictDevSpec)) {
-                                if (did.length <= 4) {
-                                    udsDidsTable.push({
-                                        didId: Number(did),
-                                        didLen: Number(item.len),
-                                        didName: item.id,
-                                        didDesc: await (item.args.desc ? item.args.desc : ''),
-                                        didCodec: item.codec,
-                                    });
-                                    //if (udsDidsTable.length >= 60) break;
+                                if (did.length > 4) {
+                                    continue;
+                                }
+                                const row = {
+                                    didId: Number(did),
+                                    didLen: Number(item.len),
+                                    didName: item.id,
+                                    didDesc: item.args.desc ? item.args.desc : '',
+                                    didCodec: item.codec,
+                                };
+                                if (
+                                    !filter ||
+                                    row.didName.toLowerCase().includes(filter) ||
+                                    row.didDesc.toLowerCase().includes(filter)
+                                ) {
+                                    udsDidsTable.push(row);
                                 }
                             }
                             udsDidsTable.sort((a, b) => a.didId - b.didId);

@@ -335,10 +335,22 @@
                     "newLine": true
                 },
 
+                "tableUdsDidsFilter": {
+                    "type": "text",
+                    "label": "Filter by name or description",
+                    "default": "",
+                    "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) ) { return false; }; return true;",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "tableUdsDidsButton": {
                     "type": "sendTo",
                     "command": "getUdsDids",
-                    "jsonData": "${JSON.stringify(data.tableUdsDidsSelDev)}",
+                    "jsonData": "${JSON.stringify({device: data.tableUdsDidsSelDev, filter: data.tableUdsDidsFilter || ''})}",
                     "label": "Update list of datapoints",
                     "variant": "outlined",
                     "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) ) { return false; }; return true;",
