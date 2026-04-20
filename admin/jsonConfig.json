@@ -276,13 +276,12 @@
         "tabUdsDids": {
             "type": "panel",
             "label": "List of datapoints",
+            "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length == 0)) { return true; } else {return false; }",
+            "xs": 12, "sm": 12, "md": 6,"lg": 4, "xl": 4,
+
             "items": {
                 "tableUdsDidsWarning": {
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12,
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12,"xl": 12,
                     "type": "staticText",
                     "text": "Configuration requires a running adapter instance!",
                     "hidden": "_alive",
@@ -307,22 +306,28 @@
                     },
                     "hidden": "!_alive",
                     "newLine": true,
-                    "xs": 12,
-                    "sm": 6,
-                    "md": 4,
-                    "lg": 3,
-                    "xl": 3
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12
                 },
-                "linkToDatapointsPage": {
-                    "type": "staticLink",
-                    "label": "Open datapoints configuration (schedules & collect)",
-                    "href": "/adapter/e3oncan/tab.html",
-                    "newLine": false,
-                    "xs": 12,
-                    "sm": 6,
-                    "md": 4,
-                    "lg": 3,
-                    "xl": 3
+                "tableUdsDidsHint1": {
+                    "type": "staticText",
+                    "newLine": true,
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "text": "Run the scan above to discover all data points on your devices and add metadata (description, unit, access). This is required before writing to any data point and recommended after every adapter or device firmware update.",
+                    "style": { "fontSize": "150%" }
+                },
+                "tableUdsDidsHint2": {
+                    "type": "staticText",
+                    "newLine": true,
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "text": "► 'e3oncan datapoints' tab (left sidebar): assign data points to read on start-up or on a schedule, and enable Collect mode per device.",
+                    "style": { "fontSize": "150%" }
+                },
+                "tableUdsDidsHint3": {
+                    "type": "staticText",
+                    "newLine": true,
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "text": "► 'Assignments to UDS CAN Adapter' tab (this dialog): alternative way to configure schedules and Collect mode; also the only place to configure energy meters (E380, E3100CB).",
+                    "style": { "fontSize": "150%" }
                 },
                 "linkToOpen3EListOfDoIs": {
                     "type": "staticLink",
