@@ -150,7 +150,8 @@
     "connectionType": "local",
     "dataSource": "push",
     "adminUI": {
-      "config": "json"
+      "config": "json",
+      "tab": "tab_datapoints.html"
     },
     "dependencies": [
       {

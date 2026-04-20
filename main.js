@@ -865,6 +865,40 @@ class E3oncan extends utils.Adapter {
                 }
             }
 
+            if (obj.command === 'getTabDids') {
+                if (obj.callback) {
+                    const result = [];
+                    for (const dev of /** @type {any[]} */ (Object.values(this.config.tableUdsDevices))) {
+                        const devStateName = dev.devStateName;
+                        const udsDids = new storage.storageDids({ stateBase: devStateName, device: devStateName });
+                        await udsDids.readKnownDids(this, 'standby');
+                        const dids = [];
+                        if (udsDids.didsDevSpecAvail) {
+                            for (const [did, item] of Object.entries(udsDids.didsDictDevCom)) {
+                                if (did === 'Version') {
+                                    continue;
+                                }
+                                dids.push({ didId: Number(did), didName: item.id, didDesc: item.args.desc || '' });
+                            }
+                            for (const [did, item] of Object.entries(udsDids.didsDictDevSpec)) {
+                                if (did.length > 4) {
+                                    continue;
+                                }
+                                dids.push({ didId: Number(did), didName: item.id, didDesc: item.args.desc || '' });
+                            }
+                            dids.sort((a, b) => a.didId - b.didId);
+                        }
+                        result.push({
+                            devStateName,
+                            devAddr: dev.devAddr,
+                            collectCanId: dev.collectCanId || '',
+                            dids,
+                        });
+                    }
+                    this.sendTo(obj.from, obj.command, result, obj.callback);
+                }
+            }
+
             if (obj.command === 'getUdsDids') {
                 if (obj.callback) {
                     this.log.silly(`Received data - ${JSON.stringify(obj)}`);
