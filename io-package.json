@@ -166,6 +166,14 @@
       "config": "json",
       "tab": "html"
     },
+    "adminTab": {
+      "singleton": false,
+      "name": {
+        "en": "e3oncan datapoints",
+        "de": "e3oncan Datenpunkte"
+      },
+      "icon": "e3oncan.png"
+    },
     "dependencies": [
       {
         "js-controller": ">=6.0.11"
