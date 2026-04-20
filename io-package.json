@@ -151,7 +151,7 @@
     "dataSource": "push",
     "adminUI": {
       "config": "json",
-      "tab": "tab_datapoints.html"
+      "tab": "html"
     },
     "dependencies": [
       {
