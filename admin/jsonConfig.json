@@ -337,8 +337,9 @@
 
                 "tableUdsDidsFilter": {
                     "type": "text",
-                    "label": "Filter by name or description",
+                    "label": "Filter by name or description (press 'Update' to apply)",
                     "default": "",
+                    "doNotSave": true,
                     "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) ) { return false; }; return true;",
                     "newLine": true,
                     "xs": 12,
@@ -427,7 +428,7 @@
                             "width": "30% ",
                             "title": "Name",
                             "tooltip": "Name of datapoint",
-                            "filter": true,
+                            "filter": false,
                             "sort": false,
                             "readOnly": true
                         },
@@ -438,7 +439,7 @@
                             "width": "45% ",
                             "title": "Description",
                             "tooltip": "Description of datapoint",
-                            "filter": true,
+                            "filter": false,
                             "sort": false,
                             "readOnly": true
                         },
@@ -449,7 +450,7 @@
                             "width": "15% ",
                             "title": "Codec",
                             "tooltip": "Codec used for datapoint",
-                            "filter": true,
+                            "filter": false,
                             "sort": false,
                             "readOnly": true
                         }
