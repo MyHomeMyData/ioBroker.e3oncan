@@ -6,6 +6,7 @@
     <title>Datapoints — e3oncan</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="/socket.io/socket.io.js"></script>
     <style>
         body { background-color: #212529; color: #dee2e6; padding: 1rem; }
         .card { background-color: #2b3035; border-color: #495057; }
@@ -57,24 +58,49 @@
         let allDevices = [];
         let adapterNative = {};
         let hasChanges = false;
+        let sock = null;
 
-        function getSocket() {
-            return window.socket || (window.parent && window.parent.socket) || null;
+        function initSocket() {
+            return new Promise(function(resolve) {
+                setStatus('Connecting…');
+                try {
+                    if (typeof io === 'undefined' || typeof io.connect !== 'function') {
+                        setStatus('socket.io not loaded (io=' + typeof io + ')', 'danger');
+                        document.getElementById('btn-load').disabled = false;
+                        return;
+                    }
+                    const s = io.connect(window.location.origin, {});
+                    s.on('connect', function() { sock = s; resolve(); });
+                    s.on('connect_error', function(err) {
+                        setStatus('Socket connection failed: ' + (err && err.message || err), 'danger');
+                        document.getElementById('btn-load').disabled = false;
+                    });
+                } catch(e) {
+                    setStatus('initSocket error: ' + e.message, 'danger');
+                    document.getElementById('btn-load').disabled = false;
+                }
+            });
         }
 
         // --- Load ---
         function loadData() {
             setStatus('Loading…');
             document.getElementById('btn-load').disabled = true;
-            const sock = getSocket();
             if (!sock) {
-                setStatus('No socket connection. Is the adapter instance running?', 'danger');
+                setStatus('No socket connection.', 'danger');
                 document.getElementById('btn-load').disabled = false;
                 return;
             }
             sock.emit('getObject', 'system.adapter.' + namespace, function(err, obj) {
+                if (err) { setStatus('getObject error: ' + err, 'danger'); document.getElementById('btn-load').disabled = false; return; }
                 adapterNative = (obj && obj.native) || {};
+                const timeout = setTimeout(function() {
+                    setStatus('No response from adapter instance ' + namespace + '. Is the adapter running?', 'danger');
+                    document.getElementById('btn-load').disabled = false;
+                }, 10000);
                 sock.emit('sendTo', namespace, 'getTabDids', {}, function(result) {
+                    clearTimeout(timeout);
+                    if (!result) { setStatus('Adapter returned no data.', 'danger'); document.getElementById('btn-load').disabled = false; return; }
                     allDevices = result || [];
                     renderDevices();
                     hasChanges = false;
@@ -308,7 +334,6 @@
                 }
             });
 
-            const sock = getSocket();
             sock.emit('extendObject', 'system.adapter.' + namespace, {
                 native: {
                     tableUdsSchedules: newSchedules,
@@ -336,7 +361,11 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(loadData, 400);
+            setStatus('Initializing…');
+            initSocket().then(function() { loadData(); }).catch(function(e) {
+                setStatus('Error: ' + e.message, 'danger');
+                document.getElementById('btn-load').disabled = false;
+            });
         });
     </script>
 </body>
