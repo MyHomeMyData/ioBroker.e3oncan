@@ -275,13 +275,8 @@
         },
         "tabUdsDids": {
             "type": "panel",
-            "xs": 12,
-            "sm": 12,
-            "md": 6,
-            "lg": 4,
-            "xl": 4,
             "label": "List of datapoints",
-            "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length == 0)) { return true; } else {return false; }",
+            "hidden": "true",
             "items": {
                 "tableUdsDidsWarning": {
                     "xs": 12,
