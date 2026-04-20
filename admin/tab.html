@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +12,7 @@
         .card { background-color: #2b3035; border-color: #495057; }
         .card-header { background-color: #343a40; border-color: #495057; }
         .table { --bs-table-bg: transparent; --bs-table-color: #dee2e6; --bs-table-border-color: #495057; }
+        .table thead th { color: #dee2e6 !important; background-color: #2b3035 !important; border-color: #495057 !important; }
         .table-hover tbody tr:hover td { background-color: rgba(255,255,255,0.05); }
         .form-control, .form-select { background-color: #343a40; color: #dee2e6; border-color: #495057; }
         .form-control:focus { background-color: #343a40; color: #dee2e6; border-color: #86b7fe; box-shadow: none; }
@@ -19,7 +20,7 @@
         .input-group-text { background-color: #343a40; color: #adb5bd; border-color: #495057; }
         .ecu-group .card-header { cursor: pointer; }
         .ecu-group .bi-chevron-down { transition: transform 0.2s; }
-        .ecu-group .card-header[aria-expanded="false"] .bi-chevron-down { transform: rotate(-90deg); }
+        .dev-name-col { flex: 0 0 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .interval-input { width: 72px !important; text-align: center; }
         code { color: #adb5bd; }
     </style>
@@ -39,12 +40,20 @@
         <button class="btn btn-sm btn-outline-secondary" onclick="collapseAll()">
             <i class="bi bi-arrows-collapse"></i> Collapse All
         </button>
-        <button class="btn btn-sm btn-outline-primary ms-auto" id="btn-load" onclick="loadData()">
-            <i class="bi bi-arrow-clockwise"></i> Load
-        </button>
-        <button class="btn btn-sm btn-success" id="btn-save" onclick="saveData()" disabled>
-            <i class="bi bi-check-lg"></i> Save
-        </button>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <span id="unsaved-badge" class="badge bg-warning text-dark d-none">
+                <i class="bi bi-exclamation-triangle-fill"></i> Unsaved changes
+            </span>
+            <button class="btn btn-sm btn-outline-primary" id="btn-load" onclick="loadData()">
+                <i class="bi bi-arrow-clockwise"></i> Load
+            </button>
+            <button class="btn btn-sm btn-success" id="btn-save" onclick="saveData(false)" disabled>
+                <i class="bi bi-check-lg"></i> Save
+            </button>
+            <button class="btn btn-sm btn-primary" id="btn-save-close" onclick="saveData(true)" disabled>
+                <i class="bi bi-check-lg"></i> Save &amp; Close
+            </button>
+        </div>
     </div>
     <div id="status" class="small text-muted mb-2"></div>
     <div id="devices-container"></div>
@@ -105,6 +114,8 @@
                     renderDevices();
                     hasChanges = false;
                     document.getElementById('btn-save').disabled = true;
+                    document.getElementById('btn-save-close').disabled = true;
+                    document.getElementById('unsaved-badge').classList.add('d-none');
                     const totalDids = allDevices.reduce(function(s, d) { return s + d.dids.length; }, 0);
                     setStatus('Loaded ' + totalDids + ' datapoints across ' + allDevices.length + ' device(s).');
                     document.getElementById('btn-load').disabled = false;
@@ -167,7 +178,7 @@
 
                 let collectHtml = '';
                 if (collect !== null) {
-                    collectHtml = '<div class="d-flex align-items-center gap-2 ms-3" onclick="event.stopPropagation()">' +
+                    collectHtml = '<div class="collect-area d-flex align-items-center gap-2 ms-2">' +
                         '<div class="form-check form-switch mb-0">' +
                         '<input class="form-check-input collect-toggle" type="checkbox" id="ct-' + dev.devStateName + '"' +
                         (collect.active ? ' checked' : '') + ' onchange="markChanged()">' +
@@ -197,15 +208,16 @@
                         '</tr>';
                 }
 
-                card.innerHTML = '<div class="card-header py-2 d-flex justify-content-between align-items-center"' +
-                    ' data-bs-toggle="collapse" data-bs-target="#' + collapseId + '" aria-expanded="true">' +
-                    '<div class="d-flex align-items-center flex-wrap gap-2">' +
-                    '<div><strong>' + dev.devStateName + '</strong>' +
+                card.innerHTML = '<div class="card-header py-2 d-flex align-items-center gap-2">' +
+                    '<div class="d-flex align-items-center gap-2 flex-grow-0">' +
+                    '<div class="dev-name-col"><strong>' + dev.devStateName + '</strong>' +
                     '<code class="ms-2 small">' + dev.devAddr + '</code>' +
                     '<span class="badge bg-secondary ms-2">' + dev.dids.length + ' DIDs</span>' +
                     (activeCount > 0 ? '<span class="badge bg-success ms-1">' + activeCount + ' scheduled</span>' : '') +
-                    '</div>' + collectHtml + '</div>' +
-                    '<i class="bi bi-chevron-down"></i></div>' +
+                    '</div>' +
+                    collectHtml +
+                    '</div>' +
+                    '<i class="bi bi-chevron-down ms-auto"></i></div>' +
                     '<div class="collapse show" id="' + collapseId + '">' +
                     '<div class="table-responsive">' +
                     '<table class="table table-sm table-hover align-middle mb-0" style="table-layout:fixed;width:100%">' +
@@ -216,7 +228,25 @@
                     '<tbody>' + rowsHtml + '</tbody></table></div></div>';
 
                 container.appendChild(card);
+
+                // JS-based collapse (avoids data-bs-toggle propagation issues)
+                const collapseEl = card.querySelector('.collapse');
+                const chevron = card.querySelector('.bi-chevron-down');
+                card.querySelector('.card-header').addEventListener('click', function(e) {
+                    if (e.target.closest('.collect-area')) return;
+                    bootstrap.Collapse.getOrCreateInstance(collapseEl).toggle();
+                });
+                collapseEl.addEventListener('hide.bs.collapse', function() { chevron.style.transform = 'rotate(-90deg)'; });
+                collapseEl.addEventListener('show.bs.collapse', function() { chevron.style.transform = ''; });
             }
+
+            // Synchronise all device-name widths to the widest one
+            // Must be three separate loops: reset all → measure all → set all
+            const nameCols = container.querySelectorAll('.dev-name-col');
+            nameCols.forEach(function(el) { el.style.width = ''; });
+            let maxW = 0;
+            nameCols.forEach(function(el) { maxW = Math.max(maxW, el.getBoundingClientRect().width); });
+            nameCols.forEach(function(el) { el.style.width = Math.ceil(maxW) + 'px'; });
         }
 
         // --- Filter ---
@@ -244,24 +274,27 @@
 
         function expandAll() {
             document.querySelectorAll('.ecu-group .collapse:not(.show)').forEach(function(el) {
-                new bootstrap.Collapse(el, { toggle: true });
+                bootstrap.Collapse.getOrCreateInstance(el).show();
             });
         }
         function collapseAll() {
             document.querySelectorAll('.ecu-group .collapse.show').forEach(function(el) {
-                new bootstrap.Collapse(el, { toggle: true });
+                bootstrap.Collapse.getOrCreateInstance(el).hide();
             });
         }
 
         function markChanged() {
             hasChanges = true;
             document.getElementById('btn-save').disabled = false;
+            document.getElementById('btn-save-close').disabled = false;
+            document.getElementById('unsaved-badge').classList.remove('d-none');
         }
 
         // --- Save ---
-        function saveData() {
+        function saveData(andClose) {
             setStatus('Saving…');
             document.getElementById('btn-save').disabled = true;
+            document.getElementById('btn-save-close').disabled = true;
 
             const tabDevAddrs = new Set(allDevices.map(function(d) { return Number(d.devAddr); }));
             const newSchedules = (adapterNative.tableUdsSchedules || []).filter(function(s) {
@@ -349,7 +382,12 @@
                     adapterNative.tableCollectCanExt = newCollectExt;
                     adapterNative.tableCollectCanInt = newCollectInt;
                     hasChanges = false;
-                    setStatus('Saved successfully.', 'success');
+                    document.getElementById('unsaved-badge').classList.add('d-none');
+                    if (andClose) {
+                        window.history.back();
+                    } else {
+                        setStatus('Saved successfully.', 'success');
+                    }
                 }
             });
         }
@@ -359,6 +397,11 @@
             el.className = 'small mb-2 ' + (type ? 'text-' + type : 'text-muted');
             el.textContent = msg;
         }
+
+        // Warn on direct URL navigation (browser close/refresh/back when not in iframe)
+        window.addEventListener('beforeunload', function(e) {
+            if (hasChanges) { e.preventDefault(); e.returnValue = ''; }
+        });
 
         document.addEventListener('DOMContentLoaded', function() {
             setStatus('Initializing…');
