@@ -55,6 +55,22 @@
             </button>
         </div>
     </div>
+    <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+        <span class="small text-muted">Schedule filter:</span>
+        <div class="btn-group btn-group-sm" role="group">
+            <input type="radio" class="btn-check" name="schedFilter" id="sf-all" value="all" checked onchange="filterRows()">
+            <label class="btn btn-outline-secondary" for="sf-all">All</label>
+            <input type="radio" class="btn-check" name="schedFilter" id="sf-onstart" value="onstart" onchange="filterRows()">
+            <label class="btn btn-outline-secondary" for="sf-onstart"><i class="bi bi-play-fill"></i> On Start</label>
+            <input type="radio" class="btn-check" name="schedFilter" id="sf-interval" value="interval" onchange="filterRows(); document.getElementById('interval-val-wrap').classList.toggle('d-none', !this.checked)">
+            <label class="btn btn-outline-secondary" for="sf-interval"><i class="bi bi-clock"></i> Interval</label>
+        </div>
+        <div id="interval-val-wrap" class="input-group input-group-sm d-none" style="width:150px">
+            <span class="input-group-text small">= </span>
+            <input type="number" class="form-control" id="filter-interval-val" placeholder="any" min="1" step="1" oninput="filterRows()">
+            <span class="input-group-text small">s</span>
+        </div>
+    </div>
     <div id="status" class="small text-muted mb-2"></div>
     <div id="devices-container"></div>
 
@@ -252,21 +268,34 @@
         // --- Filter ---
         function filterRows() {
             const search = document.getElementById('search').value.toLowerCase();
+            const schedMode = document.querySelector('input[name="schedFilter"]:checked').value;
+            const ivStr = document.getElementById('filter-interval-val').value.trim();
+            const ivFilter = (schedMode === 'interval' && ivStr) ? parseInt(ivStr, 10) : null;
+            const hasActiveFilter = search || schedMode !== 'all';
+
             document.querySelectorAll('.ecu-group').forEach(function(group) {
                 let visibleCount = 0;
                 group.querySelectorAll('tbody tr').forEach(function(row) {
-                    const visible = !search ||
+                    const textOk = !search ||
                         String(row.dataset.did).includes(search) ||
                         (row.dataset.name || '').includes(search) ||
                         (row.dataset.desc || '').includes(search);
+                    let schedOk = true;
+                    if (schedMode === 'onstart') {
+                        schedOk = row.querySelector('.onstart-check').checked;
+                    } else if (schedMode === 'interval') {
+                        const iv = row.querySelector('.interval-input').value.trim();
+                        schedOk = iv !== '' && (ivFilter === null || parseInt(iv, 10) === ivFilter);
+                    }
+                    const visible = textOk && schedOk;
                     row.style.display = visible ? '' : 'none';
                     if (visible) visibleCount++;
                 });
                 group.style.display = visibleCount > 0 ? '' : 'none';
-                if (search && visibleCount > 0) {
+                if (hasActiveFilter && visibleCount > 0) {
                     const collapse = group.querySelector('.collapse');
                     if (collapse && !collapse.classList.contains('show')) {
-                        new bootstrap.Collapse(collapse, { toggle: true });
+                        bootstrap.Collapse.getOrCreateInstance(collapse).show();
                     }
                 }
             });
