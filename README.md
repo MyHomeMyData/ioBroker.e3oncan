@@ -22,6 +22,7 @@
   - [Step 2 – Device scan](#step-2--device-scan)
   - [Step 3 – Data point scan](#step-3--data-point-scan)
   - [Step 4 – Assignments and schedules](#step-4--assignments-and-schedules)
+- [e3oncan datapoints tab](#e3oncan-datapoints-tab)
 - [Reading data points](#reading-data-points)
 - [Writing data points](#writing-data-points)
 - [Data points and metadata](#data-points-and-metadata)
@@ -132,29 +133,43 @@ What the scan does:
 
 This step is not strictly mandatory for read-only use, but it is **strongly recommended** – and **required** if you want to write to any data point.
 
-After the scan, you can browse the discovered data points in the configuration dialog by selecting a device and pressing **Update list of data points**. Use the filter symbol to search by name or codec. Deactivate the filter before switching to another device.
+After the scan, browse and manage the discovered data points using the **e3oncan datapoints** sidebar tab (see [below](#e3oncan-datapoints-tab)).
 
 ### Step 4 – Assignments and schedules
 
-Go to the **Assignments to UDS CAN Adapter** tab (and the second adapter tab if applicable).
+The recommended way to configure read schedules and per-device Collect mode is the **e3oncan datapoints** sidebar tab (see [below](#e3oncan-datapoints-tab)). Energy meters must still be configured on the **Assignments to UDS CAN Adapter** tab.
 
-**Energy meters (Collect mode)**
+**Energy meters (Assignments tab)**
 
-If you have E380 or E3100CB energy meters, you can activate listening for them here. Set **Min. update time (s)** to control how often values are stored. The default of 5 seconds is recommended – energy meters transmit more than 20 values per second, and setting this to 0 will put a high load on ioBroker.
-
-**E3 device collection (Collect mode)**
-
-Press **+** to add a device. Check **Active**, select the device, and set **Min. update time (s)**. A value of 5s is recommended; 0s (store every received value) is possible but generates more load.
-
-This mode captures data exchanged between your E3 devices in real time, without sending any requests. See the [FAQ](#faq-and-limitations) for details on which devices support this.
-
-**UDSonCAN read schedules**
-
-Press **+** to add a schedule. Select a device and a list of data points to read, then set an interval in seconds. A value of 0 means the data points are read once at adapter startup.
-
-You can add multiple schedules per device to request some data points more frequently than others. Use the **List of Data Points** tab (open in a second browser tab) as a reference.
+If you have E380 or E3100CB energy meters, activate listening for them on the **Assignments to UDS CAN Adapter** tab. Set **Min. update time (s)** to control how often values are stored. The default of 5 seconds is recommended – energy meters transmit more than 20 values per second, and setting this to 0 will put a high load on ioBroker.
 
 Press **SAVE & CLOSE** when done. Check the object tree to verify that data is being collected.
+
+---
+
+## e3oncan datapoints tab
+
+The **e3oncan datapoints** sidebar tab is the primary place for browsing data points and configuring UDSonCAN read schedules and per-device Collect mode. It is available directly from the ioBroker admin sidebar after the adapter is installed.
+
+**Browsing data points**
+
+All devices are shown as expandable cards. Each row shows one data point with its ID, name, codec, and schedule settings. Use the search box to filter by name or ID.
+
+**Scheduling**
+
+For each data point you can:
+- Check **On start** – the data point is read once when the adapter starts.
+- Enter an **Interval (s)** – the data point is read repeatedly at that interval.
+
+Both options can be combined. Use the schedule filter (All / On Start / Interval) to quickly focus on already-scheduled data points.
+
+**Collect mode**
+
+The Collect toggle at the top of each device card activates passive listening for that device. Set **Min. update time (s)** to limit how often values are stored (5 s recommended).
+
+**Saving**
+
+Press **Save** to apply your changes, or **Save & Close** to apply and return to the previous page. An **Unsaved changes** badge appears whenever there are pending changes.
 
 ---
 
@@ -283,6 +298,9 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Introduced new e3oncan datapoints tab on side bar
+
 ### 0.11.3 (2026-05-03)
 * (MyHomeMyData) The accidentally mentioned data points 1415-1418 have been removed from the changelog of version 0.11.0
 
@@ -291,7 +309,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 
 ### 0.11.1 (2026-04-23)
 * (MyHomeMyData) Improved robustness: Receiving a data point of length zero is treated as a "negative response"
-* (MyHomeMyData) The metadata is now also restored after a data point is deleted 
+* (MyHomeMyData) The metadata is now also restored after a data point is deleted
 * (MyHomeMyData) Aligned test cases for German system language
 
 ### 0.11.0 (2026-04-14)
