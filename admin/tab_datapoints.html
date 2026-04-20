@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datapoints — e3oncan</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { background-color: #212529; color: #dee2e6; padding: 1rem; }
+        .card { background-color: #2b3035; border-color: #495057; }
+        .card-header { background-color: #343a40; border-color: #495057; }
+        .table { --bs-table-bg: transparent; --bs-table-color: #dee2e6; --bs-table-border-color: #495057; }
+        .table-hover tbody tr:hover td { background-color: rgba(255,255,255,0.05); }
+        .form-control, .form-select { background-color: #343a40; color: #dee2e6; border-color: #495057; }
+        .form-control:focus { background-color: #343a40; color: #dee2e6; border-color: #86b7fe; box-shadow: none; }
+        .form-control::placeholder { color: #6c757d; }
+        .input-group-text { background-color: #343a40; color: #adb5bd; border-color: #495057; }
+        .ecu-group .card-header { cursor: pointer; }
+        .ecu-group .bi-chevron-down { transition: transform 0.2s; }
+        .ecu-group .card-header[aria-expanded="false"] .bi-chevron-down { transform: rotate(-90deg); }
+        .interval-input { width: 72px !important; text-align: center; }
+        code { color: #adb5bd; }
+    </style>
+</head>
+<body>
+    <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+        <h5 class="mb-0 me-1"><i class="bi bi-database"></i> Datapoints</h5>
+        <div class="input-group input-group-sm" style="max-width:300px">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control" id="search"
+                   placeholder="Search by ID, name or description…"
+                   oninput="filterRows()">
+        </div>
+        <button class="btn btn-sm btn-outline-secondary" onclick="expandAll()">
+            <i class="bi bi-arrows-expand"></i> Expand All
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" onclick="collapseAll()">
+            <i class="bi bi-arrows-collapse"></i> Collapse All
+        </button>
+        <button class="btn btn-sm btn-outline-primary ms-auto" id="btn-load" onclick="loadData()">
+            <i class="bi bi-arrow-clockwise"></i> Load
+        </button>
+        <button class="btn btn-sm btn-success" id="btn-save" onclick="saveData()" disabled>
+            <i class="bi bi-check-lg"></i> Save
+        </button>
+    </div>
+    <div id="status" class="small text-muted mb-2"></div>
+    <div id="devices-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const instance = urlParams.get('instance') || '0';
+        const namespace = 'e3oncan.' + instance;
+
+        let allDevices = [];
+        let adapterNative = {};
+        let hasChanges = false;
+
+        function getSocket() {
+            return window.socket || (window.parent && window.parent.socket) || null;
+        }
+
+        // --- Load ---
+        function loadData() {
+            setStatus('Loading…');
+            document.getElementById('btn-load').disabled = true;
+            const sock = getSocket();
+            if (!sock) {
+                setStatus('No socket connection. Is the adapter instance running?', 'danger');
+                document.getElementById('btn-load').disabled = false;
+                return;
+            }
+            sock.emit('getObject', 'system.adapter.' + namespace, function(err, obj) {
+                adapterNative = (obj && obj.native) || {};
+                sock.emit('sendTo', namespace, 'getTabDids', {}, function(result) {
+                    allDevices = result || [];
+                    renderDevices();
+                    hasChanges = false;
+                    document.getElementById('btn-save').disabled = true;
+                    const totalDids = allDevices.reduce(function(s, d) { return s + d.dids.length; }, 0);
+                    setStatus('Loaded ' + totalDids + ' datapoints across ' + allDevices.length + ' device(s).');
+                    document.getElementById('btn-load').disabled = false;
+                });
+            });
+        }
+
+        // --- Schedule helpers ---
+        function getScheduleState(devAddr) {
+            const onStartDids = new Set();
+            const intervalDids = new Map();
+            const schedules = adapterNative.tableUdsSchedules || [];
+            for (let i = 0; i < schedules.length; i++) {
+                const sched = schedules[i];
+                if (!sched.udsScheduleActive) continue;
+                if (Number(sched.udsSelectDevAddr) !== Number(devAddr)) continue;
+                const parts = String(sched.udsScheduleDids).split(',');
+                for (let j = 0; j < parts.length; j++) {
+                    const didId = parseInt(parts[j].trim(), 10);
+                    if (isNaN(didId)) continue;
+                    if (Number(sched.udsSchedule) === 0) {
+                        onStartDids.add(didId);
+                    } else {
+                        intervalDids.set(didId, Number(sched.udsSchedule));
+                    }
+                }
+            }
+            return { onStartDids: onStartDids, intervalDids: intervalDids };
+        }
+
+        function getCollectState(collectCanId) {
+            const ext = adapterNative.tableCollectCanExt || [];
+            const int_ = adapterNative.tableCollectCanInt || [];
+            const all = ext.concat(int_);
+            for (let i = 0; i < all.length; i++) {
+                if (String(all[i].collectCanId) === String(collectCanId)) {
+                    return { active: !!all[i].collectActive, delay: all[i].collectDelayTime || 5 };
+                }
+            }
+            return { active: false, delay: 5 };
+        }
+
+        // --- Render ---
+        function renderDevices() {
+            const container = document.getElementById('devices-container');
+            container.innerHTML = '';
+            for (let di = 0; di < allDevices.length; di++) {
+                const dev = allDevices[di];
+                const state = getScheduleState(dev.devAddr);
+                const collect = dev.collectCanId ? getCollectState(dev.collectCanId) : null;
+                const collapseId = 'dev-' + dev.devStateName.replace(/[^a-z0-9]/gi, '_');
+                const activeCount = dev.dids.filter(function(d) {
+                    return state.onStartDids.has(d.didId) || state.intervalDids.has(d.didId);
+                }).length;
+
+                const card = document.createElement('div');
+                card.className = 'card mb-2 ecu-group';
+                card.dataset.devStateName = dev.devStateName;
+                card.dataset.devAddr = String(dev.devAddr);
+
+                let collectHtml = '';
+                if (collect !== null) {
+                    collectHtml = '<div class="d-flex align-items-center gap-2 ms-3" onclick="event.stopPropagation()">' +
+                        '<div class="form-check form-switch mb-0">' +
+                        '<input class="form-check-input collect-toggle" type="checkbox" id="ct-' + dev.devStateName + '"' +
+                        (collect.active ? ' checked' : '') + ' onchange="markChanged()">' +
+                        '<label class="form-check-label small text-muted" for="ct-' + dev.devStateName + '">Collect</label>' +
+                        '</div>' +
+                        '<div class="input-group input-group-sm" style="width:140px">' +
+                        '<span class="input-group-text small">Delay</span>' +
+                        '<input type="number" class="form-control form-control-sm collect-delay" value="' + collect.delay + '" min="0" step="1" onchange="markChanged()">' +
+                        '<span class="input-group-text small">s</span>' +
+                        '</div></div>';
+                }
+
+                let rowsHtml = '';
+                for (let ri = 0; ri < dev.dids.length; ri++) {
+                    const dp = dev.dids[ri];
+                    const onStart = state.onStartDids.has(dp.didId);
+                    const interval = state.intervalDids.has(dp.didId) ? state.intervalDids.get(dp.didId) : '';
+                    rowsHtml += '<tr data-did="' + dp.didId + '" data-name="' + (dp.didName || '').toLowerCase() +
+                        '" data-desc="' + (dp.didDesc || '').toLowerCase() + '">' +
+                        '<td><code class="small">' + dp.didId + '</code></td>' +
+                        '<td class="text-truncate small" title="' + (dp.didName || '') + '">' + (dp.didName || '—') + '</td>' +
+                        '<td class="text-truncate small" title="' + (dp.didDesc || '') + '">' + (dp.didDesc || '') + '</td>' +
+                        '<td class="text-center"><input class="form-check-input onstart-check" type="checkbox"' +
+                        (onStart ? ' checked' : '') + ' onchange="markChanged()"></td>' +
+                        '<td class="text-center"><input type="number" class="form-control form-control-sm interval-input"' +
+                        ' value="' + interval + '" placeholder="—" min="1" step="1" oninput="markChanged()"></td>' +
+                        '</tr>';
+                }
+
+                card.innerHTML = '<div class="card-header py-2 d-flex justify-content-between align-items-center"' +
+                    ' data-bs-toggle="collapse" data-bs-target="#' + collapseId + '" aria-expanded="true">' +
+                    '<div class="d-flex align-items-center flex-wrap gap-2">' +
+                    '<div><strong>' + dev.devStateName + '</strong>' +
+                    '<code class="ms-2 small">' + dev.devAddr + '</code>' +
+                    '<span class="badge bg-secondary ms-2">' + dev.dids.length + ' DIDs</span>' +
+                    (activeCount > 0 ? '<span class="badge bg-success ms-1">' + activeCount + ' scheduled</span>' : '') +
+                    '</div>' + collectHtml + '</div>' +
+                    '<i class="bi bi-chevron-down"></i></div>' +
+                    '<div class="collapse show" id="' + collapseId + '">' +
+                    '<div class="table-responsive">' +
+                    '<table class="table table-sm table-hover align-middle mb-0" style="table-layout:fixed;width:100%">' +
+                    '<colgroup><col style="width:60px"><col style="width:28%"><col>' +
+                    '<col style="width:85px"><col style="width:105px"></colgroup>' +
+                    '<thead><tr><th>DID</th><th>Name</th><th>Description</th>' +
+                    '<th class="text-center">On Start</th><th class="text-center">Interval (s)</th></tr></thead>' +
+                    '<tbody>' + rowsHtml + '</tbody></table></div></div>';
+
+                container.appendChild(card);
+            }
+        }
+
+        // --- Filter ---
+        function filterRows() {
+            const search = document.getElementById('search').value.toLowerCase();
+            document.querySelectorAll('.ecu-group').forEach(function(group) {
+                let visibleCount = 0;
+                group.querySelectorAll('tbody tr').forEach(function(row) {
+                    const visible = !search ||
+                        String(row.dataset.did).includes(search) ||
+                        (row.dataset.name || '').includes(search) ||
+                        (row.dataset.desc || '').includes(search);
+                    row.style.display = visible ? '' : 'none';
+                    if (visible) visibleCount++;
+                });
+                group.style.display = visibleCount > 0 ? '' : 'none';
+                if (search && visibleCount > 0) {
+                    const collapse = group.querySelector('.collapse');
+                    if (collapse && !collapse.classList.contains('show')) {
+                        new bootstrap.Collapse(collapse, { toggle: true });
+                    }
+                }
+            });
+        }
+
+        function expandAll() {
+            document.querySelectorAll('.ecu-group .collapse:not(.show)').forEach(function(el) {
+                new bootstrap.Collapse(el, { toggle: true });
+            });
+        }
+        function collapseAll() {
+            document.querySelectorAll('.ecu-group .collapse.show').forEach(function(el) {
+                new bootstrap.Collapse(el, { toggle: true });
+            });
+        }
+
+        function markChanged() {
+            hasChanges = true;
+            document.getElementById('btn-save').disabled = false;
+        }
+
+        // --- Save ---
+        function saveData() {
+            setStatus('Saving…');
+            document.getElementById('btn-save').disabled = true;
+
+            const tabDevAddrs = new Set(allDevices.map(function(d) { return Number(d.devAddr); }));
+            const newSchedules = (adapterNative.tableUdsSchedules || []).filter(function(s) {
+                return !tabDevAddrs.has(Number(s.udsSelectDevAddr));
+            });
+            const newCollectExt = JSON.parse(JSON.stringify(adapterNative.tableCollectCanExt || []));
+            const newCollectInt = JSON.parse(JSON.stringify(adapterNative.tableCollectCanInt || []));
+
+            document.querySelectorAll('.ecu-group').forEach(function(card) {
+                const devStateName = card.dataset.devStateName;
+                const devAddr = card.dataset.devAddr;
+                const dev = allDevices.find(function(d) { return d.devStateName === devStateName; });
+                if (!dev) return;
+
+                const onStartDids = [];
+                const intervalGroups = {};
+
+                card.querySelectorAll('tbody tr').forEach(function(row) {
+                    if (row.style.display === 'none') return;
+                    const didId = parseInt(row.dataset.did, 10);
+                    const onStart = row.querySelector('.onstart-check').checked;
+                    const intervalVal = row.querySelector('.interval-input').value.trim();
+                    const interval = intervalVal ? parseInt(intervalVal, 10) : null;
+
+                    if (onStart) onStartDids.push(didId);
+                    if (interval !== null && !isNaN(interval) && interval > 0) {
+                        if (!intervalGroups[interval]) intervalGroups[interval] = [];
+                        intervalGroups[interval].push(didId);
+                    }
+                });
+
+                if (onStartDids.length > 0) {
+                    newSchedules.push({
+                        udsScheduleActive: true,
+                        udsSchedule: 0,
+                        udsSelectDevAddr: devAddr,
+                        udsScheduleDids: onStartDids.join(','),
+                        udsScheduleUserComment: ''
+                    });
+                }
+                for (const iv in intervalGroups) {
+                    newSchedules.push({
+                        udsScheduleActive: true,
+                        udsSchedule: Number(iv),
+                        udsSelectDevAddr: devAddr,
+                        udsScheduleDids: intervalGroups[iv].join(','),
+                        udsScheduleUserComment: ''
+                    });
+                }
+
+                if (dev.collectCanId) {
+                    const toggle = card.querySelector('.collect-toggle');
+                    const delayInput = card.querySelector('.collect-delay');
+                    if (toggle) {
+                        const active = toggle.checked;
+                        const delay = delayInput ? Number(delayInput.value) : 5;
+                        const cid = String(dev.collectCanId);
+                        const idxExt = newCollectExt.findIndex(function(c) { return String(c.collectCanId) === cid; });
+                        const idxInt = newCollectInt.findIndex(function(c) { return String(c.collectCanId) === cid; });
+                        if (idxExt >= 0) {
+                            newCollectExt[idxExt].collectActive = active;
+                            newCollectExt[idxExt].collectDelayTime = delay;
+                        } else if (idxInt >= 0) {
+                            newCollectInt[idxInt].collectActive = active;
+                            newCollectInt[idxInt].collectDelayTime = delay;
+                        } else if (active) {
+                            newCollectExt.push({ collectActive: true, collectCanId: dev.collectCanId, collectDelayTime: delay });
+                        }
+                    }
+                }
+            });
+
+            const sock = getSocket();
+            sock.emit('extendObject', 'system.adapter.' + namespace, {
+                native: {
+                    tableUdsSchedules: newSchedules,
+                    tableCollectCanExt: newCollectExt,
+                    tableCollectCanInt: newCollectInt
+                }
+            }, function(err) {
+                if (err) {
+                    setStatus('Save error: ' + err, 'danger');
+                    document.getElementById('btn-save').disabled = false;
+                } else {
+                    adapterNative.tableUdsSchedules = newSchedules;
+                    adapterNative.tableCollectCanExt = newCollectExt;
+                    adapterNative.tableCollectCanInt = newCollectInt;
+                    hasChanges = false;
+                    setStatus('Saved successfully.', 'success');
+                }
+            });
+        }
+
+        function setStatus(msg, type) {
+            const el = document.getElementById('status');
+            el.className = 'small mb-2 ' + (type ? 'text-' + type : 'text-muted');
+            el.textContent = msg;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(loadData, 400);
+        });
+    </script>
+</body>
+</html>
