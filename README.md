@@ -264,6 +264,9 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Improved robustness: Receiving a data point of length zero is treated as a "negative response"
+
 ### 0.11.0 (2026-04-14)
 * (MyHomeMyData) To take full advantage of the variant data points and metadata, please perform a device scan followed by a data point scan
 * (MyHomeMyData) Added handling for variant data points and for device's data format configuration, refer to https://github.com/MyHomeMyData/ioBroker.e3oncan/lib/data-points.md for details
