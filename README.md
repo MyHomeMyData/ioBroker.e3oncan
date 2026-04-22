@@ -18,7 +18,7 @@
 - [Quick start](#quick-start)
 - [Configuration guide](#configuration-guide)
   - [Step 1 – CAN adapter](#step-1--can-adapter)
-  - [Step 2 – Device scan](#step-2--device-scan)
+  - [Step 2 – Device scan and energy meter detection](#step-2--device-scan-and-energy-meter-detection)
   - [Step 3 – Data point scan](#step-3--data-point-scan)
   - [Step 4 – Assignments and schedules](#step-4--assignments-and-schedules)
 - [e3oncan datapoints tab](#e3oncan-datapoints-tab)
@@ -89,16 +89,22 @@ Open the adapter configuration dialog and go to the **CAN Adapter** tab.
 
 If you have a second CAN bus (e.g. internal bus), configure it as the second adapter here. A second **Assignments** tab will appear once the second adapter is configured.
 
-### Step 2 – Device scan
+### Step 2 – Device scan and energy meter detection
 
 Go to the **List of UDS Devices** tab and press the **Scan** button.
 
 - The scan takes a few seconds. You can watch progress in the adapter log (open a second browser tab).
-- All E3 devices found on the bus will be listed. Energy meters (E380, E3100CB) are not listed here – they are configured separately.
-- You can rename devices in the second column. These names are used as identifiers in ioBroker's object tree.
+- All E3 devices found on the bus will be listed. You can rename devices in the second column — these names are used as identifiers in ioBroker's object tree.
 - Press **SAVE** when done. The instance will restart.
 
 > During the device scan, the adapter also reads the device's data format configuration (data point 382), including temperature units (°C or °F) and date/time formats. This is stored and used during subsequent data point scans.
+
+**Energy meter detection**
+
+While the device scan runs, the adapter passively listens on the CAN bus for broadcasts from E380 and E3100CB energy meters. No additional scan time is needed — detection happens in parallel. The result is stored and shown:
+
+- In the adapter configuration dialog (**List of UDS Devices** tab) as a text summary.
+- In the **e3oncan datapoints** page as individual cards for each detected meter type (see [below](#e3oncan-datapoints-tab)).
 
 ### Step 3 – Data point scan
 
@@ -118,13 +124,15 @@ After the scan, browse and manage the discovered data points using the **e3oncan
 
 ### Step 4 – Assignments and schedules
 
-The recommended way to configure read schedules and per-device Collect mode is the **e3oncan datapoints** page (see [below](#e3oncan-datapoints-tab)). Energy meters must still be configured on the **Assignments to UDS CAN Adapter** tab.
+The recommended way to configure read schedules and per-device Collect mode is the **e3oncan datapoints** page (see [below](#e3oncan-datapoints-tab)).
 
-**Energy meters (Assignments tab)**
+**Energy meters**
 
-If you have E380 or E3100CB energy meters, activate listening for them on the **Assignments to UDS CAN Adapter** tab. Set **Min. update time (s)** to control how often values are stored. The default of 5 seconds is recommended – energy meters transmit more than 20 values per second, and setting this to 0 will put a high load on ioBroker.
+If the device scan detected E380 or E3100CB energy meters, their cards appear in the **e3oncan datapoints** page. Activate listening with the **Collect** toggle on the card and set **Min. update time (s)** to control how often values are stored. The default of 5 seconds is recommended – energy meters transmit more than 20 values per second, and setting this to 0 will put a high load on ioBroker.
 
-Press **SAVE & CLOSE** when done. Check the object tree to verify that data is being collected.
+Alternatively, energy meters can still be configured on the **Assignments to UDS CAN Adapter** tab in the adapter configuration dialog.
+
+Press **Save & Close** when done. Check the object tree to verify that data is being collected.
 
 ---
 
@@ -134,7 +142,17 @@ The **e3oncan datapoints** page is the primary place for browsing data points an
 
 **Browsing data points**
 
-All devices are shown as expandable cards. Each row shows one data point with its ID, name, codec, and schedule settings. Use the search box to filter by name or ID.
+All devices and any detected energy meters are shown as expandable cards, starting collapsed so you get an overview of your whole system at a glance. Click a card header to expand it. The search box filters by name or ID, and matching cards are expanded automatically.
+
+If a data point scan has not been performed yet for a device, a warning banner is shown at the top of the page as a reminder.
+
+**Device cards**
+
+Each device card lists its data points with ID, name, codec, and schedule settings. The Collect toggle and min. update time appear in the card header.
+
+**Energy meter cards**
+
+If energy meters were detected during the device scan (see [Step 2](#step-2--device-scan-and-energy-meter-detection)), a card for each detected meter type (E380 at address 97, E380 at address 98, E3100CB) appears at the top of the page. Use the Collect toggle and min. update time on each card to activate listening.
 
 **Scheduling**
 
@@ -143,10 +161,6 @@ For each data point you can:
 - Enter an **Interval (s)** – the data point is read repeatedly at that interval.
 
 Both options can be combined. Use the schedule filter (All / On Start / Interval) to quickly focus on already-scheduled data points.
-
-**Collect mode**
-
-The Collect toggle at the top of each device card activates passive listening for that device. Set **Min. update time (s)** to limit how often values are stored (5 s recommended).
 
 **Saving**
 
@@ -281,6 +295,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Introduced new e3oncan datapoints webUI pinned to the adapter's instance row
+* (MyHomeMyData) Energy meters (E380, E3100CB) are now auto-detected during the device scan by passive CAN listening; detected meters appear as cards in the datapoints page and the detection result is shown in the configuration dialog
 
 ### 0.11.1 (2026-04-23)
 * (MyHomeMyData) Improved robustness: Receiving a data point of length zero is treated as a "negative response"
