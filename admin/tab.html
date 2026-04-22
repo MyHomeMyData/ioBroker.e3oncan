@@ -75,6 +75,12 @@
         </div>
     </div>
     <div id="status" class="small text-muted mb-2"></div>
+    <div id="scan-warning" class="alert alert-warning d-none" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <strong>No data point scan performed yet.</strong>
+        The assignment of data points to devices is unknown and writing of data points is locked.
+        Please run a data point scan from the adapter configuration dialog (<strong>List of Data Points</strong> tab).
+    </div>
     <div id="devices-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -139,6 +145,8 @@
                     document.getElementById('unsaved-badge').classList.add('d-none');
                     const totalDids = allDevices.reduce(function(s, d) { return s + d.dids.length; }, 0);
                     setStatus('Loaded ' + totalDids + ' datapoints across ' + allDevices.length + ' device(s).');
+                    const anyScanMissing = allDevices.some(function(d) { return !d.scanDone; });
+                    document.getElementById('scan-warning').classList.toggle('d-none', !anyScanMissing);
                     document.getElementById('btn-load').disabled = false;
                 });
             });
