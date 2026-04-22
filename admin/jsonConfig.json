@@ -270,6 +270,26 @@
                             "readOnly": false
                         }
                     ]
+                },
+
+                "energyMeterHdr": {
+                    "type": "header",
+                    "text": "Energy meters on CAN bus",
+                    "size": 3,
+                    "newLine": true
+                },
+                "energyMeterHint": {
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "type": "staticText",
+                    "text": "Detected during last device scan. Run scan to update.",
+                    "newLine": true
+                },
+                "energyMeterDetectionResult": {
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "type": "text",
+                    "label": "Detected energy meters",
+                    "readOnly": true,
+                    "newLine": true
                 }
             }
         },

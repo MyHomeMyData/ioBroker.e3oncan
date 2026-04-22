@@ -232,7 +232,8 @@
   },
   "native": {
     "tableUdsDevices": [],
-    "tableUdsDids": []
+    "tableUdsDids": [],
+    "energyMeterDetectionResult": "No scan performed yet"
   },
   "objects": [],
   "instanceObjects": [

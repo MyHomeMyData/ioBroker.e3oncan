@@ -67,6 +67,7 @@ class E3oncan extends utils.Adapter {
         this.udsDidForUnits = 382; // UnitsAndFormats
         this.udsDidsVarLength = [257, 258, 259, 260, 261, 262, 263, 264, 265, 266]; // Dids have content of variable length dependend of number of list elements
         this.udsScanWorker = new udsScan.udsScan();
+        this.detectedEnergyMeters = { e380_97: false, e380_98: false, e3100cb: false };
         this.udsScanDevices = []; // UDS devices found during scan
         this.udsDevAddrs = [];
         this.udsDevStateNames = [];
@@ -93,6 +94,24 @@ class E3oncan extends utils.Adapter {
 
         // Reset the connection indicator during startup
         this.setState('info.connection', false, true);
+
+        // Read detected energy meters from previous scan (if available):
+        try {
+            // @ts-expect-error AdapterConfig
+            const e380Name = this.config.e380Name || 'e380';
+            // @ts-expect-error AdapterConfig
+            const e3100cbName = this.config.e3100cbName || 'e3100cb';
+            const s97 = await this.getStateAsync(`${e380Name}.info.detectedAddr97`);
+            const s98 = await this.getStateAsync(`${e380Name}.info.detectedAddr98`);
+            const sCb = await this.getStateAsync(`${e3100cbName}.info.detected`);
+            this.detectedEnergyMeters = {
+                e380_97: !!(s97 && s97.val),
+                e380_98: !!(s98 && s98.val),
+                e3100cb: !!(sCb && sCb.val),
+            };
+        } catch {
+            // states not yet available, keep default
+        }
 
         // Collect known devices adresses:
         for (const dev of Object.values(this.config.tableUdsDevices)) {
@@ -768,10 +787,22 @@ class E3oncan extends utils.Adapter {
                         await this.log.silly(
                             `Data to send - ${JSON.stringify({ native: { tableUdsDevices: this.udsDevices } })}`,
                         );
+                        const em = this.detectedEnergyMeters;
+                        const emParts = [
+                            em.e380_97 ? 'E380 (CAN addr 97)' : null,
+                            em.e380_98 ? 'E380 (CAN addr 98)' : null,
+                            em.e3100cb ? 'E3100CB' : null,
+                        ].filter(Boolean);
                         await this.sendTo(
                             obj.from,
                             obj.command,
-                            { native: { tableUdsDevices: this.udsDevices } },
+                            {
+                                native: {
+                                    tableUdsDevices: this.udsDevices,
+                                    energyMeterDetectionResult:
+                                        emParts.length > 0 ? emParts.join(', ') : 'None detected',
+                                },
+                            },
                             obj.callback,
                         );
                         this.udsDevScanIsRunning = false;
@@ -896,7 +927,12 @@ class E3oncan extends utils.Adapter {
                             scanDone: udsDids.didsScanDone,
                         });
                     }
-                    this.sendTo(obj.from, obj.command, result, obj.callback);
+                    this.sendTo(
+                        obj.from,
+                        obj.command,
+                        { devices: result, energyMeters: this.detectedEnergyMeters },
+                        obj.callback,
+                    );
                 }
             }
 
