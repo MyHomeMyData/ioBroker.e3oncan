@@ -137,8 +137,9 @@
                 sock.emit('sendTo', namespace, 'getTabDids', {}, function(result) {
                     clearTimeout(timeout);
                     if (!result) { setStatus('Adapter returned no data.', 'danger'); document.getElementById('btn-load').disabled = false; return; }
-                    allDevices = result || [];
+                    allDevices = (result.devices || result) || [];
                     renderDevices();
+                    renderEnergyMeters(result.energyMeters || {});
                     hasChanges = false;
                     document.getElementById('btn-save').disabled = true;
                     document.getElementById('btn-save-close').disabled = true;
@@ -247,7 +248,7 @@
                     collectHtml +
                     '</div>' +
                     '<i class="bi bi-chevron-down ms-auto"></i></div>' +
-                    '<div class="collapse show" id="' + collapseId + '">' +
+                    '<div class="collapse" id="' + collapseId + '">' +
                     '<div class="table-responsive">' +
                     '<table class="table table-sm table-hover align-middle mb-0" style="table-layout:fixed;width:100%">' +
                     '<colgroup><col style="width:60px"><col style="width:28%"><col>' +
@@ -265,6 +266,7 @@
                     if (e.target.closest('.collect-area')) return;
                     bootstrap.Collapse.getOrCreateInstance(collapseEl).toggle();
                 });
+                chevron.style.transform = 'rotate(-90deg)';
                 collapseEl.addEventListener('hide.bs.collapse', function() { chevron.style.transform = 'rotate(-90deg)'; });
                 collapseEl.addEventListener('show.bs.collapse', function() { chevron.style.transform = ''; });
             }
@@ -276,6 +278,41 @@
             let maxW = 0;
             nameCols.forEach(function(el) { maxW = Math.max(maxW, el.getBoundingClientRect().width); });
             nameCols.forEach(function(el) { el.style.width = Math.ceil(maxW) + 'px'; });
+        }
+
+        // --- Energy Meters ---
+        function renderEnergyMeters(energyMeters) {
+            const container = document.getElementById('devices-container');
+            const meters = [
+                { key: 'e380_97',  label: 'E380',    addr: 'CAN address 97', activeKey: 'e380Active',    delayKey: 'e380Delay'    },
+                { key: 'e380_98',  label: 'E380',    addr: 'CAN address 98', activeKey: 'e380Active',    delayKey: 'e380Delay'    },
+                { key: 'e3100cb', label: 'E3100CB', addr: '',               activeKey: 'e3100cbActive', delayKey: 'e3100cbDelay' },
+            ];
+            for (const m of meters) {
+                if (!energyMeters[m.key]) { continue; }
+                const active = !!adapterNative[m.activeKey];
+                const delay = adapterNative[m.delayKey] !== undefined ? adapterNative[m.delayKey] : 5;
+                const card = document.createElement('div');
+                card.className = 'card mb-2 energy-meter-group';
+                card.dataset.activeKey = m.activeKey;
+                card.dataset.delayKey = m.delayKey;
+                const addrBadge = m.addr ? '<code class="ms-2 small">' + m.addr + '</code>' : '';
+                card.innerHTML = '<div class="card-header py-2 d-flex align-items-center gap-2">' +
+                    '<strong>' + m.label + '</strong>' + addrBadge +
+                    '<span class="badge bg-info ms-2">Energy Meter</span>' +
+                    '<div class="collect-area d-flex align-items-center gap-2 ms-2">' +
+                    '<div class="form-check form-switch mb-0">' +
+                    '<input class="form-check-input em-collect-toggle" type="checkbox" id="em-ct-' + m.key + '"' +
+                    (active ? ' checked' : '') + ' onchange="markChanged()">' +
+                    '<label class="form-check-label small text-muted" for="em-ct-' + m.key + '">Collect</label>' +
+                    '</div>' +
+                    '<div class="input-group input-group-sm" style="width:140px">' +
+                    '<span class="input-group-text small">Delay</span>' +
+                    '<input type="number" class="form-control form-control-sm em-collect-delay" value="' + delay + '" min="0" step="1" onchange="markChanged()">' +
+                    '<span class="input-group-text small">s</span>' +
+                    '</div></div></div>';
+                container.appendChild(card);
+            }
         }
 
         // --- Filter ---
@@ -419,12 +456,24 @@
                 }
             });
 
-            sock.emit('extendObject', 'system.adapter.' + namespace, {
-                native: {
-                    tableUdsSchedules: newSchedules,
-                    tableCollectCanExt: newCollectExt,
-                    tableCollectCanInt: newCollectInt
+            const newNative = {
+                tableUdsSchedules: newSchedules,
+                tableCollectCanExt: newCollectExt,
+                tableCollectCanInt: newCollectInt,
+            };
+            document.querySelectorAll('.energy-meter-group').forEach(function(card) {
+                const activeKey = card.dataset.activeKey;
+                const delayKey = card.dataset.delayKey;
+                const toggle = card.querySelector('.em-collect-toggle');
+                const delayInput = card.querySelector('.em-collect-delay');
+                if (toggle && !(activeKey in newNative)) {
+                    newNative[activeKey] = toggle.checked;
+                    newNative[delayKey] = delayInput ? Number(delayInput.value) : 5;
                 }
+            });
+
+            sock.emit('extendObject', 'system.adapter.' + namespace, {
+                native: newNative,
             }, function(err) {
                 if (err) {
                     setStatus('Save error: ' + err, 'danger');
@@ -433,6 +482,7 @@
                     adapterNative.tableUdsSchedules = newSchedules;
                     adapterNative.tableCollectCanExt = newCollectExt;
                     adapterNative.tableCollectCanInt = newCollectInt;
+                    Object.assign(adapterNative, newNative);
                     hasChanges = false;
                     document.getElementById('unsaved-badge').classList.add('d-none');
                     if (andClose) {
