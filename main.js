@@ -68,6 +68,7 @@ class E3oncan extends utils.Adapter {
         this.udsDidsVarLength = [257, 258, 259, 260, 261, 262, 263, 264, 265, 266]; // Dids have content of variable length dependend of number of list elements
         this.udsScanWorker = new udsScan.udsScan();
         this.detectedEnergyMeters = { e380_97: false, e380_98: false, e3100cb: false };
+        this.detectedCollectCanIds = new Set();
         this.udsScanDevices = []; // UDS devices found during scan
         this.udsDevAddrs = [];
         this.udsDevStateNames = [];
@@ -109,6 +110,18 @@ class E3oncan extends utils.Adapter {
                 e380_98: !!(s98 && s98.val),
                 e3100cb: !!(sCb && sCb.val),
             };
+        } catch {
+            // states not yet available, keep default
+        }
+
+        // Read detected Collect CAN IDs from previous scan (if available):
+        try {
+            for (const canId of [0x451, 0x693]) {
+                const s = await this.getStateAsync(`info.detectedCollect${canId.toString(16)}`);
+                if (s && s.val) {
+                    this.detectedCollectCanIds.add(canId);
+                }
+            }
         } catch {
             // states not yet available, keep default
         }
@@ -930,7 +943,11 @@ class E3oncan extends utils.Adapter {
                     this.sendTo(
                         obj.from,
                         obj.command,
-                        { devices: result, energyMeters: this.detectedEnergyMeters },
+                        {
+                            devices: result,
+                            energyMeters: this.detectedEnergyMeters,
+                            detectedCollectCanIds: [...this.detectedCollectCanIds],
+                        },
                         obj.callback,
                     );
                 }

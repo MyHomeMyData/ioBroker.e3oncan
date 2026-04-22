@@ -117,6 +117,7 @@ What the scan does:
 - Adds metadata (description, unit, read/write access) to each data point object.
 - Sets physical units based on the device format configuration found in step 2.
 - Creates the full object tree for each device in ioBroker.
+- Detects Collect-capable devices by passively listening for their time broadcasts on the CAN bus (no extra scan time needed — runs in parallel). A pin icon appears in the device card header of the **e3oncan datapoints** page for each detected device.
 
 This step is not strictly mandatory for read-only use, but it is **strongly recommended** – and **required** if you want to write to any data point.
 
@@ -148,7 +149,7 @@ If a data point scan has not been performed yet for a device, a warning banner i
 
 **Device cards**
 
-Each device card lists its data points with ID, name, codec, and schedule settings. The Collect toggle and min. update time appear in the card header.
+Each device card lists its data points with ID, name, codec, and schedule settings. The Collect toggle and min. update time appear in the card header. If Collect traffic from the device was detected during the data point scan, a green pin icon is shown in the card header as a confirmation.
 
 **Energy meter cards**
 
@@ -296,6 +297,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Introduced new e3oncan datapoints webUI pinned to the adapter's instance row
 * (MyHomeMyData) Energy meters (E380, E3100CB) are now auto-detected during the device scan by passive CAN listening; detected meters appear as cards in the datapoints page and the detection result is shown in the configuration dialog
+* (MyHomeMyData) Collect-capable devices are now auto-detected during the data point scan by passive CAN listening; a pin icon is shown in the device card header for each detected device
 
 ### 0.11.1 (2026-04-23)
 * (MyHomeMyData) Improved robustness: Receiving a data point of length zero is treated as a "negative response"
