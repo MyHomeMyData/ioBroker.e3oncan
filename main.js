@@ -893,6 +893,7 @@ class E3oncan extends utils.Adapter {
                             devAddr: dev.devAddr,
                             collectCanId: dev.collectCanId || '',
                             dids,
+                            scanDone: udsDids.didsScanDone,
                         });
                     }
                     this.sendTo(obj.from, obj.command, result, obj.callback);
