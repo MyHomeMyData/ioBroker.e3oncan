@@ -153,13 +153,15 @@
       "config": "json",
       "tab": "html"
     },
-    "adminTab": {
-      "singleton": false,
-      "name": {
-        "en": "e3oncan datapoints",
-        "de": "e3oncan Datenpunkte"
-      },
-      "icon": "e3oncan.png"
+    "localLinks": {
+      "_default": {
+        "link": "/adapter/e3oncan/tab.html?instance=%instance%",
+        "name": {
+          "en": "Datapoints",
+          "de": "Datenpunkte"
+        },
+        "newTab": true
+      }
     },
     "dependencies": [
       {

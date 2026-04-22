@@ -133,11 +133,11 @@ What the scan does:
 
 This step is not strictly mandatory for read-only use, but it is **strongly recommended** – and **required** if you want to write to any data point.
 
-After the scan, browse and manage the discovered data points using the **e3oncan datapoints** sidebar tab (see [below](#e3oncan-datapoints-tab)).
+After the scan, browse and manage the discovered data points using the **e3oncan datapoints** page (see [below](#e3oncan-datapoints-tab)).
 
 ### Step 4 – Assignments and schedules
 
-The recommended way to configure read schedules and per-device Collect mode is the **e3oncan datapoints** sidebar tab (see [below](#e3oncan-datapoints-tab)). Energy meters must still be configured on the **Assignments to UDS CAN Adapter** tab.
+The recommended way to configure read schedules and per-device Collect mode is the **e3oncan datapoints** page (see [below](#e3oncan-datapoints-tab)). Energy meters must still be configured on the **Assignments to UDS CAN Adapter** tab.
 
 **Energy meters (Assignments tab)**
 
@@ -149,7 +149,7 @@ Press **SAVE & CLOSE** when done. Check the object tree to verify that data is b
 
 ## e3oncan datapoints tab
 
-The **e3oncan datapoints** sidebar tab is the primary place for browsing data points and configuring UDSonCAN read schedules and per-device Collect mode. It is available directly from the ioBroker admin sidebar after the adapter is installed.
+The **e3oncan datapoints** page is the primary place for browsing data points and configuring UDSonCAN read schedules and per-device Collect mode. It opens in a new browser tab when you click the **Datapoints** link button in the adapter's instance row in the ioBroker admin instances view.
 
 **Browsing data points**
 
@@ -169,7 +169,7 @@ The Collect toggle at the top of each device card activates passive listening fo
 
 **Saving**
 
-Press **Save** to apply your changes, or **Save & Close** to apply and return to the previous page. An **Unsaved changes** badge appears whenever there are pending changes.
+Press **Save** to apply your changes without closing the tab. **Save & Close** saves and closes the tab, returning you to the instances view. **Discard & Close** closes the tab without saving — no adapter restart is triggered. An **Unsaved changes** badge appears whenever there are pending changes.
 
 ---
 
@@ -299,7 +299,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (MyHomeMyData) Introduced new e3oncan datapoints tab on side bar
+* (MyHomeMyData) Introduced new e3oncan datapoints webUI pinned to the adapter's instance row
 
 ### 0.11.2 (2026-05-02)
 * (MyHomeMyData) Added "What's new in v0.11.x" section to Readme with upgrade notes for data point structure changes
