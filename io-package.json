@@ -230,8 +230,7 @@
   },
   "native": {
     "tableUdsDevices": [],
-    "tableUdsDids": [],
-    "energyMeterDetectionResult": "No scan performed yet"
+    "tableUdsDids": []
   },
   "objects": [],
   "instanceObjects": [
@@ -277,6 +276,32 @@
         "read": true,
         "write": false,
         "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.e380_delay",
+      "type": "state",
+      "common": {
+        "name": "Collect delay for E380 energy meter (s)",
+        "type": "number",
+        "role": "state",
+        "read": true,
+        "write": true,
+        "def": 5
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.e3100cb_delay",
+      "type": "state",
+      "common": {
+        "name": "Collect delay for E3100CB energy meter (s)",
+        "type": "number",
+        "role": "state",
+        "read": true,
+        "write": true,
+        "def": 5
       },
       "native": {}
     }
