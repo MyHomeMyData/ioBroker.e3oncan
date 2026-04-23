@@ -912,6 +912,7 @@ class E3oncan extends utils.Adapter {
             if (obj.command === 'getTabDids') {
                 if (obj.callback) {
                     const result = [];
+                    // eslint-disable-next-line jsdoc/check-tag-names
                     for (const dev of /** @type {any[]} */ (Object.values(this.config.tableUdsDevices))) {
                         const devStateName = dev.devStateName;
                         const udsDids = new storage.storageDids({ stateBase: devStateName, device: devStateName });
