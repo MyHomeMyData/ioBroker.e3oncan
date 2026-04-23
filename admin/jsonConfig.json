@@ -320,7 +320,7 @@
                     "confirm": {
                         "condition": "true",
                         "title": "Confirm scan for datapoints",
-                        "text": "Scan will take up to 5 minutes. Plaese make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
+                        "text": "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
                         "ok": "OK",
                         "cancel": "Cancel"
                     },
@@ -351,7 +351,7 @@
                     "type": "staticText",
                     "newLine": true,
                     "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
-                    "text": "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuraion dialog.",
+                    "text": "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.",
                     "style": { "fontSize": "150%" }
                 }
             }

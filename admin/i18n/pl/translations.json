@@ -21,6 +21,8 @@
     "Data formats used by the device": "Formaty danych używane przez urządzenie",
     "Description": "Opis",
     "Description of datapoint": "Opis punktu danych",
+    "Detected during last device scan. Run scan to update.": "Wykryto podczas ostatniego skanowania urządzenia. Uruchom skanowanie, aby zaktualizować.",
+    "Detected energy meters": "Wykryte liczniki energii",
     "Device Address": "Adres urządzenia",
     "Device ECU address (fixed)": "Adres ECU urządzenia (stały)",
     "Device ECU name (fixed)": "Nazwa ECU urządzenia (stała)",
@@ -61,7 +63,9 @@
     "Please start this adapter instance to enable further configuration options.": "Uruchom tę instancję adaptera, aby włączyć dalsze opcje konfiguracji.",
     "Requesting data on UDS CAN Adapter via UDSonCAN": "Żądanie danych na adapterze UDS CAN poprzez UDSonCAN",
     "Requesting data on external CAN Adapter via UDSonCAN": "Żądanie danych na zewnętrznym adapterze CAN poprzez UDSonCAN",
+    "Run the scan above to discover all data points on your devices and add metadata (description, unit, access). This is required before writing to any data point and recommended after every adapter or device firmware update.": "Uruchom powyższe skanowanie, aby odkryć wszystkie punkty danych na swoich urządzeniach i dodać metadane (opis, jednostkę, dostęp). Jest to wymagane przed zapisem w dowolnym punkcie danych i zalecane po każdej aktualizacji oprogramowania sprzętowego adaptera lub urządzenia.",
     "Scan will take up to 5 minutes. Plaese make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.": "Skanowanie zajmie do 5 minut. Upewnij się, że nie jest uruchomiony żaden inny klient UDSonCAN (np. Open3Eclient.py). Proszę nie zamykać zakładki podczas skanowania. Postęp możesz śledzić obserwując Logowanie w dodatkowej zakładce.",
+    "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.": "Skanowanie zajmie do 5 minut. Upewnij się, że nie jest uruchomiony żaden inny klient UDSonCAN (np. Open3Eclient.py). Proszę nie zamykać zakładki podczas skanowania. Postęp możesz śledzić obserwując Logowanie w dodatkowej zakładce.",
     "Schedule (s)": "Harmonogram (y)",
     "Schedule for requesting given datapoints. 0 for one time request on start of adapter instance.": "Harmonogram żądania danych punktów. 0 dla jednorazowego żądania przy uruchomieniu instancji adaptera.",
     "Second CAN Adapter": "Drugi adapter CAN",
@@ -78,5 +82,7 @@
     "WARNING: Values below 2 seconds may cause heavy system load!": "OSTRZEŻENIE: Wartości poniżej 2 sekund mogą spowodować duże obciążenie systemu!",
     "You may edit 2nd column to set name of state for the device (visible in object tree).": "Możesz edytować drugą kolumnę, aby ustawić nazwę stanu urządzenia (widoczną w drzewie obiektów).",
     "active": "aktywny",
-    "n/a": "nie dotyczy"
+    "n/a": "nie dotyczy",
+    "► After the scan, browse and manage the discovered data points using the 'datapoints page', which is accessible via the link button in the adapter's instance row.": "► Po skanowaniu przeglądaj wykryte punkty danych i zarządzaj nimi za pomocą „strony punktów danych”, która jest dostępna za pośrednictwem przycisku łącza w wierszu instancji adaptera.",
+    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.": "► Alternatywnie możesz skorzystać z zakładki „Przypisania do adaptera UDS CAN” znajdującej się w tym oknie dialogowym konfiguracji."
 }
