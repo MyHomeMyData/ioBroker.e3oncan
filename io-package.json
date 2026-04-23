@@ -246,7 +246,9 @@
   "native": {
     "tableUdsDevices": [],
     "tableUdsDids": [],
-    "energyMeterDetectionResult": "No scan performed yet"
+    "energyMeterDetectionResult": "No scan performed yet",
+    "didScanStarted": "No scan performed yet",
+    "didScanFinished": "No scan performed yet"
   },
   "objects": [],
   "instanceObjects": [
@@ -267,6 +269,32 @@
           "uk": "Інформація",
           "zh-cn": "资料"
         }
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.didScanStarted",
+      "type": "state",
+      "common": {
+        "name": "DID scan started",
+        "type": "string",
+        "role": "state",
+        "read": true,
+        "write": false,
+        "def": "No scan performed yet"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.didScanFinished",
+      "type": "state",
+      "common": {
+        "name": "DID scan finished",
+        "type": "string",
+        "role": "state",
+        "read": true,
+        "write": false,
+        "def": "No scan performed yet"
       },
       "native": {}
     },

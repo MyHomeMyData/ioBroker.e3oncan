@@ -72,8 +72,8 @@ class E3oncan extends utils.Adapter {
         this.udsScanDevices = []; // UDS devices found during scan
         this.udsDevAddrs = [];
         this.udsDevStateNames = [];
-        //this.udsDidsLimits = { min: 256, max: 268 }; // Min. and max. numerical value of dids for scan of data points. Should meet range defined in didsE3,json
-        this.udsDidsLimits = { min: 256, max: 3338 }; // Min. and max. numerical value of dids for scan of data points. Should meet range defined in didsE3,json
+        this.udsDidsLimits = { min: 256, max: 512 }; // Min. and max. numerical value of dids for scan of data points. Should meet range defined in didsE3,json
+        //this.udsDidsLimits = { min: 256, max: 3338 }; // Min. and max. numerical value of dids for scan of data points. Should meet range defined in didsE3,json
 
         //this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
@@ -896,9 +896,13 @@ class E3oncan extends utils.Adapter {
                     if (!this.udsDidScanIsRunning) {
                         this.udsDidScanIsRunning = true;
                         this.log.silly(`Received data - ${JSON.stringify(obj)}`);
+                        const didScanStarted = new Date().toLocaleString();
                         await this.udsScanWorker.scanUdsDids(this, this.udsDevAddrs, this.udsDidsLimits);
                         //await this.udsScanWorker.scanUdsDids(this,this.udsDevAddrs,300);
-                        this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
+                        const didScanFinished = new Date().toLocaleString();
+                        await this.setStateAsync('info.didScanStarted', didScanStarted, true);
+                        await this.setStateAsync('info.didScanFinished', didScanFinished, true);
+                        this.sendTo(obj.from, obj.command, {}, obj.callback);
                         this.udsDidScanIsRunning = false;
                     } else {
                         this.log.silly('Request "startDidScan" during running UDS did scan!');
@@ -906,6 +910,24 @@ class E3oncan extends utils.Adapter {
                     }
                 } else {
                     this.sendTo(obj.from, obj.command, obj.message, obj.callback);
+                }
+            }
+
+            if (obj.command === 'getDidScanTimestamps') {
+                if (obj.callback) {
+                    const s1 = await this.getStateAsync('info.didScanStarted');
+                    const s2 = await this.getStateAsync('info.didScanFinished');
+                    this.sendTo(
+                        obj.from,
+                        obj.command,
+                        {
+                            native: {
+                                didScanStarted: (s1 && s1.val) || 'No scan performed yet',
+                                didScanFinished: (s2 && s2.val) || 'No scan performed yet',
+                            },
+                        },
+                        obj.callback,
+                    );
                 }
             }
 

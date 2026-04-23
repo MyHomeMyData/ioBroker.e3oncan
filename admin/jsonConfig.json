@@ -320,11 +320,41 @@
                     "confirm": {
                         "condition": "true",
                         "title": "Confirm scan for datapoints",
-                        "text": "Scan will take up to 5 minutes. Plaese make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
+                        "text": "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
                         "ok": "OK",
                         "cancel": "Cancel"
                     },
                     "hidden": "!_alive",
+                    "newLine": true,
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12
+                },
+                "didScanStarted": {
+                    "type": "text",
+                    "label": "Scan started",
+                    "readOnly": true,
+                    "newLine": true,
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12
+                },
+                "didScanFinished": {
+                    "type": "text",
+                    "label": "Scan finished",
+                    "readOnly": true,
+                    "newLine": true,
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12
+                },
+                "tableUdsDidsGetTimestamps": {
+                    "type": "sendTo",
+                    "label": "↻ Update timestamps",
+                    "variant": "outlined",
+                    "showProcess": true,
+                    "command": "getDidScanTimestamps",
+                    "useNative": true,
+                    "hidden": "!_alive",
+                    "newLine": true,
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12
+                },
+                "tableUdsDidsDivider": {
+                    "type": "divider",
                     "newLine": true,
                     "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12
                 },
@@ -348,28 +378,6 @@
                     "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
                     "text": "► 'Assignments to UDS CAN Adapter' tab (this dialog): alternative way to configure schedules and Collect mode; also the only place to configure energy meters (E380, E3100CB).",
                     "style": { "fontSize": "150%" }
-                },
-                "linkToOpen3EListOfDoIs": {
-                    "type": "staticLink",
-                    "label": "For a list of frequently used data points see here.",
-                    "href": "https://github.com/open3e/open3e/wiki/036-DoI-%E2%80%90-Data-points-of-Interest",
-                    "newLine": true,
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
-                },
-                "linkToOpen3EListOfAllDida": {
-                    "type": "staticLink",
-                    "label": "For a list of all available data points see here.",
-                    "href": "https://github.com/open3e/open3e/blob/develop/src/open3e/Open3Edatapoints.md",
-                    "newLine": true,
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
                 }
             }
         },
