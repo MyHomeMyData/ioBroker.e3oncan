@@ -38,8 +38,10 @@ class E3oncan extends utils.Adapter {
         });
 
         this.stoppingInstance = false; // true during unLoad()
-        this.e380Collect = null; // E380 always is assigned to external bus
-        this.e3100cbCollect = null; // E3100CB always is assigned to external bus
+        this.e380Collect = null;
+        this.e380CollectChannel = 'ext';
+        this.e3100cbCollect = null;
+        this.e3100cbCollectChannel = 'ext';
         this.E3CollectInt = {}; // Dict of collect devices on internal bus
         this.E3CollectExt = {}; // Dict of collect devices on external bus
         this.collectTimeout = 2000; // Timeout (ms) for collecting data
@@ -67,7 +69,7 @@ class E3oncan extends utils.Adapter {
         this.udsDidForUnits = 382; // UnitsAndFormats
         this.udsDidsVarLength = [257, 258, 259, 260, 261, 262, 263, 264, 265, 266]; // Dids have content of variable length dependend of number of list elements
         this.udsScanWorker = new udsScan.udsScan();
-        this.detectedEnergyMeters = { e380_97: false, e380_98: false, e3100cb: false };
+        this.detectedEnergyMeters = { e380_97: '', e380_98: '', e3100cb: '' };
         this.detectedCollectCanIds = new Set();
         this.udsScanDevices = []; // UDS devices found during scan
         this.udsDevAddrs = [];
@@ -105,10 +107,11 @@ class E3oncan extends utils.Adapter {
             const s97 = await this.getStateAsync(`${e380Name}.info.detectedAddr97`);
             const s98 = await this.getStateAsync(`${e380Name}.info.detectedAddr98`);
             const sCb = await this.getStateAsync(`${e3100cbName}.info.detected`);
+            const toChannel = s => (s && s.val ? (typeof s.val === 'string' ? s.val : 'ext') : '');
             this.detectedEnergyMeters = {
-                e380_97: !!(s97 && s97.val),
-                e380_98: !!(s98 && s98.val),
-                e3100cb: !!(sCb && sCb.val),
+                e380_97: toChannel(s97),
+                e380_98: toChannel(s98),
+                e3100cb: toChannel(sCb),
             };
         } catch {
             // states not yet available, keep default
@@ -180,13 +183,18 @@ class E3oncan extends utils.Adapter {
             await this.setState('info.connection', true, true);
         }
 
+        // Determine collect channel for energy meters based on last scan detection:
+        const e380Chan = this.detectedEnergyMeters.e380_97 || this.detectedEnergyMeters.e380_98 || 'ext';
+        this.e380CollectChannel = e380Chan === 'int' ? 'int' : 'ext';
+        this.e3100cbCollectChannel = this.detectedEnergyMeters.e3100cb === 'int' ? 'int' : 'ext';
+
         // Setup E380 collect worker:
-        if (this.channelExt) {
+        if (this.channelExt || this.channelInt) {
             this.e380Collect = await this.setupE380CollectWorker(this.config);
         }
 
         // Setup E3100CB collect worker:
-        if (this.channelExt) {
+        if (this.channelExt || this.channelInt) {
             this.e3100cbCollect = await this.setupE3100cbCollectWorker(this.config);
         }
 
@@ -801,10 +809,11 @@ class E3oncan extends utils.Adapter {
                             `Data to send - ${JSON.stringify({ native: { tableUdsDevices: this.udsDevices } })}`,
                         );
                         const em = this.detectedEnergyMeters;
+                        const emChan = ch => (ch === 'int' ? '2nd CAN' : 'UDS CAN');
                         const emParts = [
-                            em.e380_97 ? 'E380 (CAN addr 97)' : null,
-                            em.e380_98 ? 'E380 (CAN addr 98)' : null,
-                            em.e3100cb ? 'E3100CB' : null,
+                            em.e380_97 ? `E380 (CAN addr 97, ${emChan(em.e380_97)})` : null,
+                            em.e380_98 ? `E380 (CAN addr 98, ${emChan(em.e380_98)})` : null,
+                            em.e3100cb ? `E3100CB (${emChan(em.e3100cb)})` : null,
                         ].filter(Boolean);
                         await this.sendTo(
                             obj.from,
@@ -1036,10 +1045,14 @@ class E3oncan extends utils.Adapter {
     }
 
     onCanMsgExt(msg) {
-        if (this.e380Collect && this.e380Collect.config.canID.includes(msg.id)) {
+        if (this.e380CollectChannel === 'ext' && this.e380Collect && this.e380Collect.config.canID.includes(msg.id)) {
             this.e380Collect.msgCollect(this, msg);
         }
-        if (this.e3100cbCollect && this.e3100cbCollect.config.canID.includes(msg.id)) {
+        if (
+            this.e3100cbCollectChannel === 'ext' &&
+            this.e3100cbCollect &&
+            this.e3100cbCollect.config.canID.includes(msg.id)
+        ) {
             this.e3100cbCollect.msgCollect(this, msg);
         }
         if (this.E3CollectExt[msg.id]) {
@@ -1057,6 +1070,16 @@ class E3oncan extends utils.Adapter {
     }
 
     onCanMsgInt(msg) {
+        if (this.e380CollectChannel === 'int' && this.e380Collect && this.e380Collect.config.canID.includes(msg.id)) {
+            this.e380Collect.msgCollect(this, msg);
+        }
+        if (
+            this.e3100cbCollectChannel === 'int' &&
+            this.e3100cbCollect &&
+            this.e3100cbCollect.config.canID.includes(msg.id)
+        ) {
+            this.e3100cbCollect.msgCollect(this, msg);
+        }
         if (this.E3CollectInt[msg.id]) {
             this.E3CollectInt[msg.id].msgCollect(this, msg);
         }
