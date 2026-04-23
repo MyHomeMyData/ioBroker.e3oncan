@@ -139,7 +139,7 @@
                     if (!result) { setStatus('Adapter returned no data.', 'danger'); document.getElementById('btn-load').disabled = false; return; }
                     allDevices = (result.devices || result) || [];
                     renderDevices(result.detectedCollectCanIds || []);
-                    renderEnergyMeters(result.energyMeters || {});
+                    renderEnergyMeters(result.energyMeters || {}, result.energyMeterDelays || {}, result.energyMeterActive || {});
                     hasChanges = false;
                     document.getElementById('btn-save').disabled = true;
                     document.getElementById('btn-save-close').disabled = true;
@@ -285,21 +285,20 @@
         }
 
         // --- Energy Meters ---
-        function renderEnergyMeters(energyMeters) {
+        function renderEnergyMeters(energyMeters, energyMeterDelays, energyMeterActive) {
             const container = document.getElementById('devices-container');
             const meters = [
-                { key: 'e380_97',  label: 'E380',    addr: 'CAN address 97', activeKey: 'e380Active',    delayKey: 'e380Delay'    },
-                { key: 'e380_98',  label: 'E380',    addr: 'CAN address 98', activeKey: 'e380Active',    delayKey: 'e380Delay'    },
-                { key: 'e3100cb', label: 'E3100CB', addr: '',               activeKey: 'e3100cbActive', delayKey: 'e3100cbDelay' },
+                { key: 'e380_97',  label: 'E380',    addr: 'CAN address 97', delayFor: 'e380'    },
+                { key: 'e380_98',  label: 'E380',    addr: 'CAN address 98', delayFor: 'e380'    },
+                { key: 'e3100cb',  label: 'E3100CB', addr: '',               delayFor: 'e3100cb' },
             ];
             for (const m of meters) {
                 if (!energyMeters[m.key]) { continue; }
-                const active = !!adapterNative[m.activeKey];
-                const delay = adapterNative[m.delayKey] !== undefined ? adapterNative[m.delayKey] : 5;
+                const active = !!energyMeterActive[m.delayFor];
+                const delay = energyMeterDelays[m.delayFor] !== undefined ? energyMeterDelays[m.delayFor] : 5;
                 const card = document.createElement('div');
                 card.className = 'card mb-2 energy-meter-group';
-                card.dataset.activeKey = m.activeKey;
-                card.dataset.delayKey = m.delayKey;
+                card.dataset.delayFor = m.delayFor;
                 const channel = energyMeters[m.key];
                 const addrBadge = m.addr ? '<code class="ms-2 small">' + m.addr + '</code>' : '';
                 const chanBadge = '<span class="badge bg-secondary ms-2">' + (channel === 'int' ? '2nd CAN' : 'UDS CAN') + '</span>';
@@ -468,15 +467,23 @@
                 tableCollectCanExt: newCollectExt,
                 tableCollectCanInt: newCollectInt,
             };
+
+            // Save energy meter active flags and delays to ioBroker states (one per meter type):
+            const emSaved = {};
             document.querySelectorAll('.energy-meter-group').forEach(function(card) {
-                const activeKey = card.dataset.activeKey;
-                const delayKey = card.dataset.delayKey;
+                const delayFor = card.dataset.delayFor;
+                if (!delayFor || emSaved[delayFor]) { return; }
                 const toggle = card.querySelector('.em-collect-toggle');
                 const delayInput = card.querySelector('.em-collect-delay');
-                if (toggle && !(activeKey in newNative)) {
-                    newNative[activeKey] = toggle.checked;
-                    newNative[delayKey] = delayInput ? Number(delayInput.value) : 5;
+                if (toggle) {
+                    sock.emit('setState', namespace + '.info.' + delayFor + '_active',
+                        { val: toggle.checked, ack: false }, function() {});
                 }
+                if (delayInput) {
+                    sock.emit('setState', namespace + '.info.' + delayFor + '_delay',
+                        { val: Number(delayInput.value), ack: false }, function() {});
+                }
+                emSaved[delayFor] = true;
             });
 
             sock.emit('extendObject', 'system.adapter.' + namespace, {

@@ -129,9 +129,7 @@ The recommended way to configure read schedules and per-device Collect mode is t
 
 **Energy meters**
 
-If the device scan detected E380 or E3100CB energy meters, their cards appear in the **e3oncan datapoints** page. Activate listening with the **Collect** toggle on the card and set **Min. update time (s)** to control how often values are stored. The default of 5 seconds is recommended – energy meters transmit more than 20 values per second, and setting this to 0 will put a high load on ioBroker.
-
-Alternatively, energy meters can still be configured on the **Assignments to UDS CAN Adapter** tab in the adapter configuration dialog.
+If the device scan detected E380 or E3100CB energy meters, a card for each detected meter appears in the **e3oncan datapoints** page. Activate collecting with the **Collect** toggle on the card. Use the **Delay (s)** field to set the minimum interval between value updates in ioBroker. The default of 5 seconds is recommended — energy meters transmit more than 20 values per second, and setting this to 0 will put significant load on ioBroker.
 
 Press **Save & Close** when done. Check the object tree to verify that data is being collected.
 
@@ -153,7 +151,7 @@ Each device card lists its data points with ID, name, codec, and schedule settin
 
 **Energy meter cards**
 
-If energy meters were detected during the device scan (see [Step 2](#step-2--device-scan-and-energy-meter-detection)), a card for each detected meter type (E380 at address 97, E380 at address 98, E3100CB) appears at the top of the page. Use the Collect toggle and min. update time on each card to activate listening.
+If energy meters were detected during the device scan (see [Step 2](#step-2--device-scan-and-energy-meter-detection)), a card for each detected meter appears at the top of the page. Use the **Collect** toggle to activate data collection, and the **Delay (s)** field to set the minimum interval between value updates in ioBroker.
 
 **Scheduling**
 
@@ -208,6 +206,19 @@ For detailed information about how data points are structured, how variant data 
 ---
 
 ## Energy meters
+
+Energy meters are detected automatically during the device scan. No manual configuration is needed. The adapter assigns a state name in ioBroker's object tree based on where each meter was found:
+
+| Channel | CAN address | State name |
+|---|---|---|
+| UDS CAN | 98 | `e380` |
+| UDS CAN | 97 | `e380_97` |
+| 2nd CAN | 98 | `e380_98` |
+| 2nd CAN | 97 | `e380_97` |
+
+`e380` (without suffix) is used for CAN address 98 on the UDS CAN channel to preserve backward compatibility with existing installations. `e3100cb` is always used for the E3100CB.
+
+The collect delay (default 5 s) can be adjusted per meter type in the **e3oncan datapoints** page. Changes take effect after the adapter restarts.
 
 ### E380 data and units
 
@@ -296,7 +307,10 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Introduced new e3oncan datapoints webUI pinned to the adapter's instance row
-* (MyHomeMyData) Energy meters (E380, E3100CB) are now auto-detected during the device scan by passive CAN listening; detected meters appear as cards in the datapoints page and the detection result is shown in the configuration dialog
+* (MyHomeMyData) Energy meters (E380, E3100CB) are now auto-detected during the device scan by passive CAN listening on both CAN channels
+* (MyHomeMyData) State names for energy meters are assigned automatically based on CAN address and channel; see Readme for details
+* (MyHomeMyData) Energy meter Collect toggle and delay are now configured exclusively in the e3oncan datapoints page; changes take effect after adapter restart
+* (MyHomeMyData) On first run after upgrade, the active setting is automatically migrated from the previous adapter configuration
 * (MyHomeMyData) Collect-capable devices are now auto-detected during the data point scan by passive CAN listening; a pin icon is shown in the device card header for each detected device
 
 ### 0.11.1 (2026-04-23)
