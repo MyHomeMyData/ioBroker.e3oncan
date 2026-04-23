@@ -300,11 +300,13 @@
                 card.className = 'card mb-2 energy-meter-group';
                 card.dataset.activeKey = m.activeKey;
                 card.dataset.delayKey = m.delayKey;
+                const channel = energyMeters[m.key];
                 const addrBadge = m.addr ? '<code class="ms-2 small">' + m.addr + '</code>' : '';
+                const chanBadge = '<span class="badge bg-secondary ms-2">' + (channel === 'int' ? '2nd CAN' : 'UDS CAN') + '</span>';
                 card.innerHTML = '<div class="card-header py-2 d-flex align-items-center gap-2">' +
                     '<div style="min-width:300px" class="d-flex align-items-center gap-2">' +
                     '<strong>' + m.label + '</strong>' + addrBadge +
-                    '<span class="badge bg-info ms-2">Energy Meter</span></div>' +
+                    '<span class="badge bg-info ms-2">Energy Meter</span>' + chanBadge + '</div>' +
                     '<div class="collect-area d-flex align-items-center gap-2">' +
                     '<div class="form-check form-switch mb-0">' +
                     '<input class="form-check-input em-collect-toggle" type="checkbox" id="em-ct-' + m.key + '"' +
