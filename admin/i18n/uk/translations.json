@@ -21,6 +21,8 @@
     "Data formats used by the device": "Формати даних, які використовує пристрій",
     "Description": "опис",
     "Description of datapoint": "Опис точки даних",
+    "Detected during last device scan. Run scan to update.": "Виявлено під час останнього сканування пристрою. Запустіть сканування для оновлення.",
+    "Detected energy meters": "Виявлені лічильники електроенергії",
     "Device Address": "Адреса пристрою",
     "Device ECU address (fixed)": "Адреса ECU пристрою (фіксована)",
     "Device ECU name (fixed)": "Назва ECU пристрою (фіксована)",
@@ -61,7 +63,9 @@
     "Please start this adapter instance to enable further configuration options.": "Будь ласка, запустіть цей екземпляр адаптера, щоб увімкнути додаткові параметри конфігурації.",
     "Requesting data on UDS CAN Adapter via UDSonCAN": "Запит даних про адаптер UDS CAN через UDSonCAN",
     "Requesting data on external CAN Adapter via UDSonCAN": "Запит даних на зовнішній адаптер CAN через UDSonCAN",
+    "Run the scan above to discover all data points on your devices and add metadata (description, unit, access). This is required before writing to any data point and recommended after every adapter or device firmware update.": "Запустіть сканування вище, щоб знайти всі точки даних на своїх пристроях і додати метадані (опис, одиниця, доступ). Це потрібно перед записом у будь-яку точку даних і рекомендується після кожного оновлення мікропрограми адаптера або пристрою.",
     "Scan will take up to 5 minutes. Plaese make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.": "Сканування триватиме до 5 хвилин. Будь ласка, переконайтеся, що жоден інший клієнт UDSonCAN (наприклад, Open3Eclient.py) не працює. Не закривайте вкладку під час сканування. Ви можете стежити за прогресом, спостерігаючи за входом на додатковій вкладці.",
+    "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.": "Сканування триватиме до 5 хвилин. Будь ласка, переконайтеся, що жоден інший клієнт UDSonCAN (наприклад, Open3Eclient.py) не працює. Не закривайте вкладку під час сканування. Ви можете стежити за прогресом, спостерігаючи за входом на додатковій вкладці.",
     "Schedule (s)": "Розклад (и)",
     "Schedule for requesting given datapoints. 0 for one time request on start of adapter instance.": "Розклад запиту заданих точок даних. 0 для одноразового запиту під час запуску екземпляра адаптера.",
     "Second CAN Adapter": "Другий адаптер CAN",
@@ -78,5 +82,7 @@
     "WARNING: Values below 2 seconds may cause heavy system load!": "ПОПЕРЕДЖЕННЯ: Значення нижче 2 секунд можуть спричинити велике навантаження на систему!",
     "You may edit 2nd column to set name of state for the device (visible in object tree).": "Ви можете відредагувати 2-й стовпець, щоб встановити назву стану для пристрою (видно в дереві об’єктів).",
     "active": "активний",
-    "n/a": "n/a"
+    "n/a": "n/a",
+    "► After the scan, browse and manage the discovered data points using the 'datapoints page', which is accessible via the link button in the adapter's instance row.": "► Після сканування перегляньте виявлені точки даних і керуйте ними за допомогою «сторінки точок даних», доступ до якої можна отримати за допомогою кнопки посилання в рядку екземплярів адаптера.",
+    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.": "► Крім того, ви можете скористатися вкладкою «Призначення адаптера UDS CAN» у цьому діалоговому вікні налаштування."
 }
