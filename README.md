@@ -264,10 +264,10 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.11.1 (2026-04-23)
 * (MyHomeMyData) Improved robustness: Receiving a data point of length zero is treated as a "negative response"
 * (MyHomeMyData) The metadata is now also restored after a data point is deleted 
-* (MyHomeMyData) Aligned test cases for German system language 
+* (MyHomeMyData) Aligned test cases for German system language
 
 ### 0.11.0 (2026-04-14)
 * (MyHomeMyData) To take full advantage of the variant data points and metadata, please perform a device scan followed by a data point scan
