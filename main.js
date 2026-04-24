@@ -138,7 +138,7 @@ class E3oncan extends utils.Adapter {
             if (sActive380 == null) {
                 // @ts-expect-error AdapterConfig
                 this.e380Active = !!this.config.e380Active; // migrate from old config
-                this.extendObject('info.e380_active', {
+                await this.extendObject('info.e380_active', {
                     type: 'state',
                     common: {
                         name: 'Collect E380 data',
@@ -158,7 +158,7 @@ class E3oncan extends utils.Adapter {
             if (sActiveCb == null) {
                 // @ts-expect-error AdapterConfig
                 this.e3100cbActive = !!this.config.e3100cbActive; // migrate from old config
-                this.extendObject('info.e3100cb_active', {
+                await this.extendObject('info.e3100cb_active', {
                     type: 'state',
                     common: {
                         name: 'Collect E3100CB data',
