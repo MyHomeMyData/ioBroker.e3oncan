@@ -313,8 +313,8 @@
                 "saveDidsOnScan": {
                     "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
                     "type": "checkbox",
-                    "label": "Save data point values to object tree during scan",
-                    "tooltip": "When unchecked, the scan discovers data points and their metadata but does not write json/raw/tree state values. State values are created automatically on first data receipt after the scan.",
+                    "label": "Save all data point values to object tree during scan",
+                    "tooltip": "When unchecked, the scan discovers data points and their metadata but does write json/raw/tree state values of existing values only. Additional state values are created automatically on first data receipt after the scan.",
                     "default": true,
                     "newLine": true
                 },
