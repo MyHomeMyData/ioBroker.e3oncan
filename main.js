@@ -138,6 +138,20 @@ class E3oncan extends utils.Adapter {
             if (sActive380 == null) {
                 // @ts-expect-error AdapterConfig
                 this.e380Active = !!this.config.e380Active; // migrate from old config
+                if (this.e380Active) {
+                    // Map old single-E380 config to CAN address 98 on UDS CAN channel (common case).
+                    this.detectedEnergyMeters.e380_98 = 'ext';
+                    await this.extendObject('info.e380_98', {
+                        type: 'state',
+                        common: { name: 'info.e380_98', type: 'string', role: 'state', read: true, write: false },
+                        native: {},
+                    });
+                    await this.setStateAsync('info.e380_98', { val: 'ext', ack: true });
+                    this.log.warn(
+                        'Upgrade migration: E380 configured for CAN address 98 on UDS CAN channel. ' +
+                            'If your E380 uses CAN address 97, please run a device scan to reconfigure.',
+                    );
+                }
                 await this.extendObject('info.e380_active', {
                     type: 'state',
                     common: {
@@ -158,6 +172,16 @@ class E3oncan extends utils.Adapter {
             if (sActiveCb == null) {
                 // @ts-expect-error AdapterConfig
                 this.e3100cbActive = !!this.config.e3100cbActive; // migrate from old config
+                if (this.e3100cbActive) {
+                    this.detectedEnergyMeters.e3100cb = 'ext';
+                    await this.extendObject('info.e3100cb', {
+                        type: 'state',
+                        common: { name: 'info.e3100cb', type: 'string', role: 'state', read: true, write: false },
+                        native: {},
+                    });
+                    await this.setStateAsync('info.e3100cb', { val: 'ext', ack: true });
+                    this.log.info('Upgrade migration: E3100CB configured for UDS CAN channel.');
+                }
                 await this.extendObject('info.e3100cb_active', {
                     type: 'state',
                     common: {
