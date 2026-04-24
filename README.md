@@ -140,6 +140,16 @@ What the scan does:
 
 This step is not strictly mandatory for read-only use, but it is **strongly recommended** – and **required** if you want to write to any data point.
 
+**Save data point values to object tree during scan**
+
+By default the scan also writes the current value of each data point into the object tree (`json`, `raw`, `tree` states). You can uncheck the **Save data point values to object tree during scan** option above the scan button to skip this. With that option off, the adapter still creates all data point objects and their metadata — state values are then populated automatically on first data receipt after the scan.
+
+This option is useful if you want to avoid a large number of state writes during the scan (e.g. on systems with many devices). If you previously ran a scan with values stored and now want a clean slate, you can safely delete any device's `json`, `raw`, or `tree` sub-objects from the ioBroker object tree — the adapter will recreate them automatically when it next receives data.
+
+> **Note on history adapters:** Deleting objects does **not** delete the historical data stored by a history adapter (History, InfluxDB, SQL). The recorded values remain in the adapter's backend and reappear in charts once the state ID is re-created. However, the history subscription configuration (the "enabled" flag on the object) is lost when an object is deleted and must be re-enabled manually on the new object.
+
+> **Warning:** Never delete the `info` channel (e.g. `e3oncan.0.info`). It holds scan results, energy meter detection, delays, active flags, and the CAN connection state. Deleting it will cause loss of configuration that cannot be automatically recovered.
+
 After the scan, browse and manage the discovered data points using the **e3oncan datapoints** page (see [below](#e3oncan-datapoints-tab)).
 
 ### Step 4 – Assignments and schedules
@@ -331,6 +341,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 * (MyHomeMyData) Energy meter Collect toggle and delay are now configured exclusively in the e3oncan datapoints page; changes take effect after adapter restart
 * (MyHomeMyData) On first run after upgrade, the active setting is automatically migrated from the previous adapter configuration
 * (MyHomeMyData) Collect-capable devices are now auto-detected during the data point scan by passive CAN listening; a pin icon is shown in the device card header for each detected device
+* (MyHomeMyData) Added option to suppress storing of data point values during data point scan
 
 ### 0.11.2 (2026-05-02)
 * (MyHomeMyData) Added "What's new in v0.11.x" section to Readme with upgrade notes for data point structure changes

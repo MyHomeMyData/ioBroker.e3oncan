@@ -38,6 +38,7 @@ class E3oncan extends utils.Adapter {
         });
 
         this.stoppingInstance = false; // true during unLoad()
+        this.suppressStateStorage = false;
         this.defaultDelayEM = 5;
         this.e380Active = false;
         this.e3100cbActive = false;
@@ -980,6 +981,7 @@ class E3oncan extends utils.Adapter {
                     if (!this.udsDidScanIsRunning) {
                         this.udsDidScanIsRunning = true;
                         this.log.silly(`Received data - ${JSON.stringify(obj)}`);
+                        this.suppressStateStorage = !(obj.message?.saveDidsOnScan ?? this.config.saveDidsOnScan);
                         await this.udsScanWorker.scanUdsDids(this, this.udsDevAddrs, this.udsDidsLimits);
                         //await this.udsScanWorker.scanUdsDids(this,this.udsDevAddrs,300);
                         this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);

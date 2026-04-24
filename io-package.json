@@ -230,7 +230,8 @@
   },
   "native": {
     "tableUdsDevices": [],
-    "tableUdsDids": []
+    "tableUdsDids": [],
+    "saveDidsOnScan": true
   },
   "objects": [],
   "instanceObjects": [
