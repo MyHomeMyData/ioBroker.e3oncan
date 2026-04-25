@@ -95,6 +95,7 @@
         let adapterNative = {};
         let hasChanges = false;
         let sock = null;
+        let loadedEnergyMeters = {};
 
         function initSocket() {
             return new Promise(function(resolve) {
@@ -286,6 +287,7 @@
 
         // --- Energy Meters ---
         function renderEnergyMeters(energyMeters, energyMeterDelays, energyMeterActive) {
+            loadedEnergyMeters = energyMeters || {};
             const container = document.getElementById('devices-container');
             const meters = [
                 { key: 'e380_97',  label: 'E380',    addr: 'CAN address 97', delayFor: 'e380'    },
@@ -478,23 +480,26 @@
                 tableCollectCanInt: newCollectInt,
             };
 
-            // Save energy meter active flags and delays to ioBroker states (one per meter type):
+            // Save energy meter active flags and delays as a single info.energyMeter JSON state:
+            const emJson = {
+                e380_97:  loadedEnergyMeters.e380_97  || '',
+                e380_98:  loadedEnergyMeters.e380_98  || '',
+                e3100cb:  loadedEnergyMeters.e3100cb  || '',
+                e380Active: false, e380Delay: 5,
+                e3100cbActive: false, e3100cbDelay: 5,
+            };
             const emSaved = {};
             document.querySelectorAll('.energy-meter-group').forEach(function(card) {
                 const delayFor = card.dataset.delayFor;
                 if (!delayFor || emSaved[delayFor]) { return; }
                 const toggle = card.querySelector('.em-collect-toggle');
                 const delayInput = card.querySelector('.em-collect-delay');
-                if (toggle) {
-                    sock.emit('setState', namespace + '.info.' + delayFor + '_active',
-                        { val: toggle.checked, ack: false }, function() {});
-                }
-                if (delayInput) {
-                    sock.emit('setState', namespace + '.info.' + delayFor + '_delay',
-                        { val: Number(delayInput.value), ack: false }, function() {});
-                }
+                if (toggle) { emJson[delayFor + 'Active'] = toggle.checked; }
+                if (delayInput) { emJson[delayFor + 'Delay'] = Number(delayInput.value); }
                 emSaved[delayFor] = true;
             });
+            sock.emit('setState', namespace + '.info.energyMeter',
+                { val: JSON.stringify(emJson), ack: false }, function() {});
 
             sock.emit('extendObject', 'system.adapter.' + namespace, {
                 native: newNative,
