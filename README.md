@@ -123,7 +123,7 @@ This step is not strictly mandatory for read-only use, but it is **strongly reco
 
 **Save data point values to object tree during scan**
 
-By default the scan also writes the current value of each data point into the object tree (`json`, `raw`, `tree` states). You can adjust the behavior using the option **Save data point values ​​in the object tree during scan** above the scan button. If this option is disabled, the adapter still creates all data point objects and their metadata, but only saves the values ​​of already existing data points – additional data points are then automatically created the first time data is received after the scan.
+By default the scan also writes the current value of each data point into the object tree (`json`, `raw`, `tree` states). You can adjust the behavior using the option **Save data point values ​​in the object tree during scan** above the scan button. If this option is disabled, the adapter updates values and metadata for already existing data point objects, but does not create new ones – those are created automatically the first time data is received after the scan.
 
 This option is useful if you want to avoid a large number of state writes during the scan (e.g. on systems with many devices). If you previously ran a scan with values stored and now want a clean slate, you can safely delete any device's `json`, `raw`, or `tree` sub-objects from the ioBroker object tree — the adapter will recreate them automatically when it next receives data.
 
