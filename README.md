@@ -15,6 +15,7 @@
 ## Table of contents
 
 - [Overview](#overview)
+- [What's new in v1.0.0](#whats-new-in-v100)
 - [What's new in v0.11.x](#whats-new-in-v011x)
 - [Quick start](#quick-start)
 - [Configuration guide](#configuration-guide)
@@ -50,6 +51,28 @@ Which modes are available depends on your device topology. See the [device topol
 
 > Important parts of this adapter are based on the [open3e](https://github.com/open3e) project.
 > A Python-based collect-only implementation using MQTT is available at [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
+
+---
+
+## What's new in v1.0.0
+
+### Datapoints tab
+
+A new **e3oncan datapoints** page is pinned directly to the adapter's instance row in the ioBroker instances view. It provides a dedicated UI for managing schedules and Collect settings per device and data point — no need to open the full adapter configuration dialog for day-to-day changes.
+
+### Auto-detection of energy meters
+
+Energy meters (E380 and E3100CB) are now **automatically detected** during the device scan by passive CAN listening on both CAN channels. State names are assigned automatically based on the detected CAN address and channel. The active/inactive toggle and the collect delay for each energy meter are configured exclusively in the datapoints tab.
+
+On first start after an upgrade from an earlier version, the previous energy meter configuration is migrated automatically.
+
+### Auto-detection of Collect-capable devices
+
+During the data point scan, the adapter now passively listens on the CAN bus to detect which devices support Collect mode. Detected devices are highlighted with a pin icon in the device card header of the datapoints tab.
+
+### Flexible data point scan
+
+A new option **Save data point values to object tree during scan** controls whether the current values are written to the object tree during the scan. When disabled, the adapter still updates values and metadata for all existing data point objects — only new objects are not created during the scan. This is useful to refresh metadata after a migration without rewriting all state values.
 
 ---
 
