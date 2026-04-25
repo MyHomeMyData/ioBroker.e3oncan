@@ -406,10 +406,20 @@
 
                 const onStartDids = [];
                 const intervalGroups = {};
+                const existingState = getScheduleState(devAddr);
 
                 card.querySelectorAll('tbody tr').forEach(function(row) {
-                    if (row.style.display === 'none') return;
                     const didId = parseInt(row.dataset.did, 10);
+                    if (row.style.display === 'none') {
+                        // Preserve existing schedule for hidden (filtered) rows
+                        if (existingState.onStartDids.has(didId)) onStartDids.push(didId);
+                        const iv = existingState.intervalDids.get(didId);
+                        if (iv !== undefined) {
+                            if (!intervalGroups[iv]) intervalGroups[iv] = [];
+                            intervalGroups[iv].push(didId);
+                        }
+                        return;
+                    }
                     const onStart = row.querySelector('.onstart-check').checked;
                     const intervalVal = row.querySelector('.interval-input').value.trim();
                     const interval = intervalVal ? parseInt(intervalVal, 10) : null;
