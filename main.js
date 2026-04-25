@@ -106,108 +106,84 @@ class E3oncan extends utils.Adapter {
         // Reset the connection indicator during startup
         this.setState('info.connection', false, true);
 
-        // Read detected energy meters from previous scan (if available):
+        // Read energy meter configuration from info.energyMeter JSON (with migration fallback):
         try {
-            const s97 = await this.getStateAsync('info.e380_97');
-            const s98 = await this.getStateAsync('info.e380_98');
-            const sCb = await this.getStateAsync('info.e3100cb');
-            const toChannel = s => (s && s.val ? (typeof s.val === 'string' ? s.val : 'ext') : '');
-            this.detectedEnergyMeters = {
-                e380_97: toChannel(s97),
-                e380_98: toChannel(s98),
-                e3100cb: toChannel(sCb),
-            };
-        } catch {
-            // states not yet available, keep default
-        }
-
-        // Read collect delays for energy meters (fall back to default if not yet set):
-        try {
-            const sDelay380 = await this.getStateAsync('info.e380_delay');
-            this.e380Delay = sDelay380 && sDelay380.val != null ? Number(sDelay380.val) : this.defaultDelayEM;
-            const sDelayCb = await this.getStateAsync('info.e3100cb_delay');
-            this.e3100cbDelay = sDelayCb && sDelayCb.val != null ? Number(sDelayCb.val) : this.defaultDelayEM;
-        } catch {
-            // states not yet available, keep defaults
-        }
-
-        // Read collect active flags for energy meters.
-        // States are created dynamically: null return from getStateAsync = first run → migrate from old config.
-        try {
-            const sActive380 = await this.getStateAsync('info.e380_active');
-            if (sActive380 == null) {
-                // @ts-expect-error AdapterConfig
-                this.e380Active = !!this.config.e380Active; // migrate from old config
-                if (this.e380Active) {
-                    // Map old single-E380 config to CAN address 98 on UDS CAN channel (common case).
-                    this.detectedEnergyMeters.e380_98 = 'ext';
-                    await this.extendObject('info.e380_98', {
-                        type: 'state',
-                        common: { name: 'info.e380_98', type: 'string', role: 'state', read: true, write: false },
-                        native: {},
-                    });
-                    await this.setStateAsync('info.e380_98', { val: 'ext', ack: true });
-                    this.log.warn(
-                        'Upgrade migration: E380 configured for CAN address 98 on UDS CAN channel. ' +
-                            'If your E380 uses CAN address 97, please run a device scan to reconfigure.',
-                    );
-                }
-                await this.extendObject('info.e380_active', {
-                    type: 'state',
-                    common: {
-                        name: 'Collect E380 data',
-                        type: 'boolean',
-                        role: 'switch',
-                        read: true,
-                        write: true,
-                        def: false,
-                    },
-                    native: {},
-                });
-                this.setState('info.e380_active', this.e380Active, true);
+            const sEm = await this.getStateAsync('info.energyMeter');
+            if (sEm && sEm.val) {
+                const em = JSON.parse(String(sEm.val));
+                const toChannel = v => (v && typeof v === 'string' ? v : '');
+                this.detectedEnergyMeters = {
+                    e380_97: toChannel(em.e380_97),
+                    e380_98: toChannel(em.e380_98),
+                    e3100cb: toChannel(em.e3100cb),
+                };
+                this.e380Active = em.e380Active != null ? !!em.e380Active : false;
+                this.e380Delay = em.e380Delay != null ? Number(em.e380Delay) : this.defaultDelayEM;
+                this.e3100cbActive = em.e3100cbActive != null ? !!em.e3100cbActive : false;
+                this.e3100cbDelay = em.e3100cbDelay != null ? Number(em.e3100cbDelay) : this.defaultDelayEM;
             } else {
-                this.e380Active = !!sActive380.val;
-            }
-            const sActiveCb = await this.getStateAsync('info.e3100cb_active');
-            if (sActiveCb == null) {
-                // @ts-expect-error AdapterConfig
-                this.e3100cbActive = !!this.config.e3100cbActive; // migrate from old config
-                if (this.e3100cbActive) {
-                    this.detectedEnergyMeters.e3100cb = 'ext';
-                    await this.extendObject('info.e3100cb', {
-                        type: 'state',
-                        common: { name: 'info.e3100cb', type: 'string', role: 'state', read: true, write: false },
-                        native: {},
-                    });
-                    await this.setStateAsync('info.e3100cb', { val: 'ext', ack: true });
-                    this.log.info('Upgrade migration: E3100CB configured for UDS CAN channel.');
+                // Migration: read from old individual states (pre-v1.0.0 installations)
+                const s97 = await this.getStateAsync('info.e380_97');
+                const s98 = await this.getStateAsync('info.e380_98');
+                const sCb = await this.getStateAsync('info.e3100cb');
+                const toChannel = s => (s && s.val ? (typeof s.val === 'string' ? s.val : 'ext') : '');
+                this.detectedEnergyMeters = {
+                    e380_97: toChannel(s97),
+                    e380_98: toChannel(s98),
+                    e3100cb: toChannel(sCb),
+                };
+                const sDelay380 = await this.getStateAsync('info.e380_delay');
+                this.e380Delay = sDelay380 && sDelay380.val != null ? Number(sDelay380.val) : this.defaultDelayEM;
+                const sDelayCb = await this.getStateAsync('info.e3100cb_delay');
+                this.e3100cbDelay = sDelayCb && sDelayCb.val != null ? Number(sDelayCb.val) : this.defaultDelayEM;
+                const sActive380 = await this.getStateAsync('info.e380_active');
+                if (sActive380 == null) {
+                    // @ts-expect-error AdapterConfig
+                    this.e380Active = !!this.config.e380Active; // migrate from very old config
+                    if (this.e380Active) {
+                        this.detectedEnergyMeters.e380_98 = 'ext';
+                        this.log.warn(
+                            'Upgrade migration: E380 configured for CAN address 98 on UDS CAN channel. ' +
+                                'If your E380 uses CAN address 97, please run a device scan to reconfigure.',
+                        );
+                    }
+                } else {
+                    this.e380Active = !!sActive380.val;
                 }
-                await this.extendObject('info.e3100cb_active', {
-                    type: 'state',
-                    common: {
-                        name: 'Collect E3100CB data',
-                        type: 'boolean',
-                        role: 'switch',
-                        read: true,
-                        write: true,
-                        def: false,
-                    },
-                    native: {},
-                });
-                this.setState('info.e3100cb_active', this.e3100cbActive, true);
-            } else {
-                this.e3100cbActive = !!sActiveCb.val;
+                const sActiveCb = await this.getStateAsync('info.e3100cb_active');
+                if (sActiveCb == null) {
+                    // @ts-expect-error AdapterConfig
+                    this.e3100cbActive = !!this.config.e3100cbActive; // migrate from very old config
+                    if (this.e3100cbActive) {
+                        this.detectedEnergyMeters.e3100cb = 'ext';
+                        this.log.info('Upgrade migration: E3100CB configured for UDS CAN channel.');
+                    }
+                } else {
+                    this.e3100cbActive = !!sActiveCb.val;
+                }
             }
         } catch {
             // states not yet available, keep defaults
         }
 
-        // Read detected Collect CAN IDs from previous scan (if available):
+        // Read detected Collect CAN IDs from info.collect JSON (with migration fallback):
         try {
-            for (const canId of [0x451, 0x693]) {
-                const s = await this.getStateAsync(`info.detectedCollect${canId.toString(16)}`);
-                if (s && s.val) {
-                    this.detectedCollectCanIds.add(canId);
+            const sCo = await this.getStateAsync('info.collect');
+            if (sCo && sCo.val) {
+                const co = JSON.parse(String(sCo.val));
+                if (co.detected451) {
+                    this.detectedCollectCanIds.add(0x451);
+                }
+                if (co.detected693) {
+                    this.detectedCollectCanIds.add(0x693);
+                }
+            } else {
+                // Migration: read from old individual states (pre-v1.0.0 installations)
+                for (const canId of [0x451, 0x693]) {
+                    const s = await this.getStateAsync(`info.detectedCollect${canId.toString(16)}`);
+                    if (s && s.val) {
+                        this.detectedCollectCanIds.add(canId);
+                    }
                 }
             }
         } catch {

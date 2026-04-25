@@ -294,28 +294,26 @@
       "native": {}
     },
     {
-      "_id": "info.e380_delay",
+      "_id": "info.energyMeter",
       "type": "state",
       "common": {
-        "name": "Collect delay for E380 energy meter (s)",
-        "type": "number",
-        "role": "state",
+        "name": "Energy meter detection and configuration",
+        "type": "string",
+        "role": "json",
         "read": true,
-        "write": true,
-        "def": 5
+        "write": true
       },
       "native": {}
     },
     {
-      "_id": "info.e3100cb_delay",
+      "_id": "info.collect",
       "type": "state",
       "common": {
-        "name": "Collect delay for E3100CB energy meter (s)",
-        "type": "number",
-        "role": "state",
+        "name": "Detected Collect CAN IDs",
+        "type": "string",
+        "role": "json",
         "read": true,
-        "write": true,
-        "def": 5
+        "write": false
       },
       "native": {}
     }
