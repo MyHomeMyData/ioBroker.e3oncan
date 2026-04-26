@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.11.1",
+    "version": "1.0.0-beta.0",
     "news": {
       "1.0.0-beta.0": {
         "en": "Introduced new e3oncan datapoints webUI pinned to the adapter's instance row\nEnergy meters (E380, E3100CB) are now auto-detected during the device scan by passive CAN listening on both CAN channels\nState names for energy meters are assigned automatically based on CAN address and channel; see Readme for details\nEnergy meter Collect toggle and delay are now configured exclusively in the e3oncan datapoints page; changes take effect after adapter restart\nOn first run after upgrade, the active setting is automatically migrated from the previous adapter configuration\nCollect-capable devices are now auto-detected during the data point scan by passive CAN listening; a pin icon is shown in the device card header for each detected device\nAdded option to suppress storing of data point values during data point scan",

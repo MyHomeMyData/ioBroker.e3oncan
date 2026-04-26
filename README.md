@@ -359,7 +359,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 1.0.0-beta.0 (2026-04-26)
 * (MyHomeMyData) Introduced new e3oncan datapoints webUI pinned to the adapter's instance row
 * (MyHomeMyData) Energy meters (E380, E3100CB) are now auto-detected during the device scan by passive CAN listening on both CAN channels
 * (MyHomeMyData) State names for energy meters are assigned automatically based on CAN address and channel; see Readme for details
@@ -396,14 +396,6 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 
 ### 0.10.13 (2025-09-30)
 * (MyHomeMyData) Fix for issue #162
-
-### 0.10.12 (2025-09-15)
-* (MyHomeMyData) Migration to ESLint 9, refer to issues #141 and #152
-
-### 0.10.11 (2025-09-06)
-* (MyHomeMyData) Fix for issue #152 (repository checker) and #126 (node.js 24)
-* (MyHomeMyData) Added hint to readme regarding user action after upgrading version of node.js
-* (MyHomeMyData) Update of list of data points for E3 devices to version 20250903
 
 Older changelog entries are available in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).
 
