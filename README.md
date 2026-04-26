@@ -12,6 +12,8 @@
 
 ## e3oncan adapter for ioBroker
 
+> Eine deutsche Version dieser Dokumentation ist verfügbar: [README.de.md](README.de.md)
+
 ## Table of contents
 
 - [Overview](#overview)
