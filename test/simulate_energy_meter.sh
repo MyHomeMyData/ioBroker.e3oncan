@@ -35,7 +35,12 @@ esac
 
 echo "Simulating $LABEL on $BUS (CAN ID: 0x$CAN_ID) — press Ctrl+C to stop"
 
+case "$METER" in
+    e3100) DATA="0000000400000000" ;;
+    *)     DATA="0000000000000000" ;;
+esac
+
 while true; do
-    cansend "$BUS" "${CAN_ID}#0000000000000000"
+    cansend "$BUS" "${CAN_ID}#${DATA}"
     sleep 1
 done
