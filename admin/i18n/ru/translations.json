@@ -21,6 +21,8 @@
     "Data formats used by the device": "Форматы данных, используемые устройством",
     "Description": "Описание",
     "Description of datapoint": "Описание точки данных",
+    "Detected during last device scan. Run scan to update.": "Обнаружено во время последнего сканирования устройства. Запустите сканирование для обновления.",
+    "Detected energy meters": "Обнаруженные счетчики энергии",
     "Device Address": "Адрес устройства",
     "Device ECU address (fixed)": "Адрес ЭБУ устройства (фиксированный)",
     "Device ECU name (fixed)": "Имя ЭБУ устройства (фиксированное)",
@@ -61,7 +63,10 @@
     "Please start this adapter instance to enable further configuration options.": "Запустите этот экземпляр адаптера, чтобы включить дополнительные параметры конфигурации.",
     "Requesting data on UDS CAN Adapter via UDSonCAN": "Запрос данных об адаптере UDS CAN через UDSonCAN",
     "Requesting data on external CAN Adapter via UDSonCAN": "Запрос данных о внешнем CAN-адаптере через UDsonCAN",
+    "Run the scan above to discover all data points on your devices and add metadata (description, unit, access). This is required before writing to any data point and recommended after every adapter or device firmware update.": "Запустите сканирование выше, чтобы обнаружить все точки данных на ваших устройствах и добавить метаданные (описание, объект, доступ). Это необходимо перед записью в любую точку данных и рекомендуется после каждого обновления прошивки адаптера или устройства.",
+    "Save all data point values to object tree during scan": "Сохраняйте все значения точек данных в дереве объектов во время сканирования.",
     "Scan will take up to 5 minutes. Plaese make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.": "Сканирование займет до 5 минут. Убедитесь, что ни один другой клиент UDsonCAN (например, Open3Eclient.py) не запущен. Пожалуйста, не закрывайте вкладку во время сканирования. За ходом работы вы можете следить, просматривая Журнал на дополнительной вкладке.",
+    "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.": "Сканирование займет до 5 минут. Убедитесь, что ни один другой клиент UDsonCAN (например, Open3Eclient.py) не запущен. Пожалуйста, не закрывайте вкладку во время сканирования. За прогрессом вы можете следить, просматривая Журнал на дополнительной вкладке.",
     "Schedule (s)": "Расписание(а)",
     "Schedule for requesting given datapoints. 0 for one time request on start of adapter instance.": "Расписание запроса заданных точек данных. 0 для однократного запроса при запуске экземпляра адаптера.",
     "Second CAN Adapter": "Второй CAN-адаптер",
@@ -76,7 +81,10 @@
     "UDS device scan is ongoing. This may take up to 20 seconds.": "Сканирование устройства UDS продолжается. Это может занять до 20 секунд.",
     "Update list of datapoints": "Обновить список точек данных",
     "WARNING: Values below 2 seconds may cause heavy system load!": "ВНИМАНИЕ: значения ниже 2 секунд могут привести к большой нагрузке на систему!",
+    "When unchecked, values and metadata are updated for already existing data point objects only. New data point objects are not created during the scan — they are created automatically on first data receipt after the scan.": "Если этот флажок снят, значения и метаданные обновляются только для уже существующих объектов-точек данных. Новые объекты-точки данных не создаются во время сканирования — они создаются автоматически при первом получении данных после сканирования.",
     "You may edit 2nd column to set name of state for the device (visible in object tree).": "Вы можете отредактировать второй столбец, чтобы установить имя состояния устройства (видно в дереве объектов).",
     "active": "активный",
-    "n/a": "н/д"
+    "n/a": "н/д",
+    "► After the scan, browse and manage the discovered data points using the 'datapoints page', which is accessible via the link button in the adapter's instance row.": "► После сканирования просматривайте обнаруженные точки данных и управляйте ими с помощью «страницы точек данных», доступной по кнопке ссылки в строке экземпляра адаптера.",
+    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.": "► Альтернативно вы можете использовать вкладку «Назначения адаптеру UDS CAN» в этом диалоговом окне конфигурации."
 }

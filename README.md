@@ -12,15 +12,19 @@
 
 ## e3oncan adapter for ioBroker
 
+> Eine deutsche Version dieser Dokumentation ist verfügbar: [README.de.md](README.de.md)
+
 ## Table of contents
 
 - [Overview](#overview)
+- [What's new in v1.0.0](#whats-new-in-v100)
 - [Quick start](#quick-start)
 - [Configuration guide](#configuration-guide)
   - [Step 1 – CAN adapter](#step-1--can-adapter)
-  - [Step 2 – Device scan](#step-2--device-scan)
+  - [Step 2 – Device scan and energy meter detection](#step-2--device-scan-and-energy-meter-detection)
   - [Step 3 – Data point scan](#step-3--data-point-scan)
   - [Step 4 – Assignments and schedules](#step-4--assignments-and-schedules)
+- [e3oncan datapoints tab](#e3oncan-datapoints-tab)
 - [Reading data points](#reading-data-points)
 - [Writing data points](#writing-data-points)
 - [Data points and metadata](#data-points-and-metadata)
@@ -48,6 +52,28 @@ Which modes are available depends on your device topology. See the [device topol
 
 > Important parts of this adapter are based on the [open3e](https://github.com/open3e) project.
 > A Python-based collect-only implementation using MQTT is available at [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
+
+---
+
+## What's new in v1.0.0
+
+### Datapoints tab
+
+A new **e3oncan datapoints** page is pinned directly to the adapter's instance row in the ioBroker instances view. It provides a dedicated UI for managing schedules and Collect settings per device and data point — no need to open the full adapter configuration dialog for day-to-day changes.
+
+### Auto-detection of energy meters
+
+Energy meters (E380 and E3100CB) are now **automatically detected** during the device scan by passive CAN listening on both CAN channels. State names are assigned automatically based on the detected CAN address and channel. The active/inactive toggle and the collect delay for each energy meter are configured exclusively in the datapoints tab.
+
+On first start after an upgrade from an earlier version, the previous energy meter configuration is migrated automatically.
+
+### Auto-detection of Collect-capable devices
+
+During the data point scan, the adapter now passively listens on the CAN bus to detect which devices support Collect mode. Detected devices are highlighted with a pin icon in the device card header of the datapoints tab.
+
+### Flexible data point scan
+
+A new option **Save data point values to object tree during scan** controls whether the current values are written to the object tree during the scan. When disabled, the adapter still updates values and metadata for all existing data point objects — only new objects are not created during the scan. This is useful to refresh metadata after a migration without rewriting all state values.
 
 ---
 
@@ -88,16 +114,22 @@ Open the adapter configuration dialog and go to the **CAN Adapter** tab.
 
 If you have a second CAN bus (e.g. internal bus), configure it as the second adapter here. A second **Assignments** tab will appear once the second adapter is configured.
 
-### Step 2 – Device scan
+### Step 2 – Device scan and energy meter detection
 
 Go to the **List of UDS Devices** tab and press the **Scan** button.
 
 - The scan takes a few seconds. You can watch progress in the adapter log (open a second browser tab).
-- All E3 devices found on the bus will be listed. Energy meters (E380, E3100CB) are not listed here – they are configured separately.
-- You can rename devices in the second column. These names are used as identifiers in ioBroker's object tree.
+- All E3 devices found on the bus will be listed. You can rename devices in the second column — these names are used as identifiers in ioBroker's object tree.
 - Press **SAVE** when done. The instance will restart.
 
 > During the device scan, the adapter also reads the device's data format configuration (data point 382), including temperature units (°C or °F) and date/time formats. This is stored and used during subsequent data point scans.
+
+**Energy meter detection**
+
+While the device scan runs, the adapter passively listens on the CAN bus for broadcasts from E380 and E3100CB energy meters. No additional scan time is needed — detection happens in parallel. The result is stored and shown:
+
+- In the adapter configuration dialog (**List of UDS Devices** tab) as a text summary.
+- In the **e3oncan datapoints** page as individual cards for each detected meter type (see [below](#e3oncan-datapoints-tab)).
 
 ### Step 3 – Data point scan
 
@@ -110,32 +142,63 @@ What the scan does:
 - Adds metadata (description, unit, read/write access) to each data point object.
 - Sets physical units based on the device format configuration found in step 2.
 - Creates the full object tree for each device in ioBroker.
+- Detects Collect-capable devices by passively listening for their time broadcasts on the CAN bus (no extra scan time needed — runs in parallel). A pin icon appears in the device card header of the **e3oncan datapoints** page for each detected device.
 
 This step is not strictly mandatory for read-only use, but it is **strongly recommended** – and **required** if you want to write to any data point.
 
-After the scan, you can browse the discovered data points in the configuration dialog by selecting a device and pressing **Update list of data points**. Use the filter symbol to search by name or codec. Deactivate the filter before switching to another device.
+**Save data point values to object tree during scan**
+
+By default the scan also writes the current value of each data point into the object tree (`json`, `raw`, `tree` states). You can adjust the behavior using the option **Save data point values ​​in the object tree during scan** above the scan button. If this option is disabled, the adapter updates values and metadata for already existing data point objects, but does not create new ones – those are created automatically the first time data is received after the scan.
+
+This option is useful if you want to avoid a large number of state writes during the scan (e.g. on systems with many devices). If you previously ran a scan with values stored and now want a clean slate, you can safely delete any device's `json`, `raw`, or `tree` sub-objects from the ioBroker object tree — the adapter will recreate them automatically when it next receives data. **Note:** Deleting a large number of objects at once causes ioBroker to fire many internal events simultaneously, which can briefly spike RAM usage. Delete in small batches if your system is under memory pressure.
+
+> **Note on history adapters:** Deleting objects does **not** delete the historical data stored by a history adapter (History, InfluxDB, SQL). The recorded values remain in the adapter's backend and reappear in charts once the state ID is re-created. However, the history subscription configuration (the "enabled" flag on the object) is lost when an object is deleted and must be re-enabled manually on the new object.
+
+> **Warning:** Never delete the `info` channel (e.g. `e3oncan.0.info`). It holds scan results, energy meter detection, delays, active flags, and the CAN connection state. Deleting it will cause loss of configuration that cannot be automatically recovered.
+
+After the scan, browse and manage the discovered data points using the **e3oncan datapoints** page (see [below](#e3oncan-datapoints-tab)).
 
 ### Step 4 – Assignments and schedules
 
-Go to the **Assignments to UDS CAN Adapter** tab (and the second adapter tab if applicable).
+The recommended way to configure read schedules and per-device Collect mode is the **e3oncan datapoints** page (see [below](#e3oncan-datapoints-tab)).
 
-**Energy meters (Collect mode)**
+**Energy meters**
 
-If you have E380 or E3100CB energy meters, you can activate listening for them here. Set **Min. update time (s)** to control how often values are stored. The default of 5 seconds is recommended – energy meters transmit more than 20 values per second, and setting this to 0 will put a high load on ioBroker.
+If the device scan detected E380 or E3100CB energy meters, a card for each detected meter appears in the **e3oncan datapoints** page. Activate collecting with the **Collect** toggle on the card. Use the **Delay (s)** field to set the minimum interval between value updates in ioBroker. The default of 5 seconds is recommended — energy meters transmit more than 20 values per second, and setting this to 0 will put significant load on ioBroker.
 
-**E3 device collection (Collect mode)**
+Press **Save & Close** when done. Check the object tree to verify that data is being collected.
 
-Press **+** to add a device. Check **Active**, select the device, and set **Min. update time (s)**. A value of 5s is recommended; 0s (store every received value) is possible but generates more load.
+---
 
-This mode captures data exchanged between your E3 devices in real time, without sending any requests. See the [FAQ](#faq-and-limitations) for details on which devices support this.
+## e3oncan datapoints tab
 
-**UDSonCAN read schedules**
+The **e3oncan datapoints** page is the primary place for browsing data points and configuring UDSonCAN read schedules and per-device Collect mode. It opens in a new browser tab when you click the **Datapoints** link button in the adapter's instance row in the ioBroker admin instances view.
 
-Press **+** to add a schedule. Select a device and a list of data points to read, then set an interval in seconds. A value of 0 means the data points are read once at adapter startup.
+**Browsing data points**
 
-You can add multiple schedules per device to request some data points more frequently than others. Use the **List of Data Points** tab (open in a second browser tab) as a reference.
+All devices and any detected energy meters are shown as expandable cards, starting collapsed so you get an overview of your whole system at a glance. Click a card header to expand it. The search box filters by name or ID, and matching cards are expanded automatically.
 
-Press **SAVE & CLOSE** when done. Check the object tree to verify that data is being collected.
+If a data point scan has not been performed yet for a device, a warning banner is shown at the top of the page as a reminder.
+
+**Device cards**
+
+Each device card lists its data points with ID, name, codec, and schedule settings. The Collect toggle and min. update time appear in the card header. If Collect traffic from the device was detected during the data point scan, a green pin icon is shown in the card header as a confirmation.
+
+**Energy meter cards**
+
+If energy meters were detected during the device scan (see [Step 2](#step-2--device-scan-and-energy-meter-detection)), a card for each detected meter appears at the top of the page. Use the **Collect** toggle to activate data collection, and the **Delay (s)** field to set the minimum interval between value updates in ioBroker.
+
+**Scheduling**
+
+For each data point you can:
+- Check **On start** – the data point is read once when the adapter starts.
+- Enter an **Interval (s)** – the data point is read repeatedly at that interval.
+
+Both options can be combined. Use the schedule filter (All / On Start / Interval) to quickly focus on already-scheduled data points.
+
+**Saving**
+
+Press **Save** to apply your changes without closing the tab. **Save & Close** saves and closes the tab, returning you to the instances view. **Discard & Close** closes the tab without saving — no adapter restart is triggered. An **Unsaved changes** badge appears whenever there are pending changes.
 
 ---
 
@@ -178,6 +241,19 @@ For detailed information about how data points are structured, how variant data 
 ---
 
 ## Energy meters
+
+Energy meters are detected automatically during the device scan. No manual configuration is needed. The adapter assigns a state name in ioBroker's object tree based on where each meter was found:
+
+| Channel | CAN address | State name |
+|---|---|---|
+| UDS CAN | 98 | `e380` |
+| UDS CAN | 97 | `e380_97` |
+| 2nd CAN | 98 | `e380_98` |
+| 2nd CAN | 97 | `e380_97` |
+
+`e380` (without suffix) is used for CAN address 98 on the UDS CAN channel to preserve backward compatibility with existing installations. `e3100cb` is always used for the E3100CB.
+
+The collect delay (default 5 s) can be adjusted per meter type in the **e3oncan datapoints** page. Changes take effect after the adapter restarts.
 
 ### E380 data and units
 
@@ -264,9 +340,18 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 1.0.0-beta.0 (2026-04-26)
+* (MyHomeMyData) Introduced new e3oncan datapoints webUI pinned to the adapter's instance row
+* (MyHomeMyData) Energy meters (E380, E3100CB) are now auto-detected during the device scan by passive CAN listening on both CAN channels
+* (MyHomeMyData) State names for energy meters are assigned automatically based on CAN address and channel; see Readme for details
+* (MyHomeMyData) Energy meter Collect toggle and delay are now configured exclusively in the e3oncan datapoints page; changes take effect after adapter restart
+* (MyHomeMyData) On first run after upgrade, the active setting is automatically migrated from the previous adapter configuration
+* (MyHomeMyData) Collect-capable devices are now auto-detected during the data point scan by passive CAN listening; a pin icon is shown in the device card header for each detected device
+* (MyHomeMyData) Added option to suppress storing of data point values during data point scan
+
 ### 0.11.1 (2026-04-23)
 * (MyHomeMyData) Improved robustness: Receiving a data point of length zero is treated as a "negative response"
-* (MyHomeMyData) The metadata is now also restored after a data point is deleted 
+* (MyHomeMyData) The metadata is now also restored after a data point is deleted
 * (MyHomeMyData) Aligned test cases for German system language
 
 ### 0.11.0 (2026-04-14)
@@ -289,14 +374,6 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 
 ### 0.10.13 (2025-09-30)
 * (MyHomeMyData) Fix for issue #162
-
-### 0.10.12 (2025-09-15)
-* (MyHomeMyData) Migration to ESLint 9, refer to issues #141 and #152
-
-### 0.10.11 (2025-09-06)
-* (MyHomeMyData) Fix for issue #152 (repository checker) and #126 (node.js 24)
-* (MyHomeMyData) Added hint to readme regarding user action after upgrading version of node.js
-* (MyHomeMyData) Update of list of data points for E3 devices to version 20250903
 
 Older changelog entries are available in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).
 

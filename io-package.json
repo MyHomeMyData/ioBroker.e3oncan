@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.11.1",
+    "version": "1.0.0-beta.0",
     "news": {
+      "1.0.0-beta.0": {
+        "en": "Introduced new e3oncan datapoints webUI pinned to the adapter's instance row\nEnergy meters (E380, E3100CB) are now auto-detected during the device scan by passive CAN listening on both CAN channels\nState names for energy meters are assigned automatically based on CAN address and channel; see Readme for details\nEnergy meter Collect toggle and delay are now configured exclusively in the e3oncan datapoints page; changes take effect after adapter restart\nOn first run after upgrade, the active setting is automatically migrated from the previous adapter configuration\nCollect-capable devices are now auto-detected during the data point scan by passive CAN listening; a pin icon is shown in the device card header for each detected device\nAdded option to suppress storing of data point values during data point scan",
+        "de": "Neue e3oncan Datenpunkte-Webseite, direkt in der Adapterinstanzzeile verankert\nEnergiezähler (E380, E3100CB) werden jetzt beim Gerätescan durch passives CAN-Lauschen auf beiden Kanälen automatisch erkannt\nState-Namen für Energiezähler werden automatisch anhand von CAN-Adresse und Kanal vergeben; Details im Readme\nCollect-Schalter und Verzögerung für Energiezähler werden ausschließlich in der e3oncan Datenpunkte-Seite konfiguriert; Änderungen werden nach Adapter-Neustart wirksam\nBeim ersten Start nach einem Upgrade wird die Aktiv-Einstellung automatisch aus der bisherigen Adapterkonfiguration migriert\nCollect-fähige Geräte werden jetzt beim Datenpunktscan durch passives CAN-Lauschen automatisch erkannt; ein Pin-Symbol erscheint im Gerätekarten-Header für jedes erkannte Gerät\nOption hinzugefügt, das Speichern von Datenpunktwerten während des Datenpunktscans zu unterdrücken",
+        "ru": "Новая веб-страница датапоинтов e3oncan, закреплённая в строке экземпляра адаптера\nСчётчики электроэнергии (E380, E3100CB) теперь автоматически обнаруживаются при сканировании устройств путём пассивного прослушивания CAN на обоих каналах\nИмена состояний для счётчиков электроэнергии назначаются автоматически по адресу CAN и каналу; подробности в Readme\nПереключатель Collect и задержка для счётчиков электроэнергии настраиваются исключительно на странице датапоинтов e3oncan; изменения вступают в силу после перезапуска адаптера\nПри первом запуске после обновления активная настройка автоматически переносится из предыдущей конфигурации\nУстройства с поддержкой Collect теперь автоматически обнаруживаются при сканировании датапоинтов; значок булавки отображается в заголовке карточки устройства\nДобавлена опция для отключения сохранения значений датапоинтов во время сканирования",
+        "pt": "Nova página web de pontos de dados e3oncan fixada na linha de instância do adaptador\nContadores de energia (E380, E3100CB) são agora automaticamente detectados durante o scan de dispositivos por escuta passiva CAN em ambos os canais\nNomes de estado para contadores de energia são atribuídos automaticamente com base no endereço CAN e canal; consulte o Readme para detalhes\nO interruptor Collect e o atraso para contadores de energia são configurados exclusivamente na página de pontos de dados e3oncan; as alterações têm efeito após reinício do adaptador\nNa primeira execução após atualização, a configuração ativa é automaticamente migrada da configuração anterior do adaptador\nDispositivos com capacidade Collect são agora automaticamente detectados durante o scan de pontos de dados; um ícone de pino é mostrado no cabeçalho do cartão do dispositivo\nAdicionada opção para suprimir o armazenamento de valores de pontos de dados durante o scan",
+        "nl": "Nieuwe e3oncan datapunten webpagina vastgezet in de adapterinstantierij\nEnergiemeters (E380, E3100CB) worden nu automatisch gedetecteerd tijdens de apparaatscan door passief CAN-luisteren op beide kanalen\nToestandsnamen voor energiemeters worden automatisch toegewezen op basis van CAN-adres en kanaal; zie Readme voor details\nDe Collect-schakelaar en vertraging voor energiemeters worden uitsluitend geconfigureerd op de e3oncan datapunten pagina; wijzigingen worden van kracht na herstart van de adapter\nBij de eerste uitvoering na een upgrade wordt de actieve instelling automatisch gemigreerd vanuit de vorige adapterconfiguratie\nCollect-geschikte apparaten worden nu automatisch gedetecteerd tijdens de datapuntscan; een speldpictogram verschijnt in de apparaatkaart header voor elk gedetecteerd apparaat\nOptie toegevoegd om het opslaan van datapuntwaarden tijdens de scan te onderdrukken",
+        "fr": "Nouvelle page web des points de données e3oncan épinglée dans la ligne d'instance de l'adaptateur\nLes compteurs d'énergie (E380, E3100CB) sont maintenant automatiquement détectés lors du scan des appareils par écoute passive CAN sur les deux canaux\nLes noms d'état des compteurs d'énergie sont attribués automatiquement selon l'adresse CAN et le canal ; voir le Readme pour les détails\nL'interrupteur Collect et le délai pour les compteurs d'énergie sont configurés exclusivement dans la page des points de données e3oncan ; les modifications prennent effet après redémarrage de l'adaptateur\nLors du premier démarrage après une mise à jour, la configuration active est automatiquement migrée depuis la configuration précédente\nLes appareils compatibles Collect sont maintenant automatiquement détectés lors du scan des points de données ; une icône d'épingle est affichée dans l'en-tête de la carte de l'appareil\nAjout d'une option pour supprimer l'enregistrement des valeurs de points de données lors du scan",
+        "it": "Nuova pagina web dei punti dati e3oncan agganciata alla riga dell'istanza dell'adattatore\nI contatori di energia (E380, E3100CB) vengono ora rilevati automaticamente durante la scansione dei dispositivi tramite ascolto passivo CAN su entrambi i canali\nI nomi degli stati per i contatori di energia vengono assegnati automaticamente in base all'indirizzo CAN e al canale; vedere il Readme per i dettagli\nL'interruttore Collect e il ritardo per i contatori di energia sono configurati esclusivamente nella pagina dei punti dati e3oncan; le modifiche hanno effetto dopo il riavvio dell'adattatore\nAl primo avvio dopo un aggiornamento, la configurazione attiva viene migrata automaticamente dalla configurazione precedente\nI dispositivi con supporto Collect vengono ora rilevati automaticamente durante la scansione dei punti dati; un'icona a spillo è mostrata nell'intestazione della scheda del dispositivo\nAggiunta opzione per sopprimere il salvataggio dei valori dei punti dati durante la scansione",
+        "es": "Nueva página web de puntos de datos e3oncan anclada en la fila de instancia del adaptador\nLos contadores de energía (E380, E3100CB) ahora se detectan automáticamente durante el escaneo de dispositivos mediante escucha pasiva CAN en ambos canales\nLos nombres de estado para los contadores de energía se asignan automáticamente según la dirección CAN y el canal; consulte el Readme para más detalles\nEl interruptor Collect y el retardo para los contadores de energía se configuran exclusivamente en la página de puntos de datos e3oncan; los cambios tienen efecto tras reiniciar el adaptador\nEn la primera ejecución tras una actualización, la configuración activa se migra automáticamente desde la configuración anterior\nLos dispositivos con capacidad Collect ahora se detectan automáticamente durante el escaneo de puntos de datos; se muestra un icono de chincheta en el encabezado de la tarjeta del dispositivo\nSe añadió una opción para suprimir el almacenamiento de valores de puntos de datos durante el escaneo",
+        "pl": "Nowa strona internetowa punktów danych e3oncan przypięta do wiersza instancji adaptera\nLiczniki energii (E380, E3100CB) są teraz automatycznie wykrywane podczas skanowania urządzeń przez pasywne nasłuchiwanie CAN na obu kanałach\nNazwy stanów dla liczników energii są przypisywane automatycznie na podstawie adresu CAN i kanału; szczegóły w Readme\nPrzełącznik Collect i opóźnienie dla liczników energii są konfigurowane wyłącznie na stronie punktów danych e3oncan; zmiany wchodzą w życie po ponownym uruchomieniu adaptera\nPrzy pierwszym uruchomieniu po aktualizacji aktywna konfiguracja jest automatycznie migrowana z poprzedniej konfiguracji adaptera\nUrządzenia obsługujące tryb Collect są teraz automatycznie wykrywane podczas skanowania punktów danych; ikona pinezki jest wyświetlana w nagłówku karty urządzenia\nDodano opcję pomijania zapisywania wartości punktów danych podczas skanowania",
+        "uk": "Нова веб-сторінка точок даних e3oncan, закріплена в рядку екземпляра адаптера\nЛічильники електроенергії (E380, E3100CB) тепер автоматично виявляються під час сканування пристроїв шляхом пасивного прослуховування CAN на обох каналах\nІмена станів для лічильників електроенергії призначаються автоматично на основі адреси CAN та каналу; подробиці у Readme\nПеремикач Collect і затримка для лічильників електроенергії налаштовуються виключно на сторінці точок даних e3oncan; зміни набирають чинності після перезапуску адаптера\nПри першому запуску після оновлення активне налаштування автоматично переноситься з попередньої конфігурації адаптера\nПристрої з підтримкою Collect тепер автоматично виявляються під час сканування точок даних; значок шпильки відображається у заголовку картки пристрою\nДодано опцію для відключення збереження значень точок даних під час сканування",
+        "zh-cn": "新的e3oncan数据点网页固定在适配器实例行中\n能量表（E380、E3100CB）现在在设备扫描期间通过对两个CAN通道的被动监听自动检测\n能量表的状态名称根据CAN地址和通道自动分配；详情请参阅Readme\n能量表的Collect开关和延迟仅在e3oncan数据点页面中配置；更改在适配器重启后生效\n升级后首次运行时，激活设置会自动从之前的适配器配置中迁移\n在数据点扫描期间，通过被动CAN监听自动检测支持Collect模式的设备；每个检测到的设备在设备卡片标题中显示图钉图标\n添加了在扫描期间抑制数据点值存储的选项"
+      },
       "0.11.1": {
         "en": "Improved robustness: Receiving a data point of length zero is treated as a \"negative response\"\nThe metadata is now also restored after a data point is deleted \nAligned test cases for German system language",
         "de": "Verbesserte Robustheit: Der Empfang eines Datenpunktes der Länge Null wird als \"negative Antwort\" behandelt\nDie Metadaten werden nun auch wiederhergestellt, nachdem ein Datenpunkt gelöscht wurde\nTestfälle für deutsche Systemsprache angepasst",
@@ -80,32 +93,6 @@
         "pl": "Poprawiono dla wydania # 152 (sprawdzacz repozytorium) i # 126 (node.js 24)\nDodano podpowiedź do odczytu działania użytkownika po aktualizacji wersji węzła. js\nAktualizacja listy punktów danych dla urządzeń E3 do wersji 20250903",
         "uk": "Виправлення для випуску #152 (репозиторійний чекер) та #126 (node.js 24)\nДодана підказка для читання про дію користувача після оновлення версії вузла. свінгери\nОновлення списку точок даних для пристроїв E3 до версії 20250903",
         "zh-cn": "修复第152期(仓库检查器)和第126期(节点24)\n在节点升级版本后添加了读取关于用户动作的提示 。 页:1\nE3设备数据点列表更新至版本20250903"
-      },
-      "0.10.10": {
-        "en": "Fix for issue #142 (WriteByDid not working in case of specific UDS control frame)\nUpdate of list of data points for E3 devices to version 20250729\nAdded codec for 64-bit integers. Remark: Encoding (for writing of data) is limited to values < 2^52 (4.503.599.627.370.496).",
-        "de": "Fix für Issue #142 (WriteByDid funktioniert nicht bei bestimmten UDS-Frames)\nAktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20250729\nCodec für 64-Bit-Integer hinzugefügt. Anmerkung: Die Enkodierung (zum Schreiben von Daten) ist auf Werte < 2^52 (4.503.599.627.370.496) beschränkt.",
-        "ru": "Исправление проблемы #142 (WriteByDid не работает в случае конкретной системы управления UDS)\nОбновление списка точек данных для устройств E3 до версии 20250729\nДобавлен кодек для 64-битных целых чисел. Замечание: Кодирование (для записи данных) ограничено значениями < 2^52 (4.503.599.627.370.496).",
-        "pt": "Corrigir para o problema #142 (WriteByNão funcionou no caso de um quadro de controle UDS específico)\nActualização da lista de pontos de dados para os dispositivos E3 na versão 20250729\nAdicionado codec para números inteiros de 64 bits. Observação: A codificação (para escrita de dados) é limitada a valores < 2^52 (4.503.599.627.370.496).",
-        "nl": "Fix voor probleem #142 (WriteByHeb niet gewerkt in het geval van specifieke UDS control frame)\nUpdate van de lijst van gegevenspunten voor E3-apparaten naar versie 20250729\nToegevoegd codec voor 64-bit gehele getallen. Opmerking: Codering (voor het schrijven van gegevens) is beperkt tot waarden < 2^52 (4503,599.627.370,496).",
-        "fr": "Correction pour le numéro #142 (WriteByNe fonctionne pas dans le cas d'un cadre de contrôle UDS spécifique)\nMise à jour de la liste des points de données pour les appareils E3 vers la version 20250729\nAjout du codec pour les entiers 64 bits. Remarque: Le codage (pour l'écriture des données) est limité à des valeurs < 2^52 (4.503.599.627.370.496).",
-        "it": "Risolvere per numero #142 (WriteByDid non funziona in caso di specifiche strutture di controllo UDS)\nAggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20250729\nAggiunto codec per i interi a 64 bit. Nota: La codifica (per la scrittura dei dati) è limitata ai valori < 2^52 (4.503.599.627.370.496).",
-        "es": "Fijación para el número #142 (WriteByDid no funciona en caso de marco de control UDS específico)\nActualización de la lista de puntos de datos para dispositivos E3 a la versión 20250729\nSe agregó codec para enteros de 64 bits. Observación: La codificación (para la escritura de los datos) se limita a los valores . 2^52 (4.503.599.627.370.496).",
-        "pl": "Fix for issue # 142 (WriteByDid not working in case of specific UDS control frame)\nAktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20250729\nDodano kodek dla 64- bitowych liczb całkowitych. Uwaga: Kodowanie (do zapisu danych) jest ograniczone do wartości < 2 ^ 52 (4.503.599.627.370.496).",
-        "uk": "Виправлення проблеми #142 (WriteByDid не працює в разі конкретної рамки керування UDS)\nОновлення списку точок даних для пристроїв E3 до версії 20250729\nДодано кодеку для 64-бітних цілих чисел. Примітка: Конкодування (для написання даних) обмежується значеннями < 2^52 (4.503.599.627.370.496).",
-        "zh-cn": "修复第142期( WriteBy 在特定UDS 控制框架情况下没有工作)\nE3设备数据点列表更新至20250729版本\n为64位整数添加编码器. 注:编码(用于写入数据)仅限于 < 2^52(4.503.599.627.370.496)的值."
-      },
-      "0.10.9": {
-        "en": "Update of list of data points for E3 devices to version 20250422\nFixed version number of enum info\nFix for issue #125 (findings of repository checker)",
-        "de": "Aktualisierung der Liste der Datenpunkte für E3 Geräte auf Version 20250422\nVersionsnummer der enum info korrigiert\nFix für Issue #125 (Ergebnisse des Repository-Checkers)",
-        "ru": "Обновление списка точек данных для устройств E3 до версии 20250422\nФиксированный номер версии enum info\nИсправление для выпуска #125 (находки проверки хранилища)",
-        "pt": "Atualização da lista de pontos de dados para dispositivos E3 para a versão 20250422\nNúmero de versão fixa de enum info\nCorrigir para o número #125 (conjuntos de verificador de repositório)",
-        "nl": "Update van de lijst van gegevenspunten voor E3-apparaten naar versie 20250422\nFixed version number of enum info\nFix voor uitgave #125 (bevindingen van repository checker)",
-        "fr": "Mise à jour de la liste des points de données pour les appareils E3 vers la version 20250422\nNuméro de version fixe d'enum info\nCorrection pour le numéro #125 (recherches du vérificateur du dépôt)",
-        "it": "Aggiornamento dell'elenco dei punti di dati per i dispositivi E3 alla versione 20250422\nNumero di versione fisso di enum info\nRisolvere per numero #125 (finanze di repository checker)",
-        "es": "Actualización de la lista de puntos de datos para dispositivos E3 a la versión 20250422\nNúmero de versión fija de enum info\nFijación para el número #125 (definiciones de repositorio)",
-        "pl": "Aktualizacja wykazu punktów danych dla urządzeń E3 do wersji 20250422\nPoprawiony numer wersji enum info\nFix for issue # 125 (wyniki weryfikacji repozytorium)",
-        "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20250422\nФіксована версія номеру енму\nВиправлення для випуску #125 (фінінги репозиторійного чекера)",
-        "zh-cn": "E3设备数据点列表更新至20250422版本\nEnum信息的固定版本编号\n修复第125期(查找仓库检查器)"
       }
     },
     "titleLang": {
@@ -164,6 +151,15 @@
     "dataSource": "push",
     "adminUI": {
       "config": "json"
+    },
+    "localLinks": {
+      "_default": {
+        "link": "/adapter/e3oncan/tab.html?instance=%instance%",
+        "name": {
+          "en": "Datapoints",
+          "de": "Datenpunkte"
+        }
+      }
     },
     "dependencies": [
       {
@@ -234,7 +230,8 @@
   },
   "native": {
     "tableUdsDevices": [],
-    "tableUdsDids": []
+    "tableUdsDids": [],
+    "saveDidsOnScan": true
   },
   "objects": [],
   "instanceObjects": [
@@ -280,6 +277,30 @@
         "read": true,
         "write": false,
         "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.energyMeter",
+      "type": "state",
+      "common": {
+        "name": "Energy meter detection and configuration",
+        "type": "string",
+        "role": "json",
+        "read": true,
+        "write": true
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.collect",
+      "type": "state",
+      "common": {
+        "name": "Detected Collect CAN IDs",
+        "type": "string",
+        "role": "json",
+        "read": true,
+        "write": false
       },
       "native": {}
     }
