@@ -24,6 +24,7 @@
   - [Schritt 2 – Gerätescan und Energiezähler-Erkennung](#schritt-2--gerätescan-und-energiezähler-erkennung)
   - [Schritt 3 – Datenpunktscan](#schritt-3--datenpunktscan)
   - [Schritt 4 – Zuweisungen und Zeitpläne](#schritt-4--zuweisungen-und-zeitpläne)
+- [Bus-Topologie-Analyse](#bus-topologie-analyse)
 - [e3oncan Datenpunkte-Seite](#e3oncan-datenpunkte-seite)
 - [Datenpunkte lesen](#datenpunkte-lesen)
 - [Datenpunkte schreiben](#datenpunkte-schreiben)
@@ -74,6 +75,13 @@ Während des Datenpunktscans lauscht der Adapter passiv auf dem CAN-Bus, um zu e
 ### Flexibler Datenpunktscan
 
 Eine neue Option **Datenpunktwerte während des Scans im Objektbaum speichern** steuert, ob die aktuellen Werte während des Scans in den Objektbaum geschrieben werden. Wenn diese Option deaktiviert ist, aktualisiert der Adapter Werte und Metadaten für bereits vorhandene Datenpunkt-Objekte, erstellt aber keine neuen — diese werden automatisch angelegt, wenn nach dem Scan erstmals Daten empfangen werden.
+
+### Bus-Topologie-Analyse
+
+Nach dem Datenpunktscan wertet der Adapter automatisch alle während des Scans gesammelten Topologie-Daten aus und erzeugt eine Zusammenfassung. Das Ergebnis wird in zwei neuen States im `info`-Kanal gespeichert:
+
+- `info.topology` – strukturiertes JSON mit allen gefundenen UDS-zugänglichen Geräten und Topologie-Elementen (dedupliziert über alle Topologie-Matrizen).
+- `info.topologyHtml` – eine fertig gerenderte HTML-Tabelle, farbkodiert nach Bus-Typ (CanInternal, CanExternal, CanRaw, ModBus, ServiceBus), mit UDS-Badge für Geräte, die auch über UDS erreichbar sind. Geeignet zur Anzeige in vis, jarvis oder einem beliebigen HTML-Widget.
 
 ---
 
@@ -154,7 +162,11 @@ Diese Option ist nützlich, wenn eine große Anzahl von State-Schreibvorgängen 
 
 > **Hinweis zu History-Adaptern:** Das Löschen von Objekten löscht **nicht** die historischen Daten, die von einem History-Adapter (History, InfluxDB, SQL) gespeichert wurden. Die aufgezeichneten Werte bleiben im Backend des Adapters erhalten und erscheinen in Diagrammen wieder, sobald die State-ID neu erstellt wurde. Die History-Abonnement-Konfiguration (das „enabled"-Flag am Objekt) geht jedoch beim Löschen verloren und muss am neuen Objekt manuell wieder aktiviert werden.
 
-> **Warnung:** Den `info`-Kanal niemals löschen (z. B. `e3oncan.0.info`). Er enthält Scan-Ergebnisse, Energiezähler-Erkennung, Verzögerungen, Aktiv-Flags und den CAN-Verbindungsstatus. Ein Löschen führt zum Verlust von Konfigurationsdaten, die nicht automatisch wiederhergestellt werden können.
+> **Warnung:** Den `info`-Kanal niemals löschen (z. B. `e3oncan.0.info`). Er enthält Scan-Ergebnisse, Energiezähler-Erkennung, Verzögerungen, Aktiv-Flags, Bus-Topologie-Zusammenfassungen und den CAN-Verbindungsstatus. Ein Löschen führt zum Verlust von Konfigurationsdaten, die nicht automatisch wiederhergestellt werden können.
+
+**Bus-Topologie-Analyse**
+
+Nach dem Scan erzeugt der Adapter automatisch eine Bus-Topologie-Zusammenfassung und speichert sie in zwei States im `info`-Kanal: `info.topology` (JSON) und `info.topologyHtml` (HTML). Weitere Details unter [Bus-Topologie-Analyse](#bus-topologie-analyse) weiter unten.
 
 Nach dem Scan können die gefundenen Datenpunkte über die **e3oncan Datenpunkte**-Seite durchsucht und verwaltet werden (siehe [unten](#e3oncan-datenpunkte-seite)).
 
@@ -167,6 +179,26 @@ Die empfohlene Vorgehensweise zum Konfigurieren von Leseintervallen und gerätei
 Wenn der Gerätescan E380- oder E3100CB-Energiezähler erkannt hat, erscheint für jeden erkannten Zähler eine Karte in der **e3oncan Datenpunkte**-Seite. Das Sammeln mit dem **Collect**-Schalter auf der Karte aktivieren. Im Feld **Verzögerung (s)** das Mindestintervall zwischen Wertaktualisierungen in ioBroker einstellen. Der Standardwert von 5 Sekunden ist empfohlen — Energiezähler übertragen mehr als 20 Werte pro Sekunde, und ein Wert von 0 würde ioBroker stark belasten.
 
 **Speichern & Schließen** drücken, wenn fertig. Den Objektbaum prüfen, ob Daten gesammelt werden.
+
+---
+
+## Bus-Topologie-Analyse
+
+Nach dem Datenpunktscan wertet der Adapter alle während des Scans gesammelten Topologie-Daten aus und speichert das Ergebnis in zwei States im `info`-Kanal:
+
+| State | Rolle | Inhalt |
+|---|---|---|
+| `info.topology` | `json` | Strukturiertes JSON: Liste aller UDS-zugänglichen Geräte und aller Topologie-Elemente, dedupliziert über alle Topologie-Matrizen |
+| `info.topologyHtml` | `html` | Fertig gerenderte HTML-Tabelle, farbkodiert nach Bus-Typ, mit **UDS**-Badge für Geräte, die auch über UDS erreichbar sind |
+
+**Anzeige der HTML-Tabelle**
+
+Am einfachsten lässt sich die Topologie in ioBroker mit einem Dashboard-Tool anzeigen, das HTML-States rendern kann:
+
+- **jarvis**: **stateHTML**-Widget hinzufügen → `e3oncan.x.info.topologyHtml` auswählen.
+- **vis / vis2**: Widget **basic – String (unescaped)** oder **HTML** → `e3oncan.x.info.topologyHtml` auswählen.
+
+> **Hinweis:** Die States `info.topology` und `info.topologyHtml` können für den Standard-ioBroker-Admin-State-Editor-Dialog zu groß sein. Dies ist eine bekannte Einschränkung des Admin-UI für große String-States. Die States werden korrekt geschrieben und können normal von Skripten und Widgets verwendet werden.
 
 ---
 
@@ -341,6 +373,9 @@ Wenn Ihnen dieses Projekt gefällt — oder Sie einfach großzügig sind — wü
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (MyHomeMyData) Bus-Topologie-Analyse wird jetzt automatisch nach dem Datenpunktscan erstellt; Ergebnisse werden in `info.topology` (JSON) und `info.topologyHtml` (HTML) gespeichert; Details im Readme
+
+### 1.0.0-beta.0 (2026-04-26)
 * (MyHomeMyData) Neue e3oncan Datenpunkte-Webseite, direkt in der Adapterinstanzzeile verankert
 * (MyHomeMyData) Energiezähler (E380, E3100CB) werden jetzt während des Gerätescans durch passives CAN-Lauschen auf beiden Kanälen automatisch erkannt
 * (MyHomeMyData) State-Namen für Energiezähler werden automatisch anhand von CAN-Adresse und Kanal vergeben; Details im Readme

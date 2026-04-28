@@ -25,6 +25,7 @@
   - [Step 2 – Device scan and energy meter detection](#step-2--device-scan-and-energy-meter-detection)
   - [Step 3 – Data point scan](#step-3--data-point-scan)
   - [Step 4 – Assignments and schedules](#step-4--assignments-and-schedules)
+- [Bus topology analysis](#bus-topology-analysis)
 - [e3oncan datapoints tab](#e3oncan-datapoints-tab)
 - [Reading data points](#reading-data-points)
 - [Writing data points](#writing-data-points)
@@ -75,6 +76,13 @@ During the data point scan, the adapter now passively listens on the CAN bus to 
 ### Flexible data point scan
 
 A new option **Save data point values to object tree during scan** controls whether the current values are written to the object tree during the scan. When disabled, the adapter still updates values and metadata for all existing data point objects — only new objects are not created during the scan. This is useful to refresh metadata after a migration without rewriting all state values.
+
+### Bus topology analysis
+
+After the data point scan, the adapter automatically analyses the bus topology data collected during the scan and generates a summary. The result is stored in two new states in the `info` channel:
+
+- `info.topology` – structured JSON with all discovered UDS-accessible devices and topology elements (deduplicated across all topology matrices).
+- `info.topologyHtml` – a rendered HTML table, color-coded by bus type (CanInternal, CanExternal, CanRaw, ModBus, ServiceBus), with a UDS badge on devices that are also accessible via UDS. Ready for display in vis, jarvis, or any HTML-capable widget.
 
 ---
 
@@ -173,7 +181,11 @@ This option is useful if you want to avoid a large number of state writes during
 
 > **Note on history adapters:** Deleting objects does **not** delete the historical data stored by a history adapter (History, InfluxDB, SQL). The recorded values remain in the adapter's backend and reappear in charts once the state ID is re-created. However, the history subscription configuration (the "enabled" flag on the object) is lost when an object is deleted and must be re-enabled manually on the new object.
 
-> **Warning:** Never delete the `info` channel (e.g. `e3oncan.0.info`). It holds scan results, energy meter detection, delays, active flags, and the CAN connection state. Deleting it will cause loss of configuration that cannot be automatically recovered.
+> **Warning:** Never delete the `info` channel (e.g. `e3oncan.0.info`). It holds scan results, energy meter detection, delays, active flags, bus topology summaries, and the CAN connection state. Deleting it will cause loss of configuration that cannot be automatically recovered.
+
+**Bus topology analysis**
+
+After the scan completes, the adapter automatically generates a bus topology summary and stores it in two states in the `info` channel: `info.topology` (JSON) and `info.topologyHtml` (HTML). See [Bus topology analysis](#bus-topology-analysis) below for details.
 
 After the scan, browse and manage the discovered data points using the **e3oncan datapoints** page (see [below](#e3oncan-datapoints-tab)).
 
@@ -186,6 +198,26 @@ The recommended way to configure read schedules and per-device Collect mode is t
 If the device scan detected E380 or E3100CB energy meters, a card for each detected meter appears in the **e3oncan datapoints** page. Activate collecting with the **Collect** toggle on the card. Use the **Delay (s)** field to set the minimum interval between value updates in ioBroker. The default of 5 seconds is recommended — energy meters transmit more than 20 values per second, and setting this to 0 will put significant load on ioBroker.
 
 Press **Save & Close** when done. Check the object tree to verify that data is being collected.
+
+---
+
+## Bus topology analysis
+
+After the data point scan, the adapter analyses all bus topology data collected during the scan and stores the result in two states in the `info` channel:
+
+| State | Role | Content |
+|---|---|---|
+| `info.topology` | `json` | Structured JSON: list of UDS-accessible devices and all topology elements, deduplicated across all topology matrices |
+| `info.topologyHtml` | `html` | Rendered HTML table, color-coded by bus type, with a **UDS** badge on devices that are also UDS-accessible |
+
+**Displaying the HTML table**
+
+The easiest way to display the topology in ioBroker is to use a dashboard tool that can render HTML states:
+
+- **jarvis**: Add a **stateHTML** widget → select `e3oncan.x.info.topologyHtml`.
+- **vis / vis2**: Add a **basic – String (unescaped)** or **HTML** widget → select `e3oncan.x.info.topologyHtml`.
+
+> **Note:** The `info.topology` and `info.topologyHtml` states may be too large for the standard ioBroker admin state editor dialog to display. This is a known limitation of the admin UI for large string states. The states are written correctly and can be consumed normally by scripts and widgets.
 
 ---
 
@@ -359,6 +391,9 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Bus topology analysis is now generated automatically after the data point scan; results are stored in `info.topology` (JSON) and `info.topologyHtml` (HTML); see Readme for details
+
 ### 1.0.0-beta.0 (2026-04-26)
 * (MyHomeMyData) Introduced new e3oncan datapoints webUI pinned to the adapter's instance row
 * (MyHomeMyData) Energy meters (E380, E3100CB) are now auto-detected during the device scan by passive CAN listening on both CAN channels
