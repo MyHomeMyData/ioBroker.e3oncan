@@ -329,6 +329,30 @@
         "write": false
       },
       "native": {}
+    },
+    {
+      "_id": "info.topology",
+      "type": "state",
+      "common": {
+        "name": "Topology summary (JSON)",
+        "type": "string",
+        "role": "json",
+        "read": true,
+        "write": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.topologyHtml",
+      "type": "state",
+      "common": {
+        "name": "Topology summary (HTML)",
+        "type": "string",
+        "role": "html",
+        "read": true,
+        "write": false
+      },
+      "native": {}
     }
   ]
 }
