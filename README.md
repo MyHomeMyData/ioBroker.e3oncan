@@ -374,6 +374,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Bus topology analysis is now generated automatically after the data point scan; results are stored in `info.topology` (JSON) and `info.topologyHtml` (HTML); see Readme for details
+* (MyHomeMyData) Set of Collect CAN IDs for auto-detection are now build from device configuration
 
 ### 1.0.0-beta.0 (2026-04-26)
 * (MyHomeMyData) Introduced new e3oncan datapoints webUI pinned to the adapter's instance row
