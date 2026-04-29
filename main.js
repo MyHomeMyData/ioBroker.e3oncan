@@ -171,11 +171,19 @@ class E3oncan extends utils.Adapter {
             const sCo = await this.getStateAsync('info.collect');
             if (sCo && sCo.val) {
                 const co = JSON.parse(String(sCo.val));
-                if (co.detected451) {
-                    this.detectedCollectCanIds.add(0x451);
-                }
-                if (co.detected693) {
-                    this.detectedCollectCanIds.add(0x693);
+                if (Array.isArray(co.detectedIds)) {
+                    // Current format: array of numeric CAN IDs
+                    for (const id of co.detectedIds) {
+                        this.detectedCollectCanIds.add(Number(id));
+                    }
+                } else {
+                    // Migration: old format before dynamic Collect IDs (pre-v1.0.0)
+                    if (co.detected451) {
+                        this.detectedCollectCanIds.add(0x451);
+                    }
+                    if (co.detected693) {
+                        this.detectedCollectCanIds.add(0x693);
+                    }
                 }
             } else {
                 // Migration: read from old individual states (pre-v1.0.0 installations)

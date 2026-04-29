@@ -297,7 +297,19 @@
       "_id": "info.energyMeter",
       "type": "state",
       "common": {
-        "name": "Energy meter detection and configuration",
+        "name": {
+          "en": "Energy meter detection and configuration",
+          "de": "Erkennung und Konfiguration von Energiezählern",
+          "ru": "Обнаружение и настройка счетчиков энергии",
+          "pt": "Detecção e configuração de medidores de energia",
+          "nl": "Detectie en configuratie van energiemeters",
+          "fr": "Détection et configuration des compteurs d'énergie",
+          "it": "Rilevamento e configurazione dei contatori di energia",
+          "es": "Detección y configuración de contadores de energía",
+          "pl": "Wykrywanie i konfiguracja liczników energii",
+          "uk": "Виявлення та налаштування лічильників енергії",
+          "zh-cn": "电能表检测和配置"
+        },
         "type": "string",
         "role": "json",
         "read": true,
@@ -309,7 +321,19 @@
       "_id": "info.collect",
       "type": "state",
       "common": {
-        "name": "Detected Collect CAN IDs",
+        "name": {
+          "en": "Detected Collect CAN IDs",
+          "de": "Erkannte CAN-IDs für Collect",
+          "ru": "Обнаруженные CAN-идентификаторы для сбора данных",
+          "pt": "IDs CAN de Collect detectados",
+          "nl": "Gedetecteerde CAN-ID's voor Collect",
+          "fr": "IDs CAN Collect détectés",
+          "it": "ID CAN Collect rilevati",
+          "es": "IDs CAN de Collect detectados",
+          "pl": "Wykryte identyfikatory CAN dla Collect",
+          "uk": "Виявлені CAN-ідентифікатори для збору даних",
+          "zh-cn": "检测到的 Collect CAN ID"
+        },
         "type": "string",
         "role": "json",
         "read": true,
@@ -321,7 +345,19 @@
       "_id": "info.topology",
       "type": "state",
       "common": {
-        "name": "Topology summary (JSON)",
+        "name": {
+          "en": "Topology summary (JSON)",
+          "de": "System-Topologie (JSON)",
+          "ru": "Сводка топологии (JSON)",
+          "pt": "Resumo da topologia (JSON)",
+          "nl": "Topologiesamenvatting (JSON)",
+          "fr": "Résumé de la topologie (JSON)",
+          "it": "Riepilogo della topologia (JSON)",
+          "es": "Resumen de topología (JSON)",
+          "pl": "Podsumowanie topologii (JSON)",
+          "uk": "Зведення топології (JSON)",
+          "zh-cn": "拓扑摘要 (JSON)"
+        },
         "type": "string",
         "role": "json",
         "read": true,
@@ -333,7 +369,19 @@
       "_id": "info.topologyHtml",
       "type": "state",
       "common": {
-        "name": "Topology summary (HTML)",
+        "name": {
+          "en": "Topology summary (HTML)",
+          "de": "System-Topologie (HTML)",
+          "ru": "Сводка топологии (HTML)",
+          "pt": "Resumo da topologia (HTML)",
+          "nl": "Topologiesamenvatting (HTML)",
+          "fr": "Résumé de la topologie (HTML)",
+          "it": "Riepilogo della topologia (HTML)",
+          "es": "Resumen de topología (HTML)",
+          "pl": "Podsumowanie topologii (HTML)",
+          "uk": "Зведення топології (HTML)",
+          "zh-cn": "拓扑摘要 (HTML)"
+        },
         "type": "string",
         "role": "html",
         "read": true,
