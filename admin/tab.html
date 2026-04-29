@@ -181,8 +181,9 @@
             const ext = adapterNative.tableCollectCanExt || [];
             const int_ = adapterNative.tableCollectCanInt || [];
             const all = ext.concat(int_);
+            const ids = String(collectCanId).split(',').map(function(s) { return s.trim(); });
             for (let i = 0; i < all.length; i++) {
-                if (String(all[i].collectCanId) === String(collectCanId)) {
+                if (ids.indexOf(String(all[i].collectCanId).trim()) >= 0) {
                     return { active: !!all[i].collectActive, delay: all[i].collectDelayTime || 5 };
                 }
             }
@@ -198,7 +199,9 @@
                 const dev = allDevices[di];
                 const state = getScheduleState(dev.devAddr);
                 const collect = dev.collectCanId ? getCollectState(dev.collectCanId) : null;
-                const collectDetected = dev.collectCanId && detectedCollect.has(Number(dev.collectCanId));
+                const collectDetected = dev.collectCanId && String(dev.collectCanId).split(',').some(function(id) {
+                    return detectedCollect.has(Number(id.trim()));
+                });
                 const collapseId = 'dev-' + dev.devStateName.replace(/[^a-z0-9]/gi, '_');
                 const activeCount = dev.dids.filter(function(d) {
                     return state.onStartDids.has(d.didId) || state.intervalDids.has(d.didId);
@@ -458,18 +461,20 @@
                     if (toggle) {
                         const active = toggle.checked;
                         const delay = delayInput ? Number(delayInput.value) : 5;
-                        const cid = String(dev.collectCanId);
-                        const idxExt = newCollectExt.findIndex(function(c) { return String(c.collectCanId) === cid; });
-                        const idxInt = newCollectInt.findIndex(function(c) { return String(c.collectCanId) === cid; });
-                        if (idxExt >= 0) {
-                            newCollectExt[idxExt].collectActive = active;
-                            newCollectExt[idxExt].collectDelayTime = delay;
-                        } else if (idxInt >= 0) {
-                            newCollectInt[idxInt].collectActive = active;
-                            newCollectInt[idxInt].collectDelayTime = delay;
-                        } else if (active) {
-                            newCollectExt.push({ collectActive: true, collectCanId: dev.collectCanId, collectDelayTime: delay });
-                        }
+                        const cids = String(dev.collectCanId).split(',').map(function(s) { return s.trim(); });
+                        cids.forEach(function(cid) {
+                            const idxExt = newCollectExt.findIndex(function(c) { return String(c.collectCanId).trim() === cid; });
+                            const idxInt = newCollectInt.findIndex(function(c) { return String(c.collectCanId).trim() === cid; });
+                            if (idxExt >= 0) {
+                                newCollectExt[idxExt].collectActive = active;
+                                newCollectExt[idxExt].collectDelayTime = delay;
+                            } else if (idxInt >= 0) {
+                                newCollectInt[idxInt].collectActive = active;
+                                newCollectInt[idxInt].collectDelayTime = delay;
+                            } else if (active) {
+                                newCollectExt.push({ collectActive: true, collectCanId: cid, collectDelayTime: delay });
+                            }
+                        });
                     }
                 }
             });
