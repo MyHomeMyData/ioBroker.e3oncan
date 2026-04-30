@@ -432,6 +432,8 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 * (MyHomeMyData) Bugfix: Manual change of device specific dids was not evaluated for collect workers
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20251102
 
+### Older versions
+
 Older changelog entries are available in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).
 
 ## License
