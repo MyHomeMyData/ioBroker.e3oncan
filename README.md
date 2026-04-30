@@ -356,11 +356,10 @@ Collect gives you real-time data for everything the devices exchange among thems
 **Which devices support Collect mode?**
 
 At present, the collect protocol is known for:
-- Vitocal / HPMUMASTER at CAN address `0x680` (Collect ID `0x693`, internal CAN bus)
-- Viessmann E3 devices at CAN addresses `0x684` (Collect ID `0x691`), `0x688` (Collect ID `0x695`), `0x6c3` (Collect ID `0x692`)
-- Vitocharge VX3 and Vitoair / EMCUMASTER at CAN address `0x6a1` (Collect ID `0x451`, external and internal CAN bus)
+- Vitocal / HPMUMASTER (Collect ID `0x693`, internal CAN bus)
+- Vitocharge VX3 and Vitoair / EMCUMASTER (Collect ID `0x451`, external and internal CAN bus)
 
-The Collect CAN IDs are assigned automatically based on the UDS device address during the device scan. A device with a CAN address not listed above will not have a Collect ID assigned automatically; it can be entered manually in the adapter configuration.
+The Collect CAN IDs are assigned automatically based on the UDS device name during the device scan. A device not listed above will not have a Collect ID assigned automatically; it can be entered manually in the adapter configuration.
 
 **Can I use open3e at the same time?**
 
@@ -396,7 +395,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Bus topology analysis is now generated automatically after the data point scan; results are stored in `info.topology` (JSON) and `info.topologyHtml` (HTML); see Readme for details
-* (MyHomeMyData) Collect CAN IDs are now assigned automatically based on the UDS device address; extended device support: added mappings for CAN addresses 0x684, 0x688, 0x6c3
+* (MyHomeMyData) Collect CAN IDs are now assigned automatically based on the UDS device name during the device scan
 * (MyHomeMyData) Input validation added for interval and delay fields in the datapoints tab — only positive integers are accepted
 
 ### 1.0.0-beta.0 (2026-04-26)
