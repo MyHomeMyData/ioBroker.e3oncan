@@ -170,7 +170,10 @@
                     if (Number(sched.udsSchedule) === 0) {
                         onStartDids.add(didId);
                     } else {
-                        intervalDids.set(didId, Number(sched.udsSchedule));
+                        const iv = Number(sched.udsSchedule);
+                        if (!intervalDids.has(didId) || iv < intervalDids.get(didId)) {
+                            intervalDids.set(didId, iv);
+                        }
                     }
                 }
             }
