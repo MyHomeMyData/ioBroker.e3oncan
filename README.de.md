@@ -337,11 +337,10 @@ Collect liefert Echtzeitdaten für alles, was die Geräte untereinander austausc
 **Welche Geräte unterstützen den Collect-Modus?**
 
 Derzeit ist das Collect-Protokoll bekannt für:
-- Vitocal / HPMUMASTER an CAN-Adresse `0x680` (Collect-ID `0x693`, interner CAN-Bus)
-- Viessmann-E3-Geräte an CAN-Adressen `0x684` (Collect-ID `0x691`), `0x688` (Collect-ID `0x695`), `0x6c3` (Collect-ID `0x692`)
-- Vitocharge VX3 und Vitoair / EMCUMASTER an CAN-Adresse `0x6a1` (Collect-ID `0x451`, externer und interner CAN-Bus)
+- Vitocal / HPMUMASTER (Collect-ID `0x693`, interner CAN-Bus)
+- Vitocharge VX3 und Vitoair / EMCUMASTER (Collect-ID `0x451`, externer und interner CAN-Bus)
 
-Die Collect-CAN-IDs werden beim Gerätescan anhand der UDS-Geräteadresse automatisch zugewiesen. Ein Gerät mit einer CAN-Adresse, die nicht in der Liste steht, erhält keine Collect-ID automatisch; sie kann manuell in der Adapterkonfiguration eingetragen werden.
+Die Collect-CAN-IDs werden beim Gerätescan anhand des UDS-Gerätenamens automatisch zugewiesen. Ein Gerät, das nicht in der Liste steht, erhält keine Collect-ID automatisch; sie kann manuell in der Adapterkonfiguration eingetragen werden.
 
 **Kann open3e gleichzeitig genutzt werden?**
 
@@ -377,7 +376,7 @@ Wenn Ihnen dieses Projekt gefällt — oder Sie einfach großzügig sind — wü
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Bus-Topologie-Analyse wird jetzt automatisch nach dem Datenpunktscan erstellt; Ergebnisse werden in `info.topology` (JSON) und `info.topologyHtml` (HTML) gespeichert; Details im Readme
-* (MyHomeMyData) Collect-CAN-IDs werden nun automatisch anhand der UDS-Geräteadresse vergeben; erweiterter Gerätesupport: neue Zuordnungen für CAN-Adressen 0x684, 0x688, 0x6c3 ergänzt
+* (MyHomeMyData) Collect-CAN-IDs werden nun automatisch anhand des UDS-Gerätenamens beim Gerätescan vergeben
 * (MyHomeMyData) Eingabevalidierung für Intervall- und Verzögerungsfelder in der Datenpunkte-Seite ergänzt — nur positive ganze Zahlen werden akzeptiert
 
 ### 1.0.0-beta.0 (2026-04-26)
