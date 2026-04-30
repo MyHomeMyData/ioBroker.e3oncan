@@ -410,16 +410,7 @@ Wenn Ihnen dieses Projekt gefällt — oder Sie einfach großzügig sind — wü
 * (MyHomeMyData) Bugfix: Manuelle Änderung gerätespezifischer Dids wurde für Collect-Worker nicht ausgewertet
 * (MyHomeMyData) Liste der Datenpunkte für E3-Geräte auf Version 20251102 aktualisiert
 
-### 0.10.13 (2025-09-30)
-* (MyHomeMyData) Fix für Issue #162
-
-### 0.10.12 (2025-09-15)
-* (MyHomeMyData) Migration zu ESLint 9, siehe Issues #141 und #152
-
-### 0.10.11 (2025-09-06)
-* (MyHomeMyData) Fix für Issues #152 (Repository Checker) und #126 (node.js 24)
-* (MyHomeMyData) Hinweis im Readme zu erforderlicher Aktion nach Node.js-Versionsupgrade ergänzt
-* (MyHomeMyData) Liste der Datenpunkte für E3-Geräte auf Version 20250903 aktualisiert
+### Ältere Versionen
 
 Ältere Changelog-Einträge sind in [CHANGELOG_OLD.md](CHANGELOG_OLD.md) zu finden.
 
