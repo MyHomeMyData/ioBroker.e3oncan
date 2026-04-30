@@ -222,7 +222,7 @@
                         '</div>' +
                         '<div class="input-group input-group-sm" style="width:140px">' +
                         '<span class="input-group-text small">Delay</span>' +
-                        '<input type="number" class="form-control form-control-sm collect-delay" value="' + collect.delay + '" min="0" step="1" onchange="markChanged()">' +
+                        '<input type="number" class="form-control form-control-sm collect-delay" value="' + collect.delay + '" min="0" step="1" oninput="sanitizeDelay(this)">' +
                         '<span class="input-group-text small">s</span>' +
                         '</div>' +
                         (collectDetected ? '<i class="bi bi-broadcast-pin ms-1 text-success" title="Collect traffic detected on CAN bus"></i>' : '') +
@@ -240,9 +240,9 @@
                         '<td class="text-truncate small" title="' + (dp.didName || '') + '">' + (dp.didName || '—') + '</td>' +
                         '<td class="text-truncate small" title="' + (dp.didDesc || '') + '">' + (dp.didDesc || '') + '</td>' +
                         '<td class="text-center"><input class="form-check-input onstart-check" type="checkbox"' +
-                        (onStart ? ' checked' : '') + ' onchange="markChanged()"></td>' +
+                        (onStart ? ' checked' : '') + ' onchange="updateScheduledCount(this);markChanged()"></td>' +
                         '<td class="text-center"><input type="number" class="form-control form-control-sm interval-input"' +
-                        ' value="' + interval + '" placeholder="—" min="1" step="1" oninput="markChanged()"></td>' +
+                        ' value="' + interval + '" placeholder="—" step="1" oninput="sanitizeInterval(this)" onkeydown="intervalKeydown(this,event)"></td>' +
                         '</tr>';
                 }
 
@@ -251,7 +251,7 @@
                     '<div class="dev-name-col"><strong>' + dev.devStateName + '</strong>' +
                     '<code class="ms-2 small">' + dev.devAddr + '</code>' +
                     '<span class="badge bg-secondary ms-2">' + dev.dids.length + ' DIDs</span>' +
-                    (activeCount > 0 ? '<span class="badge bg-success ms-1">' + activeCount + ' scheduled</span>' : '') +
+                    (activeCount > 0 ? '<span class="badge bg-success ms-1 scheduled-badge">' + activeCount + ' scheduled</span>' : '') +
                     '</div>' +
                     collectHtml +
                     '</div>' +
@@ -319,7 +319,7 @@
                     '</div>' +
                     '<div class="input-group input-group-sm" style="width:140px">' +
                     '<span class="input-group-text small">Delay</span>' +
-                    '<input type="number" class="form-control form-control-sm em-collect-delay" value="' + delay + '" min="0" step="1" onchange="markChanged()">' +
+                    '<input type="number" class="form-control form-control-sm em-collect-delay" value="' + delay + '" min="0" step="1" oninput="sanitizeDelay(this)">' +
                     '<span class="input-group-text small">s</span>' +
                     '</div></div></div>';
                 container.appendChild(card);
@@ -378,6 +378,51 @@
             document.getElementById('btn-save').disabled = false;
             document.getElementById('btn-save-close').disabled = false;
             document.getElementById('unsaved-badge').classList.remove('d-none');
+        }
+
+        function updateScheduledCount(el) {
+            const card = el.closest('.ecu-group');
+            if (!card) return;
+            let count = 0;
+            card.querySelectorAll('tbody tr').forEach(function(row) {
+                const onStart = row.querySelector('.onstart-check');
+                const iv = row.querySelector('.interval-input');
+                if ((onStart && onStart.checked) || (iv && parseInt(iv.value, 10) > 0)) count++;
+            });
+            const nameCol = card.querySelector('.dev-name-col');
+            if (!nameCol) return;
+            let badge = nameCol.querySelector('.scheduled-badge');
+            if (count > 0) {
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'badge bg-success ms-1 scheduled-badge';
+                    nameCol.appendChild(badge);
+                }
+                badge.textContent = count + ' scheduled';
+            } else if (badge) {
+                badge.remove();
+            }
+        }
+
+        function sanitizeInterval(el) {
+            const n = parseInt(el.value, 10);
+            el.value = (isNaN(n) || n <= 0) ? '' : String(n);
+            updateScheduledCount(el);
+            markChanged();
+        }
+
+        function intervalKeydown(el, event) {
+            if (event.key === '-') {
+                el.value = '';
+                updateScheduledCount(el);
+                markChanged();
+                event.preventDefault();
+            }
+        }
+
+        function sanitizeDelay(el) {
+            el.value = el.value.replace(/[^0-9]/g, '');
+            markChanged();
         }
 
         // --- Discard & Close ---
@@ -479,8 +524,17 @@
                 }
             });
 
+            // Deduplicate schedules: same device + same interval + same DIDs → keep first only
+            const seenSchedules = new Set();
+            const dedupedSchedules = newSchedules.filter(function(s) {
+                const key = s.udsSelectDevAddr + '_' + s.udsSchedule + '_' + s.udsScheduleDids;
+                if (seenSchedules.has(key)) return false;
+                seenSchedules.add(key);
+                return true;
+            });
+
             const newNative = {
-                tableUdsSchedules: newSchedules,
+                tableUdsSchedules: dedupedSchedules,
                 tableCollectCanExt: newCollectExt,
                 tableCollectCanInt: newCollectInt,
             };
@@ -513,7 +567,7 @@
                     setStatus('Save error: ' + err, 'danger');
                     document.getElementById('btn-save').disabled = false;
                 } else {
-                    adapterNative.tableUdsSchedules = newSchedules;
+                    adapterNative.tableUdsSchedules = dedupedSchedules;
                     adapterNative.tableCollectCanExt = newCollectExt;
                     adapterNative.tableCollectCanInt = newCollectInt;
                     Object.assign(adapterNative, newNative);
