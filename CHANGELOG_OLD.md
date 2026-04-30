@@ -1,4 +1,7 @@
 # Older Changelog Entries
+## 0.10.13 (2025-09-30)
+* (MyHomeMyData) Fix for issue #162
+
 ## 0.10.12 (2025-09-15)
 * (MyHomeMyData) Migration to ESLint 9, refer to issues #141 and #152
 
