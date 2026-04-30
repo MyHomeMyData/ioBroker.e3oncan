@@ -393,7 +393,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 1.0.0-beta.1 (2026-04-30)
 * (MyHomeMyData) Bus topology analysis is now generated automatically after the data point scan; results are stored in `info.topology` (JSON) and `info.topologyHtml` (HTML); see Readme for details
 * (MyHomeMyData) Input validation added for interval and delay fields in the datapoints tab — only positive integers are accepted
 
@@ -434,9 +434,6 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 * (MyHomeMyData) Fixes for issue #169 (repository checker)
 * (MyHomeMyData) Bugfix: Manual change of device specific dids was not evaluated for collect workers
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20251102
-
-### 0.10.13 (2025-09-30)
-* (MyHomeMyData) Fix for issue #162
 
 Older changelog entries are available in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).
 
