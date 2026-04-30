@@ -376,7 +376,6 @@ Wenn Ihnen dieses Projekt gefällt — oder Sie einfach großzügig sind — wü
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Bus-Topologie-Analyse wird jetzt automatisch nach dem Datenpunktscan erstellt; Ergebnisse werden in `info.topology` (JSON) und `info.topologyHtml` (HTML) gespeichert; Details im Readme
-* (MyHomeMyData) Collect-CAN-IDs werden nun automatisch anhand des UDS-Gerätenamens beim Gerätescan vergeben
 * (MyHomeMyData) Eingabevalidierung für Intervall- und Verzögerungsfelder in der Datenpunkte-Seite ergänzt — nur positive ganze Zahlen werden akzeptiert
 
 ### 1.0.0-beta.0 (2026-04-26)

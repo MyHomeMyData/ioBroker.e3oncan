@@ -376,7 +376,6 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Bus topology analysis is now generated automatically after the data point scan; results are stored in `info.topology` (JSON) and `info.topologyHtml` (HTML); see Readme for details
-* (MyHomeMyData) Collect CAN IDs are now assigned automatically based on the UDS device name during the device scan
 * (MyHomeMyData) Input validation added for interval and delay fields in the datapoints tab — only positive integers are accepted
 
 ### 1.0.0-beta.0 (2026-04-26)
