@@ -251,6 +251,8 @@ Both options can be combined. Use the schedule filter (All / On Start / Interval
 
 Press **Save** to apply your changes without closing the tab. **Save & Close** saves and closes the tab, returning you to the instances view. **Discard & Close** closes the tab without saving — no adapter restart is triggered. An **Unsaved changes** badge appears whenever there are pending changes.
 
+> **Note:** When saving, the schedules for all devices shown in this tab are rebuilt from the current UI state. Schedules for devices not listed here (e.g. added directly in the adapter configuration dialog) are preserved unchanged. If the same device has schedules in both places, the datapoints tab wins on save. Duplicate entries are removed automatically.
+
 ---
 
 ## Reading data points
@@ -393,6 +395,10 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Fixed: saving schedules in the datapoints tab could leave stale entries under certain conditions
+* (MyHomeMyData) Added Topology button to the datapoints tab; opens the bus topology diagram in a modal dialog
+
 ### 1.0.0-beta.1 (2026-04-30)
 * (MyHomeMyData) Bus topology analysis is now generated automatically after the data point scan; results are stored in `info.topology` (JSON) and `info.topologyHtml` (HTML); see Readme for details
 * (MyHomeMyData) Input validation added for interval and delay fields in the datapoints tab — only positive integers are accepted
