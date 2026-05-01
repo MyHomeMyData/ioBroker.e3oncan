@@ -93,6 +93,7 @@
 
         let allDevices = [];
         let adapterNative = {};
+        let adapterObj = null;
         let hasChanges = false;
         let sock = null;
         let loadedEnergyMeters = {};
@@ -130,6 +131,7 @@
             }
             sock.emit('getObject', 'system.adapter.' + namespace, function(err, obj) {
                 if (err) { setStatus('getObject error: ' + err, 'danger'); document.getElementById('btn-load').disabled = false; return; }
+                adapterObj = obj || null;
                 adapterNative = (obj && obj.native) || {};
                 const timeout = setTimeout(function() {
                     setStatus('No response from adapter instance ' + namespace + '. Is the adapter running?', 'danger');
@@ -528,9 +530,17 @@
             });
 
             // Deduplicate schedules: same device + same interval + same DIDs → keep first only
+            // Normalize address (hex vs decimal) and DID order to catch format-variant duplicates.
             const seenSchedules = new Set();
             const dedupedSchedules = newSchedules.filter(function(s) {
-                const key = s.udsSelectDevAddr + '_' + s.udsSchedule + '_' + s.udsScheduleDids;
+                const addrKey = Number(s.udsSelectDevAddr);
+                const didsKey = String(s.udsScheduleDids)
+                    .split(',')
+                    .map(function(d) { return parseInt(d.trim(), 10); })
+                    .filter(function(d) { return !isNaN(d); })
+                    .sort(function(a, b) { return a - b; })
+                    .join(',');
+                const key = addrKey + '_' + s.udsSchedule + '_' + didsKey;
                 if (seenSchedules.has(key)) return false;
                 seenSchedules.add(key);
                 return true;
@@ -563,9 +573,11 @@
             sock.emit('setState', namespace + '.info.energyMeter',
                 { val: JSON.stringify(emJson), ack: false }, function() {});
 
-            sock.emit('extendObject', 'system.adapter.' + namespace, {
-                native: newNative,
-            }, function(err) {
+            // Use setObject (not extendObject) so arrays are fully replaced,
+            // not deep-merged by index which leaves stale tail elements.
+            const objToSave = adapterObj || { type: 'instance', common: {}, native: {} };
+            objToSave.native = Object.assign({}, adapterNative, newNative);
+            sock.emit('setObject', 'system.adapter.' + namespace, objToSave, function(err) {
                 if (err) {
                     setStatus('Save error: ' + err, 'danger');
                     document.getElementById('btn-save').disabled = false;
