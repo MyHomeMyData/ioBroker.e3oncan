@@ -232,6 +232,8 @@ Beide Optionen können kombiniert werden. Den Zeitplan-Filter (Alle / Beim Start
 
 **Speichern** drückt die Änderungen an, ohne den Tab zu schließen. **Speichern & Schließen** speichert und schließt den Tab und kehrt zur Instanzansicht zurück. **Verwerfen & Schließen** schließt den Tab ohne Speichern — kein Adapter-Neustart wird ausgelöst. Ein **Nicht gespeicherte Änderungen**-Badge erscheint, sobald ausstehende Änderungen vorhanden sind.
 
+> **Hinweis:** Beim Speichern werden die Zeitpläne aller in diesem Tab angezeigten Geräte aus dem aktuellen UI-Zustand neu aufgebaut. Zeitpläne für Geräte, die hier nicht aufgeführt sind (z. B. direkt im Adapterkonfigurationsdialog angelegt), bleiben unverändert erhalten. Existieren für dasselbe Gerät Zeitpläne an beiden Stellen, überschreibt der Datenpunkte-Tab beim Speichern. Doppelte Einträge werden automatisch entfernt.
+
 ---
 
 ## Datenpunkte lesen
@@ -375,6 +377,10 @@ Wenn Ihnen dieses Projekt gefällt — oder Sie einfach großzügig sind — wü
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (MyHomeMyData) Behoben: Beim Speichern von Schedules in der Datenpunkte-Seite konnten unter bestimmten Umständen veraltete Einträge verbleiben
+* (MyHomeMyData) Topology-Schaltfläche in der Datenpunkte-Seite ergänzt; öffnet das Bus-Topologie-Diagramm in einem modalen Dialog
+
+### 1.0.0-beta.1 (2026-04-30)
 * (MyHomeMyData) Bus-Topologie-Analyse wird jetzt automatisch nach dem Datenpunktscan erstellt; Ergebnisse werden in `info.topology` (JSON) und `info.topologyHtml` (HTML) gespeichert; Details im Readme
 * (MyHomeMyData) Eingabevalidierung für Intervall- und Verzögerungsfelder in der Datenpunkte-Seite ergänzt — nur positive ganze Zahlen werden akzeptiert
 
