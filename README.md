@@ -247,6 +247,10 @@ For each data point you can:
 
 Both options can be combined. Use the schedule filter (All / On Start / Interval) to quickly focus on already-scheduled data points.
 
+**Topology**
+
+The **Topology** button in the toolbar opens the bus topology diagram in a modal dialog. The diagram is generated automatically after each data point scan (see [Bus topology analysis](#bus-topology-analysis)). The button is disabled until topology data is available.
+
 **Saving**
 
 Press **Save** to apply your changes without closing the tab. **Save & Close** saves and closes the tab, returning you to the instances view. **Discard & Close** closes the tab without saving — no adapter restart is triggered. An **Unsaved changes** badge appears whenever there are pending changes.

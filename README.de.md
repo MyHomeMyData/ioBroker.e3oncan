@@ -228,6 +228,10 @@ Für jeden Datenpunkt kann Folgendes eingestellt werden:
 
 Beide Optionen können kombiniert werden. Den Zeitplan-Filter (Alle / Beim Start / Intervall) verwenden, um schnell auf bereits eingeplante Datenpunkte zu fokussieren.
 
+**Topologie**
+
+Die Schaltfläche **Topology** in der Toolbar öffnet das Bus-Topologie-Diagramm in einem modalen Dialog. Das Diagramm wird automatisch nach jedem Datenpunktscan erstellt (siehe [Bus-Topologie-Analyse](#bus-topologie-analyse)). Die Schaltfläche ist deaktiviert, solange noch keine Topologie-Daten vorliegen.
+
 **Speichern**
 
 **Speichern** drückt die Änderungen an, ohne den Tab zu schließen. **Speichern & Schließen** speichert und schließt den Tab und kehrt zur Instanzansicht zurück. **Verwerfen & Schließen** schließt den Tab ohne Speichern — kein Adapter-Neustart wird ausgelöst. Ein **Nicht gespeicherte Änderungen**-Badge erscheint, sobald ausstehende Änderungen vorhanden sind.
