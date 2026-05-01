@@ -40,6 +40,11 @@
         <button class="btn btn-sm btn-outline-secondary" onclick="collapseAll()">
             <i class="bi bi-arrows-collapse"></i> Collapse All
         </button>
+        <span id="topology-btn-wrap" title="No topology data available yet. Topology is generated automatically when a data point scan is performed (adapter configuration → List of Data Points tab).">
+            <button class="btn btn-sm btn-outline-info" id="btn-topology" onclick="openTopology()" disabled style="pointer-events:none">
+                <i class="bi bi-diagram-3"></i> Topology
+            </button>
+        </span>
         <div class="d-flex align-items-center gap-2 ms-auto">
             <span id="unsaved-badge" class="badge bg-warning text-dark d-none">
                 <i class="bi bi-exclamation-triangle-fill"></i> Unsaved changes
@@ -83,6 +88,20 @@
     </div>
     <div id="devices-container"></div>
 
+    <div class="modal fade" id="topology-modal" tabindex="-1">
+        <div class="modal-dialog modal-xl" style="height:90vh;max-height:90vh">
+            <div class="modal-content d-flex flex-column" style="height:100%">
+                <div class="modal-header py-2 flex-shrink-0">
+                    <h6 class="modal-title mb-0"><i class="bi bi-diagram-3"></i> Network Topology</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0 flex-grow-1" style="overflow:hidden">
+                    <iframe id="topology-iframe" style="width:100%;height:100%;border:none"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
@@ -97,6 +116,7 @@
         let hasChanges = false;
         let sock = null;
         let loadedEnergyMeters = {};
+        let topologyHtml = '';
 
         function initSocket() {
             return new Promise(function(resolve) {
@@ -152,8 +172,33 @@
                     const anyScanMissing = allDevices.some(function(d) { return !d.scanDone; });
                     document.getElementById('scan-warning').classList.toggle('d-none', !anyScanMissing);
                     document.getElementById('btn-load').disabled = false;
+                    sock.emit('getState', namespace + '.info.topologyHtml', function(_err, state) {
+                        setTopologyButton(state && state.val ? state.val : '');
+                    });
                 });
             });
+        }
+
+        // --- Topology ---
+        function setTopologyButton(html) {
+            topologyHtml = html || '';
+            const btn = document.getElementById('btn-topology');
+            const wrap = document.getElementById('topology-btn-wrap');
+            if (topologyHtml) {
+                btn.disabled = false;
+                btn.style.pointerEvents = '';
+                wrap.title = '';
+            } else {
+                btn.disabled = true;
+                btn.style.pointerEvents = 'none';
+                wrap.title = 'No topology data available yet. Topology is generated automatically when a data point scan is performed (adapter configuration → List of Data Points tab).';
+            }
+        }
+
+        function openTopology() {
+            if (!topologyHtml) return;
+            document.getElementById('topology-iframe').srcdoc = topologyHtml;
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('topology-modal')).show();
         }
 
         // --- Schedule helpers ---
