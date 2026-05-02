@@ -15,6 +15,7 @@
 ## Table of contents
 
 - [Overview](#overview)
+- [What's new in v0.11.x](#whats-new-in-v011x)
 - [Quick start](#quick-start)
 - [Configuration guide](#configuration-guide)
   - [Step 1 – CAN adapter](#step-1--can-adapter)
@@ -48,6 +49,24 @@ Which modes are available depends on your device topology. See the [device topol
 
 > Important parts of this adapter are based on the [open3e](https://github.com/open3e) project.
 > A Python-based collect-only implementation using MQTT is available at [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
+
+---
+
+## What's new in v0.11.x
+
+### Updated data point structures (action required when upgrading)
+
+Version 0.11.0 introduced updated definitions for many data points — new variant types, additional metadata (description, unit, links), and revised data format handling. **If you are upgrading from v0.10.x, please perform a device scan followed by a full data point scan** to apply the new definitions and metadata to your ioBroker object tree.
+
+For a detailed list of changed data points see the [data point changelog](lib/data-points.md#changelog-of-data-point-definitions).
+
+### Variant data points and device format configuration
+
+The adapter now handles variant data points — data points whose structure depends on the device's configuration (e.g. temperature unit °C/°F, date/time format). During the device scan, the relevant format configuration (data point 382) is read and stored. The data point scan then applies the correct codec for each device automatically.
+
+### Metadata on data point objects
+
+Data point objects in the ioBroker object tree now carry metadata: description, physical unit, read/write access flag, and links to further information where available. Metadata for existing objects is updated during each data point scan and is also restored if a data point object is deleted and re-created (added in v0.11.1).
 
 ---
 
@@ -264,6 +283,9 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Added "What's new in v0.11.x" section to Readme with upgrade notes for data point structure changes
+
 ### 0.11.1 (2026-04-23)
 * (MyHomeMyData) Improved robustness: Receiving a data point of length zero is treated as a "negative response"
 * (MyHomeMyData) The metadata is now also restored after a data point is deleted 
