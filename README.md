@@ -283,7 +283,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.11.2 (2026-05-02)
 * (MyHomeMyData) Added "What's new in v0.11.x" section to Readme with upgrade notes for data point structure changes
 
 ### 0.11.1 (2026-04-23)
