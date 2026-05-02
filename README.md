@@ -399,7 +399,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 1.0.0-beta.2 (2026-05-02)
 * (MyHomeMyData) Fixed: saving schedules in the datapoints tab could leave stale entries under certain conditions
 * (MyHomeMyData) Added Topology button to the datapoints tab; opens the bus topology diagram in a modal dialog
 

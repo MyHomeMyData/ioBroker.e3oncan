@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "1.0.0-beta.1",
+    "version": "1.0.0-beta.2",
     "news": {
+      "1.0.0-beta.2": {
+        "en": "Fixed: saving schedules in the datapoints tab could leave stale entries under certain conditions\nAdded Topology button to the datapoints tab; opens the bus topology diagram in a modal dialog",
+        "de": "Behoben: Das Speichern von Zeitplänen in der Registerkarte Datenpunkte könnte unter bestimmten Bedingungen doppelte Einträge hinterlassen\nHinzugefügt: Button Topologie auf der Seite Datenpunkte öffnet die Topologie-Übersicht",
+        "ru": "Исправлено: сохранение графиков во вкладке «Точки данных» может оставить устаревшие записи при определенных условиях\nДобавлена кнопка «Топология» на вкладке «Точки данных»; открывается диаграмма топологии шины в модальном диалоге",
+        "pt": "Corrigido: salvar agendamentos na aba pontos de dados poderia deixar entradas antigas sob certas condições\nAdicionado botão de Topologia à página de pontos de dados; abre o diagrama de topologia de barramento numa janela modal",
+        "nl": "Fixed: het opslaan van schema's in het tabblad datapunten kan oude items onder bepaalde voorwaarden verlaten\nTopologieknop toegevoegd aan het tabblad datapunten; opent het bustopologiediagram in een modal dialoogvenster",
+        "fr": "Correction : enregistrer des horaires dans l'onglet points de données pourrait laisser des entrées bloquées sous certaines conditions\nAjout du bouton Topologie à l'onglet datapoints; ouverture du diagramme de topologie du bus dans une boîte de dialogue modale",
+        "it": "Risolto: gli orari di risparmio nella scheda datapoint potrebbero lasciare le voci stanti in determinate condizioni\nAggiunto Topologia pulsante per i punti di dati scheda; apre il diagramma topologia bus in una finestra di dialogo modale",
+        "es": "Fijación: los horarios de ahorro en la pestaña Puntos de datos podrían dejar entradas en ciertas condiciones\nBotón de Topología añadido a la pestaña puntos de datos; abre el diagrama de topología del bus en un diálogo modal",
+        "pl": "Naprawiono: Zapisywanie harmonogramów w zakładce punkty danych może zostawić nieświeże wpisy pod pewnymi warunkami\nDodano przycisk Topologia do zakładki punkty danych; otwiera schemat topologii autobusu w oknie modalnym",
+        "uk": "Виправлено: Зберегти графіки в вкладці даних може залишити записи за певними умовами\nДодано кнопку Топології до вкладки даних; відкриває схему топології автобуса в модальному діалоговому вікні",
+        "zh-cn": "固定:在数据点标签中保存时间表可能会在某些条件下留下呆滞的条目\n添加到数据点标签的地形按钮; 在模式对话框中打开总线地形图"
+      },
       "1.0.0-beta.1": {
         "en": "Bus topology analysis is now generated automatically after the data point scan; results are stored in info.topology (JSON) and info.topologyHtml (HTML); see Readme for details\nInput validation added for interval and delay fields in the datapoints tab — only positive integers are accepted",
         "de": "Bus-Topologie-Analyse wird jetzt automatisch nach dem Datenpunktscan erstellt; Ergebnisse werden in info.topology (JSON) und info.topologyHtml (HTML) gespeichert; Details im Readme\nEingabevalidierung für Intervall- und Verzögerungsfelder in der Datenpunkte-Seite ergänzt — nur positive ganze Zahlen werden akzeptiert",
