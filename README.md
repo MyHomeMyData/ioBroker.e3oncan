@@ -61,7 +61,7 @@ Which modes are available depends on your device topology. See the [device topol
 
 ### Datapoints tab
 
-A new **e3oncan datapoints** page is pinned directly to the adapter's instance row in the ioBroker instances view. It provides a dedicated UI for managing schedules and Collect settings per device and data point — no need to open the full adapter configuration dialog for day-to-day changes.
+A new **e3oncan datapoints** page is pinned directly to the adapter's instance row in the ioBroker instances view. Click the <img src="admin/icon_open_tab.svg" height="20"> button in the instance row to open it. It provides a dedicated UI for managing schedules and Collect settings per device and data point — no need to open the full adapter configuration dialog for day-to-day changes.
 
 ### Auto-detection of energy meters
 

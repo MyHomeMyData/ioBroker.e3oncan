@@ -60,7 +60,7 @@ Welche Modi verfügbar sind, hängt von der Gerätekonfiguration ab. Weitere Det
 
 ### Datenpunkte-Seite
 
-Eine neue **e3oncan Datenpunkte**-Seite ist direkt in der Instanzzeile des Adapters in der ioBroker-Instanzansicht verankert. Sie bietet eine dedizierte Oberfläche zum Verwalten von Zeitplänen und Collect-Einstellungen je Gerät und Datenpunkt — ohne dass der vollständige Adapterkonfigurationsdialog geöffnet werden muss.
+Eine neue **e3oncan Datenpunkte**-Seite ist direkt in der Instanzzeile des Adapters in der ioBroker-Instanzansicht verankert. Klicke auf die Schaltfläche <img src="admin/icon_open_tab.svg" height="20"> in der Instanzzeile, um sie zu öffnen. Sie bietet eine dedizierte Oberfläche zum Verwalten von Zeitplänen und Collect-Einstellungen je Gerät und Datenpunkt — ohne dass der vollständige Adapterkonfigurationsdialog geöffnet werden muss.
 
 ### Automatische Erkennung von Energiezählern
 
