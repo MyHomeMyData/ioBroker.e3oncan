@@ -139,9 +139,8 @@ Updated structure of the following data points:
 
 **Notes:**
 - For all sensor data points the last entry `Unknown` was renamed to `SensorStatus`. This is the reason for the large number of changed data points.
-- For the frequently used data points 531, 1415–1418, 2351, 2532 and 2735 the numerical value has been moved to a sub-state `ID`:
+- For the frequently used data points 531, 2351, 2532 and 2735 the numerical value has been moved to a sub-state `ID`:
   - `0531_DomesticHotWaterOperationState.ID`
-  - `1415_MixerOneCircuitOperationState.State.ID`
   - `2351_HeatPumpCompressor.PowerState.ID`
   - `2352_AdditionalElectricHeater.PowerState.ID`
   - `2735_FourThreeWayValveValveCurrentPosition.ID`
