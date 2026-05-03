@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "0.11.2",
+    "version": "0.11.3",
     "news": {
+      "0.11.3": {
+        "en": "The accidentally mentioned data points 1415-1418 have been removed from the changelog of version 0.11.0",
+        "de": "Die versehentlich erwähnten Datenpunkte 1415-1418 wurden aus dem Changelog der Version 0.11.0 entfernt",
+        "ru": "Случайно упомянутые точки 1415-1418 данных были удалены из журнала изменений версии 0.11.0",
+        "pt": "Os dados referidos acidentalmente pontos 1415-1414 foram retirados do changelog da versão 0.11.0",
+        "nl": "De per ongeluk genoemde gegevenspunten 1415-1418 zijn verwijderd uit het changelog van versie 0.11.0",
+        "fr": "Les points de données accidentellement mentionnés 1415-1418 ont été supprimés du journal de changement de la version 0.11.0",
+        "it": "I punti di dati menzionati accidentalmente 1415-1418 sono stati rimossi dal changelog della versione 0.11.0",
+        "es": "Los puntos de datos mencionados accidentalmente 1415-1418 han sido eliminados del cambio de la versión 0.11.0",
+        "pl": "Przypadkowo wymienione punkty danych 1415- 1418 zostały usunięte z changelog wersji 0.11.0",
+        "uk": "У випадково зазначених пунктах даних 1415-1418 було вилучено з зміни версії 0.11.0",
+        "zh-cn": "无意中提到的1415-1418数据点已经从0.110"
+      },
       "0.11.2": {
         "en": "Added \"What's new in v0.11.x\" section to Readme with upgrade notes for data point structure changes",
         "de": "Hinzugefügt \"Was ist neu in v0.11.x\" Abschnitt zu Readme mit Upgrade-Notizen für Datenpunkt Strukturänderungen",
