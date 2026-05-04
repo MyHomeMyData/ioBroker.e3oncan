@@ -79,6 +79,7 @@ class E3oncan extends utils.Adapter {
         this.udsScanWorker = new udsScan.udsScan();
         this.detectedEnergyMeters = { e380_97: '', e380_98: '', e3100cb: '' };
         this.detectedCollectCanIds = new Set();
+        this.collectScanDone = false; // true if info.collect exists in v1.x format (detectedIds array)
         this.udsScanDevices = []; // UDS devices found during scan
         this.udsDevAddrs = [];
         this.udsDevStateNames = [];
@@ -173,6 +174,7 @@ class E3oncan extends utils.Adapter {
                 const co = JSON.parse(String(sCo.val));
                 if (Array.isArray(co.detectedIds)) {
                     // Current format: array of numeric CAN IDs
+                    this.collectScanDone = true;
                     for (const id of co.detectedIds) {
                         this.detectedCollectCanIds.add(Number(id));
                     }
@@ -1045,6 +1047,7 @@ class E3oncan extends utils.Adapter {
                             devices: result,
                             energyMeters: this.detectedEnergyMeters,
                             detectedCollectCanIds: [...this.detectedCollectCanIds],
+                            collectScanDone: this.collectScanDone,
                             energyMeterDelays: { e380: this.e380Delay, e3100cb: this.e3100cbDelay },
                             energyMeterActive: { e380: this.e380Active, e3100cb: this.e3100cbActive },
                         },

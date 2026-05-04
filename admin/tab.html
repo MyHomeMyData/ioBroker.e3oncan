@@ -177,9 +177,9 @@
                     const totalDids = allDevices.reduce(function(s, d) { return s + d.dids.length; }, 0);
                     setStatus('Loaded ' + totalDids + ' datapoints across ' + allDevices.length + ' device(s).');
                     const anyScanMissing = allDevices.some(function(d) { return !d.scanDone; });
-                    const collectInfoMissing = (result.detectedCollectCanIds || []).length === 0;
+                    const collectScanDone = !!result.collectScanDone;
                     document.getElementById('scan-warning').classList.toggle('d-none', !anyScanMissing);
-                    document.getElementById('rescan-hint').classList.toggle('d-none', anyScanMissing || !collectInfoMissing);
+                    document.getElementById('rescan-hint').classList.toggle('d-none', anyScanMissing || collectScanDone);
                     document.getElementById('btn-load').disabled = false;
                     sock.emit('getState', namespace + '.info.topologyHtml', function(_err, state) {
                         setTopologyButton(state && state.val ? state.val : '');
