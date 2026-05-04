@@ -92,6 +92,7 @@
         A data point scan with adapter v1.x has not been performed yet.
         Please run a new data point scan from the adapter configuration dialog (<strong>List of Data Points</strong> tab)
         to enable auto-detection of Collect-capable devices and energy meters.
+        <button type="button" class="btn btn-sm btn-outline-secondary ms-3" id="btn-dismiss-rescan-hint">Don't show again</button>
     </div>
     <div id="devices-container"></div>
 
@@ -124,6 +125,11 @@
         let sock = null;
         let loadedEnergyMeters = {};
         let topologyHtml = '';
+
+        document.getElementById('btn-dismiss-rescan-hint').addEventListener('click', function() {
+            localStorage.setItem('rescanHintDismissed_' + namespace, '1');
+            document.getElementById('rescan-hint').classList.add('d-none');
+        });
 
         function initSocket() {
             return new Promise(function(resolve) {
@@ -178,8 +184,9 @@
                     setStatus('Loaded ' + totalDids + ' datapoints across ' + allDevices.length + ' device(s).');
                     const anyScanMissing = allDevices.some(function(d) { return !d.scanDone; });
                     const collectScanDone = !!result.collectScanDone;
+                    const rescanHintDismissed = !!localStorage.getItem('rescanHintDismissed_' + namespace);
                     document.getElementById('scan-warning').classList.toggle('d-none', !anyScanMissing);
-                    document.getElementById('rescan-hint').classList.toggle('d-none', anyScanMissing || collectScanDone);
+                    document.getElementById('rescan-hint').classList.toggle('d-none', anyScanMissing || collectScanDone || rescanHintDismissed);
                     document.getElementById('btn-load').disabled = false;
                     sock.emit('getState', namespace + '.info.topologyHtml', function(_err, state) {
                         setTopologyButton(state && state.val ? state.val : '');
