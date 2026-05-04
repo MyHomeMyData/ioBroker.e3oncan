@@ -383,6 +383,8 @@ Wenn Ihnen dieses Projekt gefällt — oder Sie einfach großzügig sind — wü
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Behoben: Beim Speichern von Schedules in der Datenpunkte-Seite konnten unter bestimmten Umständen veraltete Einträge verbleiben
 * (MyHomeMyData) Topology-Schaltfläche in der Datenpunkte-Seite ergänzt; öffnet das Bus-Topologie-Diagramm in einem modalen Dialog
+* (MyHomeMyData) Scan-Status-Erkennung verbessert: nutzt `udsDidsWritable` statt `didsMetaDict`, um zuverlässig zu erkennen, ob ein Datenpunktscan durchgeführt wurde
+* (MyHomeMyData) Hinweis auf erneuten Scan in der Datenpunkte-Seite ergänzt, wenn ein Scan vorhanden, aber die Collect-Erkennung noch nicht durchgeführt wurde
 
 ### 1.0.0-beta.1 (2026-04-30)
 * (MyHomeMyData) Bus-Topologie-Analyse wird jetzt automatisch nach dem Datenpunktscan erstellt; Ergebnisse werden in `info.topology` (JSON) und `info.topologyHtml` (HTML) gespeichert; Details im Readme

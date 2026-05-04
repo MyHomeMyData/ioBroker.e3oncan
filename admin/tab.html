@@ -86,6 +86,13 @@
         The assignment of data points to devices is unknown and writing of data points is locked.
         Please run a data point scan from the adapter configuration dialog (<strong>List of Data Points</strong> tab).
     </div>
+    <div id="rescan-hint" class="alert alert-info d-none" role="alert">
+        <i class="bi bi-info-circle-fill"></i>
+        <strong>Re-scan recommended.</strong>
+        A data point scan with adapter v1.x has not been performed yet.
+        Please run a new data point scan from the adapter configuration dialog (<strong>List of Data Points</strong> tab)
+        to enable auto-detection of Collect-capable devices and energy meters.
+    </div>
     <div id="devices-container"></div>
 
     <div class="modal fade" id="topology-modal" tabindex="-1">
@@ -170,7 +177,9 @@
                     const totalDids = allDevices.reduce(function(s, d) { return s + d.dids.length; }, 0);
                     setStatus('Loaded ' + totalDids + ' datapoints across ' + allDevices.length + ' device(s).');
                     const anyScanMissing = allDevices.some(function(d) { return !d.scanDone; });
+                    const collectInfoMissing = (result.detectedCollectCanIds || []).length === 0;
                     document.getElementById('scan-warning').classList.toggle('d-none', !anyScanMissing);
+                    document.getElementById('rescan-hint').classList.toggle('d-none', anyScanMissing || !collectInfoMissing);
                     document.getElementById('btn-load').disabled = false;
                     sock.emit('getState', namespace + '.info.topologyHtml', function(_err, state) {
                         setTopologyButton(state && state.val ? state.val : '');
