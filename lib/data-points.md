@@ -55,7 +55,7 @@ Starting with open3e version 0.6.1 and adapter version 0.11.0, many data points 
 | Notes / link | Further information or reference |
 | Access | Whether the data point is read-only or read-and-write |
 
-Metadata is added to data point objects during the data point scan. For data points that existed before the scan, metadata is added on first launch of the new adapter version. To add metadata to all data points at once, run a new data point scan.
+Metadata is added to data point objects during the data point scan. For data points that are newly created on adapter start (e.g. after a structural change in a definition), metadata is applied automatically. For all other existing data points, metadata is only updated by running a new data point scan.
 
 ---
 
@@ -112,9 +112,17 @@ A data point scan discovers all available data points on each device and creates
 
 **What a scan does:**
 
-- Saves all found data points and creates any that are missing.
-- Adds or updates metadata (description, unit, access information) for each data point.
+- Discovers all available data points on each configured device.
+- Adds or updates metadata (description, unit, access information) for each existing data point — for details see save option below.
 - Sets temperature unit labels based on the device format configuration (data point `382`).
+- Optionally writes the values read during the scan to the object tree (see below).
+
+**Option: Save all data point values during scan**
+
+The scan dialog offers a checkbox **Save all data point values to object tree during scan**:
+
+- **Checked (default):** All values read during the scan are written to the object tree. Missing data point objects are created.
+- **Unchecked:** Values and metadata are written for *existing* data point objects. Data point objects that do not yet exist are *not* created. Use this option to refresh metadata without extending the object tree — for example after a migration from an older adapter version.
 
 **When to run a scan:**
 

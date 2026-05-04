@@ -1,4 +1,14 @@
 # Older Changelog Entries
+## 0.10.13 (2025-09-30)
+* (MyHomeMyData) Fix for issue #162
+
+## 0.10.12 (2025-09-15)
+* (MyHomeMyData) Migration to ESLint 9, refer to issues #141 and #152
+
+## 0.10.11 (2025-09-06)
+* (MyHomeMyData) Fix for issue #152 (repository checker) and #126 (node.js 24)
+* (MyHomeMyData) Added hint to readme regarding user action after upgrading version of node.js
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20250903
 
 ## 0.10.10 (2025-08-07)
 * (MyHomeMyData) Fix for issue #142 (WriteByDid not working in case of specific UDS control frame)

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e3oncan – Datapoints</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body { background-color: #212529; color: #dee2e6; padding: 1rem; }
+        .card { background-color: #2b3035; border-color: #495057; }
+        .card-header { background-color: #343a40; border-color: #495057; }
+        .table { --bs-table-bg: transparent; --bs-table-color: #dee2e6; --bs-table-border-color: #495057; }
+        .table thead th { color: #dee2e6 !important; background-color: #2b3035 !important; border-color: #495057 !important; }
+        .table-hover tbody tr:hover td { background-color: rgba(255,255,255,0.05); }
+        .form-control, .form-select { background-color: #343a40; color: #dee2e6; border-color: #495057; }
+        .form-control:focus { background-color: #343a40; color: #dee2e6; border-color: #86b7fe; box-shadow: none; }
+        .form-control::placeholder { color: #6c757d; }
+        .input-group-text { background-color: #343a40; color: #adb5bd; border-color: #495057; }
+        .ecu-group .card-header { cursor: pointer; position: sticky; top: 0; z-index: 10; }
+        .ecu-group .bi-chevron-down { transition: transform 0.2s; }
+        .dev-name-col { flex: 0 0 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .interval-input { width: 72px !important; text-align: center; }
+        code { color: #adb5bd; }
+    </style>
+</head>
+<body>
+    <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+        <h5 class="mb-0 me-1" id="page-title"><i class="bi bi-database"></i> Datapoints</h5>
+        <div class="input-group input-group-sm" style="max-width:300px">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control" id="search"
+                   placeholder="Search by ID, name or description…"
+                   oninput="filterRows()">
+        </div>
+        <button class="btn btn-sm btn-outline-secondary" onclick="expandAll()">
+            <i class="bi bi-arrows-expand"></i> Expand All
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" onclick="collapseAll()">
+            <i class="bi bi-arrows-collapse"></i> Collapse All
+        </button>
+        <span id="topology-btn-wrap" title="No topology data available yet. Topology is generated automatically when a data point scan is performed (adapter configuration → List of Data Points tab).">
+            <button class="btn btn-sm btn-outline-info" id="btn-topology" onclick="openTopology()" disabled style="pointer-events:none">
+                <i class="bi bi-diagram-3"></i> Topology
+            </button>
+        </span>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <span id="unsaved-badge" class="badge bg-warning text-dark d-none">
+                <i class="bi bi-exclamation-triangle-fill"></i> Unsaved changes
+            </span>
+            <button class="btn btn-sm btn-outline-primary" id="btn-load" onclick="loadData()">
+                <i class="bi bi-arrow-clockwise"></i> Load
+            </button>
+            <button class="btn btn-sm btn-success" id="btn-save" onclick="saveData(false)" disabled>
+                <i class="bi bi-check-lg"></i> Save
+            </button>
+            <button class="btn btn-sm btn-primary" id="btn-save-close" onclick="saveData(true)" disabled>
+                <i class="bi bi-check-lg"></i> Save &amp; Close
+            </button>
+            <button class="btn btn-sm btn-outline-danger" onclick="discardAndClose()">
+                <i class="bi bi-x-lg"></i> Discard &amp; Close
+            </button>
+        </div>
+    </div>
+    <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+        <span class="small text-muted">Schedule filter:</span>
+        <div class="btn-group btn-group-sm" role="group">
+            <input type="radio" class="btn-check" name="schedFilter" id="sf-all" value="all" checked onchange="filterRows()">
+            <label class="btn btn-outline-secondary" for="sf-all">All</label>
+            <input type="radio" class="btn-check" name="schedFilter" id="sf-onstart" value="onstart" onchange="filterRows()">
+            <label class="btn btn-outline-secondary" for="sf-onstart"><i class="bi bi-play-fill"></i> On Start</label>
+            <input type="radio" class="btn-check" name="schedFilter" id="sf-interval" value="interval" onchange="filterRows(); document.getElementById('interval-val-wrap').classList.toggle('d-none', !this.checked)">
+            <label class="btn btn-outline-secondary" for="sf-interval"><i class="bi bi-clock"></i> Interval</label>
+        </div>
+        <div id="interval-val-wrap" class="input-group input-group-sm d-none" style="width:150px">
+            <span class="input-group-text small">= </span>
+            <input type="number" class="form-control" id="filter-interval-val" placeholder="any" min="1" step="1" oninput="filterRows()">
+            <span class="input-group-text small">s</span>
+        </div>
+    </div>
+    <div id="status" class="small text-muted mb-2"></div>
+    <div id="scan-warning" class="alert alert-warning d-none" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <strong>No data point scan performed yet.</strong>
+        The assignment of data points to devices is unknown and writing of data points is locked.
+        Please run a data point scan from the adapter configuration dialog (<strong>List of Data Points</strong> tab).
+    </div>
+    <div id="rescan-hint" class="alert alert-info d-none" role="alert">
+        <i class="bi bi-info-circle-fill"></i>
+        <strong>Re-scan recommended.</strong>
+        A data point scan with adapter v1.x has not been performed yet.
+        Please run a new data point scan from the adapter configuration dialog (<strong>List of Data Points</strong> tab)
+        to enable auto-detection of Collect-capable devices and energy meters.
+        <button type="button" class="btn btn-sm btn-outline-secondary ms-3" id="btn-dismiss-rescan-hint">Don't show again</button>
+    </div>
+    <div id="devices-container"></div>
+
+    <div class="modal fade" id="topology-modal" tabindex="-1">
+        <div class="modal-dialog modal-xl" style="height:90vh;max-height:90vh">
+            <div class="modal-content d-flex flex-column" style="height:100%">
+                <div class="modal-header py-2 flex-shrink-0">
+                    <h6 class="modal-title mb-0"><i class="bi bi-diagram-3"></i> Network Topology</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0 flex-grow-1" style="overflow:hidden">
+                    <iframe id="topology-iframe" style="width:100%;height:100%;border:none"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const instance = urlParams.get('instance') || '0';
+        const namespace = 'e3oncan.' + instance;
+        document.title = namespace + ' – Datapoints';
+        document.getElementById('page-title').innerHTML = '<i class="bi bi-database"></i> ' + namespace + ' – Datapoints';
+
+        let allDevices = [];
+        let adapterNative = {};
+        let adapterObj = null;
+        let hasChanges = false;
+        let sock = null;
+        let loadedEnergyMeters = {};
+        let topologyHtml = '';
+
+        document.getElementById('btn-dismiss-rescan-hint').addEventListener('click', function() {
+            localStorage.setItem('rescanHintDismissed_' + namespace, '1');
+            document.getElementById('rescan-hint').classList.add('d-none');
+        });
+
+        function initSocket() {
+            return new Promise(function(resolve) {
+                setStatus('Connecting…');
+                try {
+                    if (typeof io === 'undefined' || typeof io.connect !== 'function') {
+                        setStatus('socket.io not loaded (io=' + typeof io + ')', 'danger');
+                        document.getElementById('btn-load').disabled = false;
+                        return;
+                    }
+                    const s = io.connect(window.location.origin, {});
+                    s.on('connect', function() { sock = s; resolve(); });
+                    s.on('connect_error', function(err) {
+                        setStatus('Socket connection failed: ' + (err && err.message || err), 'danger');
+                        document.getElementById('btn-load').disabled = false;
+                    });
+                } catch(e) {
+                    setStatus('initSocket error: ' + e.message, 'danger');
+                    document.getElementById('btn-load').disabled = false;
+                }
+            });
+        }
+
+        // --- Load ---
+        function loadData() {
+            setStatus('Loading…');
+            document.getElementById('btn-load').disabled = true;
+            if (!sock) {
+                setStatus('No socket connection.', 'danger');
+                document.getElementById('btn-load').disabled = false;
+                return;
+            }
+            sock.emit('getObject', 'system.adapter.' + namespace, function(err, obj) {
+                if (err) { setStatus('getObject error: ' + err, 'danger'); document.getElementById('btn-load').disabled = false; return; }
+                adapterObj = obj || null;
+                adapterNative = (obj && obj.native) || {};
+                const timeout = setTimeout(function() {
+                    setStatus('No response from adapter instance ' + namespace + '. Is the adapter running?', 'danger');
+                    document.getElementById('btn-load').disabled = false;
+                }, 10000);
+                sock.emit('sendTo', namespace, 'getTabDids', {}, function(result) {
+                    clearTimeout(timeout);
+                    if (!result) { setStatus('Adapter returned no data.', 'danger'); document.getElementById('btn-load').disabled = false; return; }
+                    allDevices = (result.devices || result) || [];
+                    renderDevices(result.detectedCollectCanIds || []);
+                    renderEnergyMeters(result.energyMeters || {}, result.energyMeterDelays || {}, result.energyMeterActive || {});
+                    hasChanges = false;
+                    document.getElementById('btn-save').disabled = true;
+                    document.getElementById('btn-save-close').disabled = true;
+                    document.getElementById('unsaved-badge').classList.add('d-none');
+                    const totalDids = allDevices.reduce(function(s, d) { return s + d.dids.length; }, 0);
+                    setStatus('Loaded ' + totalDids + ' datapoints across ' + allDevices.length + ' device(s).');
+                    const anyScanMissing = allDevices.some(function(d) { return !d.scanDone; });
+                    const collectScanDone = !!result.collectScanDone;
+                    const rescanHintDismissed = !!localStorage.getItem('rescanHintDismissed_' + namespace);
+                    document.getElementById('scan-warning').classList.toggle('d-none', !anyScanMissing);
+                    document.getElementById('rescan-hint').classList.toggle('d-none', anyScanMissing || collectScanDone || rescanHintDismissed);
+                    document.getElementById('btn-load').disabled = false;
+                    sock.emit('getState', namespace + '.info.topologyHtml', function(_err, state) {
+                        setTopologyButton(state && state.val ? state.val : '');
+                    });
+                });
+            });
+        }
+
+        // --- Topology ---
+        function setTopologyButton(html) {
+            topologyHtml = html || '';
+            const btn = document.getElementById('btn-topology');
+            const wrap = document.getElementById('topology-btn-wrap');
+            if (topologyHtml) {
+                btn.disabled = false;
+                btn.style.pointerEvents = '';
+                wrap.title = '';
+            } else {
+                btn.disabled = true;
+                btn.style.pointerEvents = 'none';
+                wrap.title = 'No topology data available yet. Topology is generated automatically when a data point scan is performed (adapter configuration → List of Data Points tab).';
+            }
+        }
+
+        function openTopology() {
+            if (!topologyHtml) return;
+            document.getElementById('topology-iframe').srcdoc = topologyHtml;
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('topology-modal')).show();
+        }
+
+        // --- Schedule helpers ---
+        function getScheduleState(devAddr) {
+            const onStartDids = new Set();
+            const intervalDids = new Map();
+            const schedules = adapterNative.tableUdsSchedules || [];
+            for (let i = 0; i < schedules.length; i++) {
+                const sched = schedules[i];
+                if (!sched.udsScheduleActive) continue;
+                if (Number(sched.udsSelectDevAddr) !== Number(devAddr)) continue;
+                const parts = String(sched.udsScheduleDids).split(',');
+                for (let j = 0; j < parts.length; j++) {
+                    const didId = parseInt(parts[j].trim(), 10);
+                    if (isNaN(didId)) continue;
+                    if (Number(sched.udsSchedule) === 0) {
+                        onStartDids.add(didId);
+                    } else {
+                        const iv = Number(sched.udsSchedule);
+                        if (!intervalDids.has(didId) || iv < intervalDids.get(didId)) {
+                            intervalDids.set(didId, iv);
+                        }
+                    }
+                }
+            }
+            return { onStartDids: onStartDids, intervalDids: intervalDids };
+        }
+
+        function getCollectState(collectCanId) {
+            const ext = adapterNative.tableCollectCanExt || [];
+            const int_ = adapterNative.tableCollectCanInt || [];
+            const all = ext.concat(int_);
+            const ids = String(collectCanId).split(',').map(function(s) { return s.trim(); });
+            for (let i = 0; i < all.length; i++) {
+                if (ids.indexOf(String(all[i].collectCanId).trim()) >= 0) {
+                    return { active: !!all[i].collectActive, delay: all[i].collectDelayTime || 5 };
+                }
+            }
+            return { active: false, delay: 5 };
+        }
+
+        // --- Render ---
+        function renderDevices(detectedCollectCanIds) {
+            const detectedCollect = new Set((detectedCollectCanIds || []).map(Number));
+            const container = document.getElementById('devices-container');
+            container.innerHTML = '';
+            for (let di = 0; di < allDevices.length; di++) {
+                const dev = allDevices[di];
+                const state = getScheduleState(dev.devAddr);
+                const collect = dev.collectCanId ? getCollectState(dev.collectCanId) : null;
+                const collectDetected = dev.collectCanId && String(dev.collectCanId).split(',').some(function(id) {
+                    return detectedCollect.has(Number(id.trim()));
+                });
+                const collapseId = 'dev-' + dev.devStateName.replace(/[^a-z0-9]/gi, '_');
+                const activeCount = dev.dids.filter(function(d) {
+                    return state.onStartDids.has(d.didId) || state.intervalDids.has(d.didId);
+                }).length;
+
+                const card = document.createElement('div');
+                card.className = 'card mb-2 ecu-group';
+                card.dataset.devStateName = dev.devStateName;
+                card.dataset.devAddr = String(dev.devAddr);
+
+                let collectHtml = '';
+                if (collect !== null) {
+                    collectHtml = '<div class="collect-area d-flex align-items-center gap-2 ms-2">' +
+                        '<div class="form-check form-switch mb-0">' +
+                        '<input class="form-check-input collect-toggle" type="checkbox" id="ct-' + dev.devStateName + '"' +
+                        (collect.active ? ' checked' : '') + ' onchange="markChanged()">' +
+                        '<label class="form-check-label small text-muted" for="ct-' + dev.devStateName + '">Collect</label>' +
+                        '</div>' +
+                        '<div class="input-group input-group-sm" style="width:140px">' +
+                        '<span class="input-group-text small">Delay</span>' +
+                        '<input type="number" class="form-control form-control-sm collect-delay" value="' + collect.delay + '" min="0" step="1" oninput="sanitizeDelay(this)">' +
+                        '<span class="input-group-text small">s</span>' +
+                        '</div>' +
+                        (collectDetected ? '<i class="bi bi-broadcast-pin ms-1 text-success" title="Collect traffic detected on CAN bus"></i>' : '') +
+                        '</div>';
+                }
+
+                let rowsHtml = '';
+                for (let ri = 0; ri < dev.dids.length; ri++) {
+                    const dp = dev.dids[ri];
+                    const onStart = state.onStartDids.has(dp.didId);
+                    const interval = state.intervalDids.has(dp.didId) ? state.intervalDids.get(dp.didId) : '';
+                    rowsHtml += '<tr data-did="' + dp.didId + '" data-name="' + (dp.didName || '').toLowerCase() +
+                        '" data-desc="' + (dp.didDesc || '').toLowerCase() + '">' +
+                        '<td><code class="small">' + dp.didId + '</code></td>' +
+                        '<td class="text-truncate small" title="' + (dp.didName || '') + '">' + (dp.didName || '—') + '</td>' +
+                        '<td class="text-truncate small" title="' + (dp.didDesc || '') + '">' + (dp.didDesc || '') + '</td>' +
+                        '<td class="text-center"><input class="form-check-input onstart-check" type="checkbox"' +
+                        (onStart ? ' checked' : '') + ' onchange="updateScheduledCount(this);markChanged()"></td>' +
+                        '<td class="text-center"><input type="number" class="form-control form-control-sm interval-input"' +
+                        ' value="' + interval + '" placeholder="—" step="1" oninput="sanitizeInterval(this)" onkeydown="intervalKeydown(this,event)"></td>' +
+                        '</tr>';
+                }
+
+                card.innerHTML = '<div class="card-header py-2 d-flex align-items-center gap-2">' +
+                    '<div class="d-flex align-items-center gap-2 flex-grow-0">' +
+                    '<div class="dev-name-col"><strong>' + dev.devStateName + '</strong>' +
+                    '<code class="ms-2 small">' + dev.devAddr + '</code>' +
+                    '<span class="badge bg-secondary ms-2">' + dev.dids.length + ' DIDs</span>' +
+                    (activeCount > 0 ? '<span class="badge bg-success ms-1 scheduled-badge">' + activeCount + ' scheduled</span>' : '') +
+                    '</div>' +
+                    collectHtml +
+                    '</div>' +
+                    '<i class="bi bi-chevron-down ms-auto"></i></div>' +
+                    '<div class="collapse" id="' + collapseId + '">' +
+                    '<div class="table-responsive">' +
+                    '<table class="table table-sm table-hover align-middle mb-0" style="table-layout:fixed;width:100%">' +
+                    '<colgroup><col style="width:60px"><col style="width:28%"><col>' +
+                    '<col style="width:85px"><col style="width:105px"></colgroup>' +
+                    '<thead><tr><th>DID</th><th>Name</th><th>Description</th>' +
+                    '<th class="text-center">On Start</th><th class="text-center">Interval (s)</th></tr></thead>' +
+                    '<tbody>' + rowsHtml + '</tbody></table></div></div>';
+
+                container.appendChild(card);
+
+                // JS-based collapse (avoids data-bs-toggle propagation issues)
+                const collapseEl = card.querySelector('.collapse');
+                const chevron = card.querySelector('.bi-chevron-down');
+                card.querySelector('.card-header').addEventListener('click', function(e) {
+                    if (e.target.closest('.collect-area')) return;
+                    bootstrap.Collapse.getOrCreateInstance(collapseEl).toggle();
+                });
+                chevron.style.transform = 'rotate(-90deg)';
+                collapseEl.addEventListener('hide.bs.collapse', function() { chevron.style.transform = 'rotate(-90deg)'; });
+                collapseEl.addEventListener('show.bs.collapse', function() { chevron.style.transform = ''; });
+            }
+
+            // Synchronise all device-name widths to the widest one
+            // Must be three separate loops: reset all → measure all → set all
+            const nameCols = container.querySelectorAll('.dev-name-col');
+            nameCols.forEach(function(el) { el.style.width = ''; });
+            let maxW = 0;
+            nameCols.forEach(function(el) { maxW = Math.max(maxW, el.getBoundingClientRect().width); });
+            nameCols.forEach(function(el) { el.style.width = Math.ceil(maxW) + 'px'; });
+        }
+
+        // --- Energy Meters ---
+        function renderEnergyMeters(energyMeters, energyMeterDelays, energyMeterActive) {
+            loadedEnergyMeters = energyMeters || {};
+            const container = document.getElementById('devices-container');
+            const meters = [
+                { key: 'e380_97',  label: 'E380',    addr: 'CAN address 97', delayFor: 'e380'    },
+                { key: 'e380_98',  label: 'E380',    addr: 'CAN address 98', delayFor: 'e380'    },
+                { key: 'e3100cb',  label: 'E3100CB', addr: '',               delayFor: 'e3100cb' },
+            ];
+            for (const m of meters) {
+                if (!energyMeters[m.key]) { continue; }
+                const active = !!energyMeterActive[m.delayFor];
+                const delay = energyMeterDelays[m.delayFor] !== undefined ? energyMeterDelays[m.delayFor] : 5;
+                const card = document.createElement('div');
+                card.className = 'card mb-2 energy-meter-group';
+                card.dataset.delayFor = m.delayFor;
+                const channel = energyMeters[m.key];
+                const addrBadge = m.addr ? '<code class="ms-2 small">' + m.addr + '</code>' : '';
+                const chanBadge = '<span class="badge bg-secondary ms-2">' + (channel === 'int' ? '2nd CAN' : 'UDS CAN') + '</span>';
+                card.innerHTML = '<div class="card-header py-2 d-flex align-items-center gap-2">' +
+                    '<div style="min-width:300px" class="d-flex align-items-center gap-2">' +
+                    '<strong>' + m.label + '</strong>' + addrBadge +
+                    '<span class="badge bg-info ms-2">Energy Meter</span>' + chanBadge + '</div>' +
+                    '<div class="collect-area d-flex align-items-center gap-2">' +
+                    '<div class="form-check form-switch mb-0">' +
+                    '<input class="form-check-input em-collect-toggle" type="checkbox" id="em-ct-' + m.key + '"' +
+                    (active ? ' checked' : '') + ' onchange="markChanged()">' +
+                    '<label class="form-check-label small text-muted" for="em-ct-' + m.key + '">Collect</label>' +
+                    '</div>' +
+                    '<div class="input-group input-group-sm" style="width:140px">' +
+                    '<span class="input-group-text small">Delay</span>' +
+                    '<input type="number" class="form-control form-control-sm em-collect-delay" value="' + delay + '" min="0" step="1" oninput="sanitizeDelay(this)">' +
+                    '<span class="input-group-text small">s</span>' +
+                    '</div></div></div>';
+                container.appendChild(card);
+            }
+        }
+
+        // --- Filter ---
+        function filterRows() {
+            const search = document.getElementById('search').value.toLowerCase();
+            const schedMode = document.querySelector('input[name="schedFilter"]:checked').value;
+            const ivStr = document.getElementById('filter-interval-val').value.trim();
+            const ivFilter = (schedMode === 'interval' && ivStr) ? parseInt(ivStr, 10) : null;
+            const hasActiveFilter = search || schedMode !== 'all';
+
+            document.querySelectorAll('.ecu-group').forEach(function(group) {
+                let visibleCount = 0;
+                group.querySelectorAll('tbody tr').forEach(function(row) {
+                    const textOk = !search ||
+                        String(row.dataset.did).includes(search) ||
+                        (row.dataset.name || '').includes(search) ||
+                        (row.dataset.desc || '').includes(search);
+                    let schedOk = true;
+                    if (schedMode === 'onstart') {
+                        schedOk = row.querySelector('.onstart-check').checked;
+                    } else if (schedMode === 'interval') {
+                        const iv = row.querySelector('.interval-input').value.trim();
+                        schedOk = iv !== '' && (ivFilter === null || parseInt(iv, 10) === ivFilter);
+                    }
+                    const visible = textOk && schedOk;
+                    row.style.display = visible ? '' : 'none';
+                    if (visible) visibleCount++;
+                });
+                group.style.display = visibleCount > 0 ? '' : 'none';
+                if (hasActiveFilter && visibleCount > 0) {
+                    const collapse = group.querySelector('.collapse');
+                    if (collapse && !collapse.classList.contains('show')) {
+                        bootstrap.Collapse.getOrCreateInstance(collapse).show();
+                    }
+                }
+            });
+        }
+
+        function expandAll() {
+            document.querySelectorAll('.ecu-group .collapse:not(.show)').forEach(function(el) {
+                bootstrap.Collapse.getOrCreateInstance(el).show();
+            });
+        }
+        function collapseAll() {
+            document.querySelectorAll('.ecu-group .collapse.show').forEach(function(el) {
+                bootstrap.Collapse.getOrCreateInstance(el).hide();
+            });
+        }
+
+        function markChanged() {
+            hasChanges = true;
+            document.getElementById('btn-save').disabled = false;
+            document.getElementById('btn-save-close').disabled = false;
+            document.getElementById('unsaved-badge').classList.remove('d-none');
+        }
+
+        function updateScheduledCount(el) {
+            const card = el.closest('.ecu-group');
+            if (!card) return;
+            let count = 0;
+            card.querySelectorAll('tbody tr').forEach(function(row) {
+                const onStart = row.querySelector('.onstart-check');
+                const iv = row.querySelector('.interval-input');
+                if ((onStart && onStart.checked) || (iv && parseInt(iv.value, 10) > 0)) count++;
+            });
+            const nameCol = card.querySelector('.dev-name-col');
+            if (!nameCol) return;
+            let badge = nameCol.querySelector('.scheduled-badge');
+            if (count > 0) {
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'badge bg-success ms-1 scheduled-badge';
+                    nameCol.appendChild(badge);
+                }
+                badge.textContent = count + ' scheduled';
+            } else if (badge) {
+                badge.remove();
+            }
+        }
+
+        function sanitizeInterval(el) {
+            const n = parseInt(el.value, 10);
+            el.value = (isNaN(n) || n <= 0) ? '' : String(n);
+            updateScheduledCount(el);
+            markChanged();
+        }
+
+        function intervalKeydown(el, event) {
+            if (event.key === '-') {
+                el.value = '';
+                updateScheduledCount(el);
+                markChanged();
+                event.preventDefault();
+            }
+        }
+
+        function sanitizeDelay(el) {
+            el.value = el.value.replace(/[^0-9]/g, '');
+            markChanged();
+        }
+
+        // --- Discard & Close ---
+        function discardAndClose() {
+            hasChanges = false;
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.close();
+            }
+        }
+
+        // --- Save ---
+        function saveData(andClose) {
+            setStatus('Saving…');
+            document.getElementById('btn-save').disabled = true;
+            document.getElementById('btn-save-close').disabled = true;
+
+            const tabDevAddrs = new Set(allDevices.map(function(d) { return Number(d.devAddr); }));
+            const newSchedules = (adapterNative.tableUdsSchedules || []).filter(function(s) {
+                return !tabDevAddrs.has(Number(s.udsSelectDevAddr));
+            });
+            const newCollectExt = JSON.parse(JSON.stringify(adapterNative.tableCollectCanExt || []));
+            const newCollectInt = JSON.parse(JSON.stringify(adapterNative.tableCollectCanInt || []));
+
+            document.querySelectorAll('.ecu-group').forEach(function(card) {
+                const devStateName = card.dataset.devStateName;
+                const devAddr = card.dataset.devAddr;
+                const dev = allDevices.find(function(d) { return d.devStateName === devStateName; });
+                if (!dev) return;
+
+                const onStartDids = [];
+                const intervalGroups = {};
+                const existingState = getScheduleState(devAddr);
+
+                card.querySelectorAll('tbody tr').forEach(function(row) {
+                    const didId = parseInt(row.dataset.did, 10);
+                    if (row.style.display === 'none') {
+                        // Preserve existing schedule for hidden (filtered) rows
+                        if (existingState.onStartDids.has(didId)) onStartDids.push(didId);
+                        const iv = existingState.intervalDids.get(didId);
+                        if (iv !== undefined) {
+                            if (!intervalGroups[iv]) intervalGroups[iv] = [];
+                            intervalGroups[iv].push(didId);
+                        }
+                        return;
+                    }
+                    const onStart = row.querySelector('.onstart-check').checked;
+                    const intervalVal = row.querySelector('.interval-input').value.trim();
+                    const interval = intervalVal ? parseInt(intervalVal, 10) : null;
+
+                    if (onStart) onStartDids.push(didId);
+                    if (interval !== null && !isNaN(interval) && interval > 0) {
+                        if (!intervalGroups[interval]) intervalGroups[interval] = [];
+                        intervalGroups[interval].push(didId);
+                    }
+                });
+
+                if (onStartDids.length > 0) {
+                    newSchedules.push({
+                        udsScheduleActive: true,
+                        udsSchedule: 0,
+                        udsSelectDevAddr: devAddr,
+                        udsScheduleDids: onStartDids.join(','),
+                        udsScheduleUserComment: ''
+                    });
+                }
+                for (const iv in intervalGroups) {
+                    newSchedules.push({
+                        udsScheduleActive: true,
+                        udsSchedule: Number(iv),
+                        udsSelectDevAddr: devAddr,
+                        udsScheduleDids: intervalGroups[iv].join(','),
+                        udsScheduleUserComment: ''
+                    });
+                }
+
+                if (dev.collectCanId) {
+                    const toggle = card.querySelector('.collect-toggle');
+                    const delayInput = card.querySelector('.collect-delay');
+                    if (toggle) {
+                        const active = toggle.checked;
+                        const delay = delayInput ? Number(delayInput.value) : 5;
+                        const cids = String(dev.collectCanId).split(',').map(function(s) { return s.trim(); });
+                        cids.forEach(function(cid) {
+                            const idxExt = newCollectExt.findIndex(function(c) { return String(c.collectCanId).trim() === cid; });
+                            const idxInt = newCollectInt.findIndex(function(c) { return String(c.collectCanId).trim() === cid; });
+                            if (idxExt >= 0) {
+                                newCollectExt[idxExt].collectActive = active;
+                                newCollectExt[idxExt].collectDelayTime = delay;
+                            } else if (idxInt >= 0) {
+                                newCollectInt[idxInt].collectActive = active;
+                                newCollectInt[idxInt].collectDelayTime = delay;
+                            } else if (active) {
+                                newCollectExt.push({ collectActive: true, collectCanId: cid, collectDelayTime: delay });
+                            }
+                        });
+                    }
+                }
+            });
+
+            // Deduplicate schedules: same device + same interval + same DIDs → keep first only
+            // Normalize address (hex vs decimal) and DID order to catch format-variant duplicates.
+            const seenSchedules = new Set();
+            const dedupedSchedules = newSchedules.filter(function(s) {
+                const addrKey = Number(s.udsSelectDevAddr);
+                const didsKey = String(s.udsScheduleDids)
+                    .split(',')
+                    .map(function(d) { return parseInt(d.trim(), 10); })
+                    .filter(function(d) { return !isNaN(d); })
+                    .sort(function(a, b) { return a - b; })
+                    .join(',');
+                const key = addrKey + '_' + s.udsSchedule + '_' + didsKey;
+                if (seenSchedules.has(key)) return false;
+                seenSchedules.add(key);
+                return true;
+            });
+
+            const newNative = {
+                tableUdsSchedules: dedupedSchedules,
+                tableCollectCanExt: newCollectExt,
+                tableCollectCanInt: newCollectInt,
+            };
+
+            // Save energy meter active flags and delays as a single info.energyMeter JSON state:
+            const emJson = {
+                e380_97:  loadedEnergyMeters.e380_97  || '',
+                e380_98:  loadedEnergyMeters.e380_98  || '',
+                e3100cb:  loadedEnergyMeters.e3100cb  || '',
+                e380Active: false, e380Delay: 5,
+                e3100cbActive: false, e3100cbDelay: 5,
+            };
+            const emSaved = {};
+            document.querySelectorAll('.energy-meter-group').forEach(function(card) {
+                const delayFor = card.dataset.delayFor;
+                if (!delayFor || emSaved[delayFor]) { return; }
+                const toggle = card.querySelector('.em-collect-toggle');
+                const delayInput = card.querySelector('.em-collect-delay');
+                if (toggle) { emJson[delayFor + 'Active'] = toggle.checked; }
+                if (delayInput) { emJson[delayFor + 'Delay'] = Number(delayInput.value); }
+                emSaved[delayFor] = true;
+            });
+            sock.emit('setState', namespace + '.info.energyMeter',
+                { val: JSON.stringify(emJson), ack: false }, function() {});
+
+            // Use setObject (not extendObject) so arrays are fully replaced,
+            // not deep-merged by index which leaves stale tail elements.
+            const objToSave = adapterObj || { type: 'instance', common: {}, native: {} };
+            objToSave.native = Object.assign({}, adapterNative, newNative);
+            sock.emit('setObject', 'system.adapter.' + namespace, objToSave, function(err) {
+                if (err) {
+                    setStatus('Save error: ' + err, 'danger');
+                    document.getElementById('btn-save').disabled = false;
+                } else {
+                    adapterNative.tableUdsSchedules = dedupedSchedules;
+                    adapterNative.tableCollectCanExt = newCollectExt;
+                    adapterNative.tableCollectCanInt = newCollectInt;
+                    Object.assign(adapterNative, newNative);
+                    hasChanges = false;
+                    document.getElementById('unsaved-badge').classList.add('d-none');
+                    if (andClose) {
+                        if (window.history.length > 1) {
+                            window.history.back();
+                        } else {
+                            window.close();
+                        }
+                    } else {
+                        setStatus('Saved successfully.', 'success');
+                    }
+                }
+            });
+        }
+
+        function setStatus(msg, type) {
+            const el = document.getElementById('status');
+            el.className = 'small mb-2 ' + (type ? 'text-' + type : 'text-muted');
+            el.textContent = msg;
+        }
+
+        // Warn on direct URL navigation (browser close/refresh/back when not in iframe)
+        window.addEventListener('beforeunload', function(e) {
+            if (hasChanges) { e.preventDefault(); e.returnValue = ''; }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setStatus('Initializing…');
+            initSocket().then(function() { loadData(); }).catch(function(e) {
+                setStatus('Error: ' + e.message, 'danger');
+                document.getElementById('btn-load').disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>

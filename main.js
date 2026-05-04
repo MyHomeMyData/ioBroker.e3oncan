@@ -38,8 +38,18 @@ class E3oncan extends utils.Adapter {
         });
 
         this.stoppingInstance = false; // true during unLoad()
-        this.e380Collect = null; // E380 always is assigned to external bus
-        this.e3100cbCollect = null; // E3100CB always is assigned to external bus
+        this.suppressStateStorage = false;
+        this.defaultDelayEM = 5;
+        this.e380Active = false;
+        this.e3100cbActive = false;
+        this.e380Delay = 5;
+        this.e3100cbDelay = 5;
+        this.e380Collect97 = null;
+        this.e380Collect97Channel = 'ext';
+        this.e380Collect98 = null;
+        this.e380Collect98Channel = 'ext';
+        this.e3100cbCollect = null;
+        this.e3100cbCollectChannel = 'ext';
         this.E3CollectInt = {}; // Dict of collect devices on internal bus
         this.E3CollectExt = {}; // Dict of collect devices on external bus
         this.collectTimeout = 2000; // Timeout (ms) for collecting data
@@ -67,6 +77,9 @@ class E3oncan extends utils.Adapter {
         this.udsDidForUnits = 382; // UnitsAndFormats
         this.udsDidsVarLength = [257, 258, 259, 260, 261, 262, 263, 264, 265, 266]; // Dids have content of variable length dependend of number of list elements
         this.udsScanWorker = new udsScan.udsScan();
+        this.detectedEnergyMeters = { e380_97: '', e380_98: '', e3100cb: '' };
+        this.detectedCollectCanIds = new Set();
+        this.collectScanDone = false; // true if info.collect exists in v1.x format (detectedIds array)
         this.udsScanDevices = []; // UDS devices found during scan
         this.udsDevAddrs = [];
         this.udsDevStateNames = [];
@@ -94,6 +107,99 @@ class E3oncan extends utils.Adapter {
         // Reset the connection indicator during startup
         this.setState('info.connection', false, true);
 
+        // Read energy meter configuration from info.energyMeter JSON (with migration fallback):
+        try {
+            const sEm = await this.getStateAsync('info.energyMeter');
+            if (sEm && sEm.val) {
+                const em = JSON.parse(String(sEm.val));
+                const toChannel = v => (v && typeof v === 'string' ? v : '');
+                this.detectedEnergyMeters = {
+                    e380_97: toChannel(em.e380_97),
+                    e380_98: toChannel(em.e380_98),
+                    e3100cb: toChannel(em.e3100cb),
+                };
+                this.e380Active = em.e380Active != null ? !!em.e380Active : false;
+                this.e380Delay = em.e380Delay != null ? Number(em.e380Delay) : this.defaultDelayEM;
+                this.e3100cbActive = em.e3100cbActive != null ? !!em.e3100cbActive : false;
+                this.e3100cbDelay = em.e3100cbDelay != null ? Number(em.e3100cbDelay) : this.defaultDelayEM;
+            } else {
+                // Migration: read from old individual states (pre-v1.0.0 installations)
+                const s97 = await this.getStateAsync('info.e380_97');
+                const s98 = await this.getStateAsync('info.e380_98');
+                const sCb = await this.getStateAsync('info.e3100cb');
+                const toChannel = s => (s && s.val ? (typeof s.val === 'string' ? s.val : 'ext') : '');
+                this.detectedEnergyMeters = {
+                    e380_97: toChannel(s97),
+                    e380_98: toChannel(s98),
+                    e3100cb: toChannel(sCb),
+                };
+                const sDelay380 = await this.getStateAsync('info.e380_delay');
+                this.e380Delay = sDelay380 && sDelay380.val != null ? Number(sDelay380.val) : this.defaultDelayEM;
+                const sDelayCb = await this.getStateAsync('info.e3100cb_delay');
+                this.e3100cbDelay = sDelayCb && sDelayCb.val != null ? Number(sDelayCb.val) : this.defaultDelayEM;
+                const sActive380 = await this.getStateAsync('info.e380_active');
+                if (sActive380 == null) {
+                    // @ts-expect-error AdapterConfig
+                    this.e380Active = !!this.config.e380Active; // migrate from very old config
+                    if (this.e380Active) {
+                        this.detectedEnergyMeters.e380_98 = 'ext';
+                        this.log.warn(
+                            'Upgrade migration: E380 configured for CAN address 98 on UDS CAN channel. ' +
+                                'If your E380 uses CAN address 97, please run a device scan to reconfigure.',
+                        );
+                    }
+                } else {
+                    this.e380Active = !!sActive380.val;
+                }
+                const sActiveCb = await this.getStateAsync('info.e3100cb_active');
+                if (sActiveCb == null) {
+                    // @ts-expect-error AdapterConfig
+                    this.e3100cbActive = !!this.config.e3100cbActive; // migrate from very old config
+                    if (this.e3100cbActive) {
+                        this.detectedEnergyMeters.e3100cb = 'ext';
+                        this.log.info('Upgrade migration: E3100CB configured for UDS CAN channel.');
+                    }
+                } else {
+                    this.e3100cbActive = !!sActiveCb.val;
+                }
+            }
+        } catch {
+            // states not yet available, keep defaults
+        }
+
+        // Read detected Collect CAN IDs from info.collect JSON (with migration fallback):
+        try {
+            const sCo = await this.getStateAsync('info.collect');
+            if (sCo && sCo.val) {
+                const co = JSON.parse(String(sCo.val));
+                if (Array.isArray(co.detectedIds)) {
+                    // Current format: array of numeric CAN IDs
+                    this.collectScanDone = true;
+                    for (const id of co.detectedIds) {
+                        this.detectedCollectCanIds.add(Number(id));
+                    }
+                } else {
+                    // Migration: old format before dynamic Collect IDs (pre-v1.0.0)
+                    if (co.detected451) {
+                        this.detectedCollectCanIds.add(0x451);
+                    }
+                    if (co.detected693) {
+                        this.detectedCollectCanIds.add(0x693);
+                    }
+                }
+            } else {
+                // Migration: read from old individual states (pre-v1.0.0 installations)
+                for (const canId of [0x451, 0x693]) {
+                    const s = await this.getStateAsync(`info.detectedCollect${canId.toString(16)}`);
+                    if (s && s.val) {
+                        this.detectedCollectCanIds.add(canId);
+                    }
+                }
+            }
+        } catch {
+            // states not yet available, keep default
+        }
+
         // Collect known devices adresses:
         for (const dev of Object.values(this.config.tableUdsDevices)) {
             // @ts-expect-error AdapterConfig
@@ -106,11 +212,16 @@ class E3oncan extends utils.Adapter {
         await this.updateDatapointsSpecificNumTypeChange(this.config.tableUdsDevices); // UDS devices, specific dids, possible change of type of numerical values
         await this.updateDatapointsSpecificVariants(this.config.tableUdsDevices); // UDS devices, specific dids, update for dids having variant length of structure
         await this.updateDatapointsCommon(this.config.tableUdsDevices); // UDS devices, common dids
-        if ('e380Name' in this.config) {
-            await this.updateDatapointsCommon([{ devStateName: this.config.e380Name, device: 'e380' }]); // E380 Energy Meter
+        // Update datapoints for detected energy meters (auto-named):
+        if (this.detectedEnergyMeters.e380_98) {
+            const name98 = this.detectedEnergyMeters.e380_98 === 'int' ? 'e380_98' : 'e380';
+            await this.updateDatapointsCommon([{ devStateName: name98, device: 'e380' }]);
         }
-        if ('e3100cbName' in this.config) {
-            await this.updateDatapointsCommon([{ devStateName: this.config.e3100cbName, device: 'e3100cb' }]); // E3100CB Energy Meter
+        if (this.detectedEnergyMeters.e380_97) {
+            await this.updateDatapointsCommon([{ devStateName: 'e380_97', device: 'e380' }]);
+        }
+        if (this.detectedEnergyMeters.e3100cb) {
+            await this.updateDatapointsCommon([{ devStateName: 'e3100cb', device: 'e3100cb' }]);
         }
 
         // Setup external CAN bus if required
@@ -148,14 +259,22 @@ class E3oncan extends utils.Adapter {
             await this.setState('info.connection', true, true);
         }
 
-        // Setup E380 collect worker:
-        if (this.channelExt) {
-            this.e380Collect = await this.setupE380CollectWorker(this.config);
-        }
-
-        // Setup E3100CB collect worker:
-        if (this.channelExt) {
-            this.e3100cbCollect = await this.setupE3100cbCollectWorker(this.config);
+        // Setup energy meter collect workers for detected and activated meters:
+        if (this.channelExt || this.channelInt) {
+            if (this.e380Active) {
+                if (this.detectedEnergyMeters.e380_97) {
+                    this.e380Collect97Channel = this.detectedEnergyMeters.e380_97;
+                    this.e380Collect97 = await this.setupE380Collect97Worker(this.e380Delay);
+                }
+                if (this.detectedEnergyMeters.e380_98) {
+                    this.e380Collect98Channel = this.detectedEnergyMeters.e380_98;
+                    this.e380Collect98 = await this.setupE380Collect98Worker(this.e380Delay);
+                }
+            }
+            if (this.e3100cbActive && this.detectedEnergyMeters.e3100cb) {
+                this.e3100cbCollectChannel = this.detectedEnergyMeters.e3100cb;
+                this.e3100cbCollect = await this.setupE3100cbCollectWorker(this.e3100cbDelay);
+            }
         }
 
         // Setup all configured devices for collect:
@@ -512,44 +631,48 @@ class E3oncan extends utils.Adapter {
         }
     }
 
-    // Setup E380 collect worker:
-    async setupE380CollectWorker(conf) {
-        let e380Worker = null;
-        if (conf.e380Active) {
-            e380Worker = new collect.collect({
-                canID: [
-                    0x250, 0x251, 0x252, 0x253, 0x254, 0x255, 0x256, 0x257, 0x258, 0x259, 0x25a, 0x25b, 0x25c, 0x25d,
-                ],
-                stateBase: conf.e380Name,
-                device: 'e380',
-                delay: conf.e380Delay,
-                active: conf.e380Active,
-            });
-            await e380Worker.initStates(this, 'standby');
-        }
-        if (e380Worker) {
-            await e380Worker.startup(this);
-        }
-        return e380Worker;
+    // Setup E380 collect worker for CAN address 97 (odd CAN IDs):
+    async setupE380Collect97Worker(delay) {
+        const worker = new collect.collect({
+            canID: [0x251, 0x253, 0x255, 0x257, 0x259, 0x25b, 0x25d],
+            stateBase: 'e380_97',
+            device: 'e380',
+            delay: delay,
+            active: true,
+        });
+        await worker.initStates(this, 'standby');
+        await worker.startup(this);
+        return worker;
+    }
+
+    // Setup E380 collect worker for CAN address 98 (even CAN IDs).
+    // Backward compat: state name is 'e380' on ext channel, 'e380_98' on int channel.
+    async setupE380Collect98Worker(delay) {
+        const stateName = this.e380Collect98Channel === 'int' ? 'e380_98' : 'e380';
+        const worker = new collect.collect({
+            canID: [0x250, 0x252, 0x254, 0x256, 0x258, 0x25a, 0x25c],
+            stateBase: stateName,
+            device: 'e380',
+            delay: delay,
+            active: true,
+        });
+        await worker.initStates(this, 'standby');
+        await worker.startup(this);
+        return worker;
     }
 
     // Setup E3100CB collect worker:
-    async setupE3100cbCollectWorker(conf) {
-        let e3100cbWorker = null;
-        if (conf.e3100cbActive) {
-            e3100cbWorker = new collect.collect({
-                canID: [0x569],
-                stateBase: conf.e3100cbName,
-                device: 'e3100cb',
-                delay: conf.e3100cbDelay,
-                active: conf.e3100cbActive,
-            });
-            await e3100cbWorker.initStates(this, 'standby');
-        }
-        if (e3100cbWorker) {
-            await e3100cbWorker.startup(this);
-        }
-        return e3100cbWorker;
+    async setupE3100cbCollectWorker(delay) {
+        const worker = new collect.collect({
+            canID: [0x569],
+            stateBase: 'e3100cb',
+            device: 'e3100cb',
+            delay: delay,
+            active: true,
+        });
+        await worker.initStates(this, 'standby');
+        await worker.startup(this);
+        return worker;
     }
 
     // Setup E3 collect workers:
@@ -656,8 +779,11 @@ class E3oncan extends utils.Adapter {
             }
 
             // Stop Collect workers:
-            if (this.e380Collect) {
-                await this.e380Collect.stop(this);
+            if (this.e380Collect97) {
+                await this.e380Collect97.stop(this);
+            }
+            if (this.e380Collect98) {
+                await this.e380Collect98.stop(this);
             }
             if (this.e3100cbCollect) {
                 await this.e3100cbCollect.stop(this);
@@ -768,10 +894,23 @@ class E3oncan extends utils.Adapter {
                         await this.log.silly(
                             `Data to send - ${JSON.stringify({ native: { tableUdsDevices: this.udsDevices } })}`,
                         );
+                        const em = this.detectedEnergyMeters;
+                        const emChan = ch => (ch === 'int' ? '2nd CAN' : 'UDS CAN');
+                        const emParts = [
+                            em.e380_97 ? `E380 (CAN addr 97, ${emChan(em.e380_97)})` : null,
+                            em.e380_98 ? `E380 (CAN addr 98, ${emChan(em.e380_98)})` : null,
+                            em.e3100cb ? `E3100CB (${emChan(em.e3100cb)})` : null,
+                        ].filter(Boolean);
                         await this.sendTo(
                             obj.from,
                             obj.command,
-                            { native: { tableUdsDevices: this.udsDevices } },
+                            {
+                                native: {
+                                    tableUdsDevices: this.udsDevices,
+                                    energyMeterDetectionResult:
+                                        emParts.length > 0 ? emParts.join(', ') : 'None detected',
+                                },
+                            },
                             obj.callback,
                         );
                         this.udsDevScanIsRunning = false;
@@ -852,8 +991,12 @@ class E3oncan extends utils.Adapter {
                     if (!this.udsDidScanIsRunning) {
                         this.udsDidScanIsRunning = true;
                         this.log.silly(`Received data - ${JSON.stringify(obj)}`);
-                        await this.udsScanWorker.scanUdsDids(this, this.udsDevAddrs, this.udsDidsLimits);
-                        //await this.udsScanWorker.scanUdsDids(this,this.udsDevAddrs,300);
+                        this.suppressStateStorage =
+                            (obj.message?.saveDidsOnScan ?? this.config.saveDidsOnScan ?? true) === false;
+                        const limits = Array.isArray(obj.message?.dids)
+                            ? { dids: obj.message.dids }
+                            : this.udsDidsLimits;
+                        await this.udsScanWorker.scanUdsDids(this, this.udsDevAddrs, limits);
                         this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
                         this.udsDidScanIsRunning = false;
                     } else {
@@ -862,6 +1005,54 @@ class E3oncan extends utils.Adapter {
                     }
                 } else {
                     this.sendTo(obj.from, obj.command, obj.message, obj.callback);
+                }
+            }
+
+            if (obj.command === 'getTabDids') {
+                if (obj.callback) {
+                    const result = [];
+                    // eslint-disable-next-line jsdoc/check-tag-names
+                    for (const dev of /** @type {any[]} */ (Object.values(this.config.tableUdsDevices))) {
+                        const devStateName = dev.devStateName;
+                        const udsDids = new storage.storageDids({ stateBase: devStateName, device: devStateName });
+                        await udsDids.readKnownDids(this, 'standby');
+                        const dids = [];
+                        if (udsDids.didsDevSpecAvail) {
+                            for (const [did, item] of Object.entries(udsDids.didsDictDevCom)) {
+                                if (did === 'Version') {
+                                    continue;
+                                }
+                                dids.push({ didId: Number(did), didName: item.id, didDesc: item.args.desc || '' });
+                            }
+                            for (const [did, item] of Object.entries(udsDids.didsDictDevSpec)) {
+                                if (did.length > 4) {
+                                    continue;
+                                }
+                                dids.push({ didId: Number(did), didName: item.id, didDesc: item.args.desc || '' });
+                            }
+                            dids.sort((a, b) => a.didId - b.didId);
+                        }
+                        result.push({
+                            devStateName,
+                            devAddr: dev.devAddr,
+                            collectCanId: dev.collectCanId || '',
+                            dids,
+                            scanDone: udsDids.didsScanDone,
+                        });
+                    }
+                    this.sendTo(
+                        obj.from,
+                        obj.command,
+                        {
+                            devices: result,
+                            energyMeters: this.detectedEnergyMeters,
+                            detectedCollectCanIds: [...this.detectedCollectCanIds],
+                            collectScanDone: this.collectScanDone,
+                            energyMeterDelays: { e380: this.e380Delay, e3100cb: this.e3100cbDelay },
+                            energyMeterActive: { e380: this.e380Active, e3100cb: this.e3100cbActive },
+                        },
+                        obj.callback,
+                    );
                 }
             }
 
@@ -947,10 +1138,25 @@ class E3oncan extends utils.Adapter {
     }
 
     onCanMsgExt(msg) {
-        if (this.e380Collect && this.e380Collect.config.canID.includes(msg.id)) {
-            this.e380Collect.msgCollect(this, msg);
+        if (
+            this.e380Collect97Channel === 'ext' &&
+            this.e380Collect97 &&
+            this.e380Collect97.config.canID.includes(msg.id)
+        ) {
+            this.e380Collect97.msgCollect(this, msg);
         }
-        if (this.e3100cbCollect && this.e3100cbCollect.config.canID.includes(msg.id)) {
+        if (
+            this.e380Collect98Channel === 'ext' &&
+            this.e380Collect98 &&
+            this.e380Collect98.config.canID.includes(msg.id)
+        ) {
+            this.e380Collect98.msgCollect(this, msg);
+        }
+        if (
+            this.e3100cbCollectChannel === 'ext' &&
+            this.e3100cbCollect &&
+            this.e3100cbCollect.config.canID.includes(msg.id)
+        ) {
             this.e3100cbCollect.msgCollect(this, msg);
         }
         if (this.E3CollectExt[msg.id]) {
@@ -968,6 +1174,27 @@ class E3oncan extends utils.Adapter {
     }
 
     onCanMsgInt(msg) {
+        if (
+            this.e380Collect97Channel === 'int' &&
+            this.e380Collect97 &&
+            this.e380Collect97.config.canID.includes(msg.id)
+        ) {
+            this.e380Collect97.msgCollect(this, msg);
+        }
+        if (
+            this.e380Collect98Channel === 'int' &&
+            this.e380Collect98 &&
+            this.e380Collect98.config.canID.includes(msg.id)
+        ) {
+            this.e380Collect98.msgCollect(this, msg);
+        }
+        if (
+            this.e3100cbCollectChannel === 'int' &&
+            this.e3100cbCollect &&
+            this.e3100cbCollect.config.canID.includes(msg.id)
+        ) {
+            this.e3100cbCollect.msgCollect(this, msg);
+        }
         if (this.E3CollectInt[msg.id]) {
             this.E3CollectInt[msg.id].msgCollect(this, msg);
         }
