@@ -270,25 +270,38 @@
                             "readOnly": false
                         }
                     ]
+                },
+
+                "energyMeterHdr": {
+                    "type": "header",
+                    "text": "Energy meters on CAN bus",
+                    "size": 3,
+                    "newLine": true
+                },
+                "energyMeterHint": {
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "type": "staticText",
+                    "text": "Detected during last device scan. Run scan to update.",
+                    "newLine": true
+                },
+                "energyMeterDetectionResult": {
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "type": "text",
+                    "label": "Detected energy meters",
+                    "readOnly": true,
+                    "newLine": true
                 }
             }
         },
         "tabUdsDids": {
             "type": "panel",
-            "xs": 12,
-            "sm": 12,
-            "md": 6,
-            "lg": 4,
-            "xl": 4,
             "label": "List of datapoints",
             "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length == 0)) { return true; } else {return false; }",
+            "xs": 12, "sm": 12, "md": 6,"lg": 4, "xl": 4,
+
             "items": {
                 "tableUdsDidsWarning": {
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12,
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12,"xl": 12,
                     "type": "staticText",
                     "text": "Configuration requires a running adapter instance!",
                     "hidden": "_alive",
@@ -297,151 +310,57 @@
                         "color": "red"
                     }
                 },
+                "saveDidsOnScan": {
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "type": "checkbox",
+                    "label": "Save all data point values to object tree during scan",
+                    "tooltip": "When unchecked, values and metadata are updated for already existing data point objects only. New data point objects are not created during the scan — they are created automatically on first data receipt after the scan.",
+                    "default": true,
+                    "newLine": true
+                },
                 "tableUdsDidsStartScan": {
                     "type": "sendTo",
                     "label": "Start scan for datapoints of all devices",
                     "variant": "outlined",
                     "showProcess": true,
-                    "jsonData": "{}",
+                    "jsonData": "{\"saveDidsOnScan\": ${data.saveDidsOnScan}}",
                     "command": "startDidScan",
                     "confirm": {
                         "condition": "true",
                         "title": "Confirm scan for datapoints",
-                        "text": "Scan will take up to 5 minutes. Plaese make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
+                        "text": "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
                         "ok": "OK",
                         "cancel": "Cancel"
                     },
                     "hidden": "!_alive",
                     "newLine": true,
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12
                 },
-                "tableUdsDidsSelDev": {
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12,
-                    "type": "selectSendTo",
-                    "label": "Select device",
-                    "jsonData": "{}",
-                    "command": "getUdsDidsDevSelect",
-                    "default": "Select device",
-                    "hidden": "!_alive",
-                    "alsoDependsOn": ["udsSchedule","tableUdsDevices"],
-                    "newLine": true
-                },
-
-                "tableUdsDidsButton": {
-                    "type": "sendTo",
-                    "command": "getUdsDids",
-                    "jsonData": "${JSON.stringify(data.tableUdsDidsSelDev)}",
-                    "label": "Update list of datapoints",
-                    "variant": "outlined",
-                    "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) ) { return false; }; return true;",
-                    "useNative": true,
-                    "showProcess": true,
+                "tableUdsDidsDivider": {
+                    "type": "divider",
                     "newLine": true,
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12
                 },
-
-                "linkToOpen3EListOfDoIs": {
-                    "type": "staticLink",
-                    "label": "For a list of frequently used data points see here.",
-                    "href": "https://github.com/open3e/open3e/wiki/036-DoI-%E2%80%90-Data-points-of-Interest",
+                "tableUdsDidsHint1": {
+                    "type": "staticText",
                     "newLine": true,
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "text": "Run the scan above to discover all data points on your devices and add metadata (description, unit, access). This is required before writing to any data point and recommended after every adapter or device firmware update.",
+                    "style": { "fontSize": "150%" }
                 },
-                "linkToOpen3EListOfAllDida": {
-                    "type": "staticLink",
-                    "label": "For a list of all available data points see here.",
-                    "href": "https://github.com/open3e/open3e/blob/develop/src/open3e/Open3Edatapoints.md",
+                "tableUdsDidsHint2": {
+                    "type": "staticText",
                     "newLine": true,
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "text": "► After the scan, browse and manage the discovered data points using the 'datapoints page', which is accessible via the link button in the adapter's instance row.",
+                    "style": { "fontSize": "150%" }
                 },
-                "tableUdsDids": {
-                    "type": "table",
+                "tableUdsDidsHint3": {
+                    "type": "staticText",
                     "newLine": true,
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12,
-                    "label": "List of device specific datapoints",
-                    "hidden": "if ( (_alive) && (data.tableUdsDidsSelDev) ) { return false; }; return true;",
-                    "noDelete": true,
-                    "import": true,
-                    "export": true,
-                    "items": [
-                        {
-                            "type": "number",
-                            "attr": "didId",
-                            "doNotSave": true,
-                            "width": "5% ",
-                            "title": "ID",
-                            "tooltip": "Id of datapoint",
-                            "filter": false,
-                            "sort": false
-                        },
-                        {
-                            "type": "number",
-                            "attr": "didLen",
-                            "doNotSave": true,
-                            "width": "5% ",
-                            "title": "Length",
-                            "tooltip": "Length of datapoint",
-                            "filter": false,
-                            "sort": false
-                        },
-                        {
-                            "type": "text",
-                            "attr": "didName",
-                            "doNotSave": true,
-                            "width": "30% ",
-                            "title": "Name",
-                            "tooltip": "Name of datapoint",
-                            "filter": true,
-                            "sort": false,
-                            "readOnly": true
-                        },
-                        {
-                            "type": "text",
-                            "attr": "didDesc",
-                            "doNotSave": true,
-                            "width": "45% ",
-                            "title": "Description",
-                            "tooltip": "Description of datapoint",
-                            "filter": true,
-                            "sort": false,
-                            "readOnly": true
-                        },
-                        {
-                            "type": "text",
-                            "attr": "didCodec",
-                            "doNotSave": true,
-                            "width": "15% ",
-                            "title": "Codec",
-                            "tooltip": "Codec used for datapoint",
-                            "filter": true,
-                            "sort": false,
-                            "readOnly": true
-                        }
-                   ]
+                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "text": "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.",
+                    "style": { "fontSize": "150%" }
                 }
             }
         },
@@ -468,100 +387,6 @@
                     "style": {
                         "color": "red"
                     }
-                },
-                "energyMetersHeader": {
-                    "type": "header",
-                    "text": "Energy Meters",
-                    "size": 2,
-                    "newLine": true
-                },
-                "energyMetersWarnUpdateTime": {
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12,
-                    "type": "staticText",
-                    "text": "WARNING: Values below 2 seconds may cause heavy system load!",
-                    "newLine": true,
-                    "hidden": "if ( (data.e380Delay < 2) || (data.e3100cbDelay < 2) ) { return false; }; return true;",
-                    "style": {
-                        "color": "red"
-                    }
-                },
-                "e380Active": {
-                    "xs": 12,
-                    "sm": 2,
-                    "md": 2,
-                    "lg": 2,
-                    "xl": 2,
-                    "type": "checkbox",
-                    "label": "active",
-                    "tooltip": "Activate communication",
-                    "default" : false,
-                    "newLine": true
-                },
-                "e380Name": {
-                    "xs": 12,
-                    "sm": 2,
-                    "md": 2,
-                    "lg": 2,
-                    "xl": 2,
-                    "type": "text",
-                    "label": "Device state name",
-                    "tooltip": "This text will be used as base for object tree",
-                    "default" : "e380",
-                    "newLine": false
-                },
-                "e380Delay": {
-                    "xs": 12,
-                    "sm": 2,
-                    "md": 2,
-                    "lg": 2,
-                    "xl": 2,
-                    "type": "number",
-                    "label": "Min. update time (s)",
-                    "tooltip": "Minumum update time for states. 0 for immediate update.",
-                    "default" : 5,
-                    "min": 0,
-                    "newLine": false
-                },
-                "e3100cbActive": {
-                    "xs": 12,
-                    "sm": 2,
-                    "md": 2,
-                    "lg": 2,
-                    "xl": 2,
-                    "type": "checkbox",
-                    "label": "active",
-                    "tooltip": "Activate communication",
-                    "default" : false,
-                    "newLine": true
-                },
-                "e3100cbName": {
-                    "xs": 12,
-                    "sm": 2,
-                    "md": 2,
-                    "lg": 2,
-                    "xl": 2,
-                    "type": "text",
-                    "label": "Device state name",
-                    "tooltip": "This text will be used as base for object tree",
-                    "default" : "e3100cb",
-                    "newLine": false
-                },
-                "e3100cbDelay": {
-                    "xs": 12,
-                    "sm": 2,
-                    "md": 2,
-                    "lg": 2,
-                    "xl": 2,
-                    "type": "number",
-                    "label": "Min. update time (s)",
-                    "tooltip": "Minumum update time for states. 0 for immediate update.",
-                    "default" : 5,
-                    "min": 0,
-                    "newLine": false
                 },
                 "tableHdrCol": {
                     "type": "header",

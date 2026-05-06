@@ -29,7 +29,7 @@
     "List of datapoints":"List of data points",
     "Start scan for datapoints of all devices":"Start scan for data points of all devices",
     "Confirm scan for datapoints":"Confirm scan for data points",
-    "Scan will take up to 5 minutes. Plaese make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.":"Scan will take up to 5 minutes. Plaese make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
+    "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.":"Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
     "OK":"OK",
     "Cancel":"Cancel",
     "Select device":"Select device",
@@ -75,5 +75,16 @@
     "Second CAN Adapter":"Second CAN Adapter",
     "Device mame of CAN adapter connected to second bus, e.g. can1":"Device mame of CAN adapter connected to second bus, e.g. can1",
     "Assignments to second CAN Adapter":"Assignments to second CAN Adapter",
-    "Collecting Data on second CAN Adapter":"Collecting Data on second CAN Adapter"
+    "Collecting Data on second CAN Adapter":"Collecting Data on second CAN Adapter",
+    "Detected during last device scan. Run scan to update.":"Detected during last device scan. Run scan to update.",
+    "Detected energy meters":"Detected energy meters",
+    "Energy meter detection and configuration":"Energy meter detection and configuration",
+    "Detected Collect CAN IDs":"Detected Collect CAN IDs",
+    "Topology summary (JSON)":"Topology summary (JSON)",
+    "Topology summary (HTML)":"Topology summary (HTML)",
+    "Save all data point values to object tree during scan":"Save all data point values to object tree during scan",
+    "When unchecked, values and metadata are updated for already existing data point objects only. New data point objects are not created during the scan — they are created automatically on first data receipt after the scan.":"When unchecked, values and metadata are updated for already existing data point objects only. New data point objects are not created during the scan — they are created automatically on first data receipt after the scan.",
+    "Run the scan above to discover all data points on your devices and add metadata (description, unit, access). This is required before writing to any data point and recommended after every adapter or device firmware update.":"Run the scan above to discover all data points on your devices and add metadata (description, unit, access). This is required before writing to any data point and recommended after every adapter or device firmware update.",
+    "► After the scan, browse and manage the discovered data points using the 'datapoints page', which is accessible via the link button in the adapter's instance row.":"► After the scan, browse and manage the discovered data points using the 'datapoints page', which is accessible via the link button in the adapter's instance row.",
+    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.":"► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog."
 }
