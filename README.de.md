@@ -210,11 +210,11 @@ Die **e3oncan Datenpunkte**-Seite ist die zentrale Stelle zum Durchsuchen von Da
 
 Alle Geräte und erkannte Energiezähler werden als aufklappbare Karten angezeigt, standardmäßig zugeklappt für einen schnellen Überblick über das gesamte System. Ein Klick auf den Karten-Header klappt die Karte auf. Das Suchfeld filtert nach Name oder ID, passende Karten werden automatisch ausgeklappt.
 
-Wenn für ein Gerät noch kein Datenpunktscan durchgeführt wurde, erscheint oben auf der Seite ein Warnbanner als Erinnerung.
+Wenn für ein Gerät noch kein Datenpunktscan durchgeführt wurde, erscheint oben auf der Seite ein Warnbanner als Erinnerung. Wenn ein Scan vorhanden ist, die in v1.x eingeführte Collect-Auto-Erkennung aber noch nicht ausgeführt wurde, empfiehlt ein Info-Banner einen erneuten Scan. Dieser Hinweis kann per Instanz dauerhaft ausgeblendet werden (Schaltfläche **Nicht mehr anzeigen**).
 
 **Gerätekarten**
 
-Jede Gerätekarte listet ihre Datenpunkte mit ID, Name, Codec und Zeitplaneinstellungen auf. Der Collect-Schalter und die minimale Aktualisierungszeit erscheinen im Karten-Header. Wenn während des Datenpunktscans Collect-Traffic vom Gerät erkannt wurde, wird im Karten-Header ein grünes Pin-Symbol als Bestätigung angezeigt.
+Jede Gerätekarte listet ihre Datenpunkte mit ID, Name, Codec und Zeitplaneinstellungen auf. Der Collect-Schalter und die minimale Aktualisierungszeit erscheinen im Karten-Header. Wenn während des Datenpunktscans Collect-Traffic vom Gerät erkannt wurde, wird im Karten-Header ein grünes Pin-Symbol als Bestätigung angezeigt. Sind Datenpunkte eingeplant, erscheint ein grünes **N scheduled**-Badge — ein Klick darauf klappt die Karte auf und zeigt nur die eingeplanten Datenpunkte. Nochmaliger Klick auf das Badge hebt den Filter auf; ein Klick auf den Karten-Header hebt den Filter auf und klappt die Karte ein oder vollständig auf, je nachdem, ob das Badge sie geöffnet hatte.
 
 **Energiezähler-Karten**
 
@@ -376,51 +376,10 @@ Ja. Den State `e3oncan.0.<GERÄT>.cmnd.udsReadByDid` bearbeiten und eine Liste v
 Wenn Ihnen dieses Projekt gefällt — oder Sie einfach großzügig sind — würde ich mich über ein Bier freuen. Prost! :beers:
 
 ## Changelog
-<!--
-    Placeholder for the next version (at the beginning of the line):
-    ### **WORK IN PROGRESS**
--->
-### **WORK IN PROGRESS**
-* (MyHomeMyData) Behoben: Beim Speichern von Schedules in der Datenpunkte-Seite konnten unter bestimmten Umständen veraltete Einträge verbleiben
-* (MyHomeMyData) Topology-Schaltfläche in der Datenpunkte-Seite ergänzt; öffnet das Bus-Topologie-Diagramm in einem modalen Dialog
-* (MyHomeMyData) Scan-Status-Erkennung verbessert: nutzt `udsDidsWritable` statt `didsMetaDict`, um zuverlässig zu erkennen, ob ein Datenpunktscan durchgeführt wurde
-* (MyHomeMyData) Hinweis auf erneuten Scan in der Datenpunkte-Seite ergänzt, wenn ein Scan vorhanden, aber die Collect-Erkennung noch nicht durchgeführt wurde
 
-### 1.0.0-beta.1 (2026-04-30)
-* (MyHomeMyData) Bus-Topologie-Analyse wird jetzt automatisch nach dem Datenpunktscan erstellt; Ergebnisse werden in `info.topology` (JSON) und `info.topologyHtml` (HTML) gespeichert; Details im Readme
-* (MyHomeMyData) Eingabevalidierung für Intervall- und Verzögerungsfelder in der Datenpunkte-Seite ergänzt — nur positive ganze Zahlen werden akzeptiert
+### Historie der Änderungen
 
-### 1.0.0-beta.0 (2026-04-26)
-* (MyHomeMyData) Neue e3oncan Datenpunkte-Webseite, direkt in der Adapterinstanzzeile verankert
-* (MyHomeMyData) Energiezähler (E380, E3100CB) werden jetzt während des Gerätescans durch passives CAN-Lauschen auf beiden Kanälen automatisch erkannt
-* (MyHomeMyData) State-Namen für Energiezähler werden automatisch anhand von CAN-Adresse und Kanal vergeben; Details im Readme
-* (MyHomeMyData) Collect-Schalter und Verzögerung für Energiezähler werden ausschließlich in der e3oncan Datenpunkte-Seite konfiguriert; Änderungen werden nach Adapter-Neustart wirksam
-* (MyHomeMyData) Beim ersten Start nach einem Upgrade wird die Aktiv-Einstellung automatisch aus der bisherigen Adapterkonfiguration migriert
-* (MyHomeMyData) Collect-fähige Geräte werden jetzt während des Datenpunktscans durch passives CAN-Lauschen automatisch erkannt; ein Pin-Symbol wird im Gerätekarten-Header für jedes erkannte Gerät angezeigt
-* (MyHomeMyData) Option hinzugefügt, das Speichern von Datenpunktwerten während des Datenpunktscans zu unterdrücken
-
-### 0.11.1 (2026-04-23)
-* (MyHomeMyData) Robustheit verbessert: Ein Datenpunkt der Länge null wird als „negative response" behandelt
-* (MyHomeMyData) Metadaten werden jetzt auch nach dem Löschen eines Datenpunkts wiederhergestellt
-* (MyHomeMyData) Testfälle für deutsche Systemsprache angepasst
-
-### 0.11.0 (2026-04-14)
-* (MyHomeMyData) Für volle Unterstützung von Varianten-Datenpunkten und Metadaten bitte einen Gerätescan gefolgt von einem Datenpunktscan durchführen
-* (MyHomeMyData) Unterstützung für Varianten-Datenpunkte und Geräte-Datenformatkonfiguration hinzugefügt; Details unter https://github.com/MyHomeMyData/ioBroker.e3oncan/lib/data-points.md
-* (MyHomeMyData) Metadaten zu mehreren Datenpunkten hinzugefügt, z. B. Beschreibung, Einheit, Link zu weiteren Infos
-* (MyHomeMyData) Beim Datenpunktscan werden jetzt Metadaten zu den Datenpunkt-Objekten hinzugefügt
-* (MyHomeMyData) Handhabung schreibbarer Datenpunkte geändert; diese Information ist jetzt auch in der Datenpunktdefinition verfügbar; die Handhabung der Whitelist für Schreibzugriffe ist unverändert
-* (MyHomeMyData) Beim Gerätescan werden die verwendeten Datenformate (Datenpunkt 382) ausgewertet
-* (MyHomeMyData) Struktur vieler Datenpunkte aktualisiert; Details im [Changelog](lib/data-points.md#changelog-of-data-point-definitions)
-
-### 0.10.14 (2025-11-03)
-* (MyHomeMyData) Elemente zu enums.js basierend auf PR Nr. 182 von open3e hinzugefügt
-* (MyHomeMyData) Konfiguration der Dids-Scan-Grenzen im Quellcode vereinfacht
-* (MyHomeMyData) Scan bis Did 3338 erweitert
-* (MyHomeMyData) Hinweis zum Scanbereich im Readme ergänzt
-* (MyHomeMyData) Korrekturen für Issue #169 (Repository Checker)
-* (MyHomeMyData) Bugfix: Manuelle Änderung gerätespezifischer Dids wurde für Collect-Worker nicht ausgewertet
-* (MyHomeMyData) Liste der Datenpunkte für E3-Geräte auf Version 20251102 aktualisiert
+Die Changelog-Einträge sind in der englischen Verison der (README.MD)[README.MD#changelog] verfügbar.
 
 ### Ältere Versionen
 

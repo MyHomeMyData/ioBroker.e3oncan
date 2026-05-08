@@ -229,11 +229,11 @@ The **e3oncan datapoints** page is the primary place for browsing data points an
 
 All devices and any detected energy meters are shown as expandable cards, starting collapsed so you get an overview of your whole system at a glance. Click a card header to expand it. The search box filters by name or ID, and matching cards are expanded automatically.
 
-If a data point scan has not been performed yet for a device, a warning banner is shown at the top of the page as a reminder.
+If a data point scan has not been performed yet for a device, a warning banner is shown at the top of the page as a reminder. If a scan has been done but the Collect auto-detection introduced in v1.x has not yet run, an info banner recommends running a new data point scan. This hint can be permanently dismissed per instance with the **Don't show again** button.
 
 **Device cards**
 
-Each device card lists its data points with ID, name, codec, and schedule settings. The Collect toggle and min. update time appear in the card header. If Collect traffic from the device was detected during the data point scan, a green pin icon is shown in the card header as a confirmation.
+Each device card lists its data points with ID, name, codec, and schedule settings. The Collect toggle and min. update time appear in the card header. If Collect traffic from the device was detected during the data point scan, a green pin icon is shown in the card header as a confirmation. If any data points are scheduled, a green **N scheduled** badge appears — click it to expand the card and show only the scheduled data points. Click the badge again to remove the filter; clicking the card header removes the filter and collapses or fully expands the card, depending on whether the badge had opened it.
 
 **Energy meter cards**
 
@@ -399,6 +399,11 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Fixed: re-scan hint was incorrectly shown when a v1.x scan had been performed but found no Collect-capable devices
+* (MyHomeMyData) Re-scan hint can now be permanently dismissed per instance via a "Don't show again" button
+* (MyHomeMyData) Clicking the green scheduled badge on a device card filters the view to show only its scheduled data points; clicking the badge again or the card header restores the full view
+
 ### 1.0.0 (2026-05-06)
 * (MyHomeMyData) Adapter requires node.js >= 22 now
 * (MyHomeMyData) Improved scan status detection: uses `udsDidsWritable` instead of `didsMetaDict` to reliably detect whether a data point scan has been performed
