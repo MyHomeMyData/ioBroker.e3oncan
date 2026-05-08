@@ -400,8 +400,6 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (MyHomeMyData) Fixed: re-scan hint was incorrectly shown when a v1.x scan had been performed but found no Collect-capable devices
-* (MyHomeMyData) Re-scan hint can now be permanently dismissed per instance via a "Don't show again" button
 * (MyHomeMyData) Clicking the green scheduled badge on a device card filters the view to show only its scheduled data points; clicking the badge again or the card header restores the full view
 
 ### 1.0.0 (2026-05-06)
