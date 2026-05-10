@@ -401,6 +401,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Clicking the green scheduled badge on a device card filters the view to show only its scheduled data points; clicking the badge again or the card header restores the full view
+* (MyHomeMyData) Fixed: saving from the datapoints tab now preserves inactive schedules (disabled in the old config UI) for full backward compatibility
 
 ### 1.0.0 (2026-05-06)
 * (MyHomeMyData) Adapter requires node.js >= 22 now

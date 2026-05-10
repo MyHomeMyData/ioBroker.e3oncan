@@ -559,7 +559,10 @@
 
             const tabDevAddrs = new Set(allDevices.map(function(d) { return Number(d.devAddr); }));
             const newSchedules = (adapterNative.tableUdsSchedules || []).filter(function(s) {
-                return !tabDevAddrs.has(Number(s.udsSelectDevAddr));
+                // Keep schedules for devices not managed by this tab, and keep
+                // inactive schedules for tab devices (backward compatibility with
+                // the old config UI that allows disabling a schedule without deleting it).
+                return !tabDevAddrs.has(Number(s.udsSelectDevAddr)) || !s.udsScheduleActive;
             });
             const newCollectExt = JSON.parse(JSON.stringify(adapterNative.tableCollectCanExt || []));
             const newCollectInt = JSON.parse(JSON.stringify(adapterNative.tableCollectCanInt || []));
