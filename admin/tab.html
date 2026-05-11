@@ -125,6 +125,8 @@
         let sock = null;
         let loadedEnergyMeters = {};
         let topologyHtml = '';
+        let scheduledFilter = null;
+        let filterWasCollapsed = false;
 
         document.getElementById('btn-dismiss-rescan-hint').addEventListener('click', function() {
             localStorage.setItem('rescanHintDismissed_' + namespace, '1');
@@ -317,7 +319,7 @@
                     '<div class="dev-name-col"><strong>' + dev.devStateName + '</strong>' +
                     '<code class="ms-2 small">' + dev.devAddr + '</code>' +
                     '<span class="badge bg-secondary ms-2">' + dev.dids.length + ' DIDs</span>' +
-                    (activeCount > 0 ? '<span class="badge bg-success ms-1 scheduled-badge">' + activeCount + ' scheduled</span>' : '') +
+                    (activeCount > 0 ? '<span class="badge ' + (scheduledFilter === dev.devStateName ? 'bg-primary' : 'bg-success') + ' ms-1 scheduled-badge" style="cursor:pointer" onclick="event.stopPropagation();toggleScheduledFilter(\'' + dev.devStateName.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + '\')">' + activeCount + ' scheduled</span>' : '') +
                     '</div>' +
                     collectHtml +
                     '</div>' +
@@ -338,7 +340,17 @@
                 const chevron = card.querySelector('.bi-chevron-down');
                 card.querySelector('.card-header').addEventListener('click', function(e) {
                     if (e.target.closest('.collect-area')) return;
-                    bootstrap.Collapse.getOrCreateInstance(collapseEl).toggle();
+                    if (scheduledFilter === dev.devStateName) {
+                        scheduledFilter = null;
+                        const badge = card.querySelector('.scheduled-badge');
+                        if (badge) { badge.classList.remove('bg-primary'); badge.classList.add('bg-success'); }
+                        if (!filterWasCollapsed) {
+                            bootstrap.Collapse.getOrCreateInstance(collapseEl).hide();
+                        }
+                        filterRows();
+                    } else {
+                        bootstrap.Collapse.getOrCreateInstance(collapseEl).toggle();
+                    }
                 });
                 chevron.style.transform = 'rotate(-90deg)';
                 collapseEl.addEventListener('hide.bs.collapse', function() { chevron.style.transform = 'rotate(-90deg)'; });
@@ -398,9 +410,13 @@
             const schedMode = document.querySelector('input[name="schedFilter"]:checked').value;
             const ivStr = document.getElementById('filter-interval-val').value.trim();
             const ivFilter = (schedMode === 'interval' && ivStr) ? parseInt(ivStr, 10) : null;
-            const hasActiveFilter = search || schedMode !== 'all';
+            const hasActiveFilter = search || schedMode !== 'all' || scheduledFilter;
 
             document.querySelectorAll('.ecu-group').forEach(function(group) {
+                if (scheduledFilter && group.dataset.devStateName !== scheduledFilter) {
+                    group.style.display = 'none';
+                    return;
+                }
                 let visibleCount = 0;
                 group.querySelectorAll('tbody tr').forEach(function(row) {
                     const textOk = !search ||
@@ -408,7 +424,11 @@
                         (row.dataset.name || '').includes(search) ||
                         (row.dataset.desc || '').includes(search);
                     let schedOk = true;
-                    if (schedMode === 'onstart') {
+                    if (scheduledFilter) {
+                        const onstart = row.querySelector('.onstart-check').checked;
+                        const iv = row.querySelector('.interval-input').value.trim();
+                        schedOk = onstart || iv !== '';
+                    } else if (schedMode === 'onstart') {
                         schedOk = row.querySelector('.onstart-check').checked;
                     } else if (schedMode === 'interval') {
                         const iv = row.querySelector('.interval-input').value.trim();
@@ -439,6 +459,34 @@
             });
         }
 
+        function toggleScheduledFilter(devStateName) {
+            let group = null;
+            document.querySelectorAll('.ecu-group').forEach(function(g) {
+                if (g.dataset.devStateName === devStateName) group = g;
+            });
+            const collapseEl = group ? group.querySelector('.collapse') : null;
+
+            if (scheduledFilter === devStateName) {
+                scheduledFilter = null;
+                if (filterWasCollapsed && collapseEl) {
+                    bootstrap.Collapse.getOrCreateInstance(collapseEl).hide();
+                }
+            } else {
+                filterWasCollapsed = collapseEl ? !collapseEl.classList.contains('show') : false;
+                scheduledFilter = devStateName;
+                if (collapseEl) bootstrap.Collapse.getOrCreateInstance(collapseEl).show();
+            }
+
+            document.querySelectorAll('.ecu-group').forEach(function(g) {
+                const badge = g.querySelector('.scheduled-badge');
+                if (!badge) return;
+                const isActive = scheduledFilter && g.dataset.devStateName === scheduledFilter;
+                badge.classList.toggle('bg-success', !isActive);
+                badge.classList.toggle('bg-primary', !!isActive);
+            });
+            filterRows();
+        }
+
         function markChanged() {
             hasChanges = true;
             document.getElementById('btn-save').disabled = false;
@@ -462,6 +510,8 @@
                 if (!badge) {
                     badge = document.createElement('span');
                     badge.className = 'badge bg-success ms-1 scheduled-badge';
+                    badge.style.cursor = 'pointer';
+                    badge.onclick = (function(name) { return function(e) { e.stopPropagation(); toggleScheduledFilter(name); }; })(card.dataset.devStateName);
                     nameCol.appendChild(badge);
                 }
                 badge.textContent = count + ' scheduled';
@@ -509,7 +559,10 @@
 
             const tabDevAddrs = new Set(allDevices.map(function(d) { return Number(d.devAddr); }));
             const newSchedules = (adapterNative.tableUdsSchedules || []).filter(function(s) {
-                return !tabDevAddrs.has(Number(s.udsSelectDevAddr));
+                // Keep schedules for devices not managed by this tab, and keep
+                // inactive schedules for tab devices (backward compatibility with
+                // the old config UI that allows disabling a schedule without deleting it).
+                return !tabDevAddrs.has(Number(s.udsSelectDevAddr)) || !s.udsScheduleActive;
             });
             const newCollectExt = JSON.parse(JSON.stringify(adapterNative.tableCollectCanExt || []));
             const newCollectInt = JSON.parse(JSON.stringify(adapterNative.tableCollectCanInt || []));
