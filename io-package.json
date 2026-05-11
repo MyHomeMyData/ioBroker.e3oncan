@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "news": {
+      "1.0.1": {
+        "en": "Clicking the green scheduled badge on a device card filters the view to show only its scheduled data points; clicking the badge again or the card header restores the full view\nFixed: saving from the datapoints tab now preserves inactive schedules (disabled in the old config UI) for full backward compatibility",
+        "de": "Ein Klick auf das grüne Badge auf einer Gerätekarte filtert die Ansicht für die aktivierten Datenpunkte; erneutes Klicken hebt den Filter wieder auf\nBehoben: Speichern von der Registerkarte Datenpunkte bewahrt nun inaktive Zeitpläne (in der alten config UI) für volle Rückwärtskompatibilität",
+        "ru": "Нажатие зеленого значка на карте устройства фильтрует вид, чтобы показать только его запланированные точки данных; нажатие снова на значок или заголовок карты восстанавливает полный вид\nИсправлено: сохранение со вкладки «Точки данных» теперь сохраняет неактивные графики (отключены в старом интерфейсе конфигурирования) для полной обратной совместимости",
+        "pt": "Clicar no crachá agendado verde num cartão de dispositivo filtra a vista para mostrar apenas os seus pontos de dados agendados; clicar novamente no crachá ou o cabeçalho do cartão restaura a visão completa\nCorrigido: salvar da aba pontos de dados agora preserva agendas inativas (desativadas na interface de configuração antiga) para compatibilidade com o backward completo",
+        "nl": "Klik op de groene geplande badge op een apparaatkaart filtert het uitzicht om alleen de geplande datapunten te tonen; opnieuw op de badge klikken of de kaartkop herstelt de volledige weergave\nFixed: opslaan vanaf het tabblad datapoints bewaart nu inactieve schema's (uitgeschakeld in de oude configuratie-UI) voor volledige compatibiliteit achterwaarts",
+        "fr": "Cliquer sur l'insigne programmé vert sur une carte de périphérique filtre la vue pour afficher seulement ses points de données programmés; cliquer de nouveau sur l'insigne ou l'en-tête de la carte restaure la vue complète\nCorrection : l'enregistrement depuis l'onglet datapoints préserve désormais les horaires inactifs (désactivés dans l'ancienne interface de configuration) pour une compatibilité arrière complète",
+        "it": "Fare clic sul badge verde programmato su una scheda di dispositivo filtra la vista per mostrare solo i suoi punti di dati programmati; fare clic sul badge di nuovo o l'intestazione della carta ripristina la vista completa\nRisolto: salvare dalla scheda datapoint ora conserva i programmi inattivi (disabilitati nella vecchia configurazione UI) per la piena compatibilità all'indietro",
+        "es": "Hacer clic en la placa verde programada en una tarjeta de dispositivo filtra la vista para mostrar sólo sus puntos de datos programados; hacer clic en la placa de nuevo o el encabezado de la tarjeta restaura la vista completa\nFijado: el ahorro de la ficha datapoints ahora preserva los horarios inactivos (desactivados en la antigua interfaz de usuario) para la compatibilidad atrasada completa",
+        "pl": "Kliknięcie zielonej planowej odznaki na karcie urządzenia filtruje widok, aby wyświetlić tylko swoje zaplanowane punkty danych; kliknięcie ponownie na odznakę lub nagłówek karty przywraca pełny widok\nNaprawiono: zapisywanie z zakładki datapoints teraz zachowuje nieaktywne harmonogramy (wyłączone w starym konfigu interfejsu) dla pełnej kompatybilności wstecznej",
+        "uk": "Натискання зеленої запланованої значки на картці пристрою фільтрує вигляд, щоб показати лише свої заплановані дані; натискання значка знову або заголовок картки відновлює повне подання\nВиправлено: збереження з вкладки даних тепер зберігає неактивні графіки (здатні у старій конфігурації UI) для повної сумісності з резервними сторонами",
+        "zh-cn": "在设备卡片上单击绿色的预定徽章过滤视图,只显示其预定的数据点;再次点击徽章或卡片头恢复全视图\n固定: 现在从数据点标签中保存不活动调度表( 在旧配置 UI 中已失效) , 完全向后兼容"
+      },
       "1.0.0": {
         "en": "Adapter requires node.js >= 22 now\nImproved scan status detection: uses `udsDidsWritable` instead of `didsMetaDict` to reliably detect whether a data point scan has been performed\nAdded re-scan recommendation hint in datapoints tab when a scan exists but Collect auto-detection has not yet been run",
         "de": "Adapter benötigt node.js >= 22\nVerbesserte Scan-Status-Erkennung: verwendet `udsDidsWritable` anstelle von `didsMetaDict`, um sicher zu erkennen, ob ein Datenpunkt-Scan durchgeführt wurde\nZusätzlicher re-scan Hinweis in Datenpunkte Tab, wenn ein Scan existiert, aber Collect Auto-Detektion noch nicht ausgeführt wurde",
@@ -80,19 +93,6 @@
         "pl": "Dodano \"Co nowego w sekcji v0.11.x\" do Readme z notatkami aktualizacji zmian struktury punktów danych",
         "uk": "Додано розділ \"Що нового в v0.11.x\" для читання з оновленнями нот для змін структури даних",
         "zh-cn": "添加「 v0. 11. x. 中的新内容」 部分至 Readme, 并附有数据点结构变化的升级注释"
-      },
-      "0.11.1": {
-        "en": "Improved robustness: Receiving a data point of length zero is treated as a \"negative response\"\nThe metadata is now also restored after a data point is deleted \nAligned test cases for German system language",
-        "de": "Verbesserte Robustheit: Der Empfang eines Datenpunktes der Länge Null wird als \"negative Antwort\" behandelt\nDie Metadaten werden nun auch wiederhergestellt, nachdem ein Datenpunkt gelöscht wurde\nTestfälle für deutsche Systemsprache angepasst",
-        "ru": "Повышение надежности: получение нулевой точки данных рассматривается как «отрицательный ответ»\nМетаданные также восстанавливаются после удаления точки данных\nВыровненные тесты для немецкого системного языка",
-        "pt": "Maior robustez: Receber um ponto de dados de comprimento zero é tratado como uma \"resposta negativa\"\nOs metadados também são restaurados depois de um ponto de dados ser apagado\nCasos de teste alinhados para a língua do sistema alemão",
-        "nl": "Verbeterde robuustheid: Het ontvangen van een datapunt van lengte nul wordt behandeld als een \"negatieve respons\"\nDe metagegevens worden nu ook hersteld nadat een datapunt is verwijderd\nUitgelijnde testcases voor de Duitse systeemtaal",
-        "fr": "Amélioration de la robustesse : la réception d'un point de données de longueur zéro est traitée comme une \"réponse négative\"\nLes métadonnées sont maintenant également restaurées après la suppression d'un point de données\nCas d'essai alignés pour la langue du système allemand",
-        "it": "Maggiore robustezza: la ricezione di un data point di lunghezza zero viene trattata come una \"risposta negativa\"\nI metadati vengono ora ripristinati anche dopo la cancellazione di un data point\nCasi di prova allineati per la lingua del sistema tedesco",
-        "es": "Mayor robustez: Recibir un punto de datos de la longitud cero es tratado como una \"respuesta negativa\"\nLos metadatos ahora también se restauran después de que se elimina un punto de datos\nCasos de prueba de los Alineados para el lenguaje del sistema alemán",
-        "pl": "Lepsza odporność: Otrzymanie punktu danych o długości zero jest traktowane jako \"odpowiedź negatywna\"\nMetadane są teraz również przywrócone po usunięciu punktu danych\nDopasowanie przypadków testowych dla języka niemieckiego",
-        "uk": "Покращена надійність: Отримання точки даних довжини нульового обробляється як \"негативна відповідь\"\nМетадані також відновлюються після видалення даних\nВизначені тестові випадки для німецької мови системи",
-        "zh-cn": "增强强性:接收长度为0的数据点作为\"负反应\"处理\n在删除一个数据点后, 元数据现在也被恢复\n德语系统语言的对齐测试例"
       }
     },
     "titleLang": {
