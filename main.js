@@ -16,7 +16,13 @@
 const utils = require('@iobroker/adapter-core');
 
 // Loading modules:
-const can = require('socketcan');
+let can = null;
+let canLoadError = null;
+try {
+    can = require('socketcan');
+} catch (e) {
+    canLoadError = e;
+}
 const storage = require('./lib/storage');
 const E3DidsDict = require('./lib/didsE3.json');
 const E3DidsVarDict = require('./lib/didsE3var.json');
@@ -99,6 +105,20 @@ class E3oncan extends utils.Adapter {
      */
     async onReady() {
         // Initialize your adapter here
+
+        if (!can) {
+            if (canLoadError && /compiled against a different Node\.js version/i.test(canLoadError.message)) {
+                this.log.error('Native module socketcan was compiled for a different Node.js version.');
+                this.log.error(
+                    'Fix: stop the adapter, run  iob rebuild  on the command line, then restart the adapter.',
+                );
+            } else {
+                this.log.error(
+                    `Failed to load native module socketcan: ${canLoadError ? canLoadError.message : 'unknown error'}`,
+                );
+            }
+            return;
+        }
 
         await this.log.info(`Startup of instance ${this.namespace}: Starting.`);
         //await this.log.debug('this.config:');
