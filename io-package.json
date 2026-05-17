@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "news": {
+      "1.0.2": {
+        "en": "Improved error message when native module socketcan fails to load after a Node.js version upgrade — adapter now logs a clear hint to run `iob rebuild`",
+        "de": "Verbesserte Fehlermeldung, wenn das native Modul socketcan nach einem Node.js-Versions-Upgrade nicht geladen werden kann — Adapter protokolliert jetzt einen klaren Hinweis: `iob rebuild` ausführen",
+        "ru": "Улучшенное сообщение об ошибке, когда встроенный модуль socketcan не загружается после обновления версии Node.js — адаптер теперь регистрирует четкий намек на запуск «перестроения iob»",
+        "pt": "Mensagem de erro melhorada quando socketcan módulo nativo não consegue carregar após uma atualização de versão Node.js — adaptador agora registra uma dica clara para executar `iob reconstruction`",
+        "nl": "Verbeterde foutmelding wanneer native module socketcan niet kan worden geladen na een Node.js versie upgrade-adapter logt nu een duidelijke hint uit om te starten",
+        "fr": "Message d'erreur amélioré lorsque le module natif socketcan ne parvient pas à se charger après une mise à jour de la version Node.js — adaptateur enregistre maintenant un indice clair pour exécuter `iob rebuild`",
+        "it": "Messaggio di errore migliorato quando socket del modulo nativo può non caricare dopo un aggiornamento della versione Node.js — l'adattatore ora registra un chiaro suggerimento per eseguire `iob rebuild`",
+        "es": "Mensaje de error mejorado cuando el módulo nativo socketcan no se carga después de una actualización de la versión Node.js — el adaptador ahora registra una clara pista para ejecutar `iob reconstrucción`",
+        "pl": "Ulepszony komunikat błędu, gdy natywny moduł socketcan nie wczyta po aktualizacji wersji Node.js - adapter teraz loguje wyraźną wskazówkę do uruchomienia 'iob rebuild'",
+        "uk": "Удосконалено повідомлення про помилку, коли рідний модуль розетки може не навантажувати після оновлення версії Node.js — адаптер тепер записує чіткий підказок для запуску `iob rebuild`",
+        "zh-cn": "当本地模块套接字在节点.js版本升级后无法加载时改进错误信息——适配器现在登录一个运行“ iob 重建” 的明确提示"
+      },
       "1.0.1": {
         "en": "Clicking the green scheduled badge on a device card filters the view to show only its scheduled data points; clicking the badge again or the card header restores the full view\nFixed: saving from the datapoints tab now preserves inactive schedules (disabled in the old config UI) for full backward compatibility",
         "de": "Ein Klick auf das grüne Badge auf einer Gerätekarte filtert die Ansicht für die aktivierten Datenpunkte; erneutes Klicken hebt den Filter wieder auf\nBehoben: Speichern von der Registerkarte Datenpunkte bewahrt nun inaktive Zeitpläne (in der alten config UI) für volle Rückwärtskompatibilität",
@@ -80,19 +93,6 @@
         "pl": "Przypadkowo wymienione punkty danych 1415- 1418 zostały usunięte z changelog wersji 0.11.0",
         "uk": "У випадково зазначених пунктах даних 1415-1418 було вилучено з зміни версії 0.11.0",
         "zh-cn": "无意中提到的1415-1418数据点已经从0.110"
-      },
-      "0.11.2": {
-        "en": "Added \"What's new in v0.11.x\" section to Readme with upgrade notes for data point structure changes",
-        "de": "Hinzugefügt \"Was ist neu in v0.11.x\" Abschnitt zu Readme mit Upgrade-Notizen für Datenpunkt Strukturänderungen",
-        "ru": "Добавлен раздел «Что нового в v0.11.x» в Readme с примечаниями об обновлении для изменения структуры точек данных",
-        "pt": "Adicionado \"O que há de novo na seção v0.11.x\" para Readme com notas de atualização para mudanças na estrutura de pontos de dados",
-        "nl": "Toegevoegd \"Wat is nieuw in v0.11.x\" sectie aan Readme met upgrade notities voor gegevenspunt structuur wijzigingen",
-        "fr": "Ajout de la section « Quoi de neuf dans v0.11.x » à Readme avec des notes de mise à jour pour les changements de structure des points de données",
-        "it": "Aggiunto \"What's new in v0.11.x\" sezione a Readme con le note di aggiornamento per le modifiche della struttura del punto di dati",
-        "es": "Añadido \"Lo nuevo en v0.11.x\" sección a Readme con notas de actualización para cambios de estructura de puntos de datos",
-        "pl": "Dodano \"Co nowego w sekcji v0.11.x\" do Readme z notatkami aktualizacji zmian struktury punktów danych",
-        "uk": "Додано розділ \"Що нового в v0.11.x\" для читання з оновленнями нот для змін структури даних",
-        "zh-cn": "添加「 v0. 11. x. 中的新内容」 部分至 Readme, 并附有数据点结构变化的升级注释"
       }
     },
     "titleLang": {
