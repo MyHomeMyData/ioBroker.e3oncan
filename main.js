@@ -107,7 +107,10 @@ class E3oncan extends utils.Adapter {
         // Initialize your adapter here
 
         if (!can) {
-            if (canLoadError && /compiled against a different Node\.js version/i.test(canLoadError.message)) {
+            if (
+                canLoadError &&
+                /compiled against a different Node\.js version|did not self-register/i.test(canLoadError.message)
+            ) {
                 this.log.error('Native module socketcan was compiled for a different Node.js version.');
                 this.log.error(
                     'Fix: stop the adapter, run  iob rebuild  on the command line, then restart the adapter.',
