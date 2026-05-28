@@ -15,6 +15,7 @@ export default [
         // specify files to exclude from linting here
         ignores: [
             '.dev-server/',
+            '.local_data/',
             '.vscode/',
             '*.test.js',
             'test/**/*.js',
