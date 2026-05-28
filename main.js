@@ -548,9 +548,11 @@ class E3oncan extends utils.Adapter {
                             const didLen = devDids.didsDictDevSpec[did].len;
                             if (!(didLen in didsDictVar[did])) {
                                 // No variant definition for stored length available, skip this did
-                                this.log.warn(
-                                    `  > Variant did ${did}: no definition for length ${String(didLen)} found in didsE3var. Skipping.`,
-                                );
+                                if (devDids.didsDictDevCom[did]?.len !== didLen) {
+                                    this.log.warn(
+                                        `  > Variant did ${did}: no definition for length ${String(didLen)} found in didsE3var. Skipping.`,
+                                    );
+                                }
                                 continue;
                             }
                             // Up to now, only RawCodec was known for this did or an user defined version or an older version of variant did => Use newly defined variant did
