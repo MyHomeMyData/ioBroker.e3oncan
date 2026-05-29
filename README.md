@@ -400,7 +400,8 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (MyHomeMyData) Update of list of data points for E3 devices to version 20260528 for common and 20260527 for variant data points
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20260528 for common and 20260527 for variant data points; For details see this [changelog](lib/data-points.md#changelog-of-data-point-definitions)
+* (MyHomeMyData) Suppress spurious variant-did warning when common dict covers the length
 
 ### 1.0.2 (2026-05-17)
 * (MyHomeMyData) Improved error message when native module socketcan fails to load after a Node.js version upgrade — adapter now logs a clear hint to run `iob rebuild`

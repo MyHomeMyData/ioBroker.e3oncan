@@ -140,6 +140,13 @@ Open the adapter configuration dialog, go to the **List of Data Points** tab, pr
 
 ## Changelog of Data Point Definitions
 
+### v1.0.3 (2026-05-31)
+* **ZigBee DIDs 2084–2319 structured**: ZigBeeDeviceProperty (incl. ArticleNumber), ZigBeeDeviceCurrentValues in 57-byte (gas heater) and 68-byte (heat pump) variants with WorkingMode, Setpoint, Display, ChildLock fields
+* **Room DIDs 1884–1943 structured**: RoomProperty (name, type, temperature control, window detection) and RoomCurrentValues (temperature, humidity min/max) in 84/85-byte variants
+* **New ViGuide-derived DID structures**: fuel cell metrics (1349–1362), energy coverage matrices (1354–1373), demand coverage (1383), battery/inverter subscription DIDs (257–266, 2214 ff.)
+* **Enums updated**: `ViCareDeviceTypes` (TRV, sensor, repeater, UFH actuator), `CurrentWorkingModeLevels` (Cooling=100)
+* Codec convention: `Unknown*` fields now consistently use `RawCodec`
+
 ### v0.11.0 (2026-04-14)
 
 Updated structure of the following data points:
