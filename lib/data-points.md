@@ -12,6 +12,7 @@
 - [Writability of data points](#writability-of-data-points)
 - [What happens on adapter start and after updates](#what-happens-on-adapter-start-and-after-updates)
 - [Running a data point scan](#running-a-data-point-scan)
+- [User-defined data point structures in udsDidsSpecific](#user-defined-data-point-structures-in-udsdidsspecific)
 - [Changelog of data point definitions](#changelog-of-data-point-definitions)
 
 ---
@@ -135,6 +136,49 @@ The scan dialog offers a checkbox **Save all data point values to object tree du
 **How to start a scan:**
 
 Open the adapter configuration dialog, go to the **List of Data Points** tab, press **Start scan …** and confirm with **OK**. The scan may take up to 5 minutes. Progress is visible in the adapter log (open a second browser tab).
+
+---
+
+### User-defined data point structures in udsDidsSpecific
+
+The state `e3oncan.0.<DEVICE>.info.udsDidsSpecific` stores the device-specific data point definitions that differ from the generic definitions in `didsE3.json`. This includes:
+
+- **Variant data points** — definitions automatically selected during a data point scan because the device returned a length that matches an entry in `didsE3var.json`.
+- **User-defined structures** — definitions created or modified manually by the user.
+
+Each entry in `udsDidsSpecific` is a JSON object keyed by the numeric data point ID. The adapter tracks the origin of each entry via the `source` field:
+
+| `source` value | Meaning |
+|---|---|
+| absent | User-created definition, or automatically placed before version tracking was introduced (adapter < 0.11.0) |
+| `"didsE3var_YYYYMMDD"` | Automatically set by the adapter; version of `didsE3var.json` at the time of the last update |
+
+**Behaviour during adapter start and data point scan:**
+
+- Entries with `source: "didsE3var_..."` are updated to the latest version from `didsE3var.json` if the structure has changed.
+- Entries without a `source` field that use `RawCodec` (automatically placed by old scans) are also updated.
+- A backup of overridden entries is stored in the `Backup` sub-section of `udsDidsSpecific`.
+
+**Protecting a user-defined structure from being overridden (adapter ≥ 1.0.3):**
+
+If you have manually defined or verified the structure of a variant data point and want to prevent the adapter from overriding it, add a `"protected": true` field to the entry in `udsDidsSpecific`. You can optionally add a `"reason"` field with a free-text description; this text is included in the adapter log whenever the protection is applied.
+
+Example entry for DID 2086:
+
+```json
+"2086": {
+  "codec": "O3EComplexType",
+  "len": 68,
+  "id": "ZigBeeOneDeviceCurrentValues",
+  "protected": true,
+  "reason": "Custom ZigBee TRV structure verified for my device",
+  "args": { ... }
+}
+```
+
+The adapter will log `Variant datapoint ... is protected by user. Update skipped. Reason: "..."` and leave the definition unchanged, both on adapter start and during a data point scan.
+
+> **Note:** Protection applies only to **variant** data points (those present in `didsE3var.json`). Definitions for common data points (from `didsE3.json`) are stored in `udsDidsCommon` and are not affected by this mechanism.
 
 ---
 

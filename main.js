@@ -562,6 +562,15 @@ class E3oncan extends utils.Adapter {
                             const devStruct = await devDids.getDidStruct(this, [], devDids.didsDictDevSpec[did]);
                             const E3Struct = await devDids.getDidStruct(this, [], didsDictVar[did][didLen]);
                             if (JSON.stringify(devStruct) != JSON.stringify(E3Struct)) {
+                                if (devDids.didsDictDevSpec[did].protected) {
+                                    const reason = devDids.didsDictDevSpec[did].reason
+                                        ? ` Reason: "${devDids.didsDictDevSpec[did].reason}"`
+                                        : '';
+                                    this.log.info(
+                                        `  > Variant datapoint ${didStateName} is protected by user. Update skipped.${reason}`,
+                                    );
+                                    continue;
+                                }
                                 this.log.info(
                                     `  > New or updated defintion of variant datapoint ${didStateName} is available. Updating.`,
                                 );
