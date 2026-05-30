@@ -172,7 +172,8 @@ Example entry for DID 2086:
   "id": "ZigBeeOneDeviceCurrentValues",
   "protected": true,
   "reason": "Custom ZigBee TRV structure verified for my device",
-  "args": { ... }
+  "args": { ... },
+  "source": "didsE3var_20260527"
 }
 ```
 
