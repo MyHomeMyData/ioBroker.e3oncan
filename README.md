@@ -125,8 +125,6 @@ Data point objects in the ioBroker object tree now carry metadata: description, 
 
 The detailed steps are described in the [Configuration guide](#configuration-guide) below.
 
-> **After upgrading Node.js:** Native modules used by this adapter must be rebuilt when the Node.js version changes. If the adapter fails to start after a Node.js upgrade, stop it, run `iob rebuild` on the command line, then start it again.
-
 ---
 
 ## Configuration guide
@@ -373,7 +371,7 @@ Yes, with conditions. If you only use Collect mode in this adapter, open3e can r
 
 **The adapter stopped working after a Node.js upgrade. What do I do?**
 
-This adapter uses native modules that must be rebuilt when the Node.js version changes. Stop the adapter, run `iob rebuild` on the command line, then start the adapter again. If the problem persists, please open an issue.
+From adapter version 1.0.3, the native CAN module (socketcan) uses N-API and no longer requires rebuilding after a Node.js upgrade. If you are running an older version, upgrade the adapter first. If the problem persists after upgrading, please open an issue.
 
 **What is different from the open3e project?**
 
@@ -403,6 +401,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20260528 for common and 20260527 for variant data points; For details see this [changelog](lib/data-points.md#changelog-of-data-point-definitions)
 * (MyHomeMyData) Suppress spurious variant-did warning when common dict covers the length
 * (MyHomeMyData) User-defined variant data point structures in `udsDidsSpecific` can now be protected from automatic updates by adding `"protected": true` (and an optional `"reason"` text) to the entry; see [documentation](lib/data-points.md#user-defined-data-point-structures-in-udsdidsspecific)
+* (MyHomeMyData) Updated socketcan dependency to 4.2.1 (N-API) — the native CAN module no longer needs to be rebuilt after a Node.js upgrade
 
 ### 1.0.2 (2026-05-17)
 * (MyHomeMyData) Improved error message when native module socketcan fails to load after a Node.js version upgrade — adapter now logs a clear hint to run `iob rebuild`

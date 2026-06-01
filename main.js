@@ -113,7 +113,7 @@ class E3oncan extends utils.Adapter {
             ) {
                 this.log.error('Native module socketcan was compiled for a different Node.js version.');
                 this.log.error(
-                    'Fix: stop the adapter, run  iob rebuild  on the command line, then restart the adapter.',
+                    'Fix: upgrade the adapter to version 1.0.3 or later. From that version, socketcan uses N-API and no longer needs to be rebuilt after a Node.js upgrade.',
                 );
             } else {
                 this.log.error(
@@ -1046,7 +1046,7 @@ class E3oncan extends utils.Adapter {
                 if (obj.callback) {
                     const result = [];
                     // eslint-disable-next-line jsdoc/check-tag-names
-                    for (const dev of /** @type {any[]} */ (Object.values(this.config.tableUdsDevices))) {
+                    for (const dev of /** @type {object[]} */ (Object.values(this.config.tableUdsDevices))) {
                         const devStateName = dev.devStateName;
                         const udsDids = new storage.storageDids({ stateBase: devStateName, device: devStateName });
                         await udsDids.readKnownDids(this, 'standby');
