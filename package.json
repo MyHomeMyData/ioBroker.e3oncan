@@ -22,7 +22,7 @@
     "url": "https://github.com/MyHomeMyData/ioBroker.e3oncan.git"
   },
   "engines": {
-    "node": ">= 22"
+    "node": ">= 22.9.0"
   },
   "os": [
     "linux"

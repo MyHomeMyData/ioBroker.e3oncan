@@ -3,7 +3,7 @@
     "type": "tabs",
     "tabsStyle": {
         "width": "calc(100% - 100px)"
-        },
+    },
     "items": {
         "tabCanAdapter": {
             "type": "panel",
@@ -56,7 +56,7 @@
                     "xl": 2,
                     "type": "text",
                     "tooltip": "Device mame of CAN adapter connected to UDS-capable bus, e.g. can0",
-                    "default" : "can0",
+                    "default": "can0",
                     "newLine": false
                 },
                 "canExtActivated": {
@@ -68,9 +68,9 @@
                     "type": "checkbox",
                     "label": "Connect to Adapter",
                     "tooltip": "Check, if this adapter shall be used.",
-                    "default" : false,
+                    "default": false,
                     "newLine": false
-                },        
+                },
                 "canIntHeader": {
                     "type": "header",
                     "text": "Second CAN Adapter",
@@ -85,10 +85,10 @@
                     "xl": 2,
                     "type": "text",
                     "tooltip": "Device mame of CAN adapter connected to second bus, e.g. can1",
-                    "default" : "can1",
+                    "default": "can1",
                     "newLine": false
                 },
-               "canIntActivated": {
+                "canIntActivated": {
                     "xs": 12,
                     "sm": 4,
                     "md": 4,
@@ -97,9 +97,9 @@
                     "type": "checkbox",
                     "label": "Connect to Adapter",
                     "tooltip": "Check, if this adapter shall be used.",
-                    "default" : false,
+                    "default": false,
                     "newLine": false
-                }        
+                }
             }
         },
         "tabUdsDevices": {
@@ -117,7 +117,6 @@
                     "text": "List of available devices",
                     "size": 2
                 },
-
                 "tableUdsDevicesWarning": {
                     "xs": 12,
                     "sm": 12,
@@ -201,10 +200,11 @@
                     "lg": 12,
                     "xl": 12
                 },
-
                 "tableUdsDevices": {
                     "type": "table",
-                    "uniqueColumns": ["devStateName"],
+                    "uniqueColumns": [
+                        "devStateName"
+                    ],
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -271,7 +271,6 @@
                         }
                     ]
                 },
-
                 "energyMeterHdr": {
                     "type": "header",
                     "text": "Energy meters on CAN bus",
@@ -279,13 +278,21 @@
                     "newLine": true
                 },
                 "energyMeterHint": {
-                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "type": "staticText",
                     "text": "Detected during last device scan. Run scan to update.",
                     "newLine": true
                 },
                 "energyMeterDetectionResult": {
-                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "type": "text",
                     "label": "Detected energy meters",
                     "readOnly": true,
@@ -297,11 +304,18 @@
             "type": "panel",
             "label": "List of datapoints",
             "hidden": "if ((data.tableUdsDevices) && (data.tableUdsDevices.length == 0)) { return true; } else {return false; }",
-            "xs": 12, "sm": 12, "md": 6,"lg": 4, "xl": 4,
-
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
             "items": {
                 "tableUdsDidsWarning": {
-                    "xs": 12, "sm": 12, "md": 12, "lg": 12,"xl": 12,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "type": "staticText",
                     "text": "Configuration requires a running adapter instance!",
                     "hidden": "_alive",
@@ -311,7 +325,11 @@
                     }
                 },
                 "saveDidsOnScan": {
-                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "type": "checkbox",
                     "label": "Save all data point values to object tree during scan",
                     "tooltip": "When unchecked, values and metadata are updated for already existing data point objects only. New data point objects are not created during the scan — they are created automatically on first data receipt after the scan.",
@@ -334,33 +352,59 @@
                     },
                     "hidden": "!_alive",
                     "newLine": true,
-                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "tableUdsDidsDivider": {
                     "type": "divider",
                     "newLine": true,
-                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "tableUdsDidsHint1": {
                     "type": "staticText",
                     "newLine": true,
-                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "text": "Run the scan above to discover all data points on your devices and add metadata (description, unit, access). This is required before writing to any data point and recommended after every adapter or device firmware update.",
-                    "style": { "fontSize": "150%" }
+                    "style": {
+                        "fontSize": "150%"
+                    }
                 },
                 "tableUdsDidsHint2": {
                     "type": "staticText",
                     "newLine": true,
-                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "text": "► After the scan, browse and manage the discovered data points using the 'datapoints page', which is accessible via the link button in the adapter's instance row.",
-                    "style": { "fontSize": "150%" }
+                    "style": {
+                        "fontSize": "150%"
+                    }
                 },
                 "tableUdsDidsHint3": {
                     "type": "staticText",
                     "newLine": true,
-                    "xs": 12, "sm": 12, "md": 12, "lg": 12, "xl": 12,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "text": "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.",
-                    "style": { "fontSize": "150%" }
+                    "style": {
+                        "fontSize": "150%"
+                    }
                 }
             }
         },
@@ -393,7 +437,6 @@
                     "text": "Collecting Data on UDS CAN Adapter",
                     "size": 2
                 },
-
                 "introTableColExt": {
                     "xs": 12,
                     "sm": 12,
@@ -405,7 +448,6 @@
                     "hidden": "if (data.tableUdsDevices) {for(let i=0; i<data.tableUdsDevices.length; i++){if (data.tableUdsDevices[i].collectCanId != '') return false;}; return true;} else {return true;}",
                     "newLine": true
                 },
-
                 "introTableColExtNoDevs": {
                     "xs": 12,
                     "sm": 12,
@@ -417,7 +459,6 @@
                     "hidden": "if (data.tableUdsDevices) {for(let i=0; i<data.tableUdsDevices.length; i++){if (data.tableUdsDevices[i].collectCanId != '') return true;}; return false;} else {return false;}",
                     "newLine": true
                 },
-
                 "tableColExtErrDevName": {
                     "xs": 12,
                     "sm": 12,
@@ -432,7 +473,6 @@
                         "color": "red"
                     }
                 },
-
                 "tableCollectCanExt": {
                     "type": "table",
                     "newLine": true,
@@ -455,14 +495,18 @@
                             "sort": false,
                             "default": true
                         },
-                        {   "type": "selectSendTo",
+                        {
+                            "type": "selectSendTo",
                             "title": "Select device",
                             "command": "getExtColDeviceSelect",
                             "attr": "collectCanId",
                             "jsonData": "${JSON.stringify(globalData.tableUdsDevices)}",
                             "width": "15%",
                             "default": "Select device",
-                            "alsoDependsOn": ["collectActive","tableUdsDevices"],
+                            "alsoDependsOn": [
+                                "collectActive",
+                                "tableUdsDevices"
+                            ],
                             "newLine": false,
                             "validator": "if (data.collectCanId === 'Select device') { return false; } else { return true; }",
                             "validatorNoSaveOnError": true
@@ -486,7 +530,6 @@
                     "text": "Requesting data on UDS CAN Adapter via UDSonCAN",
                     "size": 2
                 },
-
                 "introTableUds": {
                     "xs": 12,
                     "sm": 12,
@@ -530,14 +573,18 @@
                             "step": 1,
                             "default": 0
                         },
-                        {   "type": "selectSendTo",
+                        {
+                            "type": "selectSendTo",
                             "title": "Select device",
                             "command": "getUdsDeviceSelect",
                             "attr": "udsSelectDevAddr",
                             "jsonData": "${JSON.stringify(globalData.tableUdsDevices)}",
                             "width": "15%",
                             "default": "Select device",
-                            "alsoDependsOn": ["udsSchedule","tableUdsDevices"],
+                            "alsoDependsOn": [
+                                "udsSchedule",
+                                "tableUdsDevices"
+                            ],
                             "newLine": false,
                             "validator": "if (data.udsSelectDevAddr === 'Select device') { return false; } else { return true; }",
                             "validatorNoSaveOnError": true
@@ -564,7 +611,6 @@
                         }
                     ]
                 }
-
             }
         },
         "tabCanAdapterInt": {
@@ -582,7 +628,6 @@
                     "text": "Collecting Data on second CAN Adapter",
                     "size": 2
                 },
-
                 "introTableColInt": {
                     "xs": 12,
                     "sm": 12,
@@ -593,7 +638,6 @@
                     "text": "Devices for collecting data. No writing to CAN bus. Press '+' to add device.",
                     "newLine": true
                 },
-
                 "tableCanAdapterIntWarning": {
                     "xs": 12,
                     "sm": 12,
@@ -632,7 +676,6 @@
                     "xl": 12,
                     "label": "",
                     "showSecondAddAt": 5,
-
                     "items": [
                         {
                             "type": "checkbox",
@@ -644,14 +687,18 @@
                             "sort": false,
                             "default": true
                         },
-                        {   "type": "selectSendTo",
+                        {
+                            "type": "selectSendTo",
                             "title": "Select device",
                             "command": "getIntColDeviceSelect",
                             "attr": "collectCanId",
                             "jsonData": "${JSON.stringify(globalData.tableUdsDevices)}",
                             "width": "15%",
                             "default": "Select device",
-                            "alsoDependsOn": ["collectActive","tableUdsDevices"],
+                            "alsoDependsOn": [
+                                "collectActive",
+                                "tableUdsDevices"
+                            ],
                             "newLine": false,
                             "validator": "if (data.collectCanId === 'Select device') { return false; } else { return true; }",
                             "validatorNoSaveOnError": true
