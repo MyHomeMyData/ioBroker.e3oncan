@@ -17,6 +17,7 @@
 ## Inhaltsverzeichnis
 
 - [Übersicht](#übersicht)
+- [Was ist neu in v1.0.3](#was-ist-neu-in-v103)
 - [Was ist neu in v1.0.0](#was-ist-neu-in-v100)
 - [Schnellstart](#schnellstart)
 - [Konfigurationsanleitung](#konfigurationsanleitung)
@@ -53,6 +54,30 @@ Welche Modi verfügbar sind, hängt von der Gerätekonfiguration ab. Weitere Det
 
 > Wichtige Teile dieses Adapters basieren auf dem [open3e](https://github.com/open3e)-Projekt.
 > Eine Python-basierte Collect-only-Implementierung mit MQTT ist unter [E3onCAN](https://github.com/MyHomeMyData/E3onCAN) verfügbar.
+
+---
+
+## Was ist neu in v1.0.3
+
+### Kein Rebuild mehr nach einem Node.js-Upgrade
+
+Das native CAN-Modul `socketcan` wurde auf Version 4.2.1 aktualisiert und verwendet jetzt die stabile **N-API**-Schnittstelle. Das Modul muss nach einem Wechsel der Node.js-Version nicht mehr neu kompiliert werden. Ein Upgrade von Node.js (z. B. von 22 auf 24) erfordert keinen `iob rebuild`-Schritt mehr — der Adapter startet ohne weitere Maßnahmen.
+
+### Filter für geplante Datenpunkte in der Datenpunkte-Seite
+
+Ein Klick auf das grüne Badge mit der Anzahl geplanter Datenpunkte auf einer Gerätekarte **filtert die Karte auf die geplanten Datenpunkte**. So lassen sich Zeitpläne für ein bestimmtes Gerät schnell prüfen und anpassen. Ein weiterer Klick auf das Badge oder auf den Kartenkopf stellt die vollständige Ansicht wieder her.
+
+### Schutz benutzerdefinierter Variantendatenpunkt-Definitionen
+
+Benutzerdefinierte Strukturen in `e3oncan.0.<GERÄT>.info.udsDidsSpecific` können jetzt durch das Setzen von `"protected": true` **vor automatischen Updates geschützt** werden. Ein optionales Feld `"reason"` wird in das Log geschrieben, wenn der Schutz greift. Ohne Schutz werden Variantendatenpunkte (die auch in `didsE3var.json` enthalten sind) weiterhin automatisch auf neuere Definitionen aktualisiert. Details stehen in der [Dokumentation](lib/data-points.md#user-defined-data-point-structures-in-udsdidsspecific).
+
+### Aktualisierte Datenpunkt-Definitionen
+
+Die Datenpunktdefinitionen wurden auf Version 20260528 (allgemein) und 20260527 (Varianten) aktualisiert. Highlights:
+- ZigBee-DIDs 2084–2319 vollständig strukturiert (Geräteeigenschaften, aktuelle Werte in 57- und 68-Byte-Varianten)
+- Raum-DIDs 1884–1943 strukturiert (Name, Typ, Temperaturregelung, Fenstererkennung, Min/Max-Luftfeuchte)
+- Neue ViGuide-basierte DID-Strukturen für Brennstoffzellenmetriken, Energiedeckung und Batterie-/Wechselrichter-Abonnements
+- `Unknown*`-Felder verwenden jetzt einheitlich `RawCodec`
 
 ---
 

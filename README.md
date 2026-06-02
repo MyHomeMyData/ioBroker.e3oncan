@@ -17,6 +17,7 @@
 ## Table of contents
 
 - [Overview](#overview)
+- [What's new in v1.0.3](#whats-new-in-v103)
 - [What's new in v1.0.0](#whats-new-in-v100)
 - [What's new in v0.11.x](#whats-new-in-v011x)
 - [Quick start](#quick-start)
@@ -54,6 +55,30 @@ Which modes are available depends on your device topology. See the [device topol
 
 > Important parts of this adapter are based on the [open3e](https://github.com/open3e) project.
 > A Python-based collect-only implementation using MQTT is available at [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
+
+---
+
+## What's new in v1.0.3
+
+### No more rebuild after a Node.js upgrade
+
+The native CAN module `socketcan` has been updated to version 4.2.1, which uses the stable **N-API** interface. The module no longer needs to be recompiled when the Node.js version changes. Upgrading Node.js (e.g. from 22 to 24) no longer requires running `iob rebuild` afterwards — the adapter starts without any additional steps.
+
+### Scheduled data point filter in the datapoints tab
+
+Clicking the green badge that shows the number of scheduled data points on a device card now **filters the card to show only scheduled data points**. This makes it easy to review or adjust scheduling for a specific device. Clicking the badge again or the card header restores the full view.
+
+### Protecting custom variant data point definitions
+
+User-defined structures in `e3oncan.0.<DEVICE>.info.udsDidsSpecific` can now be **protected from automatic updates** by adding `"protected": true` to the entry. An optional `"reason"` field is logged whenever the protection takes effect. Without protection, variant data point definitions (those also listed in `didsE3var.json`) are updated automatically when a newer definition is available — this behaviour is unchanged. See the [documentation](lib/data-points.md#user-defined-data-point-structures-in-udsdidsspecific) for details.
+
+### Updated data point definitions
+
+Data point definitions have been updated to version 20260528 (common) and 20260527 (variant). Highlights:
+- ZigBee DIDs 2084–2319 fully structured (device properties, current values in 57-byte and 68-byte variants)
+- Room DIDs 1884–1943 structured (name, type, temperature control, window detection, min/max humidity)
+- New ViGuide-derived DID structures for fuel cell metrics, energy coverage, and battery/inverter subscriptions
+- `Unknown*` fields now consistently use `RawCodec`
 
 ---
 
