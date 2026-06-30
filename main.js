@@ -384,6 +384,11 @@ class E3oncan extends utils.Adapter {
                                         `${this.namespace}.${dev.devStateName}.json.${didStateName}`,
                                         res.val,
                                     );
+                                    await devDids.setupCodecById(
+                                        cdi,
+                                        `${this.namespace}.${dev.devStateName}.${devDids.getDidStr(did)}_`,
+                                        dev.devUnits,
+                                    );
                                     await devDids.storeObjectTree(
                                         this,
                                         did,
@@ -422,6 +427,11 @@ class E3oncan extends utils.Adapter {
                                             did,
                                             cdi,
                                             devDids.toByteArray(raw),
+                                        );
+                                        await devDids.setupCodecById(
+                                            cdi,
+                                            `${this.namespace}.${dev.devStateName}.${devDids.getDidStr(did)}_`,
+                                            dev.devUnits,
                                         );
                                         await devDids.storeObjectTree(
                                             this,
@@ -497,6 +507,11 @@ class E3oncan extends utils.Adapter {
                                         did,
                                         cdi,
                                         devDids.toByteArray(raw),
+                                    );
+                                    await devDids.setupCodecById(
+                                        cdi,
+                                        `${this.namespace}.${dev.devStateName}.${devDids.getDidStr(did)}_`,
+                                        dev.devUnits,
                                     );
                                     await devDids.storeObjectTree(
                                         this,
@@ -596,6 +611,11 @@ class E3oncan extends utils.Adapter {
                                         res.idStr,
                                         `${this.namespace}.${dev.devStateName}.json.${didStateName}`,
                                         res.val,
+                                    );
+                                    await devDids.setupCodecById(
+                                        cdi,
+                                        `${this.namespace}.${dev.devStateName}.${devDids.getDidStr(did)}_`,
+                                        dev.devUnits,
                                     );
                                     await devDids.storeObjectTree(
                                         this,
