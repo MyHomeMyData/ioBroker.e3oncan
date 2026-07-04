@@ -17,6 +17,7 @@
 ## Table of contents
 
 - [Overview](#overview)
+- [What's new in v1.1.0](#whats-new-in-v110)
 - [What's new in v1.0.3](#whats-new-in-v103)
 - [What's new in v1.0.0](#whats-new-in-v100)
 - [What's new in v0.11.x](#whats-new-in-v011x)
@@ -55,6 +56,26 @@ Which modes are available depends on your device topology. See the [device topol
 
 > Important parts of this adapter are based on the [open3e](https://github.com/open3e) project.
 > A Python-based collect-only implementation using MQTT is available at [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
+
+---
+
+## What's new in v1.1.0
+
+### Updated data point definitions
+
+Data point definitions have been updated to version 20260701 (common) and 20260630 (variant).
+
+### New O3ESwitch codec
+
+A new codec `O3ESwitch` has been added for data points whose structure depends on a device type discriminator byte. The first byte selects the active variant from a set of predefined codec branches. This enables full structured decoding of ZigBee device slot DIDs (2086–2143, 2262), where the decoded fields differ by device type (e.g. climate sensor, TRV, floor thermostat, actuator).
+
+### Decimal rounding for numeric codecs
+
+Numeric codecs (`O3EInt8`, `O3EInt16`, `O3EInt32`, `O3EInt64`, `O3EFloat32`) now support an optional `decimals` parameter. When set to a value greater than 0, the decoded result is rounded to that number of decimal places. This is used, for example, for `SignalLevel` (scale 2.55, decimals 2) to avoid excessively long floating-point values.
+
+### Units and metadata set at startup when data point structure changes
+
+When the adapter detects at startup that a data point's structure has changed (new version in `didsE3var.json` or `didsE3.json`), it now correctly registers units and descriptions for all sub-states of the rebuilt tree. Previously, units were only set during a data point scan; a subsequent scan was required to populate them after a structure update.
 
 ---
 
@@ -108,24 +129,6 @@ After the data point scan, the adapter automatically analyses the bus topology d
 
 - `info.topology` – structured JSON with all discovered UDS-accessible devices and topology elements (deduplicated across all topology matrices).
 - `info.topologyHtml` – a rendered HTML table, color-coded by bus type (CanInternal, CanExternal, CanRaw, ModBus, ServiceBus), with a UDS badge on devices that are also accessible via UDS. Ready for display in vis, jarvis, or any HTML-capable widget.
-
----
-
-## What's new in v0.11.x
-
-### Updated data point structures (action required when upgrading)
-
-Version 0.11.0 introduced updated definitions for many data points — new variant types, additional metadata (description, unit, links), and revised data format handling. **If you are upgrading from v0.10.x, please perform a device scan followed by a full data point scan** to apply the new definitions and metadata to your ioBroker object tree.
-
-For a detailed list of changed data points see the [data point changelog](lib/data-points.md#changelog-of-data-point-definitions).
-
-### Variant data points and device format configuration
-
-The adapter now handles variant data points — data points whose structure depends on the device's configuration (e.g. temperature unit °C/°F, date/time format). During the device scan, the relevant format configuration (data point 382) is read and stored. The data point scan then applies the correct codec for each device automatically.
-
-### Metadata on data point objects
-
-Data point objects in the ioBroker object tree now carry metadata: description, physical unit, read/write access flag, and links to further information where available. Metadata for existing objects is updated during each data point scan and is also restored if a data point object is deleted and re-created (added in v0.11.1).
 
 ---
 

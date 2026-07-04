@@ -185,6 +185,29 @@ The adapter will log `Variant datapoint ... is protected by user. Update skipped
 
 ## Changelog of Data Point Definitions
 
+### v1.1.0 (2026-07-05)
+
+**Variant data points (didsE3var.json, v20260630)**
+
+* **ZigBee current-values DIDs 2086–2143 and 2262** (68-byte variant): Restructured around a new `ViCareDevice` O3ESwitch discriminator that selects the decoded fields by device type:
+  - type 0 — empty slot (raw)
+  - type 1 — climate sensor: `ActualTemperature` (°C), `Humidity` (%)
+  - type 2 — TRV: `ActualTemperature` (°C), `ValveOpening` (%), `DeviceDisplayTurned`, `DeviceChildLockActive`, `DeviceTemperatureSetpoint` (°C)
+  - type 3 — floor thermostat / Verteiler: `FlowTemperature` (°C, int16 LE), `OperatingMode`
+  - type 4/5 — actuator NC/NO: `Demand` (%), `ValveState`
+  - `SignalLevel` (%) and `BatteryRssi` (dBm, signed) added to all types
+* **Room property DIDs 1884–1943** (85-byte variant): Added linked ZigBee device index fields; `ChildLockActive` description updated; `WindowDetection` enum corrected.
+* **DID 1603** (PointOfCommonCouplingPower): minor description update.
+
+**Common data points (didsE3.json, v20260701)**
+
+* **3 new DIDs** using `O3EFloat32`:
+  - 2990 `ElectricalEnergySystemBatteryCapacityDelta`
+  - 2991 `ElectricalEnergySystemBatteryCapacity`
+  - 2992 `ElectricalEnergySystemStateOfChargeUseable`
+* **Unit fixes**: DID 279 and 281 field `Actual`: unit corrected to °C (was empty); DID 321 field `Average`: unit corrected to °C (was hPa); DID 322 field `Average`: unit corrected to hPa (was °C).
+* `decimals` field added to all numeric sub-fields for consistency with the updated codec definition (value `0` — no change to decoded values).
+
 ### v1.0.3 (2026-05-31)
 * **ZigBee DIDs 2084–2319 structured**: ZigBeeDeviceProperty (incl. ArticleNumber), ZigBeeDeviceCurrentValues in 57-byte (gas heater) and 68-byte (heat pump) variants with WorkingMode, Setpoint, Display, ChildLock fields
 * **Room DIDs 1884–1943 structured**: RoomProperty (name, type, temperature control, window detection) and RoomCurrentValues (temperature, humidity min/max) in 84/85-byte variants
