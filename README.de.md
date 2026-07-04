@@ -17,6 +17,7 @@
 ## Inhaltsverzeichnis
 
 - [Übersicht](#übersicht)
+- [Was ist neu in v1.1.0](#was-ist-neu-in-v110)
 - [Was ist neu in v1.0.3](#was-ist-neu-in-v103)
 - [Was ist neu in v1.0.0](#was-ist-neu-in-v100)
 - [Schnellstart](#schnellstart)
@@ -54,6 +55,26 @@ Welche Modi verfügbar sind, hängt von der Gerätekonfiguration ab. Weitere Det
 
 > Wichtige Teile dieses Adapters basieren auf dem [open3e](https://github.com/open3e)-Projekt.
 > Eine Python-basierte Collect-only-Implementierung mit MQTT ist unter [E3onCAN](https://github.com/MyHomeMyData/E3onCAN) verfügbar.
+
+---
+
+## Was ist neu in v1.1.0
+
+### Aktualisierte Datenpunkt-Definitionen
+
+Die Datenpunktdefinitionen wurden auf Version 20260701 (allgemein) und 20260630 (Varianten) aktualisiert.
+
+### Neuer Codec O3ESwitch
+
+Ein neuer Codec `O3ESwitch` wurde für Datenpunkte ergänzt, deren Struktur von einem gerätespezifischen Diskriminator-Byte abhängt. Das erste Byte wählt die aktive Variante aus einem Satz vordefinierter Codec-Zweige. Damit wird die vollständig strukturierte Dekodierung der ZigBee-Geräteslot-DIDs (2086–2143, 2262) ermöglicht, bei denen die dekodierten Felder je nach Gerätetyp unterschiedlich sind (z. B. Klimasensor, Heizkörperthermostat, Fußbodenheizungsthermostat, Stellantrieb).
+
+### Dezimalrundung für numerische Codecs
+
+Numerische Codecs (`O3EInt8`, `O3EInt16`, `O3EInt32`, `O3EInt64`, `O3EFloat32`) unterstützen jetzt einen optionalen Parameter `decimals`. Ist dieser größer als 0, wird das Dekodierergebnis auf die angegebene Anzahl Nachkommastellen gerundet. Beispielsweise wird `SignalLevel` (Skalierung 2,55, Dezimalstellen 2) damit ohne übermäßig lange Gleitkommazahlen ausgegeben.
+
+### Einheiten und Metadaten werden beim Start nach Strukturänderungen gesetzt
+
+Erkennt der Adapter beim Start, dass sich die Struktur eines Datenpunkts geändert hat (neue Version in `didsE3var.json` oder `didsE3.json`), werden Einheiten und Beschreibungen für alle Unterzustände des neu angelegten Tree-Abschnitts jetzt korrekt gesetzt. Bisher wurden Einheiten nur beim Datenpunktscan gesetzt; nach einer Strukturaktualisierung war ein erneuter Scan erforderlich, um sie zu befüllen.
 
 ---
 
