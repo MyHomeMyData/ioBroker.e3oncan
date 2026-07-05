@@ -12,6 +12,8 @@
 
 ## e3oncan Adapter für ioBroker
 
+> **Hinweis:** Die Navigationslinks in diesem Dokument funktionieren am besten in der [GitHub-Ansicht](https://github.com/MyHomeMyData/ioBroker.e3oncan/blob/main/README.de.md). Relative Links zu anderen Dokumenten (z.B. [data-points.md](https://github.com/MyHomeMyData/ioBroker.e3oncan/blob/main/lib/data-points.md)) öffnen ebenfalls auf GitHub.
+
 > Dieses Dokument ist die deutsche Version der Dokumentation. [English version: README.md](README.md)
 
 ## Inhaltsverzeichnis
