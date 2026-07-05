@@ -1,4 +1,50 @@
 # Older Changelog Entries
+## 1.0.0-beta.2 (2026-05-02)
+* (MyHomeMyData) Fixed: saving schedules in the datapoints tab could leave stale entries under certain conditions
+* (MyHomeMyData) Added Topology button to the datapoints tab; opens the bus topology diagram in a modal dialog
+
+## 1.0.0-beta.1 (2026-04-30)
+* (MyHomeMyData) Bus topology analysis is now generated automatically after the data point scan; results are stored in `info.topology` (JSON) and `info.topologyHtml` (HTML); see Readme for details
+* (MyHomeMyData) Input validation added for interval and delay fields in the datapoints tab — only positive integers are accepted
+
+## 1.0.0-beta.0 (2026-04-26)
+* (MyHomeMyData) Introduced new e3oncan datapoints webUI pinned to the adapter's instance row
+* (MyHomeMyData) Energy meters (E380, E3100CB) are now auto-detected during the device scan by passive CAN listening on both CAN channels
+* (MyHomeMyData) State names for energy meters are assigned automatically based on CAN address and channel; see Readme for details
+* (MyHomeMyData) Energy meter Collect toggle and delay are now configured exclusively in the e3oncan datapoints page; changes take effect after adapter restart
+* (MyHomeMyData) On first run after upgrade, the active setting is automatically migrated from the previous adapter configuration
+* (MyHomeMyData) Collect-capable devices are now auto-detected during the data point scan by passive CAN listening; a pin icon is shown in the device card header for each detected device
+* (MyHomeMyData) Added option to suppress storing of data point values during data point scan
+
+## 0.11.3 (2026-05-03)
+* (MyHomeMyData) The accidentally mentioned data points 1415-1418 have been removed from the changelog of version 0.11.0
+
+## 0.11.2 (2026-05-02)
+* (MyHomeMyData) Added "What's new in v0.11.x" section to Readme with upgrade notes for data point structure changes
+
+## 0.11.1 (2026-04-23)
+* (MyHomeMyData) Improved robustness: Receiving a data point of length zero is treated as a "negative response"
+* (MyHomeMyData) The metadata is now also restored after a data point is deleted
+* (MyHomeMyData) Aligned test cases for German system language
+
+## 0.11.0 (2026-04-14)
+* (MyHomeMyData) To take full advantage of the variant data points and metadata, please perform a device scan followed by a data point scan
+* (MyHomeMyData) Added handling for variant data points and for device's data format configuration, refer to https://github.com/MyHomeMyData/ioBroker.e3oncan/lib/data-points.md for details
+* (MyHomeMyData) Added metadata to several data points, e.g. description, unit, link to further info
+* (MyHomeMyData) During scan of data points now metadata are added to data point objects
+* (MyHomeMyData) Changed handling of writable data points; this info now also is available within definition of data point; however, there is no change to handling of the whitelist of writables
+* (MyHomeMyData) During device scan the information about used data formats (data point 382) is evaluated
+* (MyHomeMyData) Updated structure of many data points; for details see this [changelog](lib/data-points.md#changelog-of-data-point-definitions)
+
+## 0.10.14 (2025-11-03)
+* (MyHomeMyData) Added elements to enums.js based of PR no. 182 of open3e
+* (MyHomeMyData) Simplified configuration of dids scan limits in source code
+* (MyHomeMyData) Extended scan up to did 3338
+* (MyHomeMyData) Added hint regarding scan range in Readme
+* (MyHomeMyData) Fixes for issue #169 (repository checker)
+* (MyHomeMyData) Bugfix: Manual change of device specific dids was not evaluated for collect workers
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20251102
+
 ## 0.10.13 (2025-09-30)
 * (MyHomeMyData) Fix for issue #162
 
