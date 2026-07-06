@@ -1073,7 +1073,7 @@ class E3oncan extends utils.Adapter {
                         const dids = [];
                         if (udsDids.didsDevSpecAvail) {
                             for (const [did, item] of Object.entries(udsDids.didsDictDevCom)) {
-                                if (did === 'Version') {
+                                if (did === 'Version' || did in udsDids.didsDictDevSpec) {
                                     continue;
                                 }
                                 dids.push({ didId: Number(did), didName: item.id, didDesc: item.args.desc || '' });
@@ -1107,49 +1107,6 @@ class E3oncan extends utils.Adapter {
                         },
                         obj.callback,
                     );
-                }
-            }
-
-            if (obj.command === 'getUdsDids') {
-                if (obj.callback) {
-                    this.log.silly(`Received data - ${JSON.stringify(obj)}`);
-                    if (obj.message && this.udsDevStateNames.includes(obj.message)) {
-                        const udsDids = new storage.storageDids({ stateBase: obj.message, device: obj.message });
-                        await udsDids.readKnownDids(this, 'standby');
-                        const udsDidsTable = [];
-                        if (udsDids.didsDevSpecAvail) {
-                            for (const [did, item] of Object.entries(udsDids.didsDictDevCom)) {
-                                if (did != 'Version') {
-                                    udsDidsTable.push({
-                                        didId: Number(did),
-                                        didLen: Number(item.len),
-                                        didName: item.id,
-                                        didDesc: await (item.args.desc ? item.args.desc : ''),
-                                        didCodec: item.codec,
-                                    });
-                                }
-                                //if (udsDidsTable.length >= 50) break;
-                            }
-                            for (const [did, item] of Object.entries(udsDids.didsDictDevSpec)) {
-                                if (did.length <= 4) {
-                                    udsDidsTable.push({
-                                        didId: Number(did),
-                                        didLen: Number(item.len),
-                                        didName: item.id,
-                                        didDesc: await (item.args.desc ? item.args.desc : ''),
-                                        didCodec: item.codec,
-                                    });
-                                    //if (udsDidsTable.length >= 60) break;
-                                }
-                            }
-                            udsDidsTable.sort((a, b) => a.didId - b.didId);
-                        }
-                        this.sendTo(obj.from, obj.command, { native: { tableUdsDids: udsDidsTable } }, obj.callback);
-                    } else {
-                        this.sendTo(obj.from, obj.command, { native: { tableUdsDids: [] } }, obj.callback);
-                    }
-                } else {
-                    this.sendTo(obj.from, obj.command, { native: { tableUdsDids: [] } }, obj.callback);
                 }
             }
 

@@ -61,11 +61,11 @@ Which modes are available depends on your device topology. See the [device topol
 
 ---
 
-## What's new in v1.1.0
+## What's new in v1.1.1
 
 ### Updated data point definitions
 
-Data point definitions have been updated to version 20260701 (common) and 20260630 (variant).
+Data point definitions have been updated to version 20260705 (common) and 20260630 (variant).
 
 ### New O3ESwitch codec
 
@@ -427,6 +427,10 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20260705 (common)
+* (MyHomeMyData) Fixed duplicate display of variant data points in data point list of WebUI
+
 ### 1.1.0 (2026-07-05)
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20260701 (common) and 20260630 (variant)
 * (MyHomeMyData) Added codec `O3ESwitch` for device-dependent data point structures selected by a discriminator byte

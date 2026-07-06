@@ -185,6 +185,11 @@ The adapter will log `Variant datapoint ... is protected by user. Update skipped
 
 ## Changelog of Data Point Definitions
 
+### v1.1.1 (2026-07-06)
+**Common data points (didsE3.json, v20260705)**
+
+* **ZigBee current-values DIDs 2086–2143 and 2262** (57-byte): Restructured around a new `ViCareDevice` O3ESwitch discriminator that selects the decoded fields by device type. For details see below (v1.1.0).
+
 ### v1.1.0 (2026-07-05)
 
 **Variant data points (didsE3var.json, v20260630)**

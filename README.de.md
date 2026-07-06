@@ -60,11 +60,11 @@ Welche Modi verfügbar sind, hängt von der Gerätekonfiguration ab. Weitere Det
 
 ---
 
-## Was ist neu in v1.1.0
+## Was ist neu in v1.1.1
 
 ### Aktualisierte Datenpunkt-Definitionen
 
-Die Datenpunktdefinitionen wurden auf Version 20260701 (allgemein) und 20260630 (Varianten) aktualisiert.
+Die Datenpunktdefinitionen wurden auf Version 20260705 (allgemein) und 20260630 (Varianten) aktualisiert.
 
 ### Neuer Codec O3ESwitch
 
