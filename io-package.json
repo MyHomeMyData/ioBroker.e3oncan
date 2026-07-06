@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "news": {
+      "1.1.1": {
+        "en": "Update of list of data points for E3 devices to version 20260705 (common)\nFixed duplicate display of variant data points in data point list of WebUI",
+        "de": "Aktualisierung der Liste der Datenpunkte für E3-Geräte auf Version 20260705 für gemeinsame Datenpunkte\nDoppelte Anzeige von varianten Datenpunkten in der Datenpunktliste der WebUI behoben",
+        "ru": "Обновление списка параметров данных для устройств E3 до версии 20260705 (общая).\nИсправлено дублирование отображения вариантов точек данных в списке точек данных веб-интерфейса.",
+        "pt": "Atualização da lista de pontos de dados para dispositivos E3 para a versão 20260705 (comum)\nCorrigida a exibição duplicada de pontos de dados variantes na lista de pontos de dados da interface web.",
+        "nl": "Update van de lijst met gegevenspunten voor E3-apparaten naar versie 20260705 (algemeen)\nDe dubbele weergave van variantgegevenspunten in de gegevenspuntenlijst van de webinterface is gecorrigeerd.",
+        "fr": "Mise à jour de la liste des points de données pour les périphériques E3 vers la version 20260705 (commune)\nCorrection de l'affichage en double des points de données de variantes dans la liste des points de données de l'interface Web",
+        "it": "Aggiornamento dell'elenco dei punti dati per i dispositivi E3 alla versione 20260705 (comune)\nRisolto il problema di visualizzazione duplicata dei punti dati delle varianti nell'elenco dei punti dati dell'interfaccia Web.",
+        "es": "Actualización de la lista de puntos de datos para dispositivos E3 a la versión 20260705 (común).\nSe corrigió la visualización duplicada de puntos de datos de variantes en la lista de puntos de datos de la interfaz web.",
+        "pl": "Aktualizacja listy punktów danych dla urządzeń E3 do wersji 20260705 (wspólna)\nNaprawiono duplikację wyświetlania punktów danych wariantów na liście punktów danych interfejsu WebUI",
+        "uk": "Оновлення списку точок даних для пристроїв E3 до версії 20260705 (загальна)\nВиправлено дублювання відображення варіантів точок даних у списку точок даних WebUI",
+        "zh-cn": "将 E3 设备的数据点列表更新至版本 20260705（通用）\n修复了 WebUI 数据点列表中重复显示变体数据点的问题。"
+      },
       "1.1.0": {
         "en": "Update of list of data points for E3 devices to version 20260701 (common) and 20260630 (variant)\nAdded codec `O3ESwitch` for device-dependent data point structures selected by a discriminator byte\nAdded optional `decimals` parameter to numeric codecs to round decoded values\nAdded update of meta data during startup, when structure of data point has changed",
         "de": "Aktualisierung der Liste der Datenpunkte für E3-Geräte auf Version 20260701 für gemeinsame und 20260630 für variante Datenpunkte\nCodec `O3ESwitch` für geräteabhängige Datenpunktstrukturen hinzugefügt, die durch ein Diskriminatorbyte ausgewählt werden.\nDer optionale Parameter `decimals` wurde zu den numerischen Codecs hinzugefügt, um die dekodierten Werte zu runden.\nDie Metadaten werden nun beim Start aktualisiert, wenn sich die Struktur eines Datenpunkts geändert hat.",
@@ -80,19 +93,6 @@
         "pl": "Naprawiono: Zapisywanie harmonogramów w zakładce punkty danych może zostawić nieświeże wpisy pod pewnymi warunkami\nDodano przycisk Topologia do zakładki punkty danych; otwiera schemat topologii autobusu w oknie modalnym",
         "uk": "Виправлено: Зберегти графіки в вкладці даних може залишити записи за певними умовами\nДодано кнопку Топології до вкладки даних; відкриває схему топології автобуса в модальному діалоговому вікні",
         "zh-cn": "固定:在数据点标签中保存时间表可能会在某些条件下留下呆滞的条目\n添加到数据点标签的地形按钮; 在模式对话框中打开总线地形图"
-      },
-      "1.0.0-beta.1": {
-        "en": "Bus topology analysis is now generated automatically after the data point scan; results are stored in info.topology (JSON) and info.topologyHtml (HTML); see Readme for details\nInput validation added for interval and delay fields in the datapoints tab — only positive integers are accepted",
-        "de": "Bus-Topologie-Analyse wird jetzt automatisch nach dem Datenpunktscan erstellt; Ergebnisse werden in info.topology (JSON) und info.topologyHtml (HTML) gespeichert; Details im Readme\nEingabevalidierung für Intervall- und Verzögerungsfelder in der Datenpunkte-Seite ergänzt — nur positive ganze Zahlen werden akzeptiert",
-        "ru": "Анализ топологии шины теперь генерируется автоматически после сканирования точек данных; результаты сохраняются в info.topology (JSON) и info.topologyHtml (HTML); подробности в Readme\nДобавлена проверка ввода для полей интервала и задержки на вкладке точек данных — принимаются только положительные целые числа",
-        "pt": "A análise da topologia do barramento é agora gerada automaticamente após o scan dos pontos de dados; os resultados são armazenados em info.topology (JSON) e info.topologyHtml (HTML); consulte o Readme para detalhes\nValidação de entrada adicionada para campos de intervalo e atraso na aba de pontos de dados — apenas inteiros positivos são aceites",
-        "nl": "Bus-topologieanalyse wordt nu automatisch gegenereerd na de datapuntscan; resultaten worden opgeslagen in info.topology (JSON) en info.topologyHtml (HTML); zie Readme voor details\nInvoervalidatie toegevoegd voor interval- en vertragingsvelden in de datapunten tab — alleen positieve gehele getallen worden geaccepteerd",
-        "fr": "L'analyse de la topologie du bus est maintenant générée automatiquement après le scan des points de données; les résultats sont stockés dans info.topology (JSON) et info.topologyHtml (HTML); voir le Readme pour les détails\nValidation des entrées ajoutée pour les champs d'intervalle et de délai dans l'onglet des points de données — seuls les entiers positifs sont acceptés",
-        "it": "L'analisi della topologia del bus viene ora generata automaticamente dopo la scansione dei punti dati; i risultati sono memorizzati in info.topology (JSON) e info.topologyHtml (HTML); vedere il Readme per i dettagli\nAggiunta la validazione degli input per i campi intervallo e ritardo nella scheda dei punti dati — vengono accettati solo interi positivi",
-        "es": "El análisis de la topología del bus ahora se genera automáticamente después del escaneo de puntos de datos; los resultados se almacenan en info.topology (JSON) e info.topologyHtml (HTML); consulte el Readme para más detalles\nSe añadió validación de entrada para los campos de intervalo y retraso en la pestaña de puntos de datos — solo se aceptan enteros positivos",
-        "pl": "Analiza topologii magistrali jest teraz generowana automatycznie po skanowaniu punktów danych; wyniki są przechowywane w info.topology (JSON) i info.topologyHtml (HTML); szczegóły w Readme\nDodano walidację danych wejściowych dla pól interwału i opóźnienia w zakładce punktów danych — akceptowane są tylko dodatnie liczby całkowite",
-        "uk": "Аналіз топології шини тепер генерується автоматично після сканування точок даних; результати зберігаються в info.topology (JSON) та info.topologyHtml (HTML); подробиці у Readme\nДодано перевірку введення для полів інтервалу та затримки на вкладці точок даних — приймаються лише додатні цілі числа",
-        "zh-cn": "数据点扫描后现在自动生成总线拓扑分析；结果存储在info.topology（JSON）和info.topologyHtml（HTML）中；详情请参阅Readme\n在数据点标签的间隔和延迟字段中添加了输入验证——只接受正整数"
       }
     },
     "titleLang": {
