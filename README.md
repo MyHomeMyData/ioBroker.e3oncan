@@ -427,6 +427,10 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Fixed missing update of meta data (unit, description) when user changes device specific data point definition
+
 ### 1.1.1 (2026-07-06)
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20260705 (common)
 * (MyHomeMyData) Fixed duplicate display of variant data points in data point list of WebUI
