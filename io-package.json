@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "e3oncan",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "news": {
+      "1.1.2": {
+        "en": "Fixed missing update of meta data (unit, description) when user changes device specific data point definition",
+        "de": "Problem behoben: Fehlende Aktualisierung der Metadaten (Einheit, Beschreibung) bei Änderung der gerätespezifischen Datenpunktdefinition durch den Benutzer.",
+        "ru": "Исправлена ошибка, из-за которой отсутствовало обновление метаданных (единица измерения, описание) при изменении пользователем определения параметров конкретного устройства.",
+        "pt": "Corrigida a falha na atualização dos metadados (unidade, descrição) quando o usuário altera a definição do ponto de dados específico do dispositivo.",
+        "nl": "Het probleem is opgelost waarbij de metadata (eenheid, beschrijving) niet werd bijgewerkt wanneer de gebruiker de apparaatspecifieke datapuntdefinitie wijzigde.",
+        "fr": "Correction d'un problème de mise à jour des métadonnées (unité, description) lors de la modification de la définition des points de données spécifiques à l'appareil par l'utilisateur.",
+        "it": "Risolto il problema relativo all'aggiornamento mancante dei metadati (unità, descrizione) quando l'utente modifica la definizione del punto dati specifico del dispositivo.",
+        "es": "Se corrigió la falta de actualización de metadatos (unidad, descripción) cuando el usuario cambia la definición del punto de datos específico del dispositivo.",
+        "pl": "Naprawiono brak aktualizacji metadanych (jednostka, opis), gdy użytkownik zmienia definicję punktu danych konkretnego urządzenia",
+        "uk": "Виправлено відсутнє оновлення метаданих (одиниця, опис), коли користувач змінює визначення точки даних для конкретного пристрою",
+        "zh-cn": "修复了用户更改设备特定数据点定义时元数据（单位、描述）更新缺失的问题。"
+      },
       "1.1.1": {
         "en": "Update of list of data points for E3 devices to version 20260705 (common)\nFixed duplicate display of variant data points in data point list of WebUI",
         "de": "Aktualisierung der Liste der Datenpunkte für E3-Geräte auf Version 20260705 für gemeinsame Datenpunkte\nDoppelte Anzeige von varianten Datenpunkten in der Datenpunktliste der WebUI behoben",
@@ -80,19 +93,6 @@
         "pl": "Adapter wymaga node.js > = 22\nUlepszone wykrywanie statusu skanowania: używa 'udsDidsWritable' zamiast 'didsMetaDict' w celu wiarygodnego wykrycia, czy skan punktowy danych został wykonany\nDodano podpowiedź rekomendacji ponownego skanowania w zakładce datapoints, gdy skanowanie istnieje, ale zbieranie autodetekcji nie zostało jeszcze uruchomione",
         "uk": "Адаптер вимагає node.js >= 22 тепер\nУдосконалено виявлення стану сканування: використовує `udsDidsWritable` замість `didsMetaDict` для надійного виявлення, чи проводиться сканування точок даних\nДодано повторне сканування натиснення в вкладці даних, коли існує сканування, але Збір автодетекції ще не працює",
         "zh-cn": "适配器需要节点.js 现在22\n改进扫描状态检测:使用“didsWriteble”而不是“didsMetaDict”可靠地检测是否已进行数据点扫描\n当扫描已经存在但收集自动检测尚未运行时, 在数据点标签中添加了重新扫描建议提示"
-      },
-      "1.0.0-beta.2": {
-        "en": "Fixed: saving schedules in the datapoints tab could leave stale entries under certain conditions\nAdded Topology button to the datapoints tab; opens the bus topology diagram in a modal dialog",
-        "de": "Behoben: Das Speichern von Zeitplänen in der Registerkarte Datenpunkte könnte unter bestimmten Bedingungen doppelte Einträge hinterlassen\nHinzugefügt: Button Topologie auf der Seite Datenpunkte öffnet die Topologie-Übersicht",
-        "ru": "Исправлено: сохранение графиков во вкладке «Точки данных» может оставить устаревшие записи при определенных условиях\nДобавлена кнопка «Топология» на вкладке «Точки данных»; открывается диаграмма топологии шины в модальном диалоге",
-        "pt": "Corrigido: salvar agendamentos na aba pontos de dados poderia deixar entradas antigas sob certas condições\nAdicionado botão de Topologia à página de pontos de dados; abre o diagrama de topologia de barramento numa janela modal",
-        "nl": "Fixed: het opslaan van schema's in het tabblad datapunten kan oude items onder bepaalde voorwaarden verlaten\nTopologieknop toegevoegd aan het tabblad datapunten; opent het bustopologiediagram in een modal dialoogvenster",
-        "fr": "Correction : enregistrer des horaires dans l'onglet points de données pourrait laisser des entrées bloquées sous certaines conditions\nAjout du bouton Topologie à l'onglet datapoints; ouverture du diagramme de topologie du bus dans une boîte de dialogue modale",
-        "it": "Risolto: gli orari di risparmio nella scheda datapoint potrebbero lasciare le voci stanti in determinate condizioni\nAggiunto Topologia pulsante per i punti di dati scheda; apre il diagramma topologia bus in una finestra di dialogo modale",
-        "es": "Fijación: los horarios de ahorro en la pestaña Puntos de datos podrían dejar entradas en ciertas condiciones\nBotón de Topología añadido a la pestaña puntos de datos; abre el diagrama de topología del bus en un diálogo modal",
-        "pl": "Naprawiono: Zapisywanie harmonogramów w zakładce punkty danych może zostawić nieświeże wpisy pod pewnymi warunkami\nDodano przycisk Topologia do zakładki punkty danych; otwiera schemat topologii autobusu w oknie modalnym",
-        "uk": "Виправлено: Зберегти графіки в вкладці даних може залишити записи за певними умовами\nДодано кнопку Топології до вкладки даних; відкриває схему топології автобуса в модальному діалоговому вікні",
-        "zh-cn": "固定:在数据点标签中保存时间表可能会在某些条件下留下呆滞的条目\n添加到数据点标签的地形按钮; 在模式对话框中打开总线地形图"
       }
     },
     "titleLang": {
