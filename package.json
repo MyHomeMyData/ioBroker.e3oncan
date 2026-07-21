@@ -28,7 +28,7 @@
     "linux"
   ],
   "dependencies": {
-    "@iobroker/adapter-core": "^3.4.1",
+    "@iobroker/adapter-core": "^3.4.2",
     "socketcan": "^4.2.3"
   },
   "devDependencies": {
