@@ -31,6 +31,8 @@ const E3100CBDidsDict = require('./lib/didsE3100CB.json');
 const E3DidsWritable = require('./lib/didsE3Writables.json');
 const collect = require('./lib/canCollect');
 const uds = require('./lib/canUds');
+const udsGateway = require('./lib/canUdsGateway');
+const gatewayChannel = require('./lib/canGatewayChannel');
 const udsScan = require('./lib/udsScan');
 
 class E3oncan extends utils.Adapter {
@@ -256,7 +258,17 @@ class E3oncan extends utils.Adapter {
             [this.channelExt, this.channelExtName] = await this.connectToCan(
                 this.channelExt,
                 // @ts-expect-error AdapterConfig
+                this.config.canExtTransport || 'local',
+                // @ts-expect-error AdapterConfig
                 this.config.canExtName,
+                {
+                    // @ts-expect-error AdapterConfig
+                    brokerUrl: this.config.canExtGatewayMqttUrl,
+                    // @ts-expect-error AdapterConfig
+                    username: this.config.canExtGatewayMqttUser,
+                    // @ts-expect-error AdapterConfig
+                    password: this.config.canExtGatewayMqttPassword,
+                },
                 this.onCanMsgExt,
                 this.onCanExtStopped,
             );
@@ -271,7 +283,17 @@ class E3oncan extends utils.Adapter {
             [this.channelInt, this.channelIntName] = await this.connectToCan(
                 this.channelInt,
                 // @ts-expect-error AdapterConfig
+                this.config.canIntTransport || 'local',
+                // @ts-expect-error AdapterConfig
                 this.config.canIntName,
+                {
+                    // @ts-expect-error AdapterConfig
+                    brokerUrl: this.config.canIntGatewayMqttUrl,
+                    // @ts-expect-error AdapterConfig
+                    username: this.config.canIntGatewayMqttUser,
+                    // @ts-expect-error AdapterConfig
+                    password: this.config.canIntGatewayMqttPassword,
+                },
                 this.onCanMsgInt,
                 this.onCanIntStopped,
             );
@@ -653,18 +675,29 @@ class E3oncan extends utils.Adapter {
 
     // Setup CAN busses
 
-    async connectToCan(channel, name, onMsg, onStop) {
-        let chName = name;
+    /**
+     * @param {object} channel  Existing channel object, or null/undefined to create one
+     * @param {string} transport  'local' (default) or 'gateway'
+     * @param {string} name  Local CAN interface name (transport 'local' only)
+     * @param {object} gatewayConfig  MQTT connection config for the gateway channel (transport 'gateway' only)
+     * @param {Function} onMsg  onMessage listener
+     * @param {Function} onStop  onStopped listener
+     */
+    async connectToCan(channel, transport, name, gatewayConfig, onMsg, onStop) {
+        let chName = transport === 'gateway' ? gatewayConfig.brokerUrl : name;
         if (!channel) {
             try {
-                channel = can.createRawChannel(name, true);
+                channel =
+                    transport === 'gateway'
+                        ? new gatewayChannel.gatewayChannel(gatewayConfig)
+                        : can.createRawChannel(name, true);
                 await channel.addListener('onMessage', onMsg, this);
                 await channel.addListener('onStopped', onStop, this);
                 await channel.start();
                 this.cntCanConnActual++;
-                await this.log.info(`CAN-Adapter connected: ${name}`);
+                await this.log.info(`CAN-Adapter connected: ${chName}`);
             } catch (e) {
-                await this.log.error(`Could not connect to CAN-Adapter "${name}" - err=${e.message}`);
+                await this.log.error(`Could not connect to CAN-Adapter "${chName}" - err=${e.message}`);
                 channel = null;
                 chName = '';
             }
@@ -762,6 +795,10 @@ class E3oncan extends utils.Adapter {
     // Setup workers for collecting data and for communication via UDS
 
     async setupUdsWorkers() {
+        // UDS communication only ever happens on the external bus - the internal
+        // bus is collect-only - so its transport alone decides the worker class.
+        // @ts-expect-error AdapterConfig
+        const UdsWorkerClass = this.config.canExtTransport === 'gateway' ? udsGateway.udsGateway : uds.uds;
         // Create an UDS worker for each device
         // This is to allow writing of data points even when no schedule for reading is defined
         for (const dev of Object.values(this.config.tableUdsDevices)) {
@@ -770,7 +807,7 @@ class E3oncan extends utils.Adapter {
             const devRxAddr = devTxAddr + 16;
             // @ts-expect-error AdapterConfig
             this.log.silly(`New UDS worker on ${String(dev.devStateName)}`);
-            this.E3UdsWorkers[devRxAddr] = new uds.uds({
+            this.E3UdsWorkers[devRxAddr] = new UdsWorkerClass({
                 canID: devTxAddr,
                 // @ts-expect-error AdapterConfig
                 stateBase: dev.devStateName,
@@ -780,6 +817,8 @@ class E3oncan extends utils.Adapter {
                 delay: 0,
                 active: false,
                 channel: this.channelExt,
+                // @ts-expect-error AdapterConfig
+                gatewayBaseUrl: this.config.canExtGatewayUrl,
                 timeout: this.udsTimeout,
             });
             await this.E3UdsWorkers[devRxAddr].initStates(this, 'standby');
