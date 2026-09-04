@@ -100,13 +100,36 @@ timeouten zu lassen.
 
 ## 4. ioBroker.e3oncan — Transportabstraktion
 
-- `UdsTransport`-Facade: `readDid(ecu, did)` / `writeDid(ecu, did, bytes, svc)`
-  als Promise. Lokale Implementierung umhüllt `lib/canUds.js` unverändert;
-  neue `GatewayUdsTransport` ruft (1) auf.
-- Passiver Frame-Listener: Gateway-Kanalobjekt bietet dieselbe
-  `addListener('onMessage', cb)`-Schnittstelle wie der heutige
-  socketcan-Kanal, gespeist aus (2) — `lib/udsScan.js` (Collect-Erkennung)
-  und `lib/canCollect.js` laufen dadurch unverändert.
+- **UDS Lesen/Schreiben:** `lib/canUds.js`s `uds`-Klasse ist kein reiner
+  Protokoll-Codec, sondern ein sich selbst steuernder Worker (eigene
+  Kommando-Queue, State-Subscriptions, Timeout-/Statistik-Handling). Eine
+  vorgeschaltete Facade passt hier nicht. Stattdessen: neue Klasse
+  `udsGateway`, die von `uds` **erbt** und nur die drei Stellen mit
+  Frame-I/O überschreibt — `readByDid`, `writeByDid2E`, `writeByDid77`.
+  Diese rufen statt `sendFrame()`+Warten auf die `msgUds`-State-Machine
+  direkt `rawread`/`rawwrite` (1) auf und lösen bei Erfolg `decodeDataCAN()`
+  + `setDidDone()` aus (genau das, was `msgUds` beim Abschluss der
+  SF/MF-Zusammensetzung heute tut), bei Fehler dieselben Callback-/Log-Pfade
+  wie `onTimeout`. `sendFrame`/`msgUds` werden für Gateway-Worker nie
+  aufgerufen. Alles andere (Queue, Scheduling, `onUdsStateChange`,
+  Statistik) bleibt geerbt und unverändert.
+  Auswahl per neuem Config-Feld `transport` (`'local'` Default /
+  `'gateway'`) an den Worker-Konstruktionsstellen: `main.js:setupUdsWorkers`,
+  `lib/udsScan.js` (Geräte- und DID-Scan), plus Weiterreichen an
+  `startupUdsWorkerService77` in `canUds.js`.
+- **Passive Rohdaten (Collect/E380):** `lib/canCollect.js` kennt `socketcan`
+  gar nicht — es decodiert nur aus einem transportunabhängigen
+  Nachrichtenformat (`msg.id`, `msg.data`, `msg.ts_sec/ts_usec`). Genauso
+  wenig kennt der Dispatch dazu (`main.js: onCanMsgExt`/`onCanMsgInt`) oder
+  die Ad-hoc-Listener in `lib/udsScan.js` (Collect-Geräte-Erkennung,
+  Energy-Meter-Listener) `socketcan` direkt — sie hängen nur von der
+  Kanal-Event-Schnittstelle ab. Deshalb reicht hier ein neues
+  Gateway-Kanalobjekt, das dieselbe `addListener('onMessage', cb)`/
+  `addListener('onStopped', cb)`/`start()`/`stop()`-Schnittstelle wie der
+  heutige socketcan-Kanal bereitstellt, gespeist aus (2) — und tritt einfach
+  an die Stelle von `this.channelExt`/`this.channelInt`.
+  `lib/canCollect.js`, `onCanMsgExt`/`onCanMsgInt` und die Ad-hoc-Listener
+  in `lib/udsScan.js` bleiben dadurch **komplett unverändert**.
 - Neue Verbindungsart in `admin/jsonConfig.json` pro Bus (ext/int):
   „CAN-Interface (lokal)" vs. „Gateway (open3e-esp32)" — bei Gateway:
   REST-Basis-URL, MQTT-Broker-URL/Zugangsdaten, Raw-Topic-Präfix.
