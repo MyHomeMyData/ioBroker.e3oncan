@@ -41,6 +41,18 @@ Body:
 `svc`: `"0x2E"` oder `"0x77"`. Response `{"ok": true}` oder
 `{"ok": false, "error": "..."}`.
 
+`data` sind in beiden Fällen die reinen Wertbytes, **ohne** Service-Envelope
+— für `0x77` also nicht das Viessmann-spezifische Prefix
+(`43 01 82 <didLo> <didHi> <lenCode>` + Padding), das die lokale
+Implementierung heute noch selbst baut. Das Envelope baut die Firmware,
+analog dazu, wie sie eingehende 0x77-Antworten laut README schon heute
+vollständig decodiert, ohne dass der Aufrufer das Protokoll-Detail sehen
+muss. Grund: der ganze Sinn des Raw-Wegs ist, dass ioBroker.e3oncan der
+einzige Ort bleibt, der die Bedeutung der Bytes kennt — das Envelope ist
+aber reines Transport-/Service-Framing, kein Datenpunkt-Wissen, und gehört
+damit konsistent zur selben Schicht wie das ISO-TP-Framing, das die
+Firmware für `0x2E` ja bereits übernimmt.
+
 ## 2. Passive Rohdaten (Collect/E380) — MQTT
 
 Topic: `open3e/raw/<ecu-hex-3-stellig>`, z. B. `open3e/raw/251`.
