@@ -3,6 +3,15 @@
 Referenz für die Umsetzung auf feature/raw-gateway in beiden Repos. Details
 der konkreten Implementierung stimmen wir bei Bedarf später mit boonkerz ab.
 
+**Umsetzungsstand:** Abschnitt 1 (REST rawread/rawwrite, ohne Service 0x77)
+und der `rawApiVersion`/`rawWriteEnabled`-Teil von Abschnitt 3 sind
+implementiert, geflasht und **Ende-zu-Ende gegen die Simulator-Umgebung
+verifiziert** (`GET /api/rawread` gelesen, `rawWriteEnabled` per
+`/api/settings` gesetzt, `POST /api/rawwrite` auf DID 396 geschrieben,
+Little-Endian-Kodierung über Rücklesen bestätigt). Abschnitt 2
+(Raw-MQTT-Topic für Collect/E380) und der Push-Teil von Abschnitt 3
+(retained `open3e/status`) sind noch offen.
+
 ## 1. UDS Lesen/Schreiben (REST)
 
 ### GET /api/rawread
@@ -38,11 +47,23 @@ Body:
 { "ecu": "0x680", "did": 396, "svc": "0x2E", "data": "1600" }
 ```
 
-`svc`: `"0x2E"` oder `"0x77"`. Response `{"ok": true}` oder
-`{"ok": false, "error": "..."}`.
+`svc`: nur `"0x2E"` **vorerst** — `uds.h` in open3e-esp32 verzichtet bewusst
+auf Service 0x77 (open3e stuft ihn als experimentell ein, siehe Kommentar
+dort), das ist keine Lücke, sondern eine bewusste Sicherheitsentscheidung.
+`rawwrite` lehnt `"0x77"` deshalb aktuell mit einem klaren Fehler ab; ob/wie
+das ergänzt wird, klären wir separat mit boonkerz, bevor dafür Code entsteht.
 
-`data` sind in beiden Fällen die reinen Wertbytes, **ohne** Service-Envelope
-— für `0x77` also nicht das Viessmann-spezifische Prefix
+Response folgt der bestehenden Konvention von `/api/write`, nicht einem
+eigenen `{"ok": false, ...}`-Schema: Erfolg `{"ok": true}` (HTTP 200),
+Fehler ein HTTP-4xx-Status mit `{"error": "..."}`-Body.
+
+Gate: eigene Einstellung `rawWriteEnabled`, **getrennt** von `writeEnabled`
+und default aus — `rawwrite` umgeht bewusst die Datenbank-Prüfungen
+(bekannt/rw), die `writeEnabled` heute voraussetzt, ist also ein größerer
+Vertrauensschritt und verdient einen eigenen Schalter.
+
+`data` sind die reinen Wertbytes, **ohne** Service-Envelope — für ein
+künftiges `0x77` also nicht das Viessmann-spezifische Prefix
 (`43 01 82 <didLo> <didHi> <lenCode>` + Padding), das die lokale
 Implementierung heute noch selbst baut. Das Envelope baut die Firmware,
 analog dazu, wie sie eingehende 0x77-Antworten laut README schon heute
@@ -72,18 +93,20 @@ Topics, `points.json` und Auto-Discovery.
 
 ### Abfragen (REST)
 
-`/api/sysinfo` bekommt zusätzliche Felder:
+`/api/status` (nicht `/api/sysinfo` — das ist CPU-/Heap-/Task-Diagnostik,
+der falsche Ort dafür) liefert `can.state` und `mqtt.connected` **bereits
+heute**, unverändert:
 ```json
-{
-  "rawApiVersion": 1,
-  "canState": "running",
-  "mqttConnected": true
-}
+{ "can": { "state": "running", ... }, "mqtt": { "connected": true, ... }, ... }
 ```
-`canState`: `"running"` | `"error-passive"` | `"bus-off"` | `"stopped"`
-(TWAI-Treiberzustand). ioBroker.e3oncan prüft das beim Verbindungsaufbau —
-sowohl `rawApiVersion` (Firmware unterstützt die neue API?) als auch
-`canState`/`mqttConnected` (ist der Gateway gerade überhaupt betriebsbereit?).
+`can.state`: `"running"` | `"error-warning"` | `"error-passive"` |
+`"bus-off"` | `"stopped"` (TWAI-Treiberzustand, siehe `can_port.h`).
+ioBroker.e3oncan liest das beim Verbindungsaufbau — kein neuer Endpoint
+nötig, nur die beiden vorhandenen Felder nutzen.
+
+Neu ergänzt (in `/api/status`, `/api/settings`, `/api/export`/`/api/import`,
+neben `writeEnabled`): `rawApiVersion` (aktuell `1`, für Firmware-Versions-
+erkennung) und `rawWriteEnabled` (siehe Abschnitt 1, Gate für `rawwrite`).
 
 ### Push (MQTT)
 
