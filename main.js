@@ -680,8 +680,8 @@ class E3oncan extends utils.Adapter {
      * @param {string} transport  'local' (default) or 'gateway'
      * @param {string} name  Local CAN interface name (transport 'local' only)
      * @param {object} gatewayConfig  MQTT connection config for the gateway channel (transport 'gateway' only)
-     * @param {Function} onMsg  onMessage listener
-     * @param {Function} onStop  onStopped listener
+     * @param {(msg: object) => void} onMsg  onMessage listener
+     * @param {() => void} onStop  onStopped listener
      */
     async connectToCan(channel, transport, name, gatewayConfig, onMsg, onStop) {
         let chName = transport === 'gateway' ? gatewayConfig.brokerUrl : name;
