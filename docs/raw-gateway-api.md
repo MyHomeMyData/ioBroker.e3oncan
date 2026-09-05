@@ -14,8 +14,11 @@ vorhandene Endpoints — kein neuer Firmware-Code nötig) ist ebenfalls
 implementiert und **Ende-zu-Ende verifiziert** (Geräte-Scan mit
 Fortschrittsanzeige, Datenpunkt-Scan mit und ohne Speichern, 7 Geräte /
 über 1200 DIDs, Varianten-Erkennung inklusive). Abschnitt 2
-(Raw-MQTT-Topic für Collect/E380) und der Push-Teil von Abschnitt 3
-(retained `open3e/status`) sind noch offen.
+(Raw-MQTT-Topic für Collect/E380) ist ebenfalls implementiert und
+**Ende-zu-Ende verifiziert** (0x693 und E380 auf 0x250 kommen sauber per
+MQTT an, parallel zu normalem UDS-Poll-Betrieb und zu `em380`s eigener
+Dekodierung). Nur noch offen: der Push-Teil von Abschnitt 3 (retained
+`open3e/status`).
 
 ## 1. UDS Lesen/Schreiben (REST)
 
@@ -81,7 +84,11 @@ Firmware für `0x2E` ja bereits übernimmt.
 
 ## 2. Passive Rohdaten (Collect/E380) — MQTT
 
-Topic: `open3e/raw/<ecu-hex-3-stellig>`, z. B. `open3e/raw/251`.
+**Implementiert und Ende-zu-Ende verifiziert** (`raw_relay.c`/`.h`, neues
+Modul, keine Reassemblierung — ein CAN-Frame rein, eine MQTT-Nachricht
+raus).
+
+Topic: `<baseTopic>/raw/<id-hex-3-stellig>`, z. B. `open3e/raw/251`.
 
 Payload (JSON, nicht nur Hex — DLC und Zeitstempel werden für die
 Collect-Geräte-Erkennung in ioBroker.e3oncan gebraucht):
@@ -89,10 +96,36 @@ Collect-Geräte-Erkennung in ioBroker.e3oncan gebraucht):
 { "dlc": 8, "data": "21fa01b3...", "ts": 1725455669123 }
 ```
 
-Nur IDs, die in einer neuen Einstellung `raw_canids` (Komma-Liste,
-Default leer) enthalten sind, werden veröffentlicht — nach dem Muster der
-bestehenden `collect_canids`-Einstellung. Unabhängig von decodierten
-Topics, `points.json` und Auto-Discovery.
+Nur IDs, die in der neuen Einstellung `rawCanIds` (Komma-Liste, Default
+leer, per `/api/settings` GET/PUT und `/api/export`) enthalten sind,
+werden veröffentlicht — nach dem Muster der bestehenden
+`collectCanIds`-Einstellung. Unabhängig von decodierten Topics,
+`points.json` und Auto-Discovery.
+
+### Zwei Stolperfallen, die beim Implementieren tatsächlich auftraten
+
+- **Eine Listener-Spanne über weit auseinanderliegende IDs schluckt fremden
+  Verkehr dazwischen.** `collect.c`s Muster „ein Listener über
+  `[min(ids), max(ids)]`, Filterung im Callback" ist nur sicher, wenn die
+  konfigurierten IDs eng beieinander liegen. Sobald `rawCanIds` zwei weit
+  auseinanderliegende IDs enthält (z. B. `0x451` und `0x693`), deckt die
+  Spanne dazwischen auch echte UDS-Antwortadressen ab (z. B. `0x690`) — der
+  bestehende Dispatch in `can_port.c` routet ein Frame in dieser Spanne
+  **ausschließlich** an den Listener, nie an die ISO-TP-Queue, was den
+  normalen Poll-Betrieb störte (`poll.failures`/`busErrors` deutlich erhöht
+  im Test). Fix: neue `can_port_add_id_listener()` in `can_port.c`/`.h` —
+  wie die bestehende `can_port_add_listener()`, aber nur exakte IDs
+  innerhalb der Spanne werden geroutet, alles andere dazwischen fällt wie
+  gewohnt an die ISO-TP-Queue durch. Bestehende Aufrufer (`collect.c`,
+  `em380.c`) unverändert, weiterhin über die alte Funktion.
+- **Zwei Listener wollen dieselbe ID.** `em380.c` beansprucht `0x250–0x25D`
+  bereits exklusiv für die eigene Dekodierung. Da der Dispatch vor diesem
+  Fix beim ersten Treffer `return`ete, sah ein zusätzlicher Raw-Relay-
+  Listener für dieselbe ID nie etwas, solange `em380_enabled` aktiv war.
+  Fix: der Dispatch in `can_port.c` ruft jetzt **alle** passenden Listener
+  auf (nicht nur den ersten) und fällt nur an die ISO-TP-Queue durch, wenn
+  **keiner** gepasst hat — `em380.c` deckt seine eigene Dekodierung weiter
+  ab, während der Raw-Relay-Listener parallel dieselben Frames sieht.
 
 ## 3. Status & Fähigkeits-Erkennung
 
