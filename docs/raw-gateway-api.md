@@ -1,7 +1,10 @@
-# Raw-Gateway-API (open3e-esp32 ↔ ioBroker.e3oncan) — Arbeitsstand
+# Raw-Gateway-API (open3e-esp32 ↔ ioBroker.e3oncan)
 
-Referenz für die Umsetzung auf feature/raw-gateway in beiden Repos. Details
-der konkreten Implementierung stimmen wir bei Bedarf später mit boonkerz ab.
+Referenz für die Rohdaten-Schnittstellen, die dieser Branch für externe
+Integrationen ergänzt (REST `rawread`/`rawwrite`, MQTT-Raw-Relay, Status-
+Erkennung, Scan-Delegation) sowie für die Gegenseite in ioBroker.e3oncan,
+das als erste Software diesen Weg nutzt. Siehe auch die kurze Übersicht im
+README unter „Rohdaten für externe Integrationen".
 
 **Umsetzungsstand:** Abschnitt 1 (REST rawread/rawwrite, ohne Service 0x77)
 und der `rawApiVersion`/`rawWriteEnabled`-Teil von Abschnitt 3 sind
