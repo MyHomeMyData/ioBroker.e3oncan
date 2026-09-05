@@ -20,8 +20,9 @@ Fortschrittsanzeige, Datenpunkt-Scan mit und ohne Speichern, 7 Geräte /
 (Raw-MQTT-Topic für Collect/E380) ist ebenfalls implementiert und
 **Ende-zu-Ende verifiziert** (0x693 und E380 auf 0x250 kommen sauber per
 MQTT an, parallel zu normalem UDS-Poll-Betrieb und zu `em380`s eigener
-Dekodierung). Nur noch offen: der Push-Teil von Abschnitt 3 (retained
-`open3e/status`).
+Dekodierung). Der Push-Teil von Abschnitt 3 (retained `open3e/status`) ist
+implementiert (`mqtt_pub.c`), **noch nicht gegen echte Hardware verifiziert**
+(Build ausstehend).
 
 ## 1. UDS Lesen/Schreiben (REST)
 
@@ -224,6 +225,33 @@ künftigen Watchdog nach demselben Muster wie bei #255 — genauso aus wie ein
 gestörter lokaler Bus. Solange `info.connection=false`, werden keine neuen
 `rawread`/`rawwrite`-Anfragen abgeschickt, statt sie ins Leere laufen und
 timeouten zu lassen.
+
+**Wichtig:** `evaluateHealth()` in `lib/canGatewayChannel.js` wertet erst
+aus, sobald *beide* Topics mindestens einmal gemeldet haben (`lwtKnown` und
+`statusKnown`). Solange die Firmware `open3e/status` nicht veröffentlicht,
+bleibt `statusKnown` für immer `false` — `onStopped` feuert dann nie, auch
+nicht bei einem echten Ausfall. Der Push-Teil hier ist also kein Nice-to-
+have, sondern Voraussetzung dafür, dass die Gateway-Verbindungsüberwachung
+überhaupt funktioniert.
+
+**Selbstheilung:** Anders als der lokale Bus (#255: Worker halten ihre
+Kanal-Referenz seit dem Aufbau, ein sicheres In-Place-Reconnect ist deshalb
+bewusst nicht vorgesehen) bleibt der MQTT-Client von `gatewayChannel` nach
+einem `onStopped` am Leben, statt ihn abzureißen — genau um `open3e/LWT` und
+`open3e/status` weiter zu beobachten. Kehrt der gesunde Zustand zurück
+(`mqtt.js`s eigener Reconnect vorausgesetzt), feuert ein neues Event
+`onRecovered`. `main.js` reagiert darauf mit `this.terminate('...',
+EXIT_CODES.START_IMMEDIATELY_AFTER_STOP)` — ein vollständiger, sauberer
+Adapter-Neustart, kein Versuch, Worker im laufenden Betrieb neu
+aufzusetzen. Das ist inhaltlich dasselbe, was der externe #255-Watchdog
+tut (Instanz neu starten, sobald `info.connection` wieder gebraucht wird),
+nur ereignisgetrieben und ohne das separate Skript — für Gateway-Betrieb
+reicht das eigene, eingebaute Neustart-Signal aus, ein externer Watchdog
+bleibt aber weiterhin nötig für den Fall, dass die Firmware selbst nie
+mehr antwortet (dafür gibt es kein `onRecovered`, per Definition). Kein
+eigenes Rate-Limiting eingebaut: `onRecovered` feuert nur bei einer echten
+Erholung, nie bei fortgesetztem Ausfall, und js-controller hat einen
+eigenen Schutz vor Neustart-Schleifen.
 
 ## 4. ioBroker.e3oncan — Transportabstraktion
 
