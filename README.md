@@ -201,6 +201,8 @@ What the scan does:
 
 This step is not strictly mandatory for read-only use, but it is **strongly recommended** – and **required** if you want to write to any data point.
 
+> **Restart after the scan if you plan to write.** A data point newly discovered by this scan is recorded on disk right away, but the running adapter instance keeps using the data point dictionary it loaded at startup until it restarts. Writing to a data point the scan *just* found will fail with an "Encoding of data failed" error until you restart the adapter once. Data points that were already known before the scan are unaffected.
+
 **Save data point values to object tree during scan**
 
 By default the scan also writes the current value of each data point into the object tree (`json`, `raw`, `tree` states). You can adjust the behavior using the option **Save data point values ​​in the object tree during scan** above the scan button. If this option is disabled, the adapter updates values and metadata for already existing data point objects, but does not create new ones – those are created automatically the first time data is received after the scan.
