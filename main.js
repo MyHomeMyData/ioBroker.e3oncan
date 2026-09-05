@@ -268,6 +268,9 @@ class E3oncan extends utils.Adapter {
                     username: this.config.canExtGatewayMqttUser,
                     // @ts-expect-error AdapterConfig
                     password: this.config.canExtGatewayMqttPassword,
+                    // @ts-expect-error AdapterConfig
+                    baseTopic: this.config.canExtGatewayMqttBaseTopic,
+                    log: this.log,
                 },
                 this.onCanMsgExt,
                 this.onCanExtStopped,
@@ -293,6 +296,9 @@ class E3oncan extends utils.Adapter {
                     username: this.config.canIntGatewayMqttUser,
                     // @ts-expect-error AdapterConfig
                     password: this.config.canIntGatewayMqttPassword,
+                    // @ts-expect-error AdapterConfig
+                    baseTopic: this.config.canIntGatewayMqttBaseTopic,
+                    log: this.log,
                 },
                 this.onCanMsgInt,
                 this.onCanIntStopped,
@@ -303,6 +309,11 @@ class E3oncan extends utils.Adapter {
             // All configured CAN connections are established
             await this.setState('info.connection', true, true);
         }
+
+        // Tell any gateway-transport bus which CAN-IDs to relay raw over MQTT,
+        // so this adapter's own Collect/energy-meter code (fed via
+        // lib/canGatewayChannel.js, unchanged either way) has something to see:
+        await this.configureGatewayRawCanIds();
 
         // Setup energy meter collect workers for detected and activated meters:
         if (this.channelExt || this.channelInt) {
@@ -695,7 +706,16 @@ class E3oncan extends utils.Adapter {
                 await channel.addListener('onStopped', onStop, this);
                 await channel.start();
                 this.cntCanConnActual++;
-                await this.log.info(`CAN-Adapter connected: ${chName}`);
+                if (transport === 'gateway') {
+                    // start() only kicks off the MQTT connection attempt, it
+                    // does not confirm one - and "CAN-Adapter connected" would
+                    // wrongly name the broker as the CAN adapter anyway. The
+                    // gateway channel logs the real connect/fail itself, once
+                    // the broker actually answers.
+                    await this.log.debug(`Gateway channel starting, broker: ${chName}`);
+                } else {
+                    await this.log.info(`CAN-Adapter connected: ${chName}`);
+                }
             } catch (e) {
                 await this.log.error(`Could not connect to CAN-Adapter "${chName}" - err=${e.message}`);
                 channel = null;
@@ -720,6 +740,68 @@ class E3oncan extends utils.Adapter {
             }
         }
         return [null, ''];
+    }
+
+    /**
+     * CAN-IDs a gateway should relay raw over MQTT (docs/raw-gateway-api.md
+     * section 2): both energy meters' fixed broadcast IDs, always - not
+     * gated on e380Active/e3100cbActive, because the scan's own passive
+     * detection (lib/udsScan.js) needs to see them before a user has any
+     * reason to enable collection - plus every device-type-suggested
+     * collectCanId from the confirmed device table, whether or not the user
+     * has activated collection for it yet. Relaying an ID nobody ever sends
+     * costs nothing; not relaying one that is needed silently breaks
+     * detection or collection.
+     *
+     * @returns {string}  Comma-separated hex IDs, e.g. "0x250,0x251,...,0x693"
+     */
+    computeGatewayRawCanIds() {
+        const ids = new Set([
+            // E380, both meter addresses (97 odd, 98 even) combined:
+            0x250, 0x251, 0x252, 0x253, 0x254, 0x255, 0x256, 0x257, 0x258, 0x259, 0x25a, 0x25b, 0x25c, 0x25d,
+            // E3100CB:
+            0x569,
+        ]);
+        for (const id of udsScan.collectIdsFromDevices(this.config.tableUdsDevices)) {
+            ids.add(id);
+        }
+        return [...ids].map(id => `0x${id.toString(16)}`).join(',');
+    }
+
+    /**
+     * Push the current raw CAN-ID set to every bus running as a gateway.
+     * Failure only logs a warning - detection/collection over the gateway
+     * would simply see nothing until the next successful attempt, not
+     * something worth failing adapter startup over.
+     */
+    async configureGatewayRawCanIds() {
+        const rawCanIds = this.computeGatewayRawCanIds();
+        const targets = [
+            // @ts-expect-error AdapterConfig
+            [this.config.canExtTransport, this.config.canExtGatewayUrl],
+            // @ts-expect-error AdapterConfig
+            [this.config.canIntTransport, this.config.canIntGatewayUrl],
+        ];
+        for (const [transport, base] of targets) {
+            if (transport !== 'gateway' || !base) {
+                continue;
+            }
+            try {
+                const res = await fetch(`${base}/api/settings`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ system: { rawCanIds: rawCanIds } }),
+                    signal: AbortSignal.timeout(5000),
+                });
+                if (res.ok) {
+                    await this.log.info(`Configured gateway ${base} to relay raw CAN-IDs: ${rawCanIds}`);
+                } else {
+                    await this.log.warn(`Could not configure the gateway's raw CAN-ID relay - HTTP ${res.status}`);
+                }
+            } catch (e) {
+                await this.log.warn(`Could not configure the gateway's raw CAN-ID relay: ${e.message}`);
+            }
+        }
     }
 
     // Setup E380 collect worker for CAN address 97 (odd CAN IDs):
@@ -998,14 +1080,7 @@ class E3oncan extends utils.Adapter {
                             em.e380_98 ? `E380 (CAN addr 98, ${emChan(em.e380_98)})` : null,
                             em.e3100cb ? `E3100CB (${emChan(em.e3100cb)})` : null,
                         ].filter(Boolean);
-                        // @ts-expect-error AdapterConfig
-                        const extIsGateway = (this.config.canExtTransport || 'local') === 'gateway';
-                        const energyMeterDetectionResult =
-                            emParts.length > 0
-                                ? emParts.join(', ')
-                                : extIsGateway
-                                  ? 'Not checked (gateway transport needs the raw MQTT topic, not yet available)'
-                                  : 'None detected';
+                        const energyMeterDetectionResult = emParts.length > 0 ? emParts.join(', ') : 'None detected';
                         await this.sendTo(
                             obj.from,
                             obj.command,
