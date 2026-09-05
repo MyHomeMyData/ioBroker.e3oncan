@@ -8,7 +8,12 @@ und der `rawApiVersion`/`rawWriteEnabled`-Teil von Abschnitt 3 sind
 implementiert, geflasht und **Ende-zu-Ende gegen die Simulator-Umgebung
 verifiziert** (`GET /api/rawread` gelesen, `rawWriteEnabled` per
 `/api/settings` gesetzt, `POST /api/rawwrite` auf DID 396 geschrieben,
-Little-Endian-Kodierung über Rücklesen bestätigt). Abschnitt 2
+Little-Endian-Kodierung über Rücklesen bestätigt). Abschnitt 5
+(Scan-Umbau auf Firmware-Delegation, nutzt ausschließlich bereits
+vorhandene Endpoints — kein neuer Firmware-Code nötig) ist ebenfalls
+implementiert und **Ende-zu-Ende verifiziert** (Geräte-Scan mit
+Fortschrittsanzeige, Datenpunkt-Scan mit und ohne Speichern, 7 Geräte /
+über 1200 DIDs, Varianten-Erkennung inklusive). Abschnitt 2
 (Raw-MQTT-Topic für Collect/E380) und der Push-Teil von Abschnitt 3
 (retained `open3e/status`) sind noch offen.
 
@@ -168,3 +173,97 @@ timeouten zu lassen.
 - Neue Verbindungsart in `admin/jsonConfig.json` pro Bus (ext/int):
   „CAN-Interface (lokal)" vs. „Gateway (open3e-esp32)" — bei Gateway:
   REST-Basis-URL, MQTT-Broker-URL/Zugangsdaten, Raw-Topic-Präfix.
+
+## 5. Geräte-/Datenpunkt-Scan im Gateway-Betrieb
+
+**Nicht** wie beim lokalen Bus über einzelne `rawread`-Aufrufe pro
+Kandidatenadresse/DID (das würde bei gestaffelt-aber-gleichzeitig
+gestarteten Anfragen hinter der Firmware-eigenen Bus-Owner-Queue aufstauen
+und in Client-Timeouts laufen — Größenordnung Sekunden statt der ~1 Min./ECU,
+die ein nativer Scan braucht). Stattdessen: die komplette
+Geräte-/DID-Existenz-Erkennung an die bereits vorhandene, schnelle
+Scan-Engine der Firmware delegieren.
+
+### Ablauf
+
+1. `POST /api/scan` mit `{"mode": "known"}` (Default; `"full"` als Option
+   für undokumentierte DIDs, deutlich langsamer) — startet Geräte- **und**
+   DID-Scan als einen durchgehenden Firmware-Lauf (`SCAN_ECUS` →
+   `SCAN_DIDS` → `SCAN_DONE`, nicht zwei separat startbare Vorgänge).
+2. `GET /api/status` pollen, `scan.phase`/`scan.probed`/`scan.total`/
+   `scan.curDid` für eine **echte Fortschrittsanzeige** im
+   Geräte-Scan-Dialog nutzen (die Firmware liefert das ohnehin für ihre
+   eigene Web-UI, kein Mehraufwand).
+3. Nach `scan.phase == "done"`: `GET /api/system` einmalig abholen —
+   liefert pro ECU Metadaten (`prop`, `function`, `sw`, `hw`, `vin`,
+   `ident`) **und** alle gefundenen DIDs als `[did, Antwortlänge]`-Paare.
+   Keine Werte, nur Existenz+Länge — passt zu unserem Prinzip, dass
+   ioBroker.e3oncan der einzige Ort bleibt, der Bytes deutet.
+
+Zwei Stolperfallen, auf die beim Implementieren tatsächlich reingefallen
+wurde, für spätere Referenz:
+
+- `addrHex` kommt großgeschrieben zurück (`"0x6A1"`), während
+  ioBroker.e3oncan überall sonst kleingeschriebene Hex-Strings verwendet
+  (`toString(16)` in JS ist immer lowercase) — ohne Normalisierung liefen
+  Lookups für jede Adresse mit einem Hex-Buchstaben (a/b/c/d/e/f) ins Leere.
+- Das Ergebnis aus (3) nur im Adapter-Prozessspeicher zu halten reicht
+  nicht: Das Bestätigen der Geräteliste im Scan-Dialog speichert die
+  Adapter-Config, was einen Adapter-Neustart auslöst — der Cache ist dann
+  weg. Der DID-Scan muss `/api/system` bei Bedarf selbst erneut abholen
+  (kein neuer Scan nötig, die Firmware hält ihr letztes Ergebnis ohnehin
+  persistent auf ihrer eigenen Storage-Partition).
+
+### Zweistufigkeit bleibt erhalten
+
+Der bestehende UX-Grund für getrennten Geräte-/DID-Scan (Anwender kann
+Gerätenamen ändern, bevor darunter irgendetwas im Objektbaum gespeichert
+wird) bleibt bestehen, nur die Mechanik dahinter ändert sich:
+
+- **Geräte-Scan-Dialog**: löst intern bereits den kompletten Lauf aus
+  (1)–(3) aus, zeigt aber weiterhin nur die Geräteliste zum Bestätigen/
+  Umbenennen — die DID-Existenz-Infos liegen im Hintergrund schon bereit.
+  Dauert dadurch spürbar länger als der bisherige reine Adress-Sweep
+  (Sekunden bis niedrige Minuten statt Sekunden) — Fortschrittsanzeige
+  (siehe oben) fängt das ab.
+- **Datenpunkt-Scan** (nach Bestätigung): „Speichern" bedeutet **nicht**
+  „lesen oder nicht lesen" — in beiden Fällen werden die gefundenen DIDs
+  gelesen und decodiert, das ist nötig, um geräte-spezifische Varianten
+  (per Antwortlänge) zu erkennen und die Metadaten (`didsDictDevCom`,
+  Schreibbarkeit) anzulegen/zu aktualisieren. Der Unterschied liegt allein
+  darin, ob dabei **neue** Objekte im Baum angelegt werden — das regelt
+  `storage.js`s bestehende `suppressStateStorage`-Prüfung bereits
+  transportunabhängig, dafür war keine Gateway-spezifische Änderung nötig.
+  Technisch: kein Batching über `rawread` (die Batch-Fähigkeit aus
+  Abschnitt 1 wird hier nicht genutzt) — stattdessen die bestehende,
+  bereits pro Worker sequenzielle Kommando-Queue (`readByDid` je DID)
+  unverändert weiterverwenden, nur mit der auf tatsächlich vorhandene DIDs
+  eingeschränkten Kandidatenliste aus (3) statt einem blinden
+  256–4000-Sweep. Je gefundenem Gerät startet ein eigener Worker,
+  gestaffelt um 500 ms. Das reichte in der Praxis aus (Ende-zu-Ende
+  gegen die Simulator-Umgebung verifiziert: 1215 DIDs über 6 Geräte,
+  vereinzelte reguläre Retries, sauber durchgelaufen in rund einer
+  Minute, kein Timeout-Stau) — kein Konkurrenzproblem mehr, weil das
+  *nach* dem Firmware-Scan läuft, nicht parallel dazu.
+
+### Collect-/Energiezähler-Erkennung — bleibt unabhängig davon offen
+
+Weder die Firmware-Scan-Engine noch der neue Ablauf oben erkennen
+Collect-Geräte oder Energiezähler (E380/E3100CB) — beide antworten nicht
+auf Anfragen, sondern broadcasten nur, das ist prinzipiell nicht per
+Request/Response scannbar. Das gilt für open3e-esp32 selbst genauso
+(`em380_enabled`/`collect_enabled` sind dort manuelle Schalter ohne
+Auto-Erkennung).
+
+Was ioBroker.e3oncan heute an Komfort bietet, bleibt aber teilweise
+nutzbar, auch ohne Abschnitt 2:
+
+- **Zuordnung** Gerätetyp → wahrscheinliche Collect-CAN-ID (`prop`-Feld
+  aus `/api/system`, z. B. `HPMUMASTER` → `0x693`, statische Tabelle
+  `udsDevName2CanId`): funktioniert sofort, ganz ohne Rohdaten-Quelle —
+  reine Zuordnung auf Basis von Scan-Daten, die schon da sind. Als
+  **unbestätigter Vorschlag** anbieten, den der Anwender manuell aktiviert.
+- **Live-Bestätigung** (läuft auf dieser CAN-ID tatsächlich Traffic):
+  braucht weiterhin das Raw-MQTT-Topic aus Abschnitt 2 — keine
+  zusätzliche Firmware-Änderung darüber hinaus nötig, aber ohne das keine
+  Bestätigung.
