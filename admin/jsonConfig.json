@@ -102,6 +102,19 @@
                     "hidden": "data.canExtTransport !== 'gateway'",
                     "newLine": false
                 },
+                "canExtGatewayMqttBaseTopic": {
+                    "xs": 12,
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 2,
+                    "xl": 2,
+                    "type": "text",
+                    "label": "MQTT base topic",
+                    "tooltip": "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.",
+                    "default": "open3e",
+                    "hidden": "data.canExtTransport !== 'gateway'",
+                    "newLine": false
+                },
                 "canExtGatewayMqttUser": {
                     "xs": 12,
                     "sm": 2,
@@ -193,6 +206,19 @@
                     "label": "Gateway MQTT broker URL",
                     "tooltip": "MQTT broker URL the gateway publishes raw frames and status to, e.g. mqtt://open3e-esp32-2.local",
                     "default": "mqtt://open3e-esp32-2.local",
+                    "hidden": "data.canIntTransport !== 'gateway'",
+                    "newLine": false
+                },
+                "canIntGatewayMqttBaseTopic": {
+                    "xs": 12,
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 2,
+                    "xl": 2,
+                    "type": "text",
+                    "label": "MQTT base topic",
+                    "tooltip": "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.",
+                    "default": "open3e",
                     "hidden": "data.canIntTransport !== 'gateway'",
                     "newLine": false
                 },
