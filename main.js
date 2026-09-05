@@ -705,17 +705,21 @@ class E3oncan extends utils.Adapter {
         return [channel, chName];
     }
 
+    /**
+     * @param {object} channel  Channel to disconnect, or null/undefined if there is none
+     * @param {string} name  Name to log (interface name or broker URL)
+     * @returns {Array}  [null, ''] always, so a caller can destructure it the same way as connectToCan()'s result
+     */
     disconnectFromCan(channel, name) {
         if (channel) {
             try {
                 channel.stop();
                 this.log.info(`CAN-Adapter disconnected: ${name}`);
-                channel = null;
             } catch (e) {
                 this.log.error(`Could not disconnect from CAN "${name}" - err=${e.message}`);
-                channel = null;
             }
         }
+        return [null, ''];
     }
 
     // Setup E380 collect worker for CAN address 97 (odd CAN IDs):
@@ -994,14 +998,21 @@ class E3oncan extends utils.Adapter {
                             em.e380_98 ? `E380 (CAN addr 98, ${emChan(em.e380_98)})` : null,
                             em.e3100cb ? `E3100CB (${emChan(em.e3100cb)})` : null,
                         ].filter(Boolean);
+                        // @ts-expect-error AdapterConfig
+                        const extIsGateway = (this.config.canExtTransport || 'local') === 'gateway';
+                        const energyMeterDetectionResult =
+                            emParts.length > 0
+                                ? emParts.join(', ')
+                                : extIsGateway
+                                  ? 'Not checked (gateway transport needs the raw MQTT topic, not yet available)'
+                                  : 'None detected';
                         await this.sendTo(
                             obj.from,
                             obj.command,
                             {
                                 native: {
                                     tableUdsDevices: this.udsDevices,
-                                    energyMeterDetectionResult:
-                                        emParts.length > 0 ? emParts.join(', ') : 'None detected',
+                                    energyMeterDetectionResult: energyMeterDetectionResult,
                                 },
                             },
                             obj.callback,
