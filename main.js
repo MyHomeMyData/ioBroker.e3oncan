@@ -704,6 +704,9 @@ class E3oncan extends utils.Adapter {
                         : can.createRawChannel(name, true);
                 await channel.addListener('onMessage', onMsg, this);
                 await channel.addListener('onStopped', onStop, this);
+                if (transport === 'gateway') {
+                    await channel.addListener('onRecovered', this.onGatewayRecovered, this);
+                }
                 await channel.start();
                 this.cntCanConnActual++;
                 if (transport === 'gateway') {
@@ -1255,22 +1258,45 @@ class E3oncan extends utils.Adapter {
         }
     }
 
-    onCanExtStopped() {
+    /**
+     * @param {string} [reason]  Gateway transport's evaluateHealth() passes a
+     *   specific cause here; the local socketcan channel passes nothing.
+     */
+    onCanExtStopped(reason) {
         if (!this.stoppingInstance) {
             // External CAN connection was terminated unexpectedly
-            this.log.error('External CAN bus was stopped.');
+            this.log.error(`External CAN bus was stopped.${reason ? ` Reason: ${reason}.` : ''}`);
         }
         this.cntCanConnActual--;
         this.setState('info.connection', false, true);
     }
 
-    onCanIntStopped() {
+    /**
+     * @param {string} [reason]  See onCanExtStopped().
+     */
+    onCanIntStopped(reason) {
         if (!this.stoppingInstance) {
             // External CAN connection was terminated unexpectedly
-            this.log.error('Internal CAN bus was stopped.');
+            this.log.error(`Internal CAN bus was stopped.${reason ? ` Reason: ${reason}.` : ''}`);
         }
         this.cntCanConnActual--;
         this.setState('info.connection', false, true);
+    }
+
+    /**
+     * A gateway channel's health recovered after 'onStopped' had already
+     * fired for it (lib/canGatewayChannel.js). Reconnecting its UDS/Collect
+     * workers safely in place is the same hard problem ioBroker.e3oncan#255
+     * deliberately left to an external watchdog restarting the whole
+     * instance rather than attempting in-adapter - so this does the same
+     * full restart, just event-driven and without needing that separate
+     * script. No rate limiting of its own: this only fires on an actual
+     * recovery, never on continued failure, and js-controller has its own
+     * protection against a restart loop.
+     */
+    onGatewayRecovered() {
+        this.log.info('Gateway connection recovered - restarting the adapter to reconnect.');
+        this.terminate('Gateway connection recovered', utils.EXIT_CODES.START_IMMEDIATELY_AFTER_STOP);
     }
 
     onCanMsgExt(msg) {
