@@ -102,6 +102,29 @@ werden veröffentlicht — nach dem Muster der bestehenden
 `collectCanIds`-Einstellung. Unabhängig von decodierten Topics,
 `points.json` und Auto-Discovery.
 
+### Auf ioBroker.e3oncan-Seite: `rawCanIds` automatisch setzen
+
+`main.js` berechnet die Menge selbst und schreibt sie per `PUT
+/api/settings` an jeden Bus mit Gateway-Transport (`computeGatewayRawCanIds()`
++ `configureGatewayRawCanIds()`, aufgerufen in `onReady()` nach dem
+Verbindungsaufbau) — kein manuelles Pflegen durch den Anwender nötig:
+
+- **Beide Energiezähler, alle CAN-IDs, immer** (E380 0x250–0x25D, E3100CB
+  0x569) — unabhängig davon, ob `e380Active`/`e3100cbActive` gerade
+  aktiviert sind. Grund: die passive Erkennung während des Scans
+  (`lib/udsScan.js`) muss diese IDs schon sehen, bevor der Anwender
+  überhaupt einen Grund hätte, sie zu aktivieren.
+- **Alle vom Geräte-Scan vorgeschlagenen `collectCanId`-Werte** aus der
+  bestätigten Geräte-Tabelle, unabhängig davon, ob der Anwender die
+  Collect-Aktivierung dafür schon eingeschaltet hat (`collectIdsFromDevices()`
+  in `lib/udsScan.js`, jetzt eine eigenständige, exportierte Funktion —
+  vorher inline in `scanUdsDids()`, jetzt auch von `main.js`
+  wiederverwendet, damit beide Stellen dieselbe Quelle haben).
+
+Eine ID zu relayen, für die nie Verkehr kommt, kostet nichts; eine
+benötigte nicht zu relayen, bricht Erkennung oder Collect-Betrieb still.
+Deshalb bewusst großzügig statt exakt.
+
 ### Zwei Stolperfallen, die beim Implementieren tatsächlich auftraten
 
 - **Eine Listener-Spanne über weit auseinanderliegende IDs schluckt fremden
@@ -126,6 +149,34 @@ werden veröffentlicht — nach dem Muster der bestehenden
   auf (nicht nur den ersten) und fällt nur an die ISO-TP-Queue durch, wenn
   **keiner** gepasst hat — `em380.c` deckt seine eigene Dekodierung weiter
   ab, während der Raw-Relay-Listener parallel dieselben Frames sieht.
+- **`rawCanIds` wurde beim Schreiben über `PUT /api/settings` stillschweigend
+  abgeschnitten**, sobald `computeGatewayRawCanIds()` (s.o.) beide
+  Energiezähler plus Collect-IDs kombinierte (> 63 Zeichen) — Symptom: der
+  Geräte-Scan meldete „Energiezähler: keine erkannt", obwohl E380 zuvor per
+  manuell gesetztem, kürzerem `rawCanIds` nachweislich funktionierte.
+  Ursache: `sys_cfg_t.raw_canids` (`app_config.h`) nutzte wie alle anderen
+  Zeichenketten-Felder `CFG_STR_MAX` (64 Byte) — zu klein für bis zu
+  `RAW_RELAY_MAX_IDS` (32) IDs. Fix: eigene `CFG_RAW_IDS_MAX` (256 Byte) für
+  `raw_canids`; die lokale `raw_ids_was`-Kopie in `h_settings_put()`
+  (Änderungserkennung) musste auf dieselbe Größe angepasst werden, sonst
+  hätte sie ihrerseits abgeschnitten und die Änderungserkennung verfälscht.
+- **`gatewayChannel` (ioBroker-Seite) hörte auf das falsche MQTT-Topic-
+  Präfix**, sobald das Gateway mit einem von `"open3e"` abweichenden
+  `mqtt.baseTopic` betrieben wird (z. B. `"open3e32"`). `main.js` reichte
+  beim Aufbau des Kanals nur `brokerUrl`/`username`/`password` durch, nie
+  das Base-Topic — `gatewayChannel` fiel also stumm auf seinen
+  hartkodierten Default `"open3e"` zurück und abonnierte
+  `open3e/raw/+`/`open3e/LWT`/`open3e/status`, während das Gateway
+  tatsächlich unter `open3e32/...` publizierte. Symptom: identisch zum
+  Buffer-Bug oben (Scan meldet „keine Energiezähler/Collect-Geräte
+  erkannt"), obwohl `rawCanIds` korrekt gesetzt war und die MQTT-Nachrichten
+  extern nachweislich ankamen — der Adapter selbst hat sie schlicht nie
+  gesehen, auch die LWT/status-Gesundheitsprüfung lief seither ins Leere
+  (weder gesund noch `onStopped`, einfach nie befüllt). Fix: neues
+  Config-Feld `canExtGatewayMqttBaseTopic`/`canIntGatewayMqttBaseTopic`
+  (Default `"open3e"`, muss zum Gateway passen); `gatewayChannel` leitet
+  `rawTopicPrefix` jetzt aus `baseTopic` ab (`${baseTopic}/raw`) statt
+  beides unabhängig hartzukodieren.
 
 ## 3. Status & Fähigkeits-Erkennung
 
@@ -205,7 +256,12 @@ timeouten zu lassen.
   in `lib/udsScan.js` bleiben dadurch **komplett unverändert**.
 - Neue Verbindungsart in `admin/jsonConfig.json` pro Bus (ext/int):
   „CAN-Interface (lokal)" vs. „Gateway (open3e-esp32)" — bei Gateway:
-  REST-Basis-URL, MQTT-Broker-URL/Zugangsdaten, Raw-Topic-Präfix.
+  REST-Basis-URL, MQTT-Broker-URL/Zugangsdaten, MQTT-Base-Topic (muss zum
+  Gateway-eigenen `mqtt.baseTopic` passen, s.u. — Default `"open3e"`,
+  daraus leitet `gatewayChannel` sowohl das Raw-Topic-Präfix
+  (`<baseTopic>/raw`) als auch `<baseTopic>/LWT`/`<baseTopic>/status` ab;
+  ein explizites `rawTopicPrefix` in der Kanal-Konfiguration überschreibt
+  nur den Raw-Teil, für den unwahrscheinlichen Fall, dass der abweicht).
 
 ## 5. Geräte-/Datenpunkt-Scan im Gateway-Betrieb
 
