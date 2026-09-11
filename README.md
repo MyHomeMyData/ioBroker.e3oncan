@@ -427,6 +427,9 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Fixed CAN connection dropping unexpectedly and never recovering on a healthy bus (updated `socketcan` to 4.3.1, which stops treating a recoverable socket error the same as a real disconnect). Refer to issue #255.
+
 ### 1.1.2 (2026-07-16)
 * (MyHomeMyData) Fixed missing update of meta data (unit, description) when user changes device specific data point definition
 
