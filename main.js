@@ -314,6 +314,7 @@ class E3oncan extends utils.Adapter {
         // so this adapter's own Collect/energy-meter code (fed via
         // lib/canGatewayChannel.js, unchanged either way) has something to see:
         await this.configureGatewayRawCanIds();
+        await this.checkGatewayRawWrite();
 
         // Setup energy meter collect workers for detected and activated meters:
         if (this.channelExt || this.channelInt) {
@@ -772,6 +773,44 @@ class E3oncan extends utils.Adapter {
     }
 
     /**
+     * REST base URLs of all buses configured as gateway transport.
+     *
+     * @returns {string[]}
+     */
+    gatewayBaseUrls() {
+        const targets = [
+            // @ts-expect-error AdapterConfig
+            [this.config.canExtTransport, this.config.canExtGatewayUrl],
+            // @ts-expect-error AdapterConfig
+            [this.config.canIntTransport, this.config.canIntGatewayUrl],
+        ];
+        return targets.filter(([transport, base]) => transport === 'gateway' && base).map(([, base]) => base);
+    }
+
+    /**
+     * Warn once per gateway if raw write is switched off there: every
+     * data point write over a gateway goes through /api/rawwrite, so without it
+     * the writes fail and the log only shows a generic error per write.
+     */
+    async checkGatewayRawWrite() {
+        for (const base of this.gatewayBaseUrls()) {
+            try {
+                const settings = await udsScan.fetchJson(`${base}/api/settings`, {
+                    signal: AbortSignal.timeout(5000),
+                });
+                if (settings.system?.rawWriteEnabled === false) {
+                    await this.log.warn(
+                        `Raw write is disabled on gateway ${base}. Data point writes over this gateway will fail. ` +
+                            `Enable "Raw write" in the gateway's system settings if you need to write.`,
+                    );
+                }
+            } catch (e) {
+                await this.log.warn(`Could not check raw write setting of gateway ${base}: ${e.message}`);
+            }
+        }
+    }
+
+    /**
      * Push the current raw CAN-ID set to every bus running as a gateway.
      * Failure only logs a warning - detection/collection over the gateway
      * would simply see nothing until the next successful attempt, not
@@ -779,16 +818,7 @@ class E3oncan extends utils.Adapter {
      */
     async configureGatewayRawCanIds() {
         const rawCanIds = this.computeGatewayRawCanIds();
-        const targets = [
-            // @ts-expect-error AdapterConfig
-            [this.config.canExtTransport, this.config.canExtGatewayUrl],
-            // @ts-expect-error AdapterConfig
-            [this.config.canIntTransport, this.config.canIntGatewayUrl],
-        ];
-        for (const [transport, base] of targets) {
-            if (transport !== 'gateway' || !base) {
-                continue;
-            }
+        for (const base of this.gatewayBaseUrls()) {
             try {
                 const res = await fetch(`${base}/api/settings`, {
                     method: 'PUT',
