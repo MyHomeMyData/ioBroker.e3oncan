@@ -402,6 +402,8 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 * (MyHomeMyData) Gateway: energy meters and Collect devices are detected as on a local bus
 * (MyHomeMyData) Gateway: relayed CAN IDs are configured automatically on each start
 * (MyHomeMyData) Gateway: connection state follows the gateway's health; the adapter restarts itself when the gateway recovers
+* (MyHomeMyData) Requires Node.js 22.22.2 or newer, or Node.js 24.15 or newer. The adapter is tested with Node.js 22, 24 and 26
+* (MyHomeMyData) Fixed the connection state after a reconnect during the device scan: a local CAN bus that stops afterwards is now reported and sets the connection state to disconnected
 
 ### 1.1.3 (2026-09-11)
 * (MyHomeMyData) Fixed CAN connection dropping unexpectedly and never recovering on a healthy bus (updated `socketcan` to 4.3.1, which stops treating a recoverable socket error the same as a real disconnect). Refer to issue #255.
