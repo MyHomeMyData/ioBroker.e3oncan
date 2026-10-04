@@ -88,5 +88,21 @@
     "active": "aktywny",
     "n/a": "nie dotyczy",
     "► After the scan, browse and manage the discovered data points using the 'datapoints page', which is accessible via the link button in the adapter's instance row.": "► Po skanowaniu przeglądaj wykryte punkty danych i zarządzaj nimi za pomocą „strony punktów danych”, która jest dostępna za pośrednictwem przycisku łącza w wierszu instancji adaptera.",
-    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.": "► Alternatywnie możesz skorzystać z zakładki „Przypisania do adaptera UDS CAN” znajdującej się w tym oknie dialogowym konfiguracji."
+    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.": "► Alternatywnie możesz skorzystać z zakładki „Przypisania do adaptera UDS CAN” znajdującej się w tym oknie dialogowym konfiguracji.",
+    "Base URL of the open3e-esp32 gateway's REST API, e.g. http://open3e-esp32-2.local": "Adres bazowy REST API bramy open3e-esp32, np. http://open3e-esp32-2.local",
+    "Base URL of the open3e-esp32 gateway's REST API, e.g. http://open3e-esp32.local": "Adres bazowy REST API bramy open3e-esp32, np. http://open3e-esp32.local",
+    "Connection type": "Typ połączenia",
+    "Energy meters on CAN bus": "Liczniki energii na magistrali CAN",
+    "Gateway MQTT broker URL": "Adres brokera MQTT bramy",
+    "Gateway REST URL": "Adres REST bramy",
+    "Local CAN interface": "Lokalny interfejs CAN",
+    "Local CAN interface, or an open3e-esp32 gateway reached over the network.": "Lokalny interfejs CAN lub brama open3e-esp32 dostępna przez sieć.",
+    "MQTT base topic": "Temat bazowy MQTT",
+    "MQTT broker URL the gateway publishes raw frames and status to, e.g. mqtt://open3e-esp32-2.local": "Adres brokera MQTT, na który brama publikuje surowe ramki i status, np. mqtt://open3e-esp32-2.local",
+    "MQTT broker URL the gateway publishes raw frames and status to, e.g. mqtt://open3e-esp32.local": "Adres brokera MQTT, na który brama publikuje surowe ramki i status, np. mqtt://open3e-esp32.local",
+    "MQTT password": "Hasło MQTT",
+    "MQTT username": "Nazwa użytkownika MQTT",
+    "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Musi odpowiadać ustawieniu mqtt.baseTopic bramy (patrz /api/settings), niekoniecznie wartości domyślnej firmware.",
+    "Symbol '.' not allowed in 'Device state name'!": "Znak „.” nie jest dozwolony w „Nazwie stanu urządzenia”!",
+    "open3e-esp32 gateway": "Brama open3e-esp32"
 }

@@ -23,6 +23,9 @@ try {
 } catch (e) {
     canLoadError = e;
 }
+// Raw API version of open3e-esp32 this adapter was written against (RAW_API_VERSION in its httpd_api.c):
+const GATEWAY_RAW_API_VERSION = 1;
+const adapterVersion = require('./package.json').version;
 const storage = require('./lib/storage');
 const E3DidsDict = require('./lib/didsE3.json');
 const E3DidsVarDict = require('./lib/didsE3var.json');
@@ -31,6 +34,8 @@ const E3100CBDidsDict = require('./lib/didsE3100CB.json');
 const E3DidsWritable = require('./lib/didsE3Writables.json');
 const collect = require('./lib/canCollect');
 const uds = require('./lib/canUds');
+const udsGateway = require('./lib/canUdsGateway');
+const gatewayChannel = require('./lib/canGatewayChannel');
 const udsScan = require('./lib/udsScan');
 
 class E3oncan extends utils.Adapter {
@@ -124,6 +129,7 @@ class E3oncan extends utils.Adapter {
         }
 
         await this.log.info(`Startup of instance ${this.namespace}: Starting.`);
+        await this.log.debug(`Adapter version ${adapterVersion}`);
         //await this.log.debug('this.config:');
         //await this.log.debug(JSON.stringify(this.config));
 
@@ -256,7 +262,20 @@ class E3oncan extends utils.Adapter {
             [this.channelExt, this.channelExtName] = await this.connectToCan(
                 this.channelExt,
                 // @ts-expect-error AdapterConfig
+                this.config.canExtTransport || 'local',
+                // @ts-expect-error AdapterConfig
                 this.config.canExtName,
+                {
+                    // @ts-expect-error AdapterConfig
+                    brokerUrl: this.config.canExtGatewayMqttUrl,
+                    // @ts-expect-error AdapterConfig
+                    username: this.config.canExtGatewayMqttUser,
+                    // @ts-expect-error AdapterConfig
+                    password: this.config.canExtGatewayMqttPassword,
+                    // @ts-expect-error AdapterConfig
+                    baseTopic: this.config.canExtGatewayMqttBaseTopic,
+                    log: this.log,
+                },
                 this.onCanMsgExt,
                 this.onCanExtStopped,
             );
@@ -271,7 +290,20 @@ class E3oncan extends utils.Adapter {
             [this.channelInt, this.channelIntName] = await this.connectToCan(
                 this.channelInt,
                 // @ts-expect-error AdapterConfig
+                this.config.canIntTransport || 'local',
+                // @ts-expect-error AdapterConfig
                 this.config.canIntName,
+                {
+                    // @ts-expect-error AdapterConfig
+                    brokerUrl: this.config.canIntGatewayMqttUrl,
+                    // @ts-expect-error AdapterConfig
+                    username: this.config.canIntGatewayMqttUser,
+                    // @ts-expect-error AdapterConfig
+                    password: this.config.canIntGatewayMqttPassword,
+                    // @ts-expect-error AdapterConfig
+                    baseTopic: this.config.canIntGatewayMqttBaseTopic,
+                    log: this.log,
+                },
                 this.onCanMsgInt,
                 this.onCanIntStopped,
             );
@@ -281,6 +313,12 @@ class E3oncan extends utils.Adapter {
             // All configured CAN connections are established
             await this.setState('info.connection', true, true);
         }
+
+        // Tell any gateway-transport bus which CAN-IDs to relay raw over MQTT,
+        // so this adapter's own Collect/energy-meter code (fed via
+        // lib/canGatewayChannel.js, unchanged either way) has something to see:
+        await this.configureGatewayRawCanIds();
+        await this.checkGatewayCapabilities();
 
         // Setup energy meter collect workers for detected and activated meters:
         if (this.channelExt || this.channelInt) {
@@ -653,18 +691,41 @@ class E3oncan extends utils.Adapter {
 
     // Setup CAN busses
 
-    async connectToCan(channel, name, onMsg, onStop) {
-        let chName = name;
+    /**
+     * @param {object} channel  Existing channel object, or null/undefined to create one
+     * @param {string} transport  'local' (default) or 'gateway'
+     * @param {string} name  Local CAN interface name (transport 'local' only)
+     * @param {object} gatewayConfig  MQTT connection config for the gateway channel (transport 'gateway' only)
+     * @param {(msg: object) => void} onMsg  onMessage listener
+     * @param {() => void} onStop  onStopped listener
+     */
+    async connectToCan(channel, transport, name, gatewayConfig, onMsg, onStop) {
+        let chName = transport === 'gateway' ? gatewayConfig.brokerUrl : name;
         if (!channel) {
             try {
-                channel = can.createRawChannel(name, true);
+                channel =
+                    transport === 'gateway'
+                        ? new gatewayChannel.gatewayChannel(gatewayConfig)
+                        : can.createRawChannel(name, true);
                 await channel.addListener('onMessage', onMsg, this);
                 await channel.addListener('onStopped', onStop, this);
+                if (transport === 'gateway') {
+                    await channel.addListener('onRecovered', this.onGatewayRecovered, this);
+                }
                 await channel.start();
                 this.cntCanConnActual++;
-                await this.log.info(`CAN-Adapter connected: ${name}`);
+                if (transport === 'gateway') {
+                    // start() only kicks off the MQTT connection attempt, it
+                    // does not confirm one - and "CAN-Adapter connected" would
+                    // wrongly name the broker as the CAN adapter anyway. The
+                    // gateway channel logs the real connect/fail itself, once
+                    // the broker actually answers.
+                    await this.log.debug(`Gateway channel starting, broker: ${chName}`);
+                } else {
+                    await this.log.info(`CAN-Adapter connected: ${chName}`);
+                }
             } catch (e) {
-                await this.log.error(`Could not connect to CAN-Adapter "${name}" - err=${e.message}`);
+                await this.log.error(`Could not connect to CAN-Adapter "${chName}" - err=${e.message}`);
                 channel = null;
                 chName = '';
             }
@@ -672,15 +733,129 @@ class E3oncan extends utils.Adapter {
         return [channel, chName];
     }
 
+    /**
+     * @param {object} channel  Channel to disconnect, or null/undefined if there is none
+     * @param {string} name  Name to log (interface name or broker URL)
+     * @returns {Array}  [null, ''] always, so a caller can destructure it the same way as connectToCan()'s result
+     */
     disconnectFromCan(channel, name) {
         if (channel) {
             try {
                 channel.stop();
                 this.log.info(`CAN-Adapter disconnected: ${name}`);
-                channel = null;
             } catch (e) {
                 this.log.error(`Could not disconnect from CAN "${name}" - err=${e.message}`);
-                channel = null;
+            }
+        }
+        return [null, ''];
+    }
+
+    /**
+     * CAN-IDs a gateway should relay raw over MQTT (docs/raw-gateway-api.md
+     * section 2): both energy meters' fixed broadcast IDs, always - not
+     * gated on e380Active/e3100cbActive, because the scan's own passive
+     * detection (lib/udsScan.js) needs to see them before a user has any
+     * reason to enable collection - plus every device-type-suggested
+     * collectCanId from the confirmed device table, whether or not the user
+     * has activated collection for it yet. Relaying an ID nobody ever sends
+     * costs nothing; not relaying one that is needed silently breaks
+     * detection or collection.
+     *
+     * @returns {string}  Comma-separated hex IDs, e.g. "0x250,0x251,...,0x693"
+     */
+    computeGatewayRawCanIds() {
+        const ids = new Set([
+            // E380, both meter addresses (97 odd, 98 even) combined:
+            0x250, 0x251, 0x252, 0x253, 0x254, 0x255, 0x256, 0x257, 0x258, 0x259, 0x25a, 0x25b, 0x25c, 0x25d,
+            // E3100CB:
+            0x569,
+        ]);
+        for (const id of udsScan.collectIdsFromDevices(this.config.tableUdsDevices)) {
+            ids.add(id);
+        }
+        return [...ids].map(id => `0x${id.toString(16)}`).join(',');
+    }
+
+    /**
+     * REST base URLs of all buses configured as gateway transport.
+     *
+     * @returns {string[]}  REST base URLs, empty if no bus uses a gateway
+     */
+    gatewayBaseUrls() {
+        const targets = [
+            // @ts-expect-error AdapterConfig
+            [this.config.canExtTransport, this.config.canExtGatewayUrl],
+            // @ts-expect-error AdapterConfig
+            [this.config.canIntTransport, this.config.canIntGatewayUrl],
+        ];
+        return targets.filter(([transport, base]) => transport === 'gateway' && base).map(([, base]) => base);
+    }
+
+    /**
+     * Check each gateway once at startup. A firmware without the raw API cannot
+     * serve the gateway transport at all, which is an error; a different raw API
+     * version is a warning. Raw write switched off is also a warning, because
+     * every data point write over a gateway goes through /api/rawwrite.
+     */
+    async checkGatewayCapabilities() {
+        for (const base of this.gatewayBaseUrls()) {
+            try {
+                const status = await udsScan.fetchJson(`${base}/api/status`, {
+                    signal: AbortSignal.timeout(5000),
+                });
+                await this.log.debug(
+                    `Gateway ${base}: firmware ${status.firmware}, built ${status.buildDate}, ` +
+                        `build id ${status.elfSha}, raw API version ${status.rawApiVersion}, ` +
+                        `raw write ${status.rawWriteEnabled ? 'enabled' : 'disabled'}`,
+                );
+                if (status.rawApiVersion === undefined) {
+                    await this.log.error(
+                        `Gateway ${base} does not provide the raw API. Its firmware is too old for the gateway transport - ` +
+                            `please update open3e-esp32.`,
+                    );
+                    continue;
+                }
+                if (status.rawApiVersion !== GATEWAY_RAW_API_VERSION) {
+                    await this.log.warn(
+                        `Gateway ${base} reports raw API version ${status.rawApiVersion}, this adapter expects ` +
+                            `${GATEWAY_RAW_API_VERSION}. Some features may not work.`,
+                    );
+                }
+                if (status.rawWriteEnabled === false) {
+                    await this.log.warn(
+                        `Raw write is disabled on gateway ${base}. Data point writes over this gateway will fail. ` +
+                            `Enable "Rohes Schreiben freigeben" in the gateway's system settings if you need to write.`,
+                    );
+                }
+            } catch (e) {
+                await this.log.warn(`Could not check capabilities of gateway ${base}: ${e.message}`);
+            }
+        }
+    }
+
+    /**
+     * Push the current raw CAN-ID set to every bus running as a gateway.
+     * Failure only logs a warning - detection/collection over the gateway
+     * would simply see nothing until the next successful attempt, not
+     * something worth failing adapter startup over.
+     */
+    async configureGatewayRawCanIds() {
+        const rawCanIds = this.computeGatewayRawCanIds();
+        for (const base of this.gatewayBaseUrls()) {
+            try {
+                const res = await fetch(`${base}/api/settings`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ system: { rawCanIds: rawCanIds } }),
+                    signal: AbortSignal.timeout(5000),
+                });
+                if (res.ok) {
+                    await this.log.info(`Configured gateway ${base} to relay raw CAN-IDs: ${rawCanIds}`);
+                } else {
+                    await this.log.warn(`Could not configure the gateway's raw CAN-ID relay - HTTP ${res.status}`);
+                }
+            } catch (e) {
+                await this.log.warn(`Could not configure the gateway's raw CAN-ID relay: ${e.message}`);
             }
         }
     }
@@ -762,6 +937,10 @@ class E3oncan extends utils.Adapter {
     // Setup workers for collecting data and for communication via UDS
 
     async setupUdsWorkers() {
+        // UDS communication only ever happens on the external bus - the internal
+        // bus is collect-only - so its transport alone decides the worker class.
+        // @ts-expect-error AdapterConfig
+        const UdsWorkerClass = this.config.canExtTransport === 'gateway' ? udsGateway.udsGateway : uds.uds;
         // Create an UDS worker for each device
         // This is to allow writing of data points even when no schedule for reading is defined
         for (const dev of Object.values(this.config.tableUdsDevices)) {
@@ -770,7 +949,7 @@ class E3oncan extends utils.Adapter {
             const devRxAddr = devTxAddr + 16;
             // @ts-expect-error AdapterConfig
             this.log.silly(`New UDS worker on ${String(dev.devStateName)}`);
-            this.E3UdsWorkers[devRxAddr] = new uds.uds({
+            this.E3UdsWorkers[devRxAddr] = new UdsWorkerClass({
                 canID: devTxAddr,
                 // @ts-expect-error AdapterConfig
                 stateBase: dev.devStateName,
@@ -780,6 +959,8 @@ class E3oncan extends utils.Adapter {
                 delay: 0,
                 active: false,
                 channel: this.channelExt,
+                // @ts-expect-error AdapterConfig
+                gatewayBaseUrl: this.config.canExtGatewayUrl,
                 timeout: this.udsTimeout,
             });
             await this.E3UdsWorkers[devRxAddr].initStates(this, 'standby');
@@ -955,14 +1136,14 @@ class E3oncan extends utils.Adapter {
                             em.e380_98 ? `E380 (CAN addr 98, ${emChan(em.e380_98)})` : null,
                             em.e3100cb ? `E3100CB (${emChan(em.e3100cb)})` : null,
                         ].filter(Boolean);
+                        const energyMeterDetectionResult = emParts.length > 0 ? emParts.join(', ') : 'None detected';
                         await this.sendTo(
                             obj.from,
                             obj.command,
                             {
                                 native: {
                                     tableUdsDevices: this.udsDevices,
-                                    energyMeterDetectionResult:
-                                        emParts.length > 0 ? emParts.join(', ') : 'None detected',
+                                    energyMeterDetectionResult: energyMeterDetectionResult,
                                 },
                             },
                             obj.callback,
@@ -1130,22 +1311,45 @@ class E3oncan extends utils.Adapter {
         }
     }
 
-    onCanExtStopped() {
+    /**
+     * @param {string} [reason]  Gateway transport's evaluateHealth() passes a
+     *   specific cause here; the local socketcan channel passes nothing.
+     */
+    onCanExtStopped(reason) {
         if (!this.stoppingInstance) {
             // External CAN connection was terminated unexpectedly
-            this.log.error('External CAN bus was stopped.');
+            this.log.error(`External CAN bus was stopped.${reason ? ` Reason: ${reason}.` : ''}`);
         }
         this.cntCanConnActual--;
         this.setState('info.connection', false, true);
     }
 
-    onCanIntStopped() {
+    /**
+     * @param {string} [reason]  See onCanExtStopped().
+     */
+    onCanIntStopped(reason) {
         if (!this.stoppingInstance) {
             // External CAN connection was terminated unexpectedly
-            this.log.error('Internal CAN bus was stopped.');
+            this.log.error(`Internal CAN bus was stopped.${reason ? ` Reason: ${reason}.` : ''}`);
         }
         this.cntCanConnActual--;
         this.setState('info.connection', false, true);
+    }
+
+    /**
+     * A gateway channel's health recovered after 'onStopped' had already
+     * fired for it (lib/canGatewayChannel.js). Reconnecting its UDS/Collect
+     * workers safely in place is the same hard problem ioBroker.e3oncan#255
+     * deliberately left to an external watchdog restarting the whole
+     * instance rather than attempting in-adapter - so this does the same
+     * full restart, just event-driven and without needing that separate
+     * script. No rate limiting of its own: this only fires on an actual
+     * recovery, never on continued failure, and js-controller has its own
+     * protection against a restart loop.
+     */
+    onGatewayRecovered() {
+        this.log.info('Gateway connection recovered - restarting the adapter to reconnect.');
+        this.terminate('Gateway connection recovered', utils.EXIT_CODES.START_IMMEDIATELY_AFTER_STOP);
     }
 
     onCanMsgExt(msg) {

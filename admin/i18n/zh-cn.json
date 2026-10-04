@@ -88,5 +88,21 @@
     "active": "积极的",
     "n/a": "不适用",
     "► After the scan, browse and manage the discovered data points using the 'datapoints page', which is accessible via the link button in the adapter's instance row.": "► 扫描后，使用“数据点页面”浏览和管理发现的数据点，可通过适配器实例行中的链接按钮访问该页面。",
-    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.": "► 或者，您可以使用此配置对话框中的“分配给 UDS CAN 适配器”选项卡。"
+    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.": "► 或者，您可以使用此配置对话框中的“分配给 UDS CAN 适配器”选项卡。",
+    "Base URL of the open3e-esp32 gateway's REST API, e.g. http://open3e-esp32-2.local": "open3e-esp32 网关 REST API 的基础 URL，例如 http://open3e-esp32-2.local",
+    "Base URL of the open3e-esp32 gateway's REST API, e.g. http://open3e-esp32.local": "open3e-esp32 网关 REST API 的基础 URL，例如 http://open3e-esp32.local",
+    "Connection type": "连接类型",
+    "Energy meters on CAN bus": "CAN 总线上的电能表",
+    "Gateway MQTT broker URL": "网关的 MQTT 代理 URL",
+    "Gateway REST URL": "网关的 REST URL",
+    "Local CAN interface": "本地 CAN 接口",
+    "Local CAN interface, or an open3e-esp32 gateway reached over the network.": "本地 CAN 接口，或通过网络连接的 open3e-esp32 网关。",
+    "MQTT base topic": "MQTT 基础主题",
+    "MQTT broker URL the gateway publishes raw frames and status to, e.g. mqtt://open3e-esp32-2.local": "网关发布原始帧和状态的 MQTT 代理 URL，例如 mqtt://open3e-esp32-2.local",
+    "MQTT broker URL the gateway publishes raw frames and status to, e.g. mqtt://open3e-esp32.local": "网关发布原始帧和状态的 MQTT 代理 URL，例如 mqtt://open3e-esp32.local",
+    "MQTT password": "MQTT 密码",
+    "MQTT username": "MQTT 用户名",
+    "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "必须与网关自身的 mqtt.baseTopic 设置一致（参见 /api/settings），不一定与固件默认值相同。",
+    "Symbol '.' not allowed in 'Device state name'!": "“设备状态名称”中不允许使用符号“.”！",
+    "open3e-esp32 gateway": "open3e-esp32 网关"
 }
