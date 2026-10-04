@@ -88,5 +88,21 @@
     "active": "actief",
     "n/a": "n.v.t",
     "► After the scan, browse and manage the discovered data points using the 'datapoints page', which is accessible via the link button in the adapter's instance row.": "► Blader en beheer na de scan de ontdekte datapunten met behulp van de 'datapuntenpagina', die toegankelijk is via de linkknop in de exemplaarrij van de adapter.",
-    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.": "► Als alternatief kunt u in dit configuratiedialoogvenster het tabblad 'Toewijzingen aan UDS CAN-adapter' gebruiken."
+    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.": "► Als alternatief kunt u in dit configuratiedialoogvenster het tabblad 'Toewijzingen aan UDS CAN-adapter' gebruiken.",
+    "Base URL of the open3e-esp32 gateway's REST API, e.g. http://open3e-esp32-2.local": "Basis-URL van de REST-API van de open3e-esp32-gateway, bijv. http://open3e-esp32-2.local",
+    "Base URL of the open3e-esp32 gateway's REST API, e.g. http://open3e-esp32.local": "Basis-URL van de REST-API van de open3e-esp32-gateway, bijv. http://open3e-esp32.local",
+    "Connection type": "Verbindingstype",
+    "Energy meters on CAN bus": "Energiemeters op de CAN-bus",
+    "Gateway MQTT broker URL": "MQTT-brokeradres van de gateway",
+    "Gateway REST URL": "REST-URL van de gateway",
+    "Local CAN interface": "Lokale CAN-interface",
+    "Local CAN interface, or an open3e-esp32 gateway reached over the network.": "Lokale CAN-interface of een via het netwerk bereikbare open3e-esp32-gateway.",
+    "MQTT base topic": "MQTT-basistopic",
+    "MQTT broker URL the gateway publishes raw frames and status to, e.g. mqtt://open3e-esp32-2.local": "MQTT-brokeradres waarnaar de gateway ruwe frames en status publiceert, bijv. mqtt://open3e-esp32-2.local",
+    "MQTT broker URL the gateway publishes raw frames and status to, e.g. mqtt://open3e-esp32.local": "MQTT-brokeradres waarnaar de gateway ruwe frames en status publiceert, bijv. mqtt://open3e-esp32.local",
+    "MQTT password": "MQTT-wachtwoord",
+    "MQTT username": "MQTT-gebruikersnaam",
+    "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Moet overeenkomen met de instelling mqtt.baseTopic van de gateway (zie /api/settings), niet noodzakelijk met de standaardwaarde van de firmware.",
+    "Symbol '.' not allowed in 'Device state name'!": "Het symbool „.“ is niet toegestaan in „Apparaat-statusnaam“!",
+    "open3e-esp32 gateway": "open3e-esp32-gateway"
 }

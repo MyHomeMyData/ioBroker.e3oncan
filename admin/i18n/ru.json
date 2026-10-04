@@ -88,5 +88,21 @@
     "active": "активный",
     "n/a": "н/д",
     "► After the scan, browse and manage the discovered data points using the 'datapoints page', which is accessible via the link button in the adapter's instance row.": "► После сканирования просматривайте обнаруженные точки данных и управляйте ими с помощью «страницы точек данных», доступной по кнопке ссылки в строке экземпляра адаптера.",
-    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.": "► Альтернативно вы можете использовать вкладку «Назначения адаптеру UDS CAN» в этом диалоговом окне конфигурации."
+    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.": "► Альтернативно вы можете использовать вкладку «Назначения адаптеру UDS CAN» в этом диалоговом окне конфигурации.",
+    "Base URL of the open3e-esp32 gateway's REST API, e.g. http://open3e-esp32-2.local": "Базовый URL REST-API шлюза open3e-esp32, напр. http://open3e-esp32-2.local",
+    "Base URL of the open3e-esp32 gateway's REST API, e.g. http://open3e-esp32.local": "Базовый URL REST-API шлюза open3e-esp32, напр. http://open3e-esp32.local",
+    "Connection type": "Тип подключения",
+    "Energy meters on CAN bus": "Счётчики энергии на шине CAN",
+    "Gateway MQTT broker URL": "URL брокера MQTT шлюза",
+    "Gateway REST URL": "REST-URL шлюза",
+    "Local CAN interface": "Локальный интерфейс CAN",
+    "Local CAN interface, or an open3e-esp32 gateway reached over the network.": "Локальный интерфейс CAN или шлюз open3e-esp32, доступный по сети.",
+    "MQTT base topic": "Базовый топик MQTT",
+    "MQTT broker URL the gateway publishes raw frames and status to, e.g. mqtt://open3e-esp32-2.local": "URL брокера MQTT, на который шлюз публикует необработанные кадры и статус, напр. mqtt://open3e-esp32-2.local",
+    "MQTT broker URL the gateway publishes raw frames and status to, e.g. mqtt://open3e-esp32.local": "URL брокера MQTT, на который шлюз публикует необработанные кадры и статус, напр. mqtt://open3e-esp32.local",
+    "MQTT password": "Пароль MQTT",
+    "MQTT username": "Имя пользователя MQTT",
+    "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Должно совпадать с настройкой mqtt.baseTopic шлюза (см. /api/settings), необязательно со значением по умолчанию прошивки.",
+    "Symbol '.' not allowed in 'Device state name'!": "Символ «.» не допускается в «Имени состояния устройства»!",
+    "open3e-esp32 gateway": "Шлюз open3e-esp32"
 }

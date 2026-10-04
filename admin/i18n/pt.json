@@ -88,5 +88,21 @@
     "active": "ativo",
     "n/a": "n / D",
     "► After the scan, browse and manage the discovered data points using the 'datapoints page', which is accessible via the link button in the adapter's instance row.": "► Após a varredura, navegue e gerencie os pontos de dados descobertos usando a 'página de pontos de dados', que pode ser acessada por meio do botão de link na linha da instância do adaptador.",
-    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.": "► Alternativamente, você pode usar a guia 'Atribuições ao adaptador CAN UDS' nesta caixa de diálogo de configuração."
+    "► Alternatively, you can use the tab 'Assignments to UDS CAN Adapter' within this configuration dialog.": "► Alternativamente, você pode usar a guia 'Atribuições ao adaptador CAN UDS' nesta caixa de diálogo de configuração.",
+    "Base URL of the open3e-esp32 gateway's REST API, e.g. http://open3e-esp32-2.local": "URL base da API REST do gateway open3e-esp32, p. ex. http://open3e-esp32-2.local",
+    "Base URL of the open3e-esp32 gateway's REST API, e.g. http://open3e-esp32.local": "URL base da API REST do gateway open3e-esp32, p. ex. http://open3e-esp32.local",
+    "Connection type": "Tipo de ligação",
+    "Energy meters on CAN bus": "Contadores de energia no barramento CAN",
+    "Gateway MQTT broker URL": "URL do broker MQTT do gateway",
+    "Gateway REST URL": "URL REST do gateway",
+    "Local CAN interface": "Interface CAN local",
+    "Local CAN interface, or an open3e-esp32 gateway reached over the network.": "Interface CAN local ou um gateway open3e-esp32 acessível pela rede.",
+    "MQTT base topic": "Tópico base MQTT",
+    "MQTT broker URL the gateway publishes raw frames and status to, e.g. mqtt://open3e-esp32-2.local": "URL do broker MQTT para o qual o gateway publica tramas brutas e estado, p. ex. mqtt://open3e-esp32-2.local",
+    "MQTT broker URL the gateway publishes raw frames and status to, e.g. mqtt://open3e-esp32.local": "URL do broker MQTT para o qual o gateway publica tramas brutas e estado, p. ex. mqtt://open3e-esp32.local",
+    "MQTT password": "Palavra-passe MQTT",
+    "MQTT username": "Nome de utilizador MQTT",
+    "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Tem de corresponder à definição mqtt.baseTopic do gateway (ver /api/settings), não necessariamente ao valor predefinido do firmware.",
+    "Symbol '.' not allowed in 'Device state name'!": "O símbolo «.» não é permitido em «Nome de estado do dispositivo»!",
+    "open3e-esp32 gateway": "Gateway open3e-esp32"
 }
