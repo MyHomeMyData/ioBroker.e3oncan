@@ -228,6 +228,14 @@
       }
     ]
   },
+  "protectedNative": [
+    "canExtGatewayMqttPassword",
+    "canIntGatewayMqttPassword"
+  ],
+  "encryptedNative": [
+    "canExtGatewayMqttPassword",
+    "canIntGatewayMqttPassword"
+  ],
   "native": {
     "tableUdsDevices": [],
     "tableUdsDids": [],
