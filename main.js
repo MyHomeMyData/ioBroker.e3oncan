@@ -775,7 +775,7 @@ class E3oncan extends utils.Adapter {
     /**
      * REST base URLs of all buses configured as gateway transport.
      *
-     * @returns {string[]}
+     * @returns {string[]}  REST base URLs, empty if no bus uses a gateway
      */
     gatewayBaseUrls() {
         const targets = [
