@@ -22,7 +22,7 @@
     "url": "https://github.com/MyHomeMyData/ioBroker.e3oncan.git"
   },
   "engines": {
-    "node": ">= 22.9.0"
+    "node": ">= 22.22.2 < 23 || >= 24.15.0"
   },
   "os": [
     "linux"
@@ -68,5 +68,10 @@
   "bugs": {
     "url": "https://github.com/MyHomeMyData/ioBroker.e3oncan/issues"
   },
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "allowScripts": {
+    "socketcan@4.3.1": true,
+    "esbuild": true,
+    "protobufjs@7.5.6": true
+  }
 }
