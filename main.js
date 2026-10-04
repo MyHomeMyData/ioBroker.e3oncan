@@ -23,6 +23,9 @@ try {
 } catch (e) {
     canLoadError = e;
 }
+// Raw API version of open3e-esp32 this adapter was written against (RAW_API_VERSION in its httpd_api.c):
+const GATEWAY_RAW_API_VERSION = 1;
+const adapterVersion = require('./package.json').version;
 const storage = require('./lib/storage');
 const E3DidsDict = require('./lib/didsE3.json');
 const E3DidsVarDict = require('./lib/didsE3var.json');
@@ -126,6 +129,7 @@ class E3oncan extends utils.Adapter {
         }
 
         await this.log.info(`Startup of instance ${this.namespace}: Starting.`);
+        await this.log.debug(`Adapter version ${adapterVersion}`);
         //await this.log.debug('this.config:');
         //await this.log.debug(JSON.stringify(this.config));
 
@@ -314,7 +318,7 @@ class E3oncan extends utils.Adapter {
         // so this adapter's own Collect/energy-meter code (fed via
         // lib/canGatewayChannel.js, unchanged either way) has something to see:
         await this.configureGatewayRawCanIds();
-        await this.checkGatewayRawWrite();
+        await this.checkGatewayCapabilities();
 
         // Setup energy meter collect workers for detected and activated meters:
         if (this.channelExt || this.channelInt) {
@@ -788,24 +792,43 @@ class E3oncan extends utils.Adapter {
     }
 
     /**
-     * Warn once per gateway if raw write is switched off there: every
-     * data point write over a gateway goes through /api/rawwrite, so without it
-     * the writes fail and the log only shows a generic error per write.
+     * Check each gateway once at startup. A firmware without the raw API cannot
+     * serve the gateway transport at all, which is an error; a different raw API
+     * version is a warning. Raw write switched off is also a warning, because
+     * every data point write over a gateway goes through /api/rawwrite.
      */
-    async checkGatewayRawWrite() {
+    async checkGatewayCapabilities() {
         for (const base of this.gatewayBaseUrls()) {
             try {
-                const settings = await udsScan.fetchJson(`${base}/api/settings`, {
+                const status = await udsScan.fetchJson(`${base}/api/status`, {
                     signal: AbortSignal.timeout(5000),
                 });
-                if (settings.system?.rawWriteEnabled === false) {
+                await this.log.debug(
+                    `Gateway ${base}: firmware ${status.firmware}, built ${status.buildDate}, ` +
+                        `build id ${status.elfSha}, raw API version ${status.rawApiVersion}, ` +
+                        `raw write ${status.rawWriteEnabled ? 'enabled' : 'disabled'}`,
+                );
+                if (status.rawApiVersion === undefined) {
+                    await this.log.error(
+                        `Gateway ${base} does not provide the raw API. Its firmware is too old for the gateway transport - ` +
+                            `please update open3e-esp32.`,
+                    );
+                    continue;
+                }
+                if (status.rawApiVersion !== GATEWAY_RAW_API_VERSION) {
+                    await this.log.warn(
+                        `Gateway ${base} reports raw API version ${status.rawApiVersion}, this adapter expects ` +
+                            `${GATEWAY_RAW_API_VERSION}. Some features may not work.`,
+                    );
+                }
+                if (status.rawWriteEnabled === false) {
                     await this.log.warn(
                         `Raw write is disabled on gateway ${base}. Data point writes over this gateway will fail. ` +
-                            `Enable "Raw write" in the gateway's system settings if you need to write.`,
+                            `Enable "Rohes Schreiben freigeben" in the gateway's system settings if you need to write.`,
                     );
                 }
             } catch (e) {
-                await this.log.warn(`Could not check raw write setting of gateway ${base}: ${e.message}`);
+                await this.log.warn(`Could not check capabilities of gateway ${base}: ${e.message}`);
             }
         }
     }
