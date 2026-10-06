@@ -185,7 +185,7 @@ The adapter will log `Variant datapoint ... is protected by user. Update skipped
 
 ## Changelog of Data Point Definitions
 
-### v1.2.0 (2026-10-04)
+### v1.2.0 (2026-10-07)
 
 **Common data points (didsE3.json, v20260727)**
 
