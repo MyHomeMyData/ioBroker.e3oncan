@@ -121,6 +121,8 @@ Instead of a local CAN adapter, a bus can be read through an [open3e-esp32](http
 
 On every start the adapter tells the gateway which CAN IDs to relay raw. The list is derived from the energy meters and the Collect IDs of your devices, so you don't configure it on the gateway.
 
+The gateway needs open3e-esp32 version 0.2.0 or newer. That version provides the raw API version 1 this adapter expects, and the adapter logs the firmware version it finds at each start.
+
 Rules for gateway mode:
 
 - **Data point selection and scheduling are configured only in ioBroker** (datapoints tab, schedules). Don't change them in the gateway's own web UI at the same time. The adapter doesn't use those settings, and parallel changes lead to confusing results. A change made in the gateway's web UI to the relayed CAN IDs stays only until the next adapter restart.

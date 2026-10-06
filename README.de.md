@@ -123,6 +123,8 @@ Statt eines lokalen CAN-Adapters kann ein Bus über ein [open3e-esp32](https://g
 
 Bei jedem Start teilt der Adapter dem Gateway mit, welche CAN-IDs roh weitergeleitet werden sollen. Die Liste ergibt sich aus den Energiezählern und den Collect-IDs Ihrer Geräte, Sie müssen sie daher nicht auf dem Gateway konfigurieren.
 
+Das Gateway braucht open3e-esp32 in Version 0.2.0 oder neuer. Diese Version stellt die Raw-API Version 1 bereit, die der Adapter erwartet. Der Adapter protokolliert beim Start die gefundene Firmware-Version.
+
 Regeln im Gateway-Betrieb:
 
 - **Auswahl und Zeitpläne der Datenpunkte werden nur in ioBroker konfiguriert** (Datenpunkte-Seite, Zeitpläne). Ändern Sie diese nicht gleichzeitig in der Web-Oberfläche des Gateways. Der Adapter verwendet diese Einstellungen nicht, und parallele Änderungen führen zu verwirrenden Ergebnissen. Eine Änderung der weitergeleiteten CAN-IDs in der Web-Oberfläche des Gateways gilt nur bis zum nächsten Neustart des Adapters.
