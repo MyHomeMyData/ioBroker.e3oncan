@@ -239,7 +239,9 @@
   "native": {
     "tableUdsDevices": [],
     "tableUdsDids": [],
-    "saveDidsOnScan": true
+    "saveDidsOnScan": true,
+    "canExtGatewayMqttPassword": "",
+    "canIntGatewayMqttPassword": ""
   },
   "objects": [],
   "instanceObjects": [
