@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 470" role="img"
+     aria-label="Zwei Wege, wie e3oncan mit der Viessmann-Heizung spricht: bisher über einen CAN-Adapter direkt am ioBroker-Rechner, neu über ein ESP32-Gateway per WLAN.">
+
+  <rect x="0" y="0" width="920" height="470" fill="#ffffff"/>
+
+  <!-- Heating / CAN bus box, spans both rows -->
+  <rect x="30" y="130" width="190" height="210" rx="8" fill="#f4f4f4" stroke="#333" stroke-width="1.5"/>
+  <text x="125" y="220" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="bold" fill="#222">Viessmann</text>
+  <text x="125" y="240" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="bold" fill="#222">E3-Heizung</text>
+  <text x="125" y="265" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#555">CAN-Bus</text>
+  <text x="125" y="282" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#555">250 kbit/s</text>
+
+  <!-- ioBroker box, spans both rows -->
+  <rect x="700" y="130" width="190" height="210" rx="8" fill="#f4f4f4" stroke="#333" stroke-width="1.5"/>
+  <text x="795" y="220" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="bold" fill="#222">ioBroker</text>
+  <text x="795" y="245" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#555">Adapter e3oncan</text>
+  <text x="795" y="263" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#555">(eigener Codec:</text>
+  <text x="795" y="280" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#555">entscheidet, was</text>
+  <text x="795" y="297" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#555">die Bytes bedeuten)</text>
+
+  <!-- Top row: bisher -->
+  <text x="375" y="45" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#555">bisher</text>
+  <rect x="330" y="60" width="220" height="80" rx="8" fill="#ffffff" stroke="#333" stroke-width="1.5"/>
+  <text x="440" y="95" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#222">USB- / SPI-CAN-Adapter</text>
+  <text x="440" y="115" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#555">direkt am ioBroker-Rechner</text>
+
+  <line x1="220" y1="100" x2="318" y2="100" stroke="#333" stroke-width="1.5"/>
+  <polygon points="325.0,100.0 316.0,103.0 316.0,97.0" fill="#333"/>
+  <text x="272" y="92" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#444">CAN (UDS)</text>
+
+  <line x1="550" y1="100" x2="694" y2="186" stroke="#333" stroke-width="1.5"/>
+  <polygon points="700.0,190.0 690.7,187.9 693.8,182.8" fill="#333"/>
+  <text x="645" y="108" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#444">lokal, gleicher Rechner</text>
+
+  <!-- Bottom row: neu -->
+  <text x="375" y="300" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1a62b0">neu</text>
+  <rect x="330" y="315" width="220" height="90" rx="8" fill="#eaf2fb" stroke="#1a62b0" stroke-width="2"/>
+  <text x="440" y="345" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#13456f" font-weight="bold">ESP32 + CAN-Transceiver</text>
+  <text x="440" y="365" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#13456f">open3e-esp32-Firmware</text>
+  <text x="440" y="383" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#13456f">steht direkt an der Heizung</text>
+
+  <line x1="220" y1="360" x2="318" y2="360" stroke="#1a62b0" stroke-width="2"/>
+  <polygon points="325.0,360.0 316.0,363.0 316.0,357.0" fill="#1a62b0"/>
+  <text x="272" y="352" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#13456f">CAN (UDS)</text>
+
+  <line x1="550" y1="360" x2="696" y2="254" stroke="#1a62b0" stroke-width="2"/>
+  <polygon points="700.0,250.0 694.5,257.7 691.0,252.9" fill="#1a62b0"/>
+  <text x="590" y="278" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#13456f">WLAN: REST (lesen/schreiben)</text>
+  <text x="590" y="293" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#13456f">+ MQTT (Rohdaten)</text>
+
+</svg>
