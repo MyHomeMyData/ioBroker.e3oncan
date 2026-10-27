@@ -104,5 +104,10 @@
     "MQTT username": "MQTT username",
     "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.",
     "Symbol '.' not allowed in 'Device state name'!": "Symbol '.' not allowed in 'Device state name'!",
-    "open3e-esp32 gateway": "open3e-esp32 gateway"
+    "open3e-esp32 gateway": "open3e-esp32 gateway",
+    "Storage control Vitocharge VX3 (e.g. for evcc)": "Storage control Vitocharge VX3 (e.g. for evcc)",
+    "Enable support for storage control": "Enable support for storage control",
+    "Monitors the setpoints the energy manager writes to the storage and skips the automatic read-back after writing data points 2188 and 2226. Required by the storage control scripts, see Wiki.": "Monitors the setpoints the energy manager writes to the storage and skips the automatic read-back after writing data points 2188 and 2226. Required by the storage control scripts, see Wiki.",
+    "CAN ID of energy manager setpoints": "CAN ID of energy manager setpoints",
+    "CAN ID on which the energy manager writes the setpoints to the storage. Default: 0x441": "CAN ID on which the energy manager writes the setpoints to the storage. Default: 0x441"
 }

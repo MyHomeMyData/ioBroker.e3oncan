@@ -342,6 +342,9 @@ class E3oncan extends utils.Adapter {
         if (this.channelExt) {
             // @ts-expect-error AdapterConfig
             await this.setupE3CollectWorkers(this.config.tableCollectCanExt, this.E3CollectExt, this.channelExt);
+            if (this.config.storageControlActive) {
+                await this.setupStorageControlWorker();
+            }
         }
         if (this.channelInt) {
             // @ts-expect-error AdapterConfig
@@ -773,6 +776,9 @@ class E3oncan extends utils.Adapter {
         for (const id of udsScan.collectIdsFromDevices(this.config.tableUdsDevices)) {
             ids.add(id);
         }
+        if (this.config.storageControlActive && Number(this.config.storageControlCanId)) {
+            ids.add(Number(this.config.storageControlCanId));
+        }
         return [...ids].map(id => `0x${id.toString(16)}`).join(',');
     }
 
@@ -932,6 +938,30 @@ class E3oncan extends utils.Adapter {
                 }
             }
         }
+    }
+
+    // Setup collect worker for the setpoints the energy manager writes to the storage (Vitocharge VX3)
+    // via service 77. Same frame layout as collect, so the common collect worker decodes them.
+
+    async setupStorageControlWorker() {
+        const canId = Number(this.config.storageControlCanId);
+        if (!canId || this.E3CollectExt[canId]) {
+            this.log.warn(
+                `Storage control: CAN ID ${this.config.storageControlCanId} is invalid or already used for collecting.`,
+            );
+            return;
+        }
+        const worker = new collect.collect({
+            canID: [canId],
+            stateBase: 'storageControl',
+            devUnits: 'n/a',
+            device: 'collectOnly',
+            timeout: this.collectTimeout,
+            delay: 0,
+        });
+        await worker.initStates(this, 'standby');
+        await worker.startup(this);
+        this.E3CollectExt[canId] = worker;
     }
 
     // Setup workers for collecting data and for communication via UDS

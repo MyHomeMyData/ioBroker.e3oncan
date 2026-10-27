@@ -766,6 +766,35 @@
                             "default": ""
                         }
                     ]
+                },
+                "storageControlHdr": {
+                    "type": "header",
+                    "text": "Storage control Vitocharge VX3 (e.g. for evcc)",
+                    "size": 2
+                },
+                "storageControlActive": {
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4,
+                    "type": "checkbox",
+                    "label": "Enable support for storage control",
+                    "tooltip": "Monitors the setpoints the energy manager writes to the storage and skips the automatic read-back after writing data points 2188 and 2226. Required by the storage control scripts, see Wiki.",
+                    "default": false,
+                    "newLine": true
+                },
+                "storageControlCanId": {
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4,
+                    "type": "text",
+                    "label": "CAN ID of energy manager setpoints",
+                    "tooltip": "CAN ID on which the energy manager writes the setpoints to the storage. Default: 0x441",
+                    "default": "0x441",
+                    "hidden": "return !data.storageControlActive;"
                 }
             }
         },

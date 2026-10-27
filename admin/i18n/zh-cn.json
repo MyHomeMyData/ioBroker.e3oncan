@@ -104,5 +104,10 @@
     "MQTT username": "MQTT 用户名",
     "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "必须与网关自身的 mqtt.baseTopic 设置一致（参见 /api/settings），不一定与固件默认值相同。",
     "Symbol '.' not allowed in 'Device state name'!": "“设备状态名称”中不允许使用符号“.”！",
-    "open3e-esp32 gateway": "open3e-esp32 网关"
+    "open3e-esp32 gateway": "open3e-esp32 网关",
+    "Storage control Vitocharge VX3 (e.g. for evcc)": "Vitocharge VX3 储能控制（例如用于 evcc）",
+    "Enable support for storage control": "启用储能控制支持",
+    "Monitors the setpoints the energy manager writes to the storage and skips the automatic read-back after writing data points 2188 and 2226. Required by the storage control scripts, see Wiki.": "监视能源管理器写入储能设备的设定值，并在写入数据点 2188 和 2226 后跳过自动回读。储能控制脚本需要此功能，参见 Wiki。",
+    "CAN ID of energy manager setpoints": "能源管理器设定值的 CAN ID",
+    "CAN ID on which the energy manager writes the setpoints to the storage. Default: 0x441": "能源管理器向储能设备写入设定值所用的 CAN ID。默认值：0x441"
 }

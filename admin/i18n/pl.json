@@ -104,5 +104,10 @@
     "MQTT username": "Nazwa użytkownika MQTT",
     "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Musi odpowiadać ustawieniu mqtt.baseTopic bramy (patrz /api/settings), niekoniecznie wartości domyślnej firmware.",
     "Symbol '.' not allowed in 'Device state name'!": "Znak „.” nie jest dozwolony w „Nazwie stanu urządzenia”!",
-    "open3e-esp32 gateway": "Brama open3e-esp32"
+    "open3e-esp32 gateway": "Brama open3e-esp32",
+    "Storage control Vitocharge VX3 (e.g. for evcc)": "Sterowanie magazynem Vitocharge VX3 (np. dla evcc)",
+    "Enable support for storage control": "Włącz obsługę sterowania magazynem",
+    "Monitors the setpoints the energy manager writes to the storage and skips the automatic read-back after writing data points 2188 and 2226. Required by the storage control scripts, see Wiki.": "Monitoruje wartości zadane, które menedżer energii zapisuje do magazynu, i pomija automatyczny odczyt zwrotny po zapisie punktów danych 2188 i 2226. Wymagane przez skrypty sterowania magazynem, patrz Wiki.",
+    "CAN ID of energy manager setpoints": "ID CAN wartości zadanych menedżera energii",
+    "CAN ID on which the energy manager writes the setpoints to the storage. Default: 0x441": "ID CAN, na którym menedżer energii zapisuje wartości zadane do magazynu. Domyślnie: 0x441"
 }

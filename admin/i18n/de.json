@@ -104,5 +104,10 @@
     "MQTT username": "MQTT-Benutzername",
     "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Muss mit der Einstellung mqtt.baseTopic des Gateways übereinstimmen (siehe /api/settings), nicht zwingend mit dem Standard der Firmware.",
     "Symbol '.' not allowed in 'Device state name'!": "Das Symbol „.“ ist im „Geräte State-Name“ nicht erlaubt!",
-    "open3e-esp32 gateway": "open3e-esp32-Gateway"
+    "open3e-esp32 gateway": "open3e-esp32-Gateway",
+    "Storage control Vitocharge VX3 (e.g. for evcc)": "Speichersteuerung Vitocharge VX3 (z. B. für evcc)",
+    "Enable support for storage control": "Unterstützung für Speichersteuerung aktivieren",
+    "Monitors the setpoints the energy manager writes to the storage and skips the automatic read-back after writing data points 2188 and 2226. Required by the storage control scripts, see Wiki.": "Überwacht die Sollwerte, die der Energiemanager an den Speicher schreibt, und lässt das automatische Rücklesen nach dem Schreiben der Datenpunkte 2188 und 2226 aus. Erforderlich für die Skripte zur Speichersteuerung, siehe Wiki.",
+    "CAN ID of energy manager setpoints": "CAN-ID der Sollwerte des Energiemanagers",
+    "CAN ID on which the energy manager writes the setpoints to the storage. Default: 0x441": "CAN-ID, auf der der Energiemanager die Sollwerte an den Speicher schreibt. Standard: 0x441"
 }

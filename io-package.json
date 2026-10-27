@@ -241,7 +241,9 @@
     "tableUdsDids": [],
     "saveDidsOnScan": true,
     "canExtGatewayMqttPassword": "",
-    "canIntGatewayMqttPassword": ""
+    "canIntGatewayMqttPassword": "",
+    "storageControlActive": false,
+    "storageControlCanId": "0x441"
   },
   "objects": [],
   "instanceObjects": [
