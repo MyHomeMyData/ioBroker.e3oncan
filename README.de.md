@@ -19,6 +19,7 @@
 ## Inhaltsverzeichnis
 
 - [Übersicht](#übersicht)
+- [Was ist neu in v1.3.0](#was-ist-neu-in-v130)
 - [Was ist neu in v1.2.0](#was-ist-neu-in-v120)
 - [Schnellstart](#schnellstart)
 - [Konfigurationsanleitung](#konfigurationsanleitung)
@@ -57,6 +58,31 @@ Welche Modi verfügbar sind, hängt von der Gerätekonfiguration ab. Weitere Det
 
 > Wichtige Teile dieses Adapters basieren auf dem [open3e](https://github.com/open3e)-Projekt.
 > Eine Python-basierte Collect-only-Implementierung mit MQTT ist unter [E3onCAN](https://github.com/MyHomeMyData/E3onCAN) verfügbar.
+
+---
+
+## Was ist neu in v1.3.0
+
+### Geändert: Bestätigung beim Schreiben eines Datenpunkts
+
+Bisher wurde ein geschriebener State erst durch das Rücklesen etwa 2,5 Sekunden nach dem Schreiben bestätigt. Jetzt setzt der Adapter den geschriebenen State auf `ack=true`, sobald das Gerät den Schreibvorgang bestätigt. Lehnt das Gerät ab oder antwortet es nicht, bleibt der State durch den Schreibvorgang auf `ack=false`. Das Rücklesen läuft wie bisher und speichert danach den vom Gerät gelesenen Wert.
+
+Was das praktisch bedeutet:
+
+- Ein erfolgreicher Schreibvorgang erzeugt eine zusätzliche bestätigte State-Änderung, kurz vor dem Rücklesen. Skripte mit `change: 'any'` und History-Adapter sehen dieses zusätzliche Ereignis.
+- Speichert das Gerät einen anderen Wert als geschrieben (z. B. gerundet oder begrenzt), zeigt der State etwa 2,5 Sekunden lang den geschriebenen und danach den zurückgelesenen Wert.
+- Ein abgelehnter Schreibvorgang endet weiterhin mit `ack=true`, gesetzt durch das Rücklesen mit dem unveränderten Wert des Geräts. Daher den Wert prüfen, nicht nur die Bestätigung. Nur bei Datenpunkten ohne Rücklesen (siehe unten) bleibt `ack=false` als Zeichen eines fehlgeschlagenen Schreibvorgangs stehen.
+
+Siehe [Datenpunkte schreiben](#datenpunkte-schreiben).
+
+### Speichersteuerung für Vitocharge VX3
+
+Die neue Option **Speichersteuerung Vitocharge VX3 (z. B. für evcc)** im Reiter *Zuordnungen zum UDS CAN-Adapter* bereitet den Adapter auf Skripte vor, die den Speicher steuern, z. B. Laden aus dem Netz:
+
+- Die Sollwerte, die der Energiemanager etwa alle zehn Sekunden an den Speicher schreibt, werden auf CAN-ID `0x441` (einstellbar) mitgelesen und als Rohwerte unter `e3oncan.0.storageControl` abgelegt.
+- Nach dem Schreiben der Datenpunkte 2188 (Netzsollwert) und 2226 (Lade- und Entladegrenze) liest der Adapter nicht zurück.
+
+Die Option funktioniert mit lokalem CAN-Adapter und mit dem open3e-esp32-Gateway gleich. Eine Beschreibung der Skripte folgt im Wiki.
 
 ---
 
@@ -265,7 +291,9 @@ Der numerische Scanbereich ist derzeit begrenzt (z. B. 256–3338 in Version 0.1
 
 Das Schreiben ist bewusst einfach gehalten: Den Wert des entsprechenden States in ioBroker ändern und speichern, **ohne** das Kontrollkästchen `Bestätigt` (ack) zu aktivieren. Der Adapter erkennt den unbestätigten Schreibvorgang und sendet ihn an das Gerät.
 
-Etwa 2,5 Sekunden nach dem Schreiben liest der Adapter den Datenpunkt vom Gerät zurück und speichert den bestätigten Wert. Wenn der State danach nicht bestätigt ist, bitte das Adapter-Log auf Fehlerdetails prüfen.
+Sobald das Gerät den Schreibvorgang bestätigt, setzt der Adapter den geschriebenen State auf bestätigt (`ack=true`). Etwa 2,5 Sekunden nach dem Schreiben liest der Adapter den Datenpunkt vom Gerät zurück und speichert den gelesenen Wert. Lehnt das Gerät den Schreibvorgang ab, bestätigt der Schreibvorgang selbst den State nicht; das Rücklesen speichert dann den unveränderten Wert des Geräts. Wenn der State gar nicht bestätigt wird, bitte das Adapter-Log auf Fehlerdetails prüfen.
+
+Ist die Option *Speichersteuerung Vitocharge VX3* aktiv, werden die Datenpunkte 2188 und 2226 nicht zurückgelesen. Bei ihnen bedeutet `ack=false` nach einem Schreibvorgang, dass er fehlgeschlagen ist.
 
 **Whitelist schreibbarer Datenpunkte**
 
