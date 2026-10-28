@@ -2,6 +2,8 @@
 .*/
 !.vscode/
 !.github/
+# dev-server data, may be a symlink to a directory outside the encrypted home
+.dev-server
 
 *.code-workspace
 node_modules
