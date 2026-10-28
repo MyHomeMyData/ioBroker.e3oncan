@@ -75,11 +75,11 @@ Was das praktisch bedeutet:
 
 Siehe [Datenpunkte schreiben](#datenpunkte-schreiben).
 
-### Speichersteuerung für Vitocharge VX3
+### Batteriesteuerung für Vitocharge VX3
 
-Die neue Option **Speichersteuerung Vitocharge VX3 (z. B. für evcc)** im Reiter *Zuordnungen zum UDS CAN-Adapter* bereitet den Adapter auf Skripte vor, die den Speicher steuern, z. B. Laden aus dem Netz:
+Die neue Option **Batteriesteuerung Vitocharge VX3 (z. B. für evcc)** im Reiter *Zuordnungen zum UDS CAN-Adapter* bereitet den Adapter auf Skripte vor, die die Batterie steuern, z. B. Laden aus dem Netz:
 
-- Die Sollwerte, die der Energiemanager etwa alle zehn Sekunden an den Speicher schreibt, werden auf CAN-ID `0x441` (einstellbar) mitgelesen und als Rohwerte unter `e3oncan.0.storageControl` abgelegt.
+- Die Sollwerte, die der Energiemanager etwa alle zehn Sekunden an die Batterie schreibt, werden auf CAN-ID `0x441` (einstellbar) mitgelesen und als Rohwerte unter `e3oncan.0.batteryControl` abgelegt.
 - Nach dem Schreiben der Datenpunkte 2188 (Netzsollwert) und 2226 (Lade- und Entladegrenze) liest der Adapter nicht zurück.
 
 Die Option funktioniert mit lokalem CAN-Adapter und mit dem open3e-esp32-Gateway gleich. Eine Beschreibung der Skripte folgt im Wiki.
@@ -293,7 +293,7 @@ Das Schreiben ist bewusst einfach gehalten: Den Wert des entsprechenden States i
 
 Sobald das Gerät den Schreibvorgang bestätigt, speichert der Adapter den geschriebenen Wert in den States `json`, `tree` und `raw` des Datenpunkts und bestätigt sie (`ack=true`). Etwa 2,5 Sekunden nach dem Schreiben liest der Adapter den Datenpunkt vom Gerät zurück und speichert den gelesenen Wert. Lehnt das Gerät den Schreibvorgang ab, bestätigt der Schreibvorgang selbst den State nicht; das Rücklesen speichert dann den unveränderten Wert des Geräts. Wenn der State gar nicht bestätigt wird, bitte das Adapter-Log auf Fehlerdetails prüfen.
 
-Ist die Option *Speichersteuerung Vitocharge VX3* aktiv, werden die Datenpunkte 2188 und 2226 nicht zurückgelesen. Bei ihnen bedeutet `ack=false` nach einem Schreibvorgang, dass er fehlgeschlagen ist.
+Ist die Option *Batteriesteuerung Vitocharge VX3* aktiv, werden die Datenpunkte 2188 und 2226 nicht zurückgelesen. Bei ihnen bedeutet `ack=false` nach einem Schreibvorgang, dass er fehlgeschlagen ist.
 
 **Whitelist schreibbarer Datenpunkte**
 

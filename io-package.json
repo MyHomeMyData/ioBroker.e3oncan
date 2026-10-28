@@ -242,8 +242,8 @@
     "saveDidsOnScan": true,
     "canExtGatewayMqttPassword": "",
     "canIntGatewayMqttPassword": "",
-    "storageControlActive": false,
-    "storageControlCanId": "0x441"
+    "batteryControlActive": false,
+    "batteryControlCanId": "0x441"
   },
   "objects": [],
   "instanceObjects": [

@@ -105,9 +105,9 @@
     "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Debe coincidir con el ajuste mqtt.baseTopic de la pasarela (ver /api/settings), no necesariamente con el valor predeterminado del firmware.",
     "Symbol '.' not allowed in 'Device state name'!": "El símbolo «.» no está permitido en el «Nombre de estado del dispositivo».",
     "open3e-esp32 gateway": "Pasarela open3e-esp32",
-    "Storage control Vitocharge VX3 (e.g. for evcc)": "Control del almacenamiento Vitocharge VX3 (p. ej. para evcc)",
-    "Enable support for storage control": "Activar soporte para el control del almacenamiento",
-    "Monitors the setpoints the energy manager writes to the storage and skips the automatic read-back after writing data points 2188 and 2226. Required by the storage control scripts, see Wiki.": "Supervisa las consignas que el gestor de energía escribe en el almacenamiento y omite la relectura automática tras escribir los puntos de datos 2188 y 2226. Necesario para los scripts de control del almacenamiento, ver Wiki.",
+    "Battery control Vitocharge VX3 (e.g. for evcc)": "Control de la batería Vitocharge VX3 (p. ej. para evcc)",
+    "Enable support for battery control": "Activar soporte para el control de la batería",
+    "Monitors the setpoints the energy manager writes to the battery and skips the automatic read-back after writing data points 2188 and 2226. Required by the battery control scripts, see Wiki.": "Supervisa las consignas que el gestor de energía escribe en la batería y omite la relectura automática tras escribir los puntos de datos 2188 y 2226. Necesario para los scripts de control de la batería, ver Wiki.",
     "CAN ID of energy manager setpoints": "ID CAN de las consignas del gestor de energía",
-    "CAN ID on which the energy manager writes the setpoints to the storage. Default: 0x441": "ID CAN en el que el gestor de energía escribe las consignas en el almacenamiento. Predeterminado: 0x441"
+    "CAN ID on which the energy manager writes the setpoints to the battery. Default: 0x441": "ID CAN en el que el gestor de energía escribe las consignas en la batería. Predeterminado: 0x441"
 }

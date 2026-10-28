@@ -342,8 +342,8 @@ class E3oncan extends utils.Adapter {
         if (this.channelExt) {
             // @ts-expect-error AdapterConfig
             await this.setupE3CollectWorkers(this.config.tableCollectCanExt, this.E3CollectExt, this.channelExt);
-            if (this.config.storageControlActive) {
-                await this.setupStorageControlWorker();
+            if (this.config.batteryControlActive) {
+                await this.setupBatteryControlWorker();
             }
         }
         if (this.channelInt) {
@@ -776,8 +776,8 @@ class E3oncan extends utils.Adapter {
         for (const id of udsScan.collectIdsFromDevices(this.config.tableUdsDevices)) {
             ids.add(id);
         }
-        if (this.config.storageControlActive && Number(this.config.storageControlCanId)) {
-            ids.add(Number(this.config.storageControlCanId));
+        if (this.config.batteryControlActive && Number(this.config.batteryControlCanId)) {
+            ids.add(Number(this.config.batteryControlCanId));
         }
         return [...ids].map(id => `0x${id.toString(16)}`).join(',');
     }
@@ -940,20 +940,20 @@ class E3oncan extends utils.Adapter {
         }
     }
 
-    // Setup collect worker for the setpoints the energy manager writes to the storage (Vitocharge VX3)
+    // Setup collect worker for the setpoints the energy manager writes to the battery (Vitocharge VX3)
     // via service 77. Same frame layout as collect, so the common collect worker decodes them.
 
-    async setupStorageControlWorker() {
-        const canId = Number(this.config.storageControlCanId);
+    async setupBatteryControlWorker() {
+        const canId = Number(this.config.batteryControlCanId);
         if (!canId || this.E3CollectExt[canId]) {
             this.log.warn(
-                `Storage control: CAN ID ${this.config.storageControlCanId} is invalid or already used for collecting.`,
+                `Battery control: CAN ID ${this.config.batteryControlCanId} is invalid or already used for collecting.`,
             );
             return;
         }
         const worker = new collect.collect({
             canID: [canId],
-            stateBase: 'storageControl',
+            stateBase: 'batteryControl',
             devUnits: 'n/a',
             device: 'collectOnly',
             timeout: this.collectTimeout,

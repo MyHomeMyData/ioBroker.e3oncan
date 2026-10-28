@@ -75,11 +75,11 @@ What this means in practice:
 
 See [Writing data points](#writing-data-points).
 
-### Storage control for Vitocharge VX3
+### Battery control for Vitocharge VX3
 
-The new option **Storage control Vitocharge VX3 (e.g. for evcc)** on the tab *Assignments to UDS CAN Adapter* prepares the adapter for scripts that control the storage, e.g. charging from the grid:
+The new option **Battery control Vitocharge VX3 (e.g. for evcc)** on the tab *Assignments to UDS CAN Adapter* prepares the adapter for scripts that control the battery, e.g. charging from the grid:
 
-- The setpoints the energy manager writes to the storage about every ten seconds are collected on CAN ID `0x441` (configurable) and stored as raw values under `e3oncan.0.storageControl`.
+- The setpoints the energy manager writes to the battery about every ten seconds are collected on CAN ID `0x441` (configurable) and stored as raw values under `e3oncan.0.batteryControl`.
 - After writing data points 2188 (grid setpoint) and 2226 (charge and discharge limits), the adapter skips the read-back.
 
 The option works the same with a local CAN adapter and with the open3e-esp32 gateway. A description of the scripts follows in the Wiki.
@@ -293,7 +293,7 @@ Writing is intentionally simple: change the value of the corresponding state in 
 
 As soon as the device confirms the write, the adapter stores the written value in the data point's `json`, `tree` and `raw` states and acknowledges them (`ack=true`). About 2.5 seconds after writing, the adapter reads the data point back from the device and stores the value read. If the device rejects the write, the write itself does not acknowledge the state; the read-back then stores the device's unchanged value. If the state is not acknowledged at all, check the adapter log for error details.
 
-With the option *Storage control Vitocharge VX3* enabled, data points 2188 and 2226 are not read back. For them, `ack=false` after a write means the write failed.
+With the option *Battery control Vitocharge VX3* enabled, data points 2188 and 2226 are not read back. For them, `ack=false` after a write means the write failed.
 
 **Whitelist of writable data points**
 
@@ -428,7 +428,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 -->
 ### **WORK IN PROGRESS**
 * (MyHomeMyData) Changed acknowledging of written data points: a write confirmed by the device now stores the written value in the data point's `json`, `tree` and `raw` states with `ack=true` right away. A rejected or unanswered write leaves it at `ack=false`. The read-back about 2.5 s later still stores the value read from the device. See "What's new in v1.3.0" for details
-* (MyHomeMyData) Added option "Storage control Vitocharge VX3 (e.g. for evcc)": collects the setpoints the energy manager writes to the storage (CAN ID 0x441, states under `storageControl`) and skips the read-back after writing data points 2188 and 2226
+* (MyHomeMyData) Added option "Battery control Vitocharge VX3 (e.g. for evcc)": collects the setpoints the energy manager writes to the battery (CAN ID 0x441, states under `batteryControl`) and skips the read-back after writing data points 2188 and 2226
 
 ### 1.2.0 (2026-10-15)
 * (MyHomeMyData) Added open3e-esp32 gateway as optional connection type per CAN bus (REST for UDS, MQTT for passively received frames)

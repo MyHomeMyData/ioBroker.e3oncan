@@ -105,9 +105,9 @@
     "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Должно совпадать с настройкой mqtt.baseTopic шлюза (см. /api/settings), необязательно со значением по умолчанию прошивки.",
     "Symbol '.' not allowed in 'Device state name'!": "Символ «.» не допускается в «Имени состояния устройства»!",
     "open3e-esp32 gateway": "Шлюз open3e-esp32",
-    "Storage control Vitocharge VX3 (e.g. for evcc)": "Управление накопителем Vitocharge VX3 (например, для evcc)",
-    "Enable support for storage control": "Включить поддержку управления накопителем",
-    "Monitors the setpoints the energy manager writes to the storage and skips the automatic read-back after writing data points 2188 and 2226. Required by the storage control scripts, see Wiki.": "Отслеживает уставки, которые менеджер энергии записывает в накопитель, и отключает автоматическое обратное чтение после записи точек данных 2188 и 2226. Требуется для скриптов управления накопителем, см. Wiki.",
+    "Battery control Vitocharge VX3 (e.g. for evcc)": "Управление батареей Vitocharge VX3 (например, для evcc)",
+    "Enable support for battery control": "Включить поддержку управления батареей",
+    "Monitors the setpoints the energy manager writes to the battery and skips the automatic read-back after writing data points 2188 and 2226. Required by the battery control scripts, see Wiki.": "Отслеживает уставки, которые менеджер энергии записывает в батарею, и отключает автоматическое обратное чтение после записи точек данных 2188 и 2226. Требуется для скриптов управления батареей, см. Wiki.",
     "CAN ID of energy manager setpoints": "CAN ID уставок менеджера энергии",
-    "CAN ID on which the energy manager writes the setpoints to the storage. Default: 0x441": "CAN ID, по которому менеджер энергии записывает уставки в накопитель. По умолчанию: 0x441"
+    "CAN ID on which the energy manager writes the setpoints to the battery. Default: 0x441": "CAN ID, по которому менеджер энергии записывает уставки в батарею. По умолчанию: 0x441"
 }

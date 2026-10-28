@@ -105,9 +105,9 @@
     "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Має збігатися з налаштуванням mqtt.baseTopic шлюзу (див. /api/settings), необов'язково зі значенням за замовчуванням прошивки.",
     "Symbol '.' not allowed in 'Device state name'!": "Символ «.» не дозволено в «Імені стану пристрою»!",
     "open3e-esp32 gateway": "Шлюз open3e-esp32",
-    "Storage control Vitocharge VX3 (e.g. for evcc)": "Керування накопичувачем Vitocharge VX3 (наприклад, для evcc)",
-    "Enable support for storage control": "Увімкнути підтримку керування накопичувачем",
-    "Monitors the setpoints the energy manager writes to the storage and skips the automatic read-back after writing data points 2188 and 2226. Required by the storage control scripts, see Wiki.": "Відстежує уставки, які менеджер енергії записує в накопичувач, і пропускає автоматичне зворотне читання після запису точок даних 2188 і 2226. Потрібно для скриптів керування накопичувачем, див. Wiki.",
+    "Battery control Vitocharge VX3 (e.g. for evcc)": "Керування батареєю Vitocharge VX3 (наприклад, для evcc)",
+    "Enable support for battery control": "Увімкнути підтримку керування батареєю",
+    "Monitors the setpoints the energy manager writes to the battery and skips the automatic read-back after writing data points 2188 and 2226. Required by the battery control scripts, see Wiki.": "Відстежує уставки, які менеджер енергії записує в батарею, і пропускає автоматичне зворотне читання після запису точок даних 2188 і 2226. Потрібно для скриптів керування батареєю, див. Wiki.",
     "CAN ID of energy manager setpoints": "CAN ID уставок менеджера енергії",
-    "CAN ID on which the energy manager writes the setpoints to the storage. Default: 0x441": "CAN ID, за яким менеджер енергії записує уставки в накопичувач. За замовчуванням: 0x441"
+    "CAN ID on which the energy manager writes the setpoints to the battery. Default: 0x441": "CAN ID, за яким менеджер енергії записує уставки в батарею. За замовчуванням: 0x441"
 }

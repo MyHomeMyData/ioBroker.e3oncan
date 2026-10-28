@@ -105,9 +105,9 @@
     "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Moet overeenkomen met de instelling mqtt.baseTopic van de gateway (zie /api/settings), niet noodzakelijk met de standaardwaarde van de firmware.",
     "Symbol '.' not allowed in 'Device state name'!": "Het symbool „.“ is niet toegestaan in „Apparaat-statusnaam“!",
     "open3e-esp32 gateway": "open3e-esp32-gateway",
-    "Storage control Vitocharge VX3 (e.g. for evcc)": "Opslagbesturing Vitocharge VX3 (bijv. voor evcc)",
-    "Enable support for storage control": "Ondersteuning voor opslagbesturing inschakelen",
-    "Monitors the setpoints the energy manager writes to the storage and skips the automatic read-back after writing data points 2188 and 2226. Required by the storage control scripts, see Wiki.": "Bewaakt de setpoints die de energiemanager naar de opslag schrijft en slaat het automatisch teruglezen over na het schrijven van datapunten 2188 en 2226. Vereist voor de scripts voor opslagbesturing, zie Wiki.",
+    "Battery control Vitocharge VX3 (e.g. for evcc)": "Batterijbesturing Vitocharge VX3 (bijv. voor evcc)",
+    "Enable support for battery control": "Ondersteuning voor batterijbesturing inschakelen",
+    "Monitors the setpoints the energy manager writes to the battery and skips the automatic read-back after writing data points 2188 and 2226. Required by the battery control scripts, see Wiki.": "Bewaakt de setpoints die de energiemanager naar de batterij schrijft en slaat het automatisch teruglezen over na het schrijven van datapunten 2188 en 2226. Vereist voor de scripts voor batterijbesturing, zie Wiki.",
     "CAN ID of energy manager setpoints": "CAN-ID van de setpoints van de energiemanager",
-    "CAN ID on which the energy manager writes the setpoints to the storage. Default: 0x441": "CAN-ID waarop de energiemanager de setpoints naar de opslag schrijft. Standaard: 0x441"
+    "CAN ID on which the energy manager writes the setpoints to the battery. Default: 0x441": "CAN-ID waarop de energiemanager de setpoints naar de batterij schrijft. Standaard: 0x441"
 }
