@@ -65,12 +65,12 @@ Which modes are available depends on your device topology. See the [device topol
 
 ### Changed: acknowledging a written data point
 
-Until now, a written state was acknowledged only by the read-back about 2.5 seconds after the write. Now the adapter sets the written state to `ack=true` as soon as the device confirms the write. If the device rejects the write or does not answer, the write leaves the state at `ack=false`. The read-back runs as before and then stores the value read from the device.
+Until now, a written state was acknowledged only by the read-back about 2.5 seconds after the write. Now, as soon as the device confirms the write, the adapter stores the written value in all representations of the data point (`json`, `tree`, `raw`) with `ack=true`, just like a value read from the device. If the device rejects the write or does not answer, the write leaves the state at `ack=false`. The read-back runs as before and then stores the value read from the device.
 
 What this means in practice:
 
 - A successful write produces one more acknowledged state change, shortly before the read-back. Scripts subscribed with `change: 'any'` and history adapters see this additional event.
-- If the device stores a different value than written (e.g. rounded or limited), the state shows the written value for about 2.5 seconds and then the value read back.
+- If the device stores a different value than written (e.g. rounded or limited), the states show the written value for about 2.5 seconds and then the value read back.
 - A rejected write still ends with `ack=true`, set by the read-back with the device's unchanged value. Check the value, not just the acknowledge flag. Only for data points without read-back (see below) does `ack=false` stay as the sign of a failed write.
 
 See [Writing data points](#writing-data-points).
@@ -291,7 +291,7 @@ The numerical scan range is currently limited (e.g. 256–3338 in version 0.11.0
 
 Writing is intentionally simple: change the value of the corresponding state in ioBroker and save it **without** checking the `Acknowledged` (ack) checkbox. The adapter detects the unacknowledged write and sends it to the device.
 
-As soon as the device confirms the write, the adapter sets the written state to acknowledged (`ack=true`). About 2.5 seconds after writing, the adapter reads the data point back from the device and stores the value read. If the device rejects the write, the write itself does not acknowledge the state; the read-back then stores the device's unchanged value. If the state is not acknowledged at all, check the adapter log for error details.
+As soon as the device confirms the write, the adapter stores the written value in the data point's `json`, `tree` and `raw` states and acknowledges them (`ack=true`). About 2.5 seconds after writing, the adapter reads the data point back from the device and stores the value read. If the device rejects the write, the write itself does not acknowledge the state; the read-back then stores the device's unchanged value. If the state is not acknowledged at all, check the adapter log for error details.
 
 With the option *Storage control Vitocharge VX3* enabled, data points 2188 and 2226 are not read back. For them, `ack=false` after a write means the write failed.
 
@@ -427,7 +427,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (MyHomeMyData) Changed acknowledging of written data points: a write confirmed by the device now sets the written state to `ack=true` right away. A rejected or unanswered write leaves it at `ack=false`. The read-back about 2.5 s later still stores the value read from the device. See "What's new in v1.3.0" for details
+* (MyHomeMyData) Changed acknowledging of written data points: a write confirmed by the device now stores the written value in the data point's `json`, `tree` and `raw` states with `ack=true` right away. A rejected or unanswered write leaves it at `ack=false`. The read-back about 2.5 s later still stores the value read from the device. See "What's new in v1.3.0" for details
 * (MyHomeMyData) Added option "Storage control Vitocharge VX3 (e.g. for evcc)": collects the setpoints the energy manager writes to the storage (CAN ID 0x441, states under `storageControl`) and skips the read-back after writing data points 2188 and 2226
 
 ### 1.2.0 (2026-10-15)

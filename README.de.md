@@ -65,12 +65,12 @@ Welche Modi verfügbar sind, hängt von der Gerätekonfiguration ab. Weitere Det
 
 ### Geändert: Bestätigung beim Schreiben eines Datenpunkts
 
-Bisher wurde ein geschriebener State erst durch das Rücklesen etwa 2,5 Sekunden nach dem Schreiben bestätigt. Jetzt setzt der Adapter den geschriebenen State auf `ack=true`, sobald das Gerät den Schreibvorgang bestätigt. Lehnt das Gerät ab oder antwortet es nicht, bleibt der State durch den Schreibvorgang auf `ack=false`. Das Rücklesen läuft wie bisher und speichert danach den vom Gerät gelesenen Wert.
+Bisher wurde ein geschriebener State erst durch das Rücklesen etwa 2,5 Sekunden nach dem Schreiben bestätigt. Jetzt speichert der Adapter den geschriebenen Wert in allen Darstellungen des Datenpunkts (`json`, `tree`, `raw`) mit `ack=true`, sobald das Gerät den Schreibvorgang bestätigt, genau wie einen vom Gerät gelesenen Wert. Lehnt das Gerät ab oder antwortet es nicht, bleibt der State durch den Schreibvorgang auf `ack=false`. Das Rücklesen läuft wie bisher und speichert danach den vom Gerät gelesenen Wert.
 
 Was das praktisch bedeutet:
 
 - Ein erfolgreicher Schreibvorgang erzeugt eine zusätzliche bestätigte State-Änderung, kurz vor dem Rücklesen. Skripte mit `change: 'any'` und History-Adapter sehen dieses zusätzliche Ereignis.
-- Speichert das Gerät einen anderen Wert als geschrieben (z. B. gerundet oder begrenzt), zeigt der State etwa 2,5 Sekunden lang den geschriebenen und danach den zurückgelesenen Wert.
+- Speichert das Gerät einen anderen Wert als geschrieben (z. B. gerundet oder begrenzt), zeigen die States etwa 2,5 Sekunden lang den geschriebenen und danach den zurückgelesenen Wert.
 - Ein abgelehnter Schreibvorgang endet weiterhin mit `ack=true`, gesetzt durch das Rücklesen mit dem unveränderten Wert des Geräts. Daher den Wert prüfen, nicht nur die Bestätigung. Nur bei Datenpunkten ohne Rücklesen (siehe unten) bleibt `ack=false` als Zeichen eines fehlgeschlagenen Schreibvorgangs stehen.
 
 Siehe [Datenpunkte schreiben](#datenpunkte-schreiben).
@@ -291,7 +291,7 @@ Der numerische Scanbereich ist derzeit begrenzt (z. B. 256–3338 in Version 0.1
 
 Das Schreiben ist bewusst einfach gehalten: Den Wert des entsprechenden States in ioBroker ändern und speichern, **ohne** das Kontrollkästchen `Bestätigt` (ack) zu aktivieren. Der Adapter erkennt den unbestätigten Schreibvorgang und sendet ihn an das Gerät.
 
-Sobald das Gerät den Schreibvorgang bestätigt, setzt der Adapter den geschriebenen State auf bestätigt (`ack=true`). Etwa 2,5 Sekunden nach dem Schreiben liest der Adapter den Datenpunkt vom Gerät zurück und speichert den gelesenen Wert. Lehnt das Gerät den Schreibvorgang ab, bestätigt der Schreibvorgang selbst den State nicht; das Rücklesen speichert dann den unveränderten Wert des Geräts. Wenn der State gar nicht bestätigt wird, bitte das Adapter-Log auf Fehlerdetails prüfen.
+Sobald das Gerät den Schreibvorgang bestätigt, speichert der Adapter den geschriebenen Wert in den States `json`, `tree` und `raw` des Datenpunkts und bestätigt sie (`ack=true`). Etwa 2,5 Sekunden nach dem Schreiben liest der Adapter den Datenpunkt vom Gerät zurück und speichert den gelesenen Wert. Lehnt das Gerät den Schreibvorgang ab, bestätigt der Schreibvorgang selbst den State nicht; das Rücklesen speichert dann den unveränderten Wert des Geräts. Wenn der State gar nicht bestätigt wird, bitte das Adapter-Log auf Fehlerdetails prüfen.
 
 Ist die Option *Speichersteuerung Vitocharge VX3* aktiv, werden die Datenpunkte 2188 und 2226 nicht zurückgelesen. Bei ihnen bedeutet `ack=false` nach einem Schreibvorgang, dass er fehlgeschlagen ist.
 
