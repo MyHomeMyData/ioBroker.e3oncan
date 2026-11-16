@@ -133,9 +133,9 @@ Rules for gateway mode:
 
 Go to the **List of UDS Devices** tab and press the **Scan** button.
 
-- The scan takes a few seconds. You can watch progress in the adapter log (open a second browser tab).
-- All E3 devices found on the bus will be listed. You can rename devices in the second column — these names are used as identifiers in ioBroker's object tree.
-- Press **SAVE** when done. The instance will restart.
+- The scan runs in the background and takes from a few seconds (local CAN bus) to about two minutes (gateway). Progress and result are shown in the **Scan status** line below the button.
+- When the scan is done, the adapter saves the list of devices to the configuration itself, and the instance restarts. Reload the page (F5) to see the list in the open configuration dialog. If nothing changed, nothing is saved. The final result in the scan status is shown in green, or in red if the scan failed or found no device.
+- All E3 devices found on the bus are listed. You can rename devices in the second column — these names are used as identifiers in ioBroker's object tree. Press **SAVE** after renaming.
 
 > During the device scan, the adapter also reads the device's data format configuration (data point 382), including temperature units (°C or °F) and date/time formats. This is stored and used during subsequent data point scans.
 
@@ -150,7 +150,7 @@ While the device scan runs, the adapter passively listens on the CAN bus for bro
 
 Go to the **List of Data Points** tab, press **Start scan …** and confirm with **OK**.
 
-> **Be patient** – the scan may take up to 5 minutes. Progress is visible in the adapter log.
+> **Be patient** – the scan may take up to 5 minutes. It runs in the background; progress and result are shown in the **Scan status** line below the button.
 
 What the scan does:
 - Discovers all available data points for each device.
@@ -398,6 +398,12 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Device scan and data point scan run in the background; progress and result are shown in a new scan status line below the scan buttons (states info.scanStatus and info.scanStatusHtml), the result in green on success and in red on failure. Fixes an empty device list after a device scan with admin 7.8.25 or newer, which drops answers after 30 s (ioBroker.admin#3737)
+* (MyHomeMyData) The device scan saves the list of devices to the configuration itself, and restarts the instance
+* (MyHomeMyData) Only one scan can run at a time
+* (MyHomeMyData) Added new devices to enum.js
+
 ### 1.2.0 (2026-10-15)
 * (MyHomeMyData) Added open3e-esp32 gateway as optional connection type per CAN bus (REST for UDS, MQTT for passively received frames)
 * (MyHomeMyData) Gateway: device and data point scan run on the gateway's scan engine, with progress in the log

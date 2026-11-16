@@ -66,7 +66,7 @@
     "Requesting data on external CAN Adapter via UDSonCAN": "Requesting data on external CAN Adapter via UDSonCAN",
     "Run the scan above to discover all data points on your devices and add metadata (description, unit, access). This is required before writing to any data point and recommended after every adapter or device firmware update.": "Run the scan above to discover all data points on your devices and add metadata (description, unit, access). This is required before writing to any data point and recommended after every adapter or device firmware update.",
     "Save all data point values to object tree during scan": "Save all data point values to object tree during scan",
-    "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.": "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
+    "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. The scan runs in the background; progress and result are shown in the scan status below the button.": "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. The scan runs in the background; progress and result are shown in the scan status below the button.",
     "Schedule (s)": "Schedule (s)",
     "Schedule for requesting given datapoints. 0 for one time request on start of adapter instance.": "Schedule for requesting given data points. 0 for one time request on start of adapter instance.",
     "Second CAN Adapter": "Second CAN Adapter",
@@ -104,5 +104,6 @@
     "MQTT username": "MQTT username",
     "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.",
     "Symbol '.' not allowed in 'Device state name'!": "Symbol '.' not allowed in 'Device state name'!",
-    "open3e-esp32 gateway": "open3e-esp32 gateway"
+    "open3e-esp32 gateway": "open3e-esp32 gateway",
+    "Scan status": "Scan status"
 }

@@ -66,7 +66,7 @@
     "Requesting data on external CAN Adapter via UDSonCAN": "Запит даних на зовнішній адаптер CAN через UDSonCAN",
     "Run the scan above to discover all data points on your devices and add metadata (description, unit, access). This is required before writing to any data point and recommended after every adapter or device firmware update.": "Запустіть сканування вище, щоб знайти всі точки даних на своїх пристроях і додати метадані (опис, одиниця, доступ). Це потрібно перед записом у будь-яку точку даних і рекомендується після кожного оновлення мікропрограми адаптера або пристрою.",
     "Save all data point values to object tree during scan": "Збережіть усі значення точок даних у дереві об’єктів під час сканування",
-    "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.": "Сканування триватиме до 5 хвилин. Будь ласка, переконайтеся, що жоден інший клієнт UDSonCAN (наприклад, Open3Eclient.py) не працює. Не закривайте вкладку під час сканування. Ви можете стежити за прогресом, спостерігаючи за входом на додатковій вкладці.",
+    "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. The scan runs in the background; progress and result are shown in the scan status below the button.": "Сканування триває до 5 хвилин. Переконайтеся, що не запущено інший клієнт UDSonCAN (наприклад, Open3Eclient.py). Сканування виконується у фоновому режимі; перебіг і результат відображаються у стані сканування під кнопкою.",
     "Schedule (s)": "Розклад (и)",
     "Schedule for requesting given datapoints. 0 for one time request on start of adapter instance.": "Розклад запиту заданих точок даних. 0 для одноразового запиту під час запуску екземпляра адаптера.",
     "Second CAN Adapter": "Другий адаптер CAN",
@@ -104,5 +104,6 @@
     "MQTT username": "Ім'я користувача MQTT",
     "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Має збігатися з налаштуванням mqtt.baseTopic шлюзу (див. /api/settings), необов'язково зі значенням за замовчуванням прошивки.",
     "Symbol '.' not allowed in 'Device state name'!": "Символ «.» не дозволено в «Імені стану пристрою»!",
-    "open3e-esp32 gateway": "Шлюз open3e-esp32"
+    "open3e-esp32 gateway": "Шлюз open3e-esp32",
+    "Scan status": "Стан сканування"
 }

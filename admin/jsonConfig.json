@@ -356,6 +356,21 @@
                     "lg": 12,
                     "xl": 12
                 },
+                "tableUdsDevicesScanStatus": {
+                    "type": "state",
+                    "oid": "info.scanStatusHtml",
+                    "control": "html",
+                    "label": "Scan status",
+                    "addColon": true,
+                    "narrow": true,
+                    "blinkOnUpdate": true,
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "tableUdsDevices": {
                     "type": "table",
                     "uniqueColumns": [
@@ -502,11 +517,26 @@
                     "confirm": {
                         "condition": "true",
                         "title": "Confirm scan for datapoints",
-                        "text": "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.",
+                        "text": "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. The scan runs in the background; progress and result are shown in the scan status below the button.",
                         "ok": "OK",
                         "cancel": "Cancel"
                     },
                     "hidden": "!_alive",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
+                "tableUdsDidsScanStatus": {
+                    "type": "state",
+                    "oid": "info.scanStatusHtml",
+                    "control": "html",
+                    "label": "Scan status",
+                    "addColon": true,
+                    "narrow": true,
+                    "blinkOnUpdate": true,
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,

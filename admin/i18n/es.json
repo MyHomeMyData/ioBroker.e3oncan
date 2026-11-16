@@ -66,7 +66,7 @@
     "Requesting data on external CAN Adapter via UDSonCAN": "Solicitud de datos sobre adaptador CAN externo vía UDSonCAN",
     "Run the scan above to discover all data points on your devices and add metadata (description, unit, access). This is required before writing to any data point and recommended after every adapter or device firmware update.": "Ejecute el escaneo anterior para descubrir todos los puntos de datos en sus dispositivos y agregue metadatos (descripción, unidad, acceso). Esto es necesario antes de escribir en cualquier punto de datos y se recomienda después de cada actualización del firmware del dispositivo o adaptador.",
     "Save all data point values to object tree during scan": "Guarde todos los valores de los puntos de datos en el árbol de objetos durante el escaneo",
-    "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. Please do not close the tab during scan. You may follow up the progress by watching the Log in an additional tab.": "El escaneo tardará hasta 5 minutos. Asegúrese de que no se esté ejecutando ningún otro cliente UDSonCAN (por ejemplo, Open3Eclient.py). No cierre la pestaña durante el escaneo. Puede seguir el progreso viendo el Registro en una pestaña adicional.",
+    "Scan will take up to 5 minutes. Please make sure, no other UDSonCAN client (e.g. Open3Eclient.py) is running. The scan runs in the background; progress and result are shown in the scan status below the button.": "El escaneo tarda hasta 5 minutos. Asegúrese de que no se esté ejecutando ningún otro cliente UDSonCAN (p. ej., Open3Eclient.py). El escaneo se ejecuta en segundo plano; el progreso y el resultado se muestran en el estado del escaneo debajo del botón.",
     "Schedule (s)": "Horario(s)",
     "Schedule for requesting given datapoints. 0 for one time request on start of adapter instance.": "Calendario para solicitar puntos de datos determinados. 0 para una solicitud única al inicio de la instancia del adaptador.",
     "Second CAN Adapter": "Segundo adaptador CAN",
@@ -104,5 +104,6 @@
     "MQTT username": "Usuario MQTT",
     "Must match the gateway's own mqtt.baseTopic setting (its /api/settings), not necessarily the firmware default.": "Debe coincidir con el ajuste mqtt.baseTopic de la pasarela (ver /api/settings), no necesariamente con el valor predeterminado del firmware.",
     "Symbol '.' not allowed in 'Device state name'!": "El símbolo «.» no está permitido en el «Nombre de estado del dispositivo».",
-    "open3e-esp32 gateway": "Pasarela open3e-esp32"
+    "open3e-esp32 gateway": "Pasarela open3e-esp32",
+    "Scan status": "Estado del escaneo"
 }

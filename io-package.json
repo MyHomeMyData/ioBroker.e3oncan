@@ -385,6 +385,56 @@
         "write": false
       },
       "native": {}
+    },
+    {
+      "_id": "info.scanStatus",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "Status of the last device or data point scan",
+          "de": "Status des letzten Geräte- oder Datenpunktscans",
+          "ru": "Статус последнего сканирования устройств или точек данных",
+          "pt": "Estado da última verificação de dispositivos ou pontos de dados",
+          "nl": "Status van de laatste apparaat- of datapuntscan",
+          "fr": "État de la dernière analyse des appareils ou des points de données",
+          "it": "Stato dell'ultima scansione dei dispositivi o dei punti dati",
+          "es": "Estado del último escaneo de dispositivos o puntos de datos",
+          "pl": "Status ostatniego skanowania urządzeń lub punktów danych",
+          "uk": "Стан останнього сканування пристроїв або точок даних",
+          "zh-cn": "上次设备或数据点扫描的状态"
+        },
+        "type": "string",
+        "role": "text",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.scanStatusHtml",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "Status of the last device or data point scan (HTML)",
+          "de": "Status des letzten Geräte- oder Datenpunktscans (HTML)",
+          "ru": "Статус последнего сканирования устройств или точек данных (HTML)",
+          "pt": "Estado da última verificação de dispositivos ou pontos de dados (HTML)",
+          "nl": "Status van de laatste apparaat- of datapuntscan (HTML)",
+          "fr": "État de la dernière analyse des appareils ou des points de données (HTML)",
+          "it": "Stato dell'ultima scansione dei dispositivi o dei punti dati (HTML)",
+          "es": "Estado del último escaneo de dispositivos o puntos de datos (HTML)",
+          "pl": "Status ostatniego skanowania urządzeń lub punktów danych (HTML)",
+          "uk": "Стан останнього сканування пристроїв або точок даних (HTML)",
+          "zh-cn": "上次设备或数据点扫描的状态 (HTML)"
+        },
+        "type": "string",
+        "role": "html",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
     }
   ]
 }

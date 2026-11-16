@@ -135,9 +135,9 @@ Regeln im Gateway-Betrieb:
 
 Zum Tab **Liste der UDS-Geräte** wechseln und **Scan** drücken.
 
-- Der Scan dauert einige Sekunden. Der Fortschritt ist im Adapter-Log sichtbar (zweiten Browser-Tab öffnen).
-- Alle auf dem Bus gefundenen E3-Geräte werden aufgelistet. Die Geräte können in der zweiten Spalte umbenannt werden — diese Namen werden als Bezeichner im ioBroker-Objektbaum verwendet.
-- **SPEICHERN** drücken, wenn fertig. Die Instanz wird neu gestartet.
+- Der Scan läuft im Hintergrund und dauert von einigen Sekunden (lokaler CAN-Bus) bis etwa zwei Minuten (Gateway). Fortschritt und Ergebnis zeigt die Zeile **Scan-Status** unter der Schaltfläche.
+- Am Ende speichert der Adapter die Geräteliste selbst in der Konfiguration, und die Instanz wird neu gestartet. Um die Liste im geöffneten Konfigurationsdialog zu sehen, die Seite neu laden (F5). Hat sich nichts geändert, wird nichts gespeichert. Das Endergebnis im Scan-Status erscheint grün, oder rot, wenn der Scan fehlgeschlagen ist oder kein Gerät gefunden hat.
+- Alle auf dem Bus gefundenen E3-Geräte werden aufgelistet. Die Geräte können in der zweiten Spalte umbenannt werden — diese Namen werden als Bezeichner im ioBroker-Objektbaum verwendet. Nach dem Umbenennen **SPEICHERN** drücken.
 
 > Während des Gerätescans liest der Adapter auch die Datenformatkonfiguration des Geräts (Datenpunkt 382) aus, einschließlich Temperatureinheiten (°C oder °F) und Datums-/Zeitformaten. Diese werden gespeichert und beim nachfolgenden Datenpunktscan verwendet.
 
@@ -152,7 +152,7 @@ Während der Gerätescan läuft, lauscht der Adapter passiv auf dem CAN-Bus auf 
 
 Tab **Liste der Datenpunkte** öffnen, **Scan starten …** drücken und mit **OK** bestätigen.
 
-> **Geduld** – der Scan kann bis zu 5 Minuten dauern. Der Fortschritt ist im Adapter-Log sichtbar.
+> **Geduld** – der Scan kann bis zu 5 Minuten dauern. Er läuft im Hintergrund; Fortschritt und Ergebnis zeigt die Zeile **Scan-Status** unter der Schaltfläche.
 
 Was der Scan tut:
 - Ermittelt alle verfügbaren Datenpunkte für jedes Gerät.
