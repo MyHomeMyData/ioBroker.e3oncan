@@ -118,7 +118,9 @@ Falls ein zweiter CAN-Bus vorhanden ist (z. B. interner Bus), kann er hier als z
 Statt eines lokalen CAN-Adapters kann ein Bus über ein [open3e-esp32](https://github.com/boonkerz/open3e-esp32)-Gateway gelesen werden. Stellen Sie für diesen Bus **Verbindungsart** auf *open3e-esp32-Gateway* und tragen Sie ein:
 
 - **Gateway-REST-URL**, z. B. `http://open3e-esp32.local`
-- **Gateway-MQTT-Broker-URL**, z. B. `mqtt://broker.local`, und das **MQTT-Basis-Topic**. Das Basis-Topic muss mit der Einstellung `mqtt.baseTopic` des Gateways übereinstimmen (Standard `open3e`).
+- **Vom Gateway genutzter MQTT-Broker**, z. B. `mqtt://localhost`, und das **MQTT-Basis-Topic**. Hier denselben Broker eintragen, der in den Einstellungen des Gateways steht, häufig der MQTT-Adapter von ioBroker. Das Basis-Topic muss mit der Einstellung `mqtt.baseTopic` des Gateways übereinstimmen (Standard `open3e`).
+
+  > **Hinweis:** `localhost` funktioniert nur aus Sicht des Adapters, wenn der Broker auf dem ioBroker-Rechner läuft. In den Einstellungen des Gateways selbst muss stattdessen die Netzwerkadresse dieses Rechners stehen. Mit `localhost` würde das Gateway den Broker bei sich selbst suchen.
 - **MQTT-Benutzername und -Passwort**, falls der Broker sie verlangt.
 
 Bei jedem Start teilt der Adapter dem Gateway mit, welche CAN-IDs roh weitergeleitet werden sollen. Die Liste ergibt sich aus den Energiezählern und den Collect-IDs Ihrer Geräte, Sie müssen sie daher nicht auf dem Gateway konfigurieren.

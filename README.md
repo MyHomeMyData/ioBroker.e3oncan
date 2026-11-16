@@ -116,7 +116,9 @@ If you have a second CAN bus (e.g. internal bus), configure it as the second ada
 Instead of a local CAN adapter, a bus can be read through an [open3e-esp32](https://github.com/boonkerz/open3e-esp32) gateway. Set **Connection type** to *open3e-esp32 gateway* for that bus and fill in:
 
 - **Gateway REST URL**, e.g. `http://open3e-esp32.local`
-- **Gateway MQTT broker URL**, e.g. `mqtt://broker.local`, and the **MQTT base topic**. The base topic must match the gateway's own `mqtt.baseTopic` setting (default `open3e`).
+- **MQTT broker used by the gateway**, e.g. `mqtt://localhost`, and the **MQTT base topic**. Enter the same broker that is set in the gateway's settings, often the MQTT adapter of ioBroker. The base topic must match the gateway's own `mqtt.baseTopic` setting (default `open3e`).
+
+  > **Note:** `localhost` only works from the adapter's point of view, if the broker runs on the ioBroker host. In the gateway's own settings, enter the network address of that host instead. With `localhost` there, the gateway would look for the broker on itself.
 - **MQTT username and password**, if the broker needs them.
 
 On every start the adapter tells the gateway which CAN IDs to relay raw. The list is derived from the energy meters and the Collect IDs of your devices, so you don't configure it on the gateway.
@@ -402,6 +404,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 * (MyHomeMyData) Device scan and data point scan run in the background; progress and result are shown in a new scan status line below the scan buttons (states info.scanStatus and info.scanStatusHtml), the result in green on success and in red on failure. Fixes an empty device list after a device scan with admin 7.8.25 or newer, which drops answers after 30 s (ioBroker.admin#3737)
 * (MyHomeMyData) The device scan saves the list of devices to the configuration itself, and restarts the instance
 * (MyHomeMyData) Only one scan can run at a time
+* (MyHomeMyData) Gateway: the MQTT broker field is now labelled "MQTT broker used by the gateway" and defaults to mqtt://localhost; the old default suggested a broker on the gateway itself
 * (MyHomeMyData) Added new devices to enum.js
 
 ### 1.2.0 (2026-10-15)
