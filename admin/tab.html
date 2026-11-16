@@ -564,6 +564,22 @@
                 // the old config UI that allows disabling a schedule without deleting it).
                 return !tabDevAddrs.has(Number(s.udsSelectDevAddr)) || !s.udsScheduleActive;
             });
+            // The active schedules of tab devices are rebuilt below (one row per device and
+            // interval). Keep their user comments, keyed by device and interval; comments of
+            // rows that get merged are joined, so no text is lost.
+            const userComments = new Map();
+            (adapterNative.tableUdsSchedules || []).forEach(function(s) {
+                if (!s.udsScheduleActive || !tabDevAddrs.has(Number(s.udsSelectDevAddr))) return;
+                const comment = String(s.udsScheduleUserComment || '').trim();
+                if (!comment) return;
+                const key = Number(s.udsSelectDevAddr) + '_' + Number(s.udsSchedule);
+                const comments = userComments.get(key) || [];
+                if (!comments.includes(comment)) comments.push(comment);
+                userComments.set(key, comments);
+            });
+            function userComment(devAddr, interval) {
+                return (userComments.get(Number(devAddr) + '_' + Number(interval)) || []).join(' / ');
+            }
             const newCollectExt = JSON.parse(JSON.stringify(adapterNative.tableCollectCanExt || []));
             const newCollectInt = JSON.parse(JSON.stringify(adapterNative.tableCollectCanInt || []));
 
@@ -606,7 +622,7 @@
                         udsSchedule: 0,
                         udsSelectDevAddr: devAddr,
                         udsScheduleDids: onStartDids.join(','),
-                        udsScheduleUserComment: ''
+                        udsScheduleUserComment: userComment(devAddr, 0)
                     });
                 }
                 for (const iv in intervalGroups) {
@@ -615,7 +631,7 @@
                         udsSchedule: Number(iv),
                         udsSelectDevAddr: devAddr,
                         udsScheduleDids: intervalGroups[iv].join(','),
-                        udsScheduleUserComment: ''
+                        udsScheduleUserComment: userComment(devAddr, iv)
                     });
                 }
 
