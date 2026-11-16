@@ -405,7 +405,8 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 * (MyHomeMyData) The device scan saves the list of devices to the configuration itself, and restarts the instance
 * (MyHomeMyData) Only one scan can run at a time
 * (MyHomeMyData) Gateway: the MQTT broker field is now labelled "MQTT broker used by the gateway" and defaults to mqtt://localhost; the old default suggested a broker on the gateway itself
-* (MyHomeMyData) Added new devices to enum.js
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20261101 (common) and 20261022 (variant)
+* (MyHomeMyData) Update of enumerations to version 20261116; the values of OpStates were corrected (open3e#145)
 
 ### 1.2.0 (2026-10-15)
 * (MyHomeMyData) Added open3e-esp32 gateway as optional connection type per CAN bus (REST for UDS, MQTT for passively received frames)
