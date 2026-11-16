@@ -96,6 +96,7 @@ class E3oncan extends utils.Adapter {
         this.udsDevStateNames = [];
         //this.udsDidsLimits = { min: 256, max: 268 }; // Min. and max. numerical value of dids for scan of data points. Should meet range defined in didsE3,json
         this.udsDidsLimits = { min: 256, max: 3338 }; // Min. and max. numerical value of dids for scan of data points. Should meet range defined in didsE3,json
+        this.scanIsRunning = false; // Device scan or data point scan in progress; only one at a time
 
         //this.on('install', this.onInstall.bind(this));
         this.on('ready', this.onReady.bind(this));
@@ -135,6 +136,8 @@ class E3oncan extends utils.Adapter {
 
         // Reset the connection indicator during startup
         this.setState('info.connection', false, true);
+
+        await this.initScanStatus();
 
         // Read energy meter configuration from info.energyMeter JSON (with migration fallback):
         try {
@@ -1108,6 +1111,133 @@ class E3oncan extends utils.Adapter {
         }
     }
 
+    /**
+     * Create the scan status states if missing. A status that still says
+     * "running" belongs to a scan the previous adapter process could not finish.
+     */
+    async initScanStatus() {
+        const common = { read: true, write: false };
+        await this.extendObject('info.scanStatus', {
+            type: 'state',
+            common: {
+                ...common,
+                name: 'Status of the last device or data point scan',
+                type: 'string',
+                role: 'text',
+                def: '',
+            },
+            native: {},
+        });
+        await this.extendObject('info.scanStatusHtml', {
+            type: 'state',
+            common: {
+                ...common,
+                name: 'Status of the last device or data point scan (HTML)',
+                type: 'string',
+                role: 'html',
+                def: '',
+            },
+            native: {},
+        });
+        const state = await this.getStateAsync('info.scanStatus');
+        if (state && typeof state.val === 'string' && state.val.includes(' running')) {
+            await this.setScanStatus(
+                `${state.val.split(' running')[0]} interrupted by a restart of the adapter.`,
+                'error',
+            );
+        }
+    }
+
+    /**
+     * Show the progress or result of a scan in the admin UI. info.scanStatus
+     * holds the plain text, info.scanStatusHtml the same text for the settings
+     * dialog: the final result in bold, green on success and red otherwise.
+     *
+     * @param {string} text  Status text
+     * @param {'running'|'ok'|'error'} [level]  Running scan or final result
+     */
+    async setScanStatus(text, level = 'running') {
+        const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const color = { ok: '#4caf50', error: '#f44336' }[level];
+        const html = color ? `<b style="color: ${color}">${escaped}</b>` : escaped;
+        try {
+            await this.setStateAsync('info.scanStatus', { val: text, ack: true });
+            await this.setStateAsync('info.scanStatusHtml', { val: html, ack: true });
+        } catch (e) {
+            this.log.debug(`Could not set scan status: ${e.message}`);
+        }
+    }
+
+    /**
+     * Run a scan unless another one is in progress. Errors end up in the log
+     * and in info.scanStatus instead of being lost in a detached promise.
+     *
+     * @param {string} label  "Device scan" or "Data point scan"
+     * @param {() => Promise<void>} scanFn  The scan itself
+     */
+    async runScan(label, scanFn) {
+        if (this.scanIsRunning) {
+            this.log.warn(`${label} requested while another scan is running - request ignored.`);
+            return;
+        }
+        this.scanIsRunning = true;
+        try {
+            await scanFn();
+        } catch (e) {
+            this.log.error(`${label} failed: ${e.message}`);
+            await this.setScanStatus(`${label} failed: ${e.message}`, 'error');
+        } finally {
+            this.scanIsRunning = false;
+        }
+    }
+
+    /**
+     * Device scan started from the admin UI. The result goes straight into the
+     * instance configuration, which restarts the instance. Nothing is written
+     * when the scan changed nothing.
+     *
+     * An open settings dialog does not notice the new configuration (it reads the
+     * instance object only when opened), so the status asks for a page reload.
+     */
+    async runDeviceScan() {
+        const instObjId = `system.adapter.${this.namespace}`;
+        const instObj = await this.getForeignObjectAsync(instObjId);
+        const before = JSON.stringify({
+            tableUdsDevices: instObj?.native?.tableUdsDevices ?? [],
+            energyMeterDetectionResult: instObj?.native?.energyMeterDetectionResult ?? '',
+        });
+
+        if (!(await this.udsScanWorker.scanUdsDevices(this))) {
+            return; // scanUdsDevices() has reported the reason in log and status
+        }
+
+        const em = this.detectedEnergyMeters;
+        const emChan = ch => (ch === 'int' ? '2nd CAN' : 'UDS CAN');
+        const emParts = [
+            em.e380_97 ? `E380 (CAN addr 97, ${emChan(em.e380_97)})` : null,
+            em.e380_98 ? `E380 (CAN addr 98, ${emChan(em.e380_98)})` : null,
+            em.e3100cb ? `E3100CB (${emChan(em.e3100cb)})` : null,
+        ].filter(Boolean);
+        const energyMeterDetectionResult = emParts.length > 0 ? emParts.join(', ') : 'None detected';
+        const after = { tableUdsDevices: this.udsDevices, energyMeterDetectionResult };
+
+        const summary =
+            `Device scan done: ${this.udsDevices.length} device(s), ${this.udsScanWorker.udsCntNewDevs} new. ` +
+            `Energy meters: ${energyMeterDetectionResult}.`;
+        // No device at all usually means a problem with the bus or the gateway (see log)
+        const level = this.udsDevices.length > 0 ? 'ok' : 'error';
+        if (JSON.stringify(after) === before) {
+            await this.setScanStatus(`${summary} No changes.`, level);
+            return;
+        }
+        await this.log.silly(`Device scan: writing to configuration - ${JSON.stringify(after)}`);
+        await this.setScanStatus(
+            `${summary} List saved. If the list of devices is empty, reload the page (F5).`,
+            level,
+        );
+        await this.extendForeignObjectAsync(instObjId, { native: after });
+    }
+
     // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
     // /**
     //  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
@@ -1122,42 +1252,11 @@ class E3oncan extends utils.Adapter {
 
             if (obj.command === 'getUdsDevices') {
                 if (obj.callback) {
-                    if (!this.udsDevScanIsRunning) {
-                        this.udsDevScanIsRunning = true;
-                        await this.log.silly(`Received data - ${JSON.stringify(obj)}`);
-                        await this.udsScanWorker.scanUdsDevices(this);
-                        await this.log.silly(
-                            `Data to send - ${JSON.stringify({ native: { tableUdsDevices: this.udsDevices } })}`,
-                        );
-                        const em = this.detectedEnergyMeters;
-                        const emChan = ch => (ch === 'int' ? '2nd CAN' : 'UDS CAN');
-                        const emParts = [
-                            em.e380_97 ? `E380 (CAN addr 97, ${emChan(em.e380_97)})` : null,
-                            em.e380_98 ? `E380 (CAN addr 98, ${emChan(em.e380_98)})` : null,
-                            em.e3100cb ? `E3100CB (${emChan(em.e3100cb)})` : null,
-                        ].filter(Boolean);
-                        const energyMeterDetectionResult = emParts.length > 0 ? emParts.join(', ') : 'None detected';
-                        await this.sendTo(
-                            obj.from,
-                            obj.command,
-                            {
-                                native: {
-                                    tableUdsDevices: this.udsDevices,
-                                    energyMeterDetectionResult: energyMeterDetectionResult,
-                                },
-                            },
-                            obj.callback,
-                        );
-                        this.udsDevScanIsRunning = false;
-                    } else {
-                        await this.log.debug('Request "getUdsDevice" during running UDS scan!');
-                        this.sendTo(
-                            obj.from,
-                            obj.command,
-                            { native: { tableUdsDevices: this.udsDevices } },
-                            obj.callback,
-                        );
-                    }
+                    // Answer at once and report progress and result via info.scanStatus.
+                    // The admin's WebSocket client drops answers that take longer than
+                    // 30 s (ioBroker.admin#3737), and a scan usually does.
+                    this.sendTo(obj.from, obj.command, {}, obj.callback);
+                    void this.runScan('Device scan', () => this.runDeviceScan());
                 } else {
                     this.sendTo(obj.from, obj.command, { native: { tableUdsDevices: [] } }, obj.callback);
                 }
@@ -1223,21 +1322,16 @@ class E3oncan extends utils.Adapter {
 
             if (obj.command === 'startDidScan') {
                 if (obj.callback) {
-                    if (!this.udsDidScanIsRunning) {
-                        this.udsDidScanIsRunning = true;
-                        this.log.silly(`Received data - ${JSON.stringify(obj)}`);
+                    this.log.silly(`Received data - ${JSON.stringify(obj)}`);
+                    // Answer at once, see getUdsDevices above.
+                    this.sendTo(obj.from, obj.command, {}, obj.callback);
+                    const message = obj.message;
+                    void this.runScan('Data point scan', async () => {
                         this.suppressStateStorage =
-                            (obj.message?.saveDidsOnScan ?? this.config.saveDidsOnScan ?? true) === false;
-                        const limits = Array.isArray(obj.message?.dids)
-                            ? { dids: obj.message.dids }
-                            : this.udsDidsLimits;
+                            (message?.saveDidsOnScan ?? this.config.saveDidsOnScan ?? true) === false;
+                        const limits = Array.isArray(message?.dids) ? { dids: message.dids } : this.udsDidsLimits;
                         await this.udsScanWorker.scanUdsDids(this, this.udsDevAddrs, limits);
-                        this.sendTo(obj.from, obj.command, this.udsDevices, obj.callback);
-                        this.udsDidScanIsRunning = false;
-                    } else {
-                        this.log.silly('Request "startDidScan" during running UDS did scan!');
-                        this.sendTo(obj.from, obj.command, obj.message, obj.callback);
-                    }
+                    });
                 } else {
                     this.sendTo(obj.from, obj.command, obj.message, obj.callback);
                 }

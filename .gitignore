@@ -2,6 +2,8 @@
 .*/
 !.vscode/
 !.github/
+# dev-server: a symlink, which ".*/" does not match
+.dev-server
 
 *.code-workspace
 node_modules
