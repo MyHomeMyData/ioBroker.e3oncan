@@ -19,6 +19,7 @@
 ## Table of contents
 
 - [Overview](#overview)
+- [What's new in v1.3.0](#whats-new-in-v130)
 - [What's new in v1.2.0](#whats-new-in-v120)
 - [Quick start](#quick-start)
 - [Configuration guide](#configuration-guide)
@@ -57,6 +58,14 @@ Which modes are available depends on your device topology. See the [device topol
 
 > Important parts of this adapter are based on the [open3e](https://github.com/open3e) project.
 > A Python-based collect-only implementation using MQTT is available at [E3onCAN](https://github.com/MyHomeMyData/E3onCAN).
+
+---
+
+## What's new in v1.3.0
+
+- **Scan status line:** Device scan and data point scan run in the background. A status line below the scan buttons shows progress and the final result, in green on success and in red on failure. The device scan saves the list of devices itself; reload the page (F5) to see it. This also fixes an empty device list after a gateway scan with admin 7.8.25 or newer.
+- **Gateway configuration:** The MQTT broker field is now called *MQTT broker used by the gateway* and defaults to `mqtt://localhost`.
+- **Data points and enumerations** updated to the current open3e state; the texts of `OpStates` were corrected.
 
 ---
 
