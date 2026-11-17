@@ -410,7 +410,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 1.3.0 (2026-11-17)
 * (MyHomeMyData) Device scan and data point scan run in the background; progress and result are shown in a new scan status line below the scan buttons (states info.scanStatus and info.scanStatusHtml), the result in green on success and in red on failure. Fixes an empty device list after a device scan with admin 7.8.25 or newer, which drops answers after 30 s (ioBroker.admin#3737)
 * (MyHomeMyData) The device scan saves the list of devices to the configuration itself, and restarts the instance
 * (MyHomeMyData) Only one scan can run at a time
@@ -437,12 +437,6 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 ### 1.1.1 (2026-07-06)
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20260705 (common)
 * (MyHomeMyData) Fixed duplicate display of variant data points in data point list of WebUI
-
-### 1.1.0 (2026-07-05)
-* (MyHomeMyData) Update of list of data points for E3 devices to version 20260701 (common) and 20260630 (variant)
-* (MyHomeMyData) Added codec `O3ESwitch` for device-dependent data point structures selected by a discriminator byte
-* (MyHomeMyData) Added optional `decimals` parameter to numeric codecs to round decoded values
-* (MyHomeMyData) Added update of meta data during startup, when structure of data point has changed
 
 ### Older versions
 
