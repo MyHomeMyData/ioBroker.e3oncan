@@ -185,7 +185,7 @@ The adapter will log `Variant datapoint ... is protected by user. Update skipped
 
 ## Changelog of Data Point Definitions
 
-### v1.3.0 (2026-11-16)
+### v1.3.0 (2026-11-17)
 * Added **new devices** to enum values
 * **ZigBee devices**: decoded `Hardware-Version` (previously raw, in **40 `ZigBee*DeviceProperty` DIDs**) and device `ConnectionState` (previously raw, in **80 `ZigBee*DeviceCurrentValues` definitions**, both 57- and 68-byte variants) with new enum `ZigBeeConnectionStates`, refer to PR #402
 * **`OpStates`**: corrected per issue #145 — the previous decoding (sourced from an older viGuide app version) was field-confirmed wrong; new values cross-checked against two independent reports (Philip-Wiege's systematic testing on a Vitocal 250-A, wangnick's observation of value 255 on unused heating circuits) and against the current viGuide app's data

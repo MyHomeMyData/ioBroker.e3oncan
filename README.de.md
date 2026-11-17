@@ -66,6 +66,7 @@ Welche Modi verfügbar sind, hängt von der Gerätekonfiguration ab. Weitere Det
 - **Scan-Status:** Geräte- und Datenpunktscan laufen im Hintergrund. Eine Statuszeile unter den Scan-Schaltflächen zeigt den Fortschritt und das Endergebnis, grün bei Erfolg und rot bei einem Fehler. Der Gerätescan speichert die Geräteliste selbst; um sie zu sehen, die Seite neu laden (F5). Damit ist auch die leere Geräteliste nach einem Gateway-Scan mit Admin 7.8.25 oder neuer behoben.
 - **Gateway-Konfiguration:** Das Feld für den MQTT-Broker heißt jetzt *Vom Gateway genutzter MQTT-Broker*, die Voreinstellung ist `mqtt://localhost`.
 - **Datenpunkte und Aufzählungen** auf den aktuellen Stand von open3e gebracht; die Texte von `OpStates` wurden korrigiert.
+- **Tab Datenpunkte**: Beschreibungstexte der Abrufintervalle werden beim Speichern nicht mehr gelöscht.
 
 ---
 

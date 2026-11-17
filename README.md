@@ -66,6 +66,7 @@ Which modes are available depends on your device topology. See the [device topol
 - **Scan status line:** Device scan and data point scan run in the background. A status line below the scan buttons shows progress and the final result, in green on success and in red on failure. The device scan saves the list of devices itself; reload the page (F5) to see it. This also fixes an empty device list after a gateway scan with admin 7.8.25 or newer.
 - **Gateway configuration:** The MQTT broker field is now called *MQTT broker used by the gateway* and defaults to `mqtt://localhost`.
 - **Data points and enumerations** updated to the current open3e state; the texts of `OpStates` were corrected.
+- **Datapoints tab**: saving no longer clears the descriptions of the schedules in the configuration
 
 ---
 
