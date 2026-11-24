@@ -12,6 +12,7 @@
 - [Writability of data points](#writability-of-data-points)
 - [What happens on adapter start and after updates](#what-happens-on-adapter-start-and-after-updates)
 - [Running a data point scan](#running-a-data-point-scan)
+- [Topology and plant profile](#topology-and-plant-profile)
 - [User-defined data point structures in udsDidsSpecific](#user-defined-data-point-structures-in-udsdidsspecific)
 - [Changelog of data point definitions](#changelog-of-data-point-definitions)
 
@@ -135,7 +136,27 @@ The scan dialog offers a checkbox **Save all data point values to object tree du
 
 **How to start a scan:**
 
-Open the adapter configuration dialog, go to the **List of Data Points** tab, press **Start scan …** and confirm with **OK**. The scan may take up to 5 minutes. Progress is visible in the adapter log (open a second browser tab).
+Open the adapter configuration dialog, go to the **List of Data Points** tab, press **Start scan …** and confirm with **OK**. The scan runs in the background and may take up to 5 minutes. Progress and result are shown in the scan status line below the button; more details are in the adapter log.
+
+---
+
+### Topology and plant profile
+
+While scanning, the adapter collects the data it needs to describe the bus and the plant. At the end of a scan it writes three states in the `info` channel:
+
+| State | Content |
+|---|---|
+| `info.topology` | Bus topology as JSON: the UDS-accessible devices (from data point `256` BusIdentification) and all devices listed in the topology matrices (data points `954` and `1286`–`1289`), including devices that are not UDS-accessible, e.g. on the internal CAN bus or the ServiceBus |
+| `info.plantProfile` | Plant profile as JSON: heat generator, role of each control unit, refrigerant circuit or boiler, sensors, domestic hot water, buffer, electric heater, energy storage system, heating circuits and the actuators and sensors listed in data point `1238` |
+| `info.topologyHtml` | Both as HTML. It is shown by the **Topology** button on the datapoints page |
+
+**How the plant profile is derived:**
+
+- **Role of the control units** from data point `256`: e.g. `HPMUMASTER` is the indoor unit of a heat pump, `HMUMASTER` of a boiler, the outdoor unit is the device that reports the compressor (data point `2346`), `EHCU` is the electric heater and `EMCU` the energy storage system. Gateways, room control and HMI get no role, because they answer for every data point of the database.
+- **What the scan did not find is not there:** a device answers data points of parts it does not have with a negative response.
+- **What answers is not necessarily fitted:** unused sensor terminals answer with `SensorStatus` `not_available`, fitted ones with `no_error`. Further data points tell the configuration, e.g. `933`–`936` (type of heating circuit), `1415`–`1418` (operation state) and `2574` (power of the electric heater).
+
+The values are a snapshot taken during the scan. They are collected whether or not the option *Save all data point values to object tree during scan* is set. A scan limited to selected data points cannot tell which parts are missing, so it keeps the previous profile. The detection rules follow the plant view of [open3e-esp32](https://github.com/boonkerz/open3e-esp32) by boonkerz.
 
 ---
 

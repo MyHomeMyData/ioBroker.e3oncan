@@ -40,7 +40,7 @@
         <button class="btn btn-sm btn-outline-secondary" onclick="collapseAll()">
             <i class="bi bi-arrows-collapse"></i> Collapse All
         </button>
-        <span id="topology-btn-wrap" title="No topology data available yet. Topology is generated automatically when a data point scan is performed (adapter configuration → List of Data Points tab).">
+        <span id="topology-btn-wrap" title="No topology data available yet. Topology and plant profile are generated automatically when a data point scan is performed (adapter configuration → List of Data Points tab).">
             <button class="btn btn-sm btn-outline-info" id="btn-topology" onclick="openTopology()" disabled style="pointer-events:none">
                 <i class="bi bi-diagram-3"></i> Topology
             </button>
@@ -200,6 +200,15 @@
         // --- Topology ---
         function setTopologyButton(html) {
             topologyHtml = html || '';
+            // A topology from an adapter version without plant profile: show where the profile will appear.
+            if (topologyHtml && topologyHtml.indexOf('Plant Profile') < 0) {
+                const pos = topologyHtml.indexOf('</p>');
+                if (pos >= 0) {
+                    const note = '<h4 style="margin:0 0 4px 0">Plant Profile</h4>' +
+                        '<p style="margin:0 0 16px 0;color:#666">The plant profile appears here after the next data point scan.</p>';
+                    topologyHtml = topologyHtml.slice(0, pos + 4) + '\n' + note + topologyHtml.slice(pos + 4);
+                }
+            }
             const btn = document.getElementById('btn-topology');
             const wrap = document.getElementById('topology-btn-wrap');
             if (topologyHtml) {
@@ -209,7 +218,7 @@
             } else {
                 btn.disabled = true;
                 btn.style.pointerEvents = 'none';
-                wrap.title = 'No topology data available yet. Topology is generated automatically when a data point scan is performed (adapter configuration → List of Data Points tab).';
+                wrap.title = 'No topology data available yet. Topology and plant profile are generated automatically when a data point scan is performed (adapter configuration → List of Data Points tab).';
             }
         }
 
