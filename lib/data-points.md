@@ -185,6 +185,20 @@ The adapter will log `Variant datapoint ... is protected by user. Update skipped
 
 ## Changelog of Data Point Definitions
 
+### v1.4.0 (2026-11-24)
+
+**Common data points (didsE3.json, v20261124)**
+
+* **DID 1238 `AvailableActorSensorComponents`**: decoded (previously raw) as a list of the actuators and sensors fitted to the device, given by their data point numbers, e.g. 381 (central heating pump), 1842 (diverter valve), 491 (circulation pump). Decoding found by boonkerz in open3e-esp32.
+* Added new **DID 3737 `AllengraSensorOutdoorUnit`**: flow rate in the heating water circuit, measured at the outdoor unit. Some devices return 0 on DID 1043 `AllengraSensor` and provide the flow rate here instead; the description of DID 1043 says so now.
+* Decoded previously raw **DID 2808 `InverterInternalPowerModuleTemperature`** (temperature sensor with actual, minimum, maximum, average and sensor status) and **DID 3119 `RefrigerantCircuitFourWayValveStatistical`** (`Count` and `Duration` in s), from findings on a Vitocal 200-A.
+* **Units:** the pressure sensors **318 `WaterPressureSensor`, 322 `CompressorInletPressureSensor` and 325 `CompressorOutletPressureSensor`** now show `bar` instead of `hPa`; the values were always in bar. The temperature sensors **3015, 3017, 3018 and 3019** gained the unit `°C`, **2626 `MaximumPowerElectricalHeater`** and **3384 `ElectricalActivePowerConsumptionLimitationDefaultValue`** the unit `W`.
+* **Writability:** the heating curves of mixer circuits 1 to 4 (**880–883 `Mixer…CircuitCentralHeatingCurve`**) changed from read-only to read-write; a Vitocal 250-A accepts writing them. The new flags take effect with the next data point scan.
+
+**Enumerations (enums.js, v20261116)**
+
+* New device `DCIOU` (73) in the list of device types.
+
 ### v1.3.0 (2026-11-17)
 * Added **new devices** to enum values
 * **ZigBee devices**: decoded `Hardware-Version` (previously raw, in **40 `ZigBee*DeviceProperty` DIDs**) and device `ConnectionState` (previously raw, in **80 `ZigBee*DeviceCurrentValues` definitions**, both 57- and 68-byte variants) with new enum `ZigBeeConnectionStates`, refer to PR #402

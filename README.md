@@ -410,6 +410,10 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20261124 (common); DID 1238 is decoded as list of the actuators and sensors of a device, details see [data-points.md](lib/data-points.md#v140-2026-11-24)
+* (MyHomeMyData) Update of enumerations: new device DCIOU
+
 ### 1.3.0 (2026-11-17)
 * (MyHomeMyData) Device scan and data point scan run in the background; progress and result are shown in a new scan status line below the scan buttons (states info.scanStatus and info.scanStatusHtml), the result in green on success and in red on failure. Fixes an empty device list after a device scan with admin 7.8.25 or newer, which drops answers after 30 s (ioBroker.admin#3737)
 * (MyHomeMyData) The device scan saves the list of devices to the configuration itself, and restarts the instance
