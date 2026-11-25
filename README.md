@@ -427,7 +427,7 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 1.4.0 (2026-11-25)
 * (MyHomeMyData) Plant profile: the data point scan derives the configuration of the plant (heat generator, control units, sensors, actuators, heating circuits, energy storage system) and shows it in the topology view; also stored as JSON in info.plantProfile. Detection rules after open3e-esp32 by boonkerz
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20261124 (common); DID 1238 is decoded as list of the actuators and sensors of a device, details see [data-points.md](lib/data-points.md#v140-2026-11-24)
 * (MyHomeMyData) Update of enumerations: new device DCIOU
@@ -456,10 +456,6 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
 
 ### 1.1.2 (2026-07-16)
 * (MyHomeMyData) Fixed missing update of meta data (unit, description) when user changes device specific data point definition
-
-### 1.1.1 (2026-07-06)
-* (MyHomeMyData) Update of list of data points for E3 devices to version 20260705 (common)
-* (MyHomeMyData) Fixed duplicate display of variant data points in data point list of WebUI
 
 ### Older versions
 

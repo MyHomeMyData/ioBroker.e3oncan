@@ -1,4 +1,8 @@
 # Older Changelog Entries
+## 1.1.1 (2026-07-06)
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20260705 (common)
+* (MyHomeMyData) Fixed duplicate display of variant data points in data point list of WebUI
+
 ## 1.1.0 (2026-07-05)
 * (MyHomeMyData) Update of list of data points for E3 devices to version 20260701 (common) and 20260630 (variant)
 * (MyHomeMyData) Added codec `O3ESwitch` for device-dependent data point structures selected by a discriminator byte
