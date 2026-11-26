@@ -216,7 +216,7 @@ The adapter will log `Variant datapoint ... is protected by user. Update skipped
 
 **Variant data points (didsE3var.json, v20261125)**
 
-* **DIDs 627–634 `CentralHeating…CircuitName`**: the 12-byte variants of 627–630 are replaced by one variant with **variable length** (length 0) for each of 627–634. Some devices (e.g. Vitodens) send the circuit name in the length of the name plus a terminating zero, and the length changes when the name is changed in ViCare. These names were stored as raw `DeviceSpecific` data points so far. On adapter start, existing definitions are switched to the new variant, the `DeviceSpecific` states are replaced by the named states. Refer to open3e discussion #415.
+* **DIDs 627–634 `CentralHeating…CircuitName`**: the 12-byte variants of 627–630 are replaced by one variant with **variable length** (length 0) for each of 627–634. Some devices (e.g. Vitodens) send the circuit name in the length of the name plus a terminating zero, and the length changes when the name is changed in ViCare. These names were stored as raw `DeviceSpecific` data points so far. On adapter start, existing definitions are switched to the new variant, the `DeviceSpecific` states are replaced by the named states. Definitions stored with exactly the common length (40 bytes, devices with fixed length) are switched to the common definition instead, so values are padded when writing. Data points with variable length are not written using service 0x77. Refer to open3e discussion #415.
 
 ### v1.4.0 (2026-11-25)
 
