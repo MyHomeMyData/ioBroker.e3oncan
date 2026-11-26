@@ -620,9 +620,18 @@ class E3oncan extends utils.Adapter {
                             // Skip entries for 'Version' and 'Backup'
                             const oldDef = devDids.didsDictDevSpec[did];
                             const didLen = oldDef.len;
-                            const newDef =
-                                didsDictVar[did][didLen] ||
-                                (Number(didLen) !== 0 ? storage.variableLengthDef(did, Number(didLen)) : null);
+                            // Data point with variable length, stored with exactly the common length (e.g. circuit
+                            // name 631 with 40 bytes, formerly common length 12): the common definition applies.
+                            // Such devices use a fixed length, so values must be padded when writing.
+                            const toCommon =
+                                !didsDictVar[did][didLen] &&
+                                storage.variableLengthDef(did) !== null &&
+                                E3DidsDict[did] !== undefined &&
+                                Number(didLen) === Number(E3DidsDict[did].len);
+                            const newDef = toCommon
+                                ? E3DidsDict[did]
+                                : didsDictVar[did][didLen] ||
+                                  (Number(didLen) !== 0 ? storage.variableLengthDef(did, Number(didLen)) : null);
                             if (!newDef) {
                                 // No variant definition for stored length available, skip this did
                                 if (devDids.didsDictDevCom[did]?.len !== didLen) {
@@ -653,7 +662,9 @@ class E3oncan extends utils.Adapter {
                                     continue;
                                 }
                                 this.log.info(
-                                    `  > New or updated defintion of variant datapoint ${didStateName} is available. Updating.`,
+                                    toCommon
+                                        ? `  > Common definition applies to datapoint ${didStateName}. Updating.`
+                                        : `  > New or updated defintion of variant datapoint ${didStateName} is available. Updating.`,
                                 );
                                 // Delete tree states based on old structure:
                                 await this.delObjectAsync(
@@ -724,10 +735,16 @@ class E3oncan extends utils.Adapter {
                                     );
                                     await (devDids.didsDictDevSpec['Backup'][did] = await oldDef);
                                 }
-                                // Update datapoint description:
-                                await (devDids.didsDictDevSpec[did] = { ...newDef });
-                                // Remember version of source:
-                                devDids.didsDictDevSpec[did]['source'] = `didsE3var_${didsDictVar.Version}`;
+                                if (toCommon) {
+                                    // Common definition: remove device specific entry
+                                    delete devDids.didsDictDevSpec[did];
+                                    devDids.didsDictDevCom[did] = { ...newDef };
+                                } else {
+                                    // Update datapoint description:
+                                    await (devDids.didsDictDevSpec[did] = { ...newDef });
+                                    // Remember version of source:
+                                    devDids.didsDictDevSpec[did]['source'] = `didsE3var_${didsDictVar.Version}`;
+                                }
                             } else if (movedFromCommon.has(did)) {
                                 delete devDids.didsDictDevSpec[did];
                             }
