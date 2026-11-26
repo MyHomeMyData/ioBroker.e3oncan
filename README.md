@@ -427,9 +427,15 @@ If you enjoyed this project — or just feeling generous, consider buying me a b
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (MyHomeMyData) Names of heating circuits (DIDs 627–634) are decoded in any length up to 40 bytes, also after renaming in ViCare. So far, such names were stored as raw `DeviceSpecific` data points on some devices (e.g. Vitodens). Devices with fixed length (40 bytes) keep it, values are padded when writing. Existing installations are switched on adapter start: states `06xx_DeviceSpecific` are replaced by `06xx_CentralHeating…CircuitName` - pls. check scripts using the old names. Details see [data-points.md](lib/data-points.md#work-in-progress)
+* (MyHomeMyData) Data point scan removes outdated variant definitions of a device when the device matches the common definition
+* (MyHomeMyData) Data points with variable length are not written using service 0x77
+* (MyHomeMyData) Fix: after a data point scan, writing was refused ("Writing not allowed") until the adapter was restarted
+
 ### 1.4.0 (2026-11-25)
 * (MyHomeMyData) Plant profile: the data point scan derives the configuration of the plant (heat generator, control units, sensors, actuators, heating circuits, energy storage system) and shows it in the topology view; also stored as JSON in info.plantProfile. Detection rules after open3e-esp32 by boonkerz
-* (MyHomeMyData) Update of list of data points for E3 devices to version 20261124 (common); DID 1238 is decoded as list of the actuators and sensors of a device, details see [data-points.md](lib/data-points.md#v140-2026-11-24)
+* (MyHomeMyData) Update of list of data points for E3 devices to version 20261124 (common); DID 1238 is decoded as list of the actuators and sensors of a device, details see [data-points.md](lib/data-points.md#v140-2026-11-25)
 * (MyHomeMyData) Update of enumerations: new device DCIOU
 * (MyHomeMyData) Dependency updates (mqtt 5.16.1)
 

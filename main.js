@@ -597,12 +597,42 @@ class E3oncan extends utils.Adapter {
                     if (!('Backup' in devDids.didsDictDevSpec)) {
                         devDids.didsDictDevSpec['Backup'] = {};
                     }
+                    // Data points known as common with a length that is no longer the common length, but that
+                    // have a variant with variable length (e.g. circuit names 631-634, formerly 12 bytes):
+                    // treat them like device specific data points, so they get the variant definition below.
+                    const movedFromCommon = new Set();
+                    for (const [did, def] of Object.entries(devDids.didsDictDevCom)) {
+                        if (
+                            did.length <= 4 &&
+                            !(did in devDids.didsDictDevSpec) &&
+                            storage.variableLengthDef(did) &&
+                            def?.len !== E3DidsDict[did]?.len &&
+                            Number(def?.len) !== 0
+                        ) {
+                            devDids.didsDictDevSpec[did] = def;
+                            movedFromCommon.add(did);
+                        }
+                    }
                     for (const did of Object.keys(devDids.didsDictDevSpec)) {
                         if (did.length <= 4 && did in didsDictVar) {
-                            // Check if matching did is available in list of variant dids
+                            // Check if matching did is available in list of variant dids:
+                            // exact length first, then a variant with variable length (len 0)
                             // Skip entries for 'Version' and 'Backup'
-                            const didLen = devDids.didsDictDevSpec[did].len;
-                            if (!(didLen in didsDictVar[did])) {
+                            const oldDef = devDids.didsDictDevSpec[did];
+                            const didLen = oldDef.len;
+                            // Data point with variable length, stored with exactly the common length (e.g. circuit
+                            // name 631 with 40 bytes, formerly common length 12): the common definition applies.
+                            // Such devices use a fixed length, so values must be padded when writing.
+                            const toCommon =
+                                !didsDictVar[did][didLen] &&
+                                storage.variableLengthDef(did) !== null &&
+                                E3DidsDict[did] !== undefined &&
+                                Number(didLen) === Number(E3DidsDict[did].len);
+                            const newDef = toCommon
+                                ? E3DidsDict[did]
+                                : didsDictVar[did][didLen] ||
+                                  (Number(didLen) !== 0 ? storage.variableLengthDef(did, Number(didLen)) : null);
+                            if (!newDef) {
                                 // No variant definition for stored length available, skip this did
                                 if (devDids.didsDictDevCom[did]?.len !== didLen) {
                                     this.log.warn(
@@ -613,32 +643,41 @@ class E3oncan extends utils.Adapter {
                             }
                             // Up to now, only RawCodec was known for this did or an user defined version or an older version of variant did => Use newly defined variant did
                             // Replace .json and .tree state(s) based on raw data of did
-                            const didStateName = `${await devDids.getDidStr(did)}_${await didsDictVar[did][didLen].id}`;
+                            const didStr = await devDids.getDidStr(did);
+                            const didStateName = `${didStr}_${await newDef.id}`;
+                            // State name of the previous definition, e.g. 0627_DeviceSpecific:
+                            const oldStateName = `${didStr}_${String(oldDef.id).replace(this.FORBIDDEN_CHARS, '_').replace('.', '_')}`;
                             // Check for changes in datapoint structure
-                            const devStruct = await devDids.getDidStruct(this, [], devDids.didsDictDevSpec[did]);
-                            const E3Struct = await devDids.getDidStruct(this, [], didsDictVar[did][didLen]);
+                            const devStruct = await devDids.getDidStruct(this, [], oldDef);
+                            const E3Struct = await devDids.getDidStruct(this, [], newDef);
                             if (JSON.stringify(devStruct) != JSON.stringify(E3Struct)) {
-                                if (devDids.didsDictDevSpec[did].protected) {
-                                    const reason = devDids.didsDictDevSpec[did].reason
-                                        ? ` Reason: "${devDids.didsDictDevSpec[did].reason}"`
-                                        : '';
+                                if (oldDef.protected) {
+                                    const reason = oldDef.reason ? ` Reason: "${oldDef.reason}"` : '';
                                     this.log.info(
                                         `  > Variant datapoint ${didStateName} is protected by user. Update skipped.${reason}`,
                                     );
+                                    if (movedFromCommon.has(did)) {
+                                        delete devDids.didsDictDevSpec[did];
+                                    }
                                     continue;
                                 }
                                 this.log.info(
-                                    `  > New or updated defintion of variant datapoint ${didStateName} is available. Updating.`,
+                                    toCommon
+                                        ? `  > Common definition applies to datapoint ${didStateName}. Updating.`
+                                        : `  > New or updated defintion of variant datapoint ${didStateName} is available. Updating.`,
                                 );
                                 // Delete tree states based on old structure:
                                 await this.delObjectAsync(
                                     `${this.namespace}.${dev.devStateName}.tree.${didStateName}`,
                                     { recursive: true },
                                 );
-                                const raw = await devDids.getObjectVal(this, `${dev.devStateName}.raw.${didStateName}`);
+                                let raw = await devDids.getObjectVal(this, `${dev.devStateName}.raw.${didStateName}`);
+                                if (raw == null && oldStateName != didStateName) {
+                                    raw = await devDids.getObjectVal(this, `${dev.devStateName}.raw.${oldStateName}`);
+                                }
                                 if (raw != null) {
                                     // Create states based on new structure if raw data is available:
-                                    const cdi = await didsDictVar[did][didLen];
+                                    const cdi = newDef;
                                     const res = await devDids.decodeDid(
                                         this,
                                         { config: { stateBase: dev.devStateName, devUnits: dev.devUnits } },
@@ -653,9 +692,16 @@ class E3oncan extends utils.Adapter {
                                         `${this.namespace}.${dev.devStateName}.json.${didStateName}`,
                                         res.val,
                                     );
+                                    await devDids.storeObjectJson(
+                                        this,
+                                        did,
+                                        res.idStr,
+                                        `${this.namespace}.${dev.devStateName}.raw.${didStateName}`,
+                                        raw,
+                                    );
                                     await devDids.setupCodecById(
                                         cdi,
-                                        `${this.namespace}.${dev.devStateName}.${devDids.getDidStr(did)}_`,
+                                        `${this.namespace}.${dev.devStateName}.${didStr}_`,
                                         dev.devUnits,
                                     );
                                     await devDids.storeObjectTree(
@@ -666,22 +712,41 @@ class E3oncan extends utils.Adapter {
                                         res.val,
                                     );
                                 }
+                                if (oldStateName != didStateName) {
+                                    // Remove states of the previous definition, e.g. 0627_DeviceSpecific:
+                                    this.log.info(`  > Removing states of previous datapoint ${oldStateName}.`);
+                                    for (const channel of ['tree', 'json', 'raw']) {
+                                        await this.delObjectAsync(
+                                            `${this.namespace}.${dev.devStateName}.${channel}.${oldStateName}`,
+                                            { recursive: true },
+                                        );
+                                    }
+                                }
                                 // Create Backup of user defined data point definition:
                                 if (
-                                    (devDids.didsDictDevSpec[did].codec != 'RawCodec' && // It's not a RawCodec
-                                        !('source' in devDids.didsDictDevSpec[did])) || // and info about source of definition is missing OR
-                                    ('source' in devDids.didsDictDevSpec[did] && // the source of definition is known
-                                        !devDids.didsDictDevSpec[did].source.includes('didsE3var_')) // and the source is NOT the list of variant codecs
+                                    !movedFromCommon.has(did) && // It's not a former common definition
+                                    ((oldDef.codec != 'RawCodec' && // It's not a RawCodec
+                                        !('source' in oldDef)) || // and info about source of definition is missing OR
+                                        ('source' in oldDef && // the source of definition is known
+                                            !oldDef.source.includes('didsE3var_'))) // and the source is NOT the list of variant codecs
                                 ) {
                                     this.log.info(
                                         `  > Creating backup of actual definition of data point ${didStateName} - see section "Backup"`,
                                     );
-                                    await (devDids.didsDictDevSpec['Backup'][did] = await devDids.didsDictDevSpec[did]);
+                                    await (devDids.didsDictDevSpec['Backup'][did] = await oldDef);
                                 }
-                                // Update datapoint description:
-                                await (devDids.didsDictDevSpec[did] = await didsDictVar[did][didLen]);
-                                // Remember version of source:
-                                devDids.didsDictDevSpec[did]['source'] = `didsE3var_${didsDictVar.Version}`;
+                                if (toCommon) {
+                                    // Common definition: remove device specific entry
+                                    delete devDids.didsDictDevSpec[did];
+                                    devDids.didsDictDevCom[did] = { ...newDef };
+                                } else {
+                                    // Update datapoint description:
+                                    await (devDids.didsDictDevSpec[did] = { ...newDef });
+                                    // Remember version of source:
+                                    devDids.didsDictDevSpec[did]['source'] = `didsE3var_${didsDictVar.Version}`;
+                                }
+                            } else if (movedFromCommon.has(did)) {
+                                delete devDids.didsDictDevSpec[did];
                             }
                         }
                     }

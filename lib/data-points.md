@@ -42,6 +42,8 @@ Some data points have different lengths and structures on different devices. To 
 
 The adapter automatically selects the correct variant for each device during the data point scan.
 
+A variant with the length **0** marks a data point whose length is given by the response. Some devices send a text, e.g. the name of a heating circuit (DIDs 627–634), in the length of the text plus a terminating zero instead of padding it to a fixed length; the length then changes when the text is changed. Such data points are decoded with the actual length, up to the length of the generic definition, and written as text plus terminating zero. Devices that use the fixed length keep the generic definition.
+
 An overview of all known data points including their variants is available in the [open3e project](https://github.com/open3e/open3e/blob/develop/src/open3e/Open3Edatapoints.md).
 
 ---
@@ -164,7 +166,7 @@ The values are a snapshot taken during the scan. They are collected whether or n
 
 The state `e3oncan.0.<DEVICE>.info.udsDidsSpecific` stores the device-specific data point definitions that differ from the generic definitions in `didsE3.json`. This includes:
 
-- **Variant data points** — definitions automatically selected during a data point scan because the device returned a length that matches an entry in `didsE3var.json`.
+- **Variant data points** — definitions automatically selected during a data point scan because the device returned a length that matches an entry in `didsE3var.json`, or a length that differs from the generic definition for a data point with a variant of length 0 (variable length).
 - **User-defined structures** — definitions created or modified manually by the user.
 
 Each entry in `udsDidsSpecific` is a JSON object keyed by the numeric data point ID. The adapter tracks the origin of each entry via the `source` field:
@@ -205,6 +207,16 @@ The adapter will log `Variant datapoint ... is protected by user. Update skipped
 ---
 
 ## Changelog of Data Point Definitions
+
+### WORK IN PROGRESS
+
+**Common data points (didsE3.json, v20261125)**
+
+* **DIDs 631–634 `CentralHeating…CircuitName`**: generic length changed from 12 to 40 bytes, like 627–630.
+
+**Variant data points (didsE3var.json, v20261125)**
+
+* **DIDs 627–634 `CentralHeating…CircuitName`**: the 12-byte variants of 627–630 are replaced by one variant with **variable length** (length 0) for each of 627–634. Some devices (e.g. Vitodens) send the circuit name in the length of the name plus a terminating zero, and the length changes when the name is changed in ViCare. These names were stored as raw `DeviceSpecific` data points so far. On adapter start, existing definitions are switched to the new variant, the `DeviceSpecific` states are replaced by the named states. Definitions stored with exactly the common length (40 bytes, devices with fixed length) are switched to the common definition instead, so values are padded when writing. Data points with variable length are not written using service 0x77. Refer to open3e discussion #415.
 
 ### v1.4.0 (2026-11-25)
 
